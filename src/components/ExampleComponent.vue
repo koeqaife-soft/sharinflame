@@ -7,21 +7,21 @@
       </li>
     </ul>
     <p>Count: {{ todoCount }} / {{ meta.totalCount }}</p>
-    <p>Active: {{ active ? 'yes' : 'no' }}</p>
+    <p>Active: {{ active ? "yes" : "no" }}</p>
     <p>Clicks on todos: {{ clickCount }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { Todo, Meta } from './models';
+import { computed, ref } from "vue";
+import { Todo, Meta } from "./models";
 
 interface Props {
   title: string;
   todos?: Todo[];
   meta: Meta;
   active: boolean;
-};
+}
 
 const props = withDefaults(defineProps<Props>(), {
   todos: () => []
