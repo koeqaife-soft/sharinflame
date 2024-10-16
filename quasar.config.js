@@ -92,6 +92,9 @@ module.exports = configure(function (/* ctx */) {
           { server: false }
         ]
       ]
+      // alias: {
+      //   "quasar/dist/quasar.sass": path.resolve(__dirname, "./src/css/app.scss")
+      // }
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
@@ -102,9 +105,11 @@ module.exports = configure(function (/* ctx */) {
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
     framework: {
-      config: {},
+      config: {
+        dark: "auto"
+      },
 
-      // iconSet: 'material-icons', // Quasar icon set
+      iconSet: "material-icons", // Quasar icon set
       // lang: 'en-US', // Quasar language pack
 
       // For special cases outside of where the auto-import strategy can have an impact
@@ -115,12 +120,13 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: [],
+      removeDefaultCss: true
     },
 
     // animations: 'all', // --- includes all animations
     // https://v2.quasar.dev/options/animations
-    animations: [],
+    animations: "all",
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#sourcefiles
     // sourceFiles: {
