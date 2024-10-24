@@ -1,0 +1,35 @@
+.body--light {
+  --background-color: #fffbf6;
+  --card: #fff6ec;
+  --on-card: #000000;
+  --button: #fda999;
+  --on-button: #2e1700;
+  --toolbar: #ffc072;
+  --on-toolbar: #281701;
+}
+
+.body--dark {
+  --background-color: #2f2c29;
+  --card: #3d3935;
+  --on-card: #ffffff;
+  --button: #fda999;
+  --on-button: #2e1700;
+  --toolbar: #ffc072;
+  --on-toolbar: #281701;
+}
+
+.body--dark,
+.body--light {
+  background: var(--background-color) !important;
+}
+
+.q-header {
+  background-color: var(--toolbar);
+
+  div {
+    color: var(--on-toolbar);
+  }
+  span {
+    color: var(--on-toolbar);
+  }
+}

@@ -1,6 +1,3 @@
-// This is just an example,
-// so you can safely delete all default props below
-
 export default {
   email: "Email",
   password: "Password",
@@ -13,5 +10,9 @@ export default {
   name_is_required: "Name is required",
   incorrect_format: "Incorrect format",
   too_short: "Too short",
-  too_long: "Too long"
+  too_long: "Too long",
+  email_exists: "Email already exists!",
+  username_exists: "Username already exists!",
+
+  login: "Login"
 };

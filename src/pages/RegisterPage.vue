@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex flex-center">
-    <q-card class="register-card">
+    <q-card class="register-card" unelevated>
       <q-card-section class="q-pa-md label-section">
         <div class="text-h6">{{ $t("register") }}</div>
       </q-card-section>
@@ -12,6 +12,8 @@
             :label="$t('username')"
             lazy-rules
             :rules="[_validateName]"
+            :error="usernameError.hasError"
+            :error-message="usernameError.message"
             class="q-mb-sm"
           />
           <q-input
@@ -21,6 +23,8 @@
             type="email"
             lazy-rules
             :rules="[_validateEmail]"
+            :error="emailError.hasError"
+            :error-message="emailError.message"
             class="q-mb-sm"
           />
           <q-input
@@ -49,7 +53,7 @@
             class="q-mb-md"
           />
 
-          <q-btn :label="$t('register')" type="submit" class="full-width default-button" />
+          <q-btn :label="$t('register')" type="submit" class="full-width default-button" unelevated />
         </q-form>
       </q-card-section>
     </q-card>
@@ -57,9 +61,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { validateEmail, validatePassword, validateName } from "src/utils/validations";
+import { api, apiEndpoints } from "src/boot/axios";
+import { isAxiosError } from "axios";
 
 const { t } = useI18n();
 
@@ -68,6 +74,26 @@ const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
 const isPwd = ref(true);
+const existing = ref<{ username: string | null; email: string | null }>({
+  username: null,
+  email: null
+});
+
+const usernameError = computed(() => {
+  const message = username.value != existing.value.username;
+  return {
+    hasError: message !== true,
+    message: message === true ? "" : t("username_exists")
+  };
+});
+
+const emailError = computed(() => {
+  const message = email.value != existing.value.email;
+  return {
+    hasError: message !== true,
+    message: message === true ? "" : t("email_exists")
+  };
+});
 
 const _validate = (result: string | boolean) => (result === true ? true : t(result || ""));
 const _validateEmail = (val: string) => _validate(validateEmail(val));
@@ -76,7 +102,22 @@ const _validatePassword = (val: string) => _validate(validatePassword(val));
 
 const validateConfirmPassword = (val: string) => val === password.value || t("passwords_must_match");
 
-const register = () => {
-  console.log("Logging in with", email.value, password.value);
+const register = async () => {
+  try {
+    const r = await api.post(apiEndpoints.auth.register, {
+      username: username.value,
+      password: password.value,
+      email: email.value
+    });
+    console.log(r.data);
+  } catch (error) {
+    if (isAxiosError(error)) {
+      if (error.response?.data["error"] == "USERNAME_EXISTS") {
+        existing.value.username = username.value;
+      } else if (error.response?.data["error"] == "USER_ALREADY_EXISTS") {
+        existing.value.email = email.value;
+      } else throw error;
+    } else throw error;
+  }
 };
 </script>
