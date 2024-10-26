@@ -110,8 +110,7 @@ const validateConfirmPassword = (val: string) => val === password.value || t("pa
 
 const _register = async () => {
   try {
-    const r = await register(username.value, email.value, password.value);
-    console.log(r.data);
+    await register(username.value, email.value, password.value);
   } catch (error) {
     if (isAxiosError(error)) {
       if (error.response?.data["error"] == "USERNAME_EXISTS") {
