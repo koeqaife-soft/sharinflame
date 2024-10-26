@@ -1,6 +1,6 @@
 import { boot } from "quasar/wrappers";
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
-import { authEndpoints, getAuthToken, setAuthToken } from "src/api/auth";
+import { authEndpoints, deleteAuthToken, getAuthToken, setAuthToken } from "src/api/auth";
 
 declare module "vue" {
   interface ComponentCustomProperties {
@@ -67,6 +67,7 @@ api.interceptors.response.use(
           setAuthToken(newToken);
           onRefreshed(newToken);
         } catch (refreshError) {
+          deleteAuthToken();
           subscribers.forEach((callback) => callback(null!));
           subscribers = [];
           return Promise.reject(refreshError);

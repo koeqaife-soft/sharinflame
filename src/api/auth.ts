@@ -15,6 +15,10 @@ function setAuthToken(value: string) {
   localStorage.setItem("access_token", value);
 }
 
+function deleteAuthToken() {
+  localStorage.removeItem("access_token");
+}
+
 async function register(username: string, email: string, password: string) {
   const r = await api.post(authEndpoints.register, {
     username: username,
@@ -34,4 +38,4 @@ async function login(email: string, password: string) {
   return r;
 }
 
-export { getAuthToken, setAuthToken, register, login };
+export { getAuthToken, setAuthToken, deleteAuthToken, register, login };
