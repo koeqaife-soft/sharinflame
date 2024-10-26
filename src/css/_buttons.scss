@@ -1,7 +1,29 @@
+@import "mixins";
+
 .default-button {
   border-radius: 10px;
-  background-color: var(--button);
+  background-color: var(--primary);
+
   span {
-    color: var(--on-button);
+    color: var(--on-primary);
+  }
+}
+
+.secondary-button {
+  border-radius: 10px;
+  background-color: var(--secondary);
+
+  span {
+    color: var(--on-secondary);
+  }
+}
+
+.outlined-button {
+  border-radius: 10px;
+  background-color: transparent;
+  border: 2px solid var(--primary);
+
+  span {
+    color: var(--primary);
   }
 }
