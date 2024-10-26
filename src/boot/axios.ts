@@ -1,6 +1,6 @@
 import { boot } from "quasar/wrappers";
-import axios, { AxiosInstance } from "axios";
-import { authEndpoints, getAuthToken } from "src/api/auth";
+import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
+import { authEndpoints, getAuthToken, setAuthToken } from "src/api/auth";
 
 declare module "vue" {
   interface ComponentCustomProperties {
@@ -13,7 +13,18 @@ declare module "vue" {
 const url = "http://localhost:6169/v1";
 const api = axios.create({ baseURL: url, timeout: 5000, withCredentials: true });
 
-const endpointsWithoutAuth = ["/auth/login", "/auth/register", "/auth/refresh"];
+const endpointsWithoutAuth = [authEndpoints.login, authEndpoints.register, authEndpoints.refresh];
+let isRefreshing = false;
+let subscribers: Array<(token: string) => void> = [];
+
+const onRefreshed = (token: string) => {
+  subscribers.forEach((callback) => callback(token));
+  subscribers = [];
+};
+
+const addSubscriber = (callback: (token: string) => void) => {
+  subscribers.push(callback);
+};
 
 api.interceptors.request.use(
   (config) => {
@@ -28,6 +39,54 @@ api.interceptors.request.use(
     return config;
   },
   (error) => {
+    return Promise.reject(error);
+  }
+);
+
+interface ApiResponse<T> {
+  success: boolean;
+  error?: string;
+  data: T;
+}
+
+api.interceptors.response.use(
+  (response: AxiosResponse) => response,
+  async (error: AxiosError<ApiResponse<undefined>>) => {
+    const { response } = error;
+
+    if (response && response.status === 401 && response.data?.error === "EXPIRED_TOKEN") {
+      const originalRequest = error.config;
+
+      if (!isRefreshing) {
+        isRefreshing = true;
+
+        try {
+          const refreshResponse = await api.post<ApiResponse<{ access: string }>>("/auth/refresh");
+          const newToken = refreshResponse.data.data.access;
+
+          setAuthToken(newToken);
+          onRefreshed(newToken);
+        } catch (refreshError) {
+          subscribers.forEach((callback) => callback(null!));
+          subscribers = [];
+          return Promise.reject(refreshError);
+        } finally {
+          isRefreshing = false;
+        }
+      }
+
+      return new Promise((resolve, reject) => {
+        addSubscriber((newToken) => {
+          if (newToken) {
+            originalRequest!.headers["Authorization"] = newToken;
+            resolve(api(originalRequest!));
+          } else {
+            reject(new Error("Unable to refresh token"));
+          }
+        });
+      });
+    }
+
     return Promise.reject(error);
   }
 );
