@@ -4,7 +4,7 @@
       <q-toolbar class="toolbar">
         <q-toolbar-title> SharinFlame </q-toolbar-title>
 
-        <q-btn flat dense round icon="dark_mode" aria-label="DarkMode" @click="$q.dark.toggle()" />
+        <q-btn flat dense round icon="sym_o_dark_mode" aria-label="DarkMode" @click="$q.dark.toggle()" />
       </q-toolbar>
     </q-header>
 
