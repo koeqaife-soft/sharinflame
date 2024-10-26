@@ -5,7 +5,7 @@
         <div class="text-h6">{{ $t("register") }}</div>
       </q-card-section>
       <q-card-section>
-        <q-form @submit="register">
+        <q-form @submit="_register">
           <q-input
             outlined
             v-model="username"
@@ -64,8 +64,8 @@
 import { ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { validateEmail, validatePassword, validateName } from "src/utils/validations";
-import { api, apiEndpoints } from "src/boot/axios";
 import { isAxiosError } from "axios";
+import { register } from "src/api/auth";
 
 const { t } = useI18n();
 
@@ -102,13 +102,9 @@ const _validatePassword = (val: string) => _validate(validatePassword(val));
 
 const validateConfirmPassword = (val: string) => val === password.value || t("passwords_must_match");
 
-const register = async () => {
+const _register = async () => {
   try {
-    const r = await api.post(apiEndpoints.auth.register, {
-      username: username.value,
-      password: password.value,
-      email: email.value
-    });
+    const r = await register(username.value, email.value, password.value);
     console.log(r.data);
   } catch (error) {
     if (isAxiosError(error)) {

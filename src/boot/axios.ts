@@ -1,5 +1,6 @@
 import { boot } from "quasar/wrappers";
 import axios, { AxiosInstance } from "axios";
+import { authEndpoints, getAuthToken } from "src/api/auth";
 
 declare module "vue" {
   interface ComponentCustomProperties {
@@ -11,11 +12,8 @@ declare module "vue" {
 
 const url = "http://localhost:6169/v1";
 const api = axios.create({ baseURL: url, timeout: 5000, withCredentials: true });
-const endpointsWithoutAuth = ["/auth/login", "/auth/register", "/auth/refresh"];
 
-function getAuthToken() {
-  return localStorage.getItem("access_token");
-}
+const endpointsWithoutAuth = ["/auth/login", "/auth/register", "/auth/refresh"];
 
 api.interceptors.request.use(
   (config) => {
@@ -35,12 +33,7 @@ api.interceptors.request.use(
 );
 
 const apiEndpoints = {
-  auth: {
-    register: "/auth/register",
-    login: "/auth/login",
-    refresh: "/auth/refresh",
-    logout: "/auth/logout"
-  }
+  auth: authEndpoints
 };
 
 export default boot(({ app }) => {
