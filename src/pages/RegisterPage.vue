@@ -54,6 +54,12 @@
           />
 
           <q-btn :label="$t('register')" type="submit" class="full-width default-button" unelevated />
+          <q-btn
+            :label="$t('login')"
+            @click="$router.push({ path: '/login' })"
+            class="full-width outlined-button q-mt-xs"
+            unelevated
+          />
         </q-form>
       </q-card-section>
     </q-card>
