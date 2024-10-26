@@ -45,7 +45,7 @@ module.exports = configure(function (/* ctx */) {
     build: {
       target: {
         browser: ["es2019", "edge88", "firefox78", "chrome87", "safari13.1"],
-        node: "node20"
+        node: "node22"
       },
 
       vueRouterMode: "hash", // available values: 'hash', 'history'
@@ -53,7 +53,7 @@ module.exports = configure(function (/* ctx */) {
       // vueDevtools,
       // vueOptionsAPI: false,
 
-      rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
+      // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
       // publicPath: '/',
       // analyze: true,
@@ -210,7 +210,7 @@ module.exports = configure(function (/* ctx */) {
 
       builder: {
         // https://www.electron.build/configuration/configuration
-
+        asar: true,
         appId: "sharinflame"
       }
     },
