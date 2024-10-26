@@ -1,4 +1,6 @@
-import { api } from "src/boot/axios";
+import { AxiosInstance } from "axios";
+
+let api: AxiosInstance;
 
 export const authEndpoints = {
   register: "/auth/register",
@@ -38,4 +40,14 @@ async function login(email: string, password: string) {
   return r;
 }
 
-export { getAuthToken, setAuthToken, deleteAuthToken, register, login };
+async function logout() {
+  const r = await api.post(authEndpoints.logout);
+  deleteAuthToken();
+  return r;
+}
+
+async function init(_api: AxiosInstance) {
+  api = _api;
+}
+
+export { getAuthToken, setAuthToken, deleteAuthToken, register, login, logout, init };

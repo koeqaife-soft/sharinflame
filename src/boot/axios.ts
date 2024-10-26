@@ -13,6 +13,19 @@ declare module "vue" {
 const url = "http://localhost:6169/v1";
 const api = axios.create({ baseURL: url, timeout: 5000, withCredentials: true });
 
+const initFunctions = [() => import("src/api/auth")];
+
+async function initialize() {
+  await Promise.all(
+    initFunctions.map(async (initFunction) => {
+      const module = await initFunction();
+      return module.init(api);
+    })
+  );
+}
+
+initialize();
+
 const endpointsWithoutAuth = [authEndpoints.login, authEndpoints.register, authEndpoints.refresh];
 let isRefreshing = false;
 let subscribers: Array<(token: string) => void> = [];
@@ -86,6 +99,8 @@ api.interceptors.response.use(
           }
         });
       });
+    } else if (response && response.status === 401) {
+      deleteAuthToken();
     }
 
     return Promise.reject(error);
