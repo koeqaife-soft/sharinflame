@@ -1,25 +1,41 @@
 .body--light {
   --background-color: #fffbf6;
+  --text: #000000;
+
   --card: #fff6ec;
   --on-card: #000000;
-  --button: #fda999;
-  --on-button: #2e1700;
-  --toolbar: #ffc072;
-  --on-toolbar: #281701;
+
+  --primary: #ff8061;
+  --on-primary: #fffbf6;
+
+  --secondary: #fd7555;
+  --on-secondary: #fffbf6;
+
+  --toolbar: #ff8061;
+  --on-toolbar: #fffbf6;
 }
 
 .body--dark {
   --background-color: #2f2c29;
+  --text: #ffffff;
+
   --card: #3d3935;
   --on-card: #ffffff;
-  --button: #fda999;
-  --on-button: #2e1700;
-  --toolbar: #ffc072;
-  --on-toolbar: #281701;
+
+  --primary: #fda999;
+  --on-primary: #2e1700;
+
+  --secondary: #fe9682;
+  --on-secondary: #2e1700;
+
+  --toolbar: #fda999;
+  --on-toolbar: #2e1700;
 }
 
 .body--dark,
 .body--light {
+  --q-primary: var(--primary);
+  --q-secondary: var(--secondary);
   background: var(--background-color) !important;
 }
 
