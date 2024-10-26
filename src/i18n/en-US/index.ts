@@ -14,5 +14,7 @@ export default {
   email_exists: "Email already exists!",
   username_exists: "Username already exists!",
 
-  login: "Login"
+  login: "Login",
+  user_does_not_exist: "User does not exist",
+  incorrect_password: "Wrong password"
 };

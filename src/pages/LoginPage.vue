@@ -14,6 +14,8 @@
             lazy-rules
             :rules="[_validateEmail]"
             class="q-mb-sm"
+            :error="!!errors.email"
+            :error-message="errors.email"
           />
           <q-input
             outlined
@@ -23,6 +25,8 @@
             lazy-rules
             :rules="[_validatePassword]"
             class="q-mb-sm"
+            :error="!!errors.password"
+            :error-message="errors.password"
           >
             <template v-slot:append>
               <q-icon
@@ -57,18 +61,30 @@ const { t } = useI18n();
 const email = ref("");
 const password = ref("");
 const isPwd = ref(true);
+const errors = ref<{
+  email?: string;
+  password?: string;
+}>({
+  email: undefined,
+  password: undefined
+});
 
 const _validate = (result: string | boolean) => (result === true ? true : t(result || ""));
 const _validateEmail = (val: string) => _validate(validateEmail(val));
 const _validatePassword = (val: string) => _validate(validatePassword(val));
 
 const _login = async () => {
+  errors.value.email = undefined;
+  errors.value.password = undefined;
   try {
-    const r = await login(email.value, password.value);
-    console.log(r.data);
+    await login(email.value, password.value);
   } catch (error) {
     if (isAxiosError(error)) {
-      throw error;
+      if (error.response?.data["error"] == "INCORRECT_PASSWORD") {
+        errors.value.password = t("incorrect_password");
+      } else if (error.response?.data["error"] == "USER_DOES_NOT_EXIST") {
+        errors.value.email = t("user_does_not_exist");
+      } else throw error;
     } else throw error;
   }
 };
