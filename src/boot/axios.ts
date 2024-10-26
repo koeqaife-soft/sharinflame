@@ -10,7 +10,7 @@ declare module "vue" {
 }
 
 const url = "http://localhost:6169/v1";
-const api = axios.create({ baseURL: url, timeout: 5000 });
+const api = axios.create({ baseURL: url, timeout: 5000, withCredentials: true });
 const endpointsWithoutAuth = ["/auth/login", "/auth/register", "/auth/refresh"];
 
 function getAuthToken() {
