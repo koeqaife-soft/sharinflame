@@ -14,6 +14,7 @@
             :rules="[_validateName]"
             :error="usernameError.hasError"
             :error-message="usernameError.message"
+            :hint="t('username_hint')"
             class="q-mb-sm"
           />
           <q-input
@@ -57,7 +58,7 @@
           <q-btn
             :label="$t('login')"
             @click="$router.push({ path: '/login' })"
-            class="full-width outlined-button q-mt-xs"
+            class="full-width outlined-button q-mt-sm"
             unelevated
           />
         </q-form>
