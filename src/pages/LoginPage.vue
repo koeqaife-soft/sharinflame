@@ -40,7 +40,7 @@
           <q-btn
             :label="$t('register')"
             @click="$router.push({ path: '/register' })"
-            class="full-width outlined-button q-mt-xs"
+            class="full-width outlined-button q-mt-sm"
             unelevated
           />
         </q-form>
