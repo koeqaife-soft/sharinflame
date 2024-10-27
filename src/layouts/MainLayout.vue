@@ -2,7 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-header unelevated>
       <q-toolbar class="toolbar">
-        <LogoComponent />
+        <LogoComponent @icon-click="logoClick" :is-animated="isIconAnimated" icon-class="icon" />
 
         <q-toolbar-title> SharinFlame </q-toolbar-title>
 
@@ -18,4 +18,14 @@
 
 <script setup lang="ts">
 import LogoComponent from "src/components/LogoComponent.vue";
+import { ref } from "vue";
+
+const isIconAnimated = ref(false);
+
+function logoClick() {
+  isIconAnimated.value = true;
+  setTimeout(() => {
+    isIconAnimated.value = false;
+  }, 500);
+}
 </script>
