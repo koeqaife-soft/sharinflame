@@ -3,7 +3,7 @@
 .login-card,
 .register-card {
   @include elevation(2);
-  border-radius: 15px;
+  border-radius: 18px;
   padding: 10px;
   background-color: var(--card);
 

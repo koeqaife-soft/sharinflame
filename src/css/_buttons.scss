@@ -1,7 +1,7 @@
 @import "mixins";
 
 .default-button {
-  border-radius: 10px;
+  border-radius: 8px;
   background-color: var(--primary);
 
   span {
@@ -10,7 +10,7 @@
 }
 
 .secondary-button {
-  border-radius: 10px;
+  border-radius: 8px;
   background-color: var(--secondary);
 
   span {
@@ -19,7 +19,7 @@
 }
 
 .outlined-button {
-  border-radius: 10px;
+  border-radius: 8px;
   background-color: transparent;
   border: 2px solid var(--primary);
 
