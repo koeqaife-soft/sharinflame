@@ -15,7 +15,8 @@ function createWindow() {
     webPreferences: {
       contextIsolation: true,
       preload: path.resolve(__dirname, process.env.QUASAR_ELECTRON_PRELOAD)
-    }
+    },
+    autoHideMenuBar: true
   });
 
   mainWindow.loadURL(process.env.APP_URL);
