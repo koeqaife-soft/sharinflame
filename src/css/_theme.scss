@@ -44,6 +44,7 @@
 
   div {
     color: var(--on-toolbar);
+    user-select: none;
   }
   span {
     color: var(--on-toolbar);
@@ -52,5 +53,8 @@
     width: 30px;
     height: 30px;
     color: var(--on-toolbar);
+    &.animated {
+      animation: pulse 0.5s ease-in-out;
+    }
   }
 }
