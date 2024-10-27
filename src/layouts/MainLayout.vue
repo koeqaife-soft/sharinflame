@@ -18,14 +18,26 @@
 
 <script setup lang="ts">
 import LogoComponent from "src/components/LogoComponent.vue";
-import { ref } from "vue";
+import { onBeforeUnmount, ref } from "vue";
 
 const isIconAnimated = ref(false);
+let animationTimeout: ReturnType<typeof setTimeout>;
 
 function logoClick() {
+  if (animationTimeout) {
+    clearTimeout(animationTimeout);
+  }
+
   isIconAnimated.value = true;
-  setTimeout(() => {
+
+  animationTimeout = setTimeout(() => {
     isIconAnimated.value = false;
   }, 500);
 }
+
+onBeforeUnmount(() => {
+  if (animationTimeout) {
+    clearTimeout(animationTimeout);
+  }
+});
 </script>
