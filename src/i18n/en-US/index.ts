@@ -16,5 +16,6 @@ export default {
 
   login: "Login",
   user_does_not_exist: "User does not exist",
-  incorrect_password: "Wrong password"
+  incorrect_password: "Wrong password",
+  username_hint: "4-16 chars, letters/numbers/._ only, no consecutive . or _"
 };
