@@ -24,9 +24,9 @@ function createWindow() {
   if (process.env.DEBUGGING) {
     mainWindow.webContents.openDevTools();
   } else {
-    mainWindow.webContents.on("devtools-opened", () => {
-      mainWindow?.webContents.closeDevTools();
-    });
+    // mainWindow.webContents.on("devtools-opened", () => {
+    //   mainWindow?.webContents.closeDevTools();
+    // });
   }
 
   mainWindow.on("closed", () => {
