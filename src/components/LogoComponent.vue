@@ -1,5 +1,11 @@
 <template>
-  <svg viewBox="-2.4 -2.4 28.8 28.8" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon">
+  <svg
+    viewBox="-2.4 -2.4 28.8 28.8"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    :class="[iconClass, { animated: isAnimated }]"
+    @click="handleClick"
+  >
     <defs>
       <mask id="a">
         <rect x="-2.4" y="-2.4" width="28.8" height="28.8" rx="14.4" fill="#fff" />
@@ -12,4 +18,22 @@
     <rect x="-2.4" y="-2.4" width="28.8" height="28.8" rx="14.4" fill="currentColor" mask="url(#a)" />
   </svg>
 </template>
-<script setup lang="ts"></script>
+<script setup lang="ts">
+interface Props {
+  iconClass: string;
+  isAnimated?: boolean;
+}
+
+withDefaults(defineProps<Props>(), {
+  iconClass: "icon",
+  isAnimated: false
+});
+
+const emit = defineEmits<{
+  (e: "icon-click"): void;
+}>();
+
+const handleClick = () => {
+  emit("icon-click");
+};
+</script>
