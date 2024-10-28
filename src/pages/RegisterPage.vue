@@ -27,6 +27,7 @@
             :error="emailError.hasError"
             :error-message="emailError.message"
             class="q-mb-sm"
+            :hint="t('email_hint')"
           />
           <q-input
             outlined
@@ -36,6 +37,7 @@
             lazy-rules
             :rules="[_validatePassword]"
             class="q-mb-sm"
+            :hint="t('password_hint')"
           >
             <template v-slot:append>
               <q-icon
@@ -52,6 +54,7 @@
             lazy-rules
             :rules="[validateConfirmPassword]"
             class="q-mb-md"
+            :hint="t('confirm_password_hint')"
           />
 
           <q-btn :label="$t('register')" type="submit" class="full-width default-button" unelevated />
