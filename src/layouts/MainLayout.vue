@@ -1,12 +1,50 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header unelevated>
-      <q-toolbar class="toolbar">
-        <LogoComponent @icon-click="logoClick" :is-animated="isIconAnimated" icon-class="icon" />
+      <q-toolbar class="toolbar webkit-drag">
+        <LogoComponent @icon-click="logoClick" :is-animated="isIconAnimated" icon-class="icon" class="webkit-no-drag" />
 
-        <q-toolbar-title> SharinFlame </q-toolbar-title>
+        <q-toolbar-title class="webkit-no-drag"> SharinFlame </q-toolbar-title>
 
-        <q-btn flat dense round icon="sym_o_dark_mode" aria-label="DarkMode" @click="$q.dark.toggle()" />
+        <q-btn
+          flat
+          dense
+          round
+          icon="sym_o_dark_mode"
+          aria-label="DarkMode"
+          @click="$q.dark.toggle()"
+          class="webkit-no-drag"
+        />
+        <q-btn
+          flat
+          dense
+          round
+          icon="sym_o_minimize"
+          aria-label="Minimize"
+          @click="minimizeWindow"
+          v-if="$q.platform.is.electron"
+          class="only-electron webkit-no-drag"
+        />
+        <q-btn
+          flat
+          dense
+          round
+          icon="sym_o_crop_square"
+          aria-label="Maximize"
+          @click="maximizeWindow"
+          v-if="$q.platform.is.electron"
+          class="only-electron webkit-no-drag"
+        />
+        <q-btn
+          flat
+          dense
+          round
+          icon="sym_o_close"
+          aria-label="Close"
+          @click="closeWindow"
+          v-if="$q.platform.is.electron"
+          class="only-electron webkit-no-drag"
+        />
       </q-toolbar>
     </q-header>
 
@@ -40,4 +78,16 @@ onBeforeUnmount(() => {
     clearTimeout(animationTimeout);
   }
 });
+
+function minimizeWindow() {
+  window.electron.minimizeWindow();
+}
+
+function maximizeWindow() {
+  window.electron.maximizeWindow();
+}
+
+function closeWindow() {
+  window.electron.closeWindow();
+}
 </script>
