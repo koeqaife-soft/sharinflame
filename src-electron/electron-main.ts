@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
 import os from "os";
 
@@ -12,6 +12,7 @@ function createWindow() {
     width: 1000,
     height: 600,
     useContentSize: true,
+    frame: false,
     webPreferences: {
       contextIsolation: true,
       preload: path.resolve(__dirname, process.env.QUASAR_ELECTRON_PRELOAD)
@@ -46,4 +47,23 @@ app.on("activate", () => {
   if (mainWindow === undefined) {
     createWindow();
   }
+});
+
+ipcMain.on("minimize-window", () => {
+  const win = BrowserWindow.getFocusedWindow();
+  if (win) win.minimize();
+});
+
+ipcMain.on("maximize-window", () => {
+  const win = BrowserWindow.getFocusedWindow();
+  if (win?.isMaximized()) {
+    win?.unmaximize();
+  } else {
+    win?.maximize();
+  }
+});
+
+ipcMain.on("close-window", () => {
+  const win = BrowserWindow.getFocusedWindow();
+  if (win) win.close();
 });
