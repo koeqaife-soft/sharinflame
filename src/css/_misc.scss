@@ -5,3 +5,35 @@
 .webkit-no-drag {
   -webkit-app-region: no-drag;
 }
+
+.post {
+  .q-card__section {
+    display: flex;
+    align-items: center;
+  }
+
+  .avatar {
+    background-color: var(--secondary);
+    color: var(--on-secondary);
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-size: 2.3em;
+    user-select: none;
+  }
+  .username {
+    font-size: 1.3em;
+    display: inline-flex;
+    text-align: center;
+  }
+}
+
+.posts-infinite-scroll {
+  margin-top: 15px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.loading {
+  color: var(--primary);
+}
