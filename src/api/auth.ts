@@ -22,7 +22,7 @@ function deleteAuthToken() {
 }
 
 async function register(username: string, email: string, password: string) {
-  const r = await api.post(authEndpoints.register, {
+  const r = await api.post<ResponseWithAccess>(authEndpoints.register, {
     username: username,
     password: password,
     email: email
@@ -32,7 +32,7 @@ async function register(username: string, email: string, password: string) {
 }
 
 async function login(email: string, password: string) {
-  const r = await api.post(authEndpoints.login, {
+  const r = await api.post<ResponseWithAccess>(authEndpoints.login, {
     password: password,
     email: email
   });
@@ -41,7 +41,7 @@ async function login(email: string, password: string) {
 }
 
 async function logout() {
-  const r = await api.post(authEndpoints.logout);
+  const r = await api.post<ResponseWithAccess>(authEndpoints.logout);
   deleteAuthToken();
   return r;
 }
