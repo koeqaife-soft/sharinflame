@@ -2,6 +2,7 @@ import { boot } from "quasar/wrappers";
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import { authEndpoints, deleteAuthToken, getAuthToken, refresh } from "src/api/auth";
 import { useRouter } from "vue-router";
+import { postsEndpoints } from "src/api/posts";
 
 declare module "vue" {
   interface ComponentCustomProperties {
@@ -14,7 +15,7 @@ declare module "vue" {
 const url = "http://localhost:6169/v1";
 const api = axios.create({ baseURL: url, timeout: 5000, withCredentials: true });
 
-const initFunctions = [() => import("src/api/auth")];
+const initFunctions = [() => import("src/api/auth"), () => import("src/api/posts")];
 
 async function initialize() {
   await Promise.all(
@@ -109,7 +110,8 @@ api.interceptors.response.use(
 );
 
 const apiEndpoints = {
-  auth: authEndpoints
+  auth: authEndpoints,
+  posts: postsEndpoints
 };
 
 export default boot(({ app }) => {
