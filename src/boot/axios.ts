@@ -56,15 +56,9 @@ api.interceptors.request.use(
   }
 );
 
-interface ApiResponse<T> {
-  success: boolean;
-  error?: string;
-  data: T;
-}
-
 api.interceptors.response.use(
   (response: AxiosResponse) => response,
-  async (error: AxiosError<ApiResponse<undefined>>) => {
+  async (error: AxiosError<ApiResponse>) => {
     const { response } = error;
 
     if (response && response.status === 401 && response.data?.error === "EXPIRED_TOKEN") {
@@ -74,7 +68,7 @@ api.interceptors.response.use(
         isRefreshing = true;
 
         try {
-          const refreshResponse = await api.post<ApiResponse<{ access: string }>>(authEndpoints.refresh);
+          const refreshResponse = await api.post<ResponseWithAccess>(authEndpoints.refresh);
           const newToken = refreshResponse.data.data.access;
 
           setAuthToken(newToken);
