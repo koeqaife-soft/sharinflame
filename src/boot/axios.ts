@@ -1,6 +1,7 @@
 import { boot } from "quasar/wrappers";
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
-import { authEndpoints, deleteAuthToken, getAuthToken, setAuthToken } from "src/api/auth";
+import { authEndpoints, deleteAuthToken, getAuthToken, refresh } from "src/api/auth";
+import { useRouter } from "vue-router";
 
 declare module "vue" {
   interface ComponentCustomProperties {
@@ -32,6 +33,11 @@ let subscribers: Array<(token: string) => void> = [];
 
 const onRefreshed = (token: string) => {
   subscribers.forEach((callback) => callback(token));
+  subscribers = [];
+};
+
+const clearSubscribers = () => {
+  subscribers.forEach((callback) => callback(null!));
   subscribers = [];
 };
 
@@ -68,15 +74,16 @@ api.interceptors.response.use(
         isRefreshing = true;
 
         try {
-          const refreshResponse = await api.post<ResponseWithAccess>(authEndpoints.refresh);
+          const refreshResponse = await refresh();
           const newToken = refreshResponse.data.data.access;
 
-          setAuthToken(newToken);
-          onRefreshed(newToken);
+          if (newToken) onRefreshed(newToken);
+          else throw new Error("No new token received");
         } catch (refreshError) {
           deleteAuthToken();
-          subscribers.forEach((callback) => callback(null!));
-          subscribers = [];
+          clearSubscribers();
+          // TODO: Test to see if it works
+          useRouter().push({ path: "/login" });
           return Promise.reject(refreshError);
         } finally {
           isRefreshing = false;
