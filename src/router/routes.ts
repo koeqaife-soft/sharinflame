@@ -12,10 +12,13 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: "", component: () => import("pages/LoginPage.vue") }]
   },
   {
+    path: "/app",
+    component: () => import("layouts/MainLayout.vue"),
+    children: [{ path: "", component: () => import("pages/AppPage.vue") }]
+  },
+  {
     path: "/",
-    redirect: () => {
-      return "/login";
-    }
+    redirect: () => (!!localStorage.getItem("access_token") ? "/app" : "/login")
   },
 
   {
