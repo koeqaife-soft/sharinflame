@@ -46,8 +46,14 @@ async function logout() {
   return r;
 }
 
+async function refresh() {
+  const r = await api.post<ResponseWithAccess>(authEndpoints.refresh);
+  if (r.data?.success) setAuthToken(r.data!.data.access);
+  return r;
+}
+
 async function init(_api: AxiosInstance) {
   api = _api;
 }
 
-export { getAuthToken, setAuthToken, deleteAuthToken, register, login, logout, init };
+export { getAuthToken, setAuthToken, deleteAuthToken, register, login, logout, refresh, init };
