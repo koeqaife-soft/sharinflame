@@ -6,6 +6,17 @@ interface ApiResponse<T = { [key: string]: unknown }> {
 
 type ResponseWithAccess = ApiResponse<{ access: string }>;
 
+interface User {
+  user_id: number;
+  username: string;
+  display_name?: string;
+  avatar_url?: string;
+  banner_url?: string;
+  bio?: string;
+  gender?: string;
+  languages?: string[];
+}
+
 interface Post {
   post_id: number;
   user_id: number;
@@ -22,6 +33,11 @@ interface Post {
 
   created_at_unix: number;
   updated_at_unix: number;
+
+  user: User;
 }
 
+type PostMinimal = [post_id: number, user_id: number];
+
 type ResponseWithPost = ApiResponse<Post>;
+type ResponseWithUser = ApiResponse<User>;
