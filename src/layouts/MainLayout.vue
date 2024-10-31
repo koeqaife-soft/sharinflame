@@ -23,7 +23,7 @@
           aria-label="Minimize"
           @click="minimizeWindow"
           v-if="$q.platform.is.electron"
-          class="only-electron webkit-no-drag"
+          class="webkit-no-drag"
         />
         <q-btn
           flat
@@ -33,7 +33,7 @@
           aria-label="Maximize"
           @click="maximizeWindow"
           v-if="$q.platform.is.electron"
-          class="only-electron webkit-no-drag"
+          class="webkit-no-drag"
         />
         <q-btn
           flat
@@ -43,7 +43,7 @@
           aria-label="Close"
           @click="closeWindow"
           v-if="$q.platform.is.electron"
-          class="only-electron webkit-no-drag"
+          class="webkit-no-drag"
         />
       </q-toolbar>
     </q-header>

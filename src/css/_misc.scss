@@ -5,7 +5,3 @@
 .webkit-no-drag {
   -webkit-app-region: no-drag;
 }
-
-body:not(.electron) .only-electron {
-  display: none;
-}
