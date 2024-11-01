@@ -1,6 +1,6 @@
 <template>
   <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll q-mt-sm">
-    <div v-for="(item, index) in items" :key="index" class="caption">
+    <div v-for="(item, index) in items" :key="index" class="post-div">
       <PostComponent :post="item" class="q-mb-sm" />
     </div>
     <template v-slot:loading>
@@ -14,8 +14,12 @@
 import { ref } from "vue";
 import PostComponent from "./PostComponent.vue";
 import { usePostsStore } from "src/stores/posts-store";
-import { viewPosts } from "src/api/posts";
+import { getPostsTypes, viewPosts } from "src/api/posts";
 import { isAxiosError } from "axios";
+
+const props = defineProps<{
+  type: keyof typeof getPostsTypes;
+}>();
 
 const items = ref<Post[]>([]);
 const store = usePostsStore();
@@ -23,7 +27,7 @@ const store = usePostsStore();
 async function onLoad(index: number, done: (stop?: boolean) => void) {
   try {
     if (store.loaded.length == 0 && store.notLoaded.length == 0) {
-      const r = await store.getPosts("popular");
+      const r = await store.getPosts(props.type);
       if (!r.success) return;
     }
     if (store.loaded.length == 0) {
