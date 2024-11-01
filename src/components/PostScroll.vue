@@ -39,7 +39,7 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
       if (!r.success) return;
     }
     if (store.loaded.length == 0) {
-      await store.loadPosts(10);
+      await store.loadPosts(5);
     }
     if (store.loaded.length != 0) {
       const posts = store.viewPosts(5);
