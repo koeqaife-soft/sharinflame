@@ -14,12 +14,14 @@ export const getPostsTypes = {
   popular: postsEndpoints.popular
 };
 
+export type KeyOfGetPostsTypes = keyof typeof getPostsTypes;
+
 async function getPost(id: number) {
   const r = await api.get<ResponseWithPost>(postsEndpoints.post(id));
   return r;
 }
 
-async function getPosts(type: keyof typeof getPostsTypes) {
+async function getPosts(type: KeyOfGetPostsTypes) {
   const r = await api.get<ApiResponse<{ posts: PostMinimal[] }>>(getPostsTypes[type]);
   return r;
 }
