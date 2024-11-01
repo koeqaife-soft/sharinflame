@@ -36,7 +36,6 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
 
       items.value.push(...posts);
     }
-    console.log([store.loaded.length, store.notLoaded.length, items.value.length]);
     done(false);
   } catch (e) {
     if (isAxiosError(e)) done(true);
