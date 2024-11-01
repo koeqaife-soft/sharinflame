@@ -15,24 +15,32 @@ import { ref } from "vue";
 import PostComponent from "./PostComponent.vue";
 import { usePostsStore } from "src/stores/posts-store";
 import { viewPosts } from "src/api/posts";
+import { isAxiosError } from "axios";
 
 const items = ref<Post[]>([]);
 const store = usePostsStore();
 
 async function onLoad(index: number, done: (stop?: boolean) => void) {
-  if (store.notLoaded.length == 0) {
-    const r = await store.getPosts("popular");
-    if (!r.success) return;
+  try {
+    if (store.loaded.length == 0 && store.notLoaded.length == 0) {
+      const r = await store.getPosts("popular");
+      if (!r.success) return;
+    }
+    if (store.loaded.length == 0) {
+      await store.loadPosts(10);
+    }
+    if (store.loaded.length != 0) {
+      const posts = store.viewPosts(5);
+      const postIds = posts.map((post) => String(post.post_id));
+      await viewPosts(postIds);
+
+      items.value.push(...posts);
+    }
+    console.log([store.loaded.length, store.notLoaded.length, items.value.length]);
+    done(false);
+  } catch (e) {
+    if (isAxiosError(e)) done(true);
+    else throw e;
   }
-  if (store.loaded.length == 0) {
-    await store.loadPosts(25);
-  }
-  if (store.loaded.length != 0) {
-    const posts = store.viewPosts(5);
-    const postIds = posts.map((post) => String(post.post_id));
-    await viewPosts(postIds);
-    items.value.push(...posts);
-  }
-  done();
 }
 </script>
