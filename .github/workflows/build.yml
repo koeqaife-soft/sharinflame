@@ -1,0 +1,39 @@
+name: Build Quasar Application (Electron)
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build Quasar Application
+        run: npm run build -m electron
+
+      - name: Upload Build Artifacts
+        if: success()
+        uses: actions/upload-artifact@v2
+        with:
+          name: quasar-build-${{ matrix.os }}
+          path: dist/electron/Packaged/**
