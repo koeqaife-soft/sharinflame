@@ -35,10 +35,7 @@ module.exports = configure(function (/* ctx */) {
       // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
 
       "roboto-font",
-      "material-icons",
-      "material-symbols-outlined",
-      "material-symbols-rounded",
-      "material-symbols-sharp"
+      "material-symbols-outlined"
     ],
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
@@ -56,11 +53,11 @@ module.exports = configure(function (/* ctx */) {
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
       // publicPath: '/',
-      // analyze: true,
+      analyze: true,
       // env: {},
       // rawDefine: {}
       // ignorePublicFolder: true,
-      // minify: false,
+      minify: true,
       // polyfillModulePreload: true,
       // distDir
 
@@ -195,7 +192,7 @@ module.exports = configure(function (/* ctx */) {
 
       inspectPort: 5858,
 
-      bundler: "packager", // 'packager' or 'builder'
+      bundler: "builder", // 'packager' or 'builder'
 
       packager: {
         // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
@@ -208,11 +205,11 @@ module.exports = configure(function (/* ctx */) {
         // win32metadata: { ... }
         // platform: "win32",
         // arch: "x64"
+        ignore: ["tests", "docs", "node_modules/.cache"]
       },
 
       builder: {
         // https://www.electron.build/configuration/configuration
-        asar: true,
         appId: "sharinflame"
       }
     },
