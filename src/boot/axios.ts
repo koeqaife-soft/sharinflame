@@ -1,8 +1,8 @@
 import { boot } from "quasar/wrappers";
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import { authEndpoints, deleteAuthToken, getAuthToken, refresh } from "src/api/auth";
-import { useRouter } from "vue-router";
 import { postsEndpoints } from "src/api/posts";
+import router from "src/router";
 
 declare module "vue" {
   interface ComponentCustomProperties {
@@ -83,8 +83,7 @@ api.interceptors.response.use(
         } catch (refreshError) {
           deleteAuthToken();
           clearSubscribers();
-          // TODO: Test to see if it works
-          useRouter().push({ path: "/login" });
+          router.push({ path: "/login" });
           return Promise.reject(refreshError);
         } finally {
           isRefreshing = false;
@@ -103,6 +102,7 @@ api.interceptors.response.use(
       });
     } else if (response && response.status === 401) {
       deleteAuthToken();
+      router.push({ path: "/login" });
     }
 
     return Promise.reject(error);
