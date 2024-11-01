@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { getPost, getPosts, getPostsTypes } from "src/api/posts";
+import { getPost, getPosts, KeyOfGetPostsTypes } from "src/api/posts";
 
 export const usePostsStore = defineStore("posts", {
   state: () => ({
@@ -8,7 +8,7 @@ export const usePostsStore = defineStore("posts", {
   }),
   getters: {},
   actions: {
-    async getPosts(type: keyof typeof getPostsTypes) {
+    async getPosts(type: KeyOfGetPostsTypes) {
       const r = await getPosts(type);
       if (r.data.success) {
         this.notLoaded = r.data.data.posts;

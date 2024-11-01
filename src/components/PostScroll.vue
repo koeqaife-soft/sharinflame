@@ -14,11 +14,11 @@
 import { ref } from "vue";
 import PostComponent from "./PostComponent.vue";
 import { usePostsStore } from "src/stores/posts-store";
-import { getPostsTypes, viewPosts } from "src/api/posts";
+import { KeyOfGetPostsTypes, viewPosts } from "src/api/posts";
 import { isAxiosError } from "axios";
 
 const props = defineProps<{
-  type: keyof typeof getPostsTypes;
+  type: KeyOfGetPostsTypes;
 }>();
 
 const items = ref<Post[]>([]);
