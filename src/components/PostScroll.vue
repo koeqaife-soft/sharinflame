@@ -11,7 +11,7 @@
   </q-infinite-scroll>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import PostComponent from "./PostComponent.vue";
 import { usePostsStore } from "src/stores/posts-store";
 import { KeyOfGetPostsTypes, viewPosts } from "src/api/posts";
@@ -23,6 +23,14 @@ const props = defineProps<{
 
 const items = ref<Post[]>([]);
 const store = usePostsStore();
+
+watch(
+  () => props.type,
+  () => {
+    items.value = [];
+    store.reset();
+  }
+);
 
 async function onLoad(index: number, done: (stop?: boolean) => void) {
   try {
