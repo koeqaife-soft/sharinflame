@@ -29,7 +29,7 @@ jobs:
         run: npm install
 
       - name: Build Quasar Application
-        run: npm run build -m electron
+        run: quasar build -m electron
 
       - name: Upload Build Artifacts
         if: success()
