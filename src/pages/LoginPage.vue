@@ -55,6 +55,7 @@ import { useI18n } from "vue-i18n";
 import { validateEmail, validatePassword } from "src/utils/validations";
 import { isAxiosError } from "axios";
 import { login } from "src/api/auth";
+import { useRouter } from "vue-router";
 
 const { t } = useI18n();
 
@@ -69,6 +70,8 @@ const errors = ref<{
   password: undefined
 });
 
+const router = useRouter();
+
 const _validate = (result: string | boolean) => (result === true ? true : t(result || ""));
 const _validateEmail = (val: string) => _validate(validateEmail(val));
 const _validatePassword = (val: string) => _validate(validatePassword(val));
@@ -77,7 +80,8 @@ const _login = async () => {
   errors.value.email = undefined;
   errors.value.password = undefined;
   try {
-    await login(email.value, password.value);
+    const r = await login(email.value, password.value);
+    if (r.data.success) router.push({ path: "/app" });
   } catch (error) {
     if (isAxiosError(error)) {
       if (error.response?.data["error"] == "INCORRECT_PASSWORD") {

@@ -76,6 +76,7 @@ import { useI18n } from "vue-i18n";
 import { validateEmail, validatePassword, validateName } from "src/utils/validations";
 import { isAxiosError } from "axios";
 import { register } from "src/api/auth";
+import { useRouter } from "vue-router";
 
 const { t } = useI18n();
 
@@ -105,6 +106,8 @@ const emailError = computed(() => {
   };
 });
 
+const router = useRouter();
+
 const _validate = (result: string | boolean) => (result === true ? true : t(result || ""));
 const _validateEmail = (val: string) => _validate(validateEmail(val));
 const _validateName = (val: string) => _validate(validateName(val));
@@ -114,7 +117,8 @@ const validateConfirmPassword = (val: string) => val === password.value || t("pa
 
 const _register = async () => {
   try {
-    await register(username.value, email.value, password.value);
+    const r = await register(username.value, email.value, password.value);
+    if (r.data.success) router.push({ path: "/app" });
   } catch (error) {
     if (isAxiosError(error)) {
       if (error.response?.data["error"] == "USERNAME_EXISTS") {
