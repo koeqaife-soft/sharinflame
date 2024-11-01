@@ -9,11 +9,10 @@
           {{ post.user.username.charAt(0).toUpperCase() }}
         </template>
       </q-avatar>
-      <div class="username">{{ post.user.display_name || post.user.username }}</div>
-    </q-card-section>
-    <q-separator inset />
-    <q-card-section>
-      <div class="content">{{ post.content }}</div>
+      <div class="text-container">
+        <div class="username">{{ post.user.display_name || post.user.username }}</div>
+        <div class="content">{{ post.content }}</div>
+      </div>
     </q-card-section>
   </q-card>
 </template>

@@ -9,7 +9,7 @@
 .post {
   .q-card__section {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
   }
 
   .avatar {
@@ -17,14 +17,25 @@
     color: var(--on-secondary);
     align-items: center;
     justify-content: center;
-    margin-right: 10px;
-    font-size: 2.3em;
+    font-size: 3em;
     user-select: none;
   }
+
+  .text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 10px;
+  }
+
   .username {
     font-size: 1.3em;
-    display: inline-flex;
     text-align: center;
+  }
+
+  .content {
+    margin-top: 3px;
+    font-size: 1em;
   }
 }
 
@@ -36,4 +47,8 @@
 
 .loading {
   color: var(--primary);
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
