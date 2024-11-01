@@ -1,5 +1,5 @@
 <template>
-  <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll">
+  <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll q-mt-sm">
     <div v-for="(item, index) in items" :key="index" class="caption">
       <PostComponent :post="item" class="q-mb-sm" />
     </div>
