@@ -23,13 +23,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: "22"
 
       - name: Install dependencies
         run: npm install
 
       - name: Build Quasar Application
-        run: quasar build -m electron
+        run: npm run build:electron
 
       - name: Upload Build Artifacts
         if: success()
