@@ -5,7 +5,7 @@
     </div>
     <template v-slot:loading>
       <div class="row justify-center q-my-md">
-        <q-spinner-dots class="loading" size="40px" />
+        <q-spinner class="loading" size="40px" />
       </div>
     </template>
   </q-infinite-scroll>
@@ -43,10 +43,11 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
     }
     if (store.loaded.length != 0) {
       const posts = store.viewPosts(5);
-      const postIds = posts.map((post) => String(post.post_id));
-      await viewPosts(postIds);
 
       items.value.push(...posts);
+
+      const postIds = posts.map((post) => String(post.post_id));
+      viewPosts(postIds);
     }
     done(false);
   } catch (e) {
