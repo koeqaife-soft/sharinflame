@@ -1,6 +1,6 @@
 <template>
-  <q-page class="flex flex-center">
-    <post-scroll :type="currentType" />
+  <q-page class="app-page">
+    <post-scroll :type="currentType" class="column" />
   </q-page>
 </template>
 
