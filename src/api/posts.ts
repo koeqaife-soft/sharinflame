@@ -5,13 +5,15 @@ let api: AxiosInstance;
 export const postsEndpoints = {
   create_post: "/posts",
   popular: "/posts/popular",
+  new_posts: "/posts/new",
   post: (id: number) => `/posts/${id}`,
   post_reactions: (id: number) => `/posts/${id}/reactions`,
   view: "/posts/view"
 };
 
 export const getPostsTypes = {
-  popular: postsEndpoints.popular
+  popular: postsEndpoints.popular,
+  new: postsEndpoints.new_posts
 };
 
 export type KeyOfGetPostsTypes = keyof typeof getPostsTypes;
