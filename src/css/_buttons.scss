@@ -27,3 +27,29 @@
     color: var(--primary);
   }
 }
+
+.card-button {
+  border-radius: 8px;
+  background-color: var(--card-high);
+  height: 40px;
+  > span {
+    color: var(--on-card);
+    display: flex;
+    justify-content: flex-start;
+  }
+}
+
+.category-button {
+  transition: background-color 0.2s ease-in-out;
+
+  > span {
+    transition: color 0.2s ease-in-out;
+  }
+
+  &.selected {
+    background-color: var(--primary);
+    > span {
+      color: var(--on-primary);
+    }
+  }
+}
