@@ -8,7 +8,8 @@ export const postsEndpoints = {
   new_posts: "/posts/new",
   post: (id: number) => `/posts/${id}`,
   post_reactions: (id: number) => `/posts/${id}/reactions`,
-  view: "/posts/view"
+  view: "/posts/view",
+  get_posts_batch: "/posts/batch"
 };
 
 export const getPostsTypes = {
@@ -20,6 +21,14 @@ export type KeyOfGetPostsTypes = keyof typeof getPostsTypes;
 
 async function getPost(id: number) {
   const r = await api.get<ResponseWithPost>(postsEndpoints.post(id));
+  return r;
+}
+
+async function getPostsBatch(posts: string[] | number[]) {
+  const params = { posts: posts.join(",") };
+  const r = await api.get<ApiResponse<{ posts: Post[] }>>(postsEndpoints.get_posts_batch, {
+    params: params
+  });
   return r;
 }
 
@@ -38,4 +47,4 @@ async function init(_api: AxiosInstance) {
   api = _api;
 }
 
-export { init, getPost, getPosts, viewPosts };
+export { init, getPost, getPosts, viewPosts, getPostsBatch };
