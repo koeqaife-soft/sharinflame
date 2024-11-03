@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { getPost, getPosts, KeyOfGetPostsTypes } from "src/api/posts";
+import { getPostsBatch, getPosts, KeyOfGetPostsTypes } from "src/api/posts";
 
 export const usePostsStore = defineStore("posts", {
   state: () => ({
@@ -18,9 +18,11 @@ export const usePostsStore = defineStore("posts", {
     async loadPosts(count: number) {
       const itemsToLoad = this.notLoaded.slice(0, count);
 
-      for (const item of itemsToLoad) {
-        const loaded = await getPost(item[0]);
-        if (loaded.data.success) this.loaded.push(loaded.data.data);
+      const idsToLoad = itemsToLoad.map((item) => item[0]);
+      const loaded = await getPostsBatch(idsToLoad);
+
+      if (loaded.data.success) {
+        this.loaded.push(...loaded.data.data.posts);
       }
 
       this.notLoaded = this.notLoaded.slice(count);
