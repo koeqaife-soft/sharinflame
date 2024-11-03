@@ -78,8 +78,11 @@ api.interceptors.response.use(
           const refreshResponse = await refresh();
           const newToken = refreshResponse.data.data.access;
 
-          if (newToken) onRefreshed(newToken);
-          else throw new Error("No new token received");
+          if (newToken) {
+            onRefreshed(newToken);
+            originalRequest!.headers["Authorization"] = newToken;
+            return api(originalRequest!);
+          } else throw new Error("No new token received");
         } catch (refreshError) {
           deleteAuthToken();
           clearSubscribers();
