@@ -51,7 +51,7 @@ const categoriesList: ButtonProps[] = [
 ];
 
 const updateScreenSize = () => {
-  isSmallScreen.value = window.innerWidth <= 958;
+  isSmallScreen.value = window.innerWidth <= 814;
   isBigScreen.value = window.innerWidth >= 1308;
 };
 

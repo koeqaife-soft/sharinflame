@@ -45,16 +45,18 @@
   background-color: var(--toolbar);
 
   div {
-    color: var(--on-toolbar);
     user-select: none;
   }
-  span {
+
+  span,
+  div,
+  .icon {
     color: var(--on-toolbar);
   }
+
   .icon {
     width: 30px;
     height: 30px;
-    color: var(--on-toolbar);
     &.animated {
       animation: pulse 0.5s ease-in-out;
     }
@@ -106,7 +108,8 @@
   padding: 8px;
 
   .categories {
-    width: 350px;
+    width: 100%;
+    max-width: 350px;
     height: 300px;
 
     .container {
@@ -120,6 +123,14 @@
   .center-column .q-infinite-scroll {
     padding-left: 8px;
     padding-right: 8px;
+  }
+
+  .left-column {
+    justify-content: flex-end;
+  }
+
+  .right-column {
+    justify-content: flex-start;
   }
 
   @media (min-width: 1308px) {
@@ -136,26 +147,30 @@
       max-width: 600px;
       min-width: 550px;
     }
-
-    .left-column {
-      justify-content: flex-end;
-    }
-
-    .right-column {
-      justify-content: flex-start;
-    }
   }
   @media (max-width: 1307px) {
     .left-column,
-    .right-column,
     .center-column {
       display: flex;
       justify-content: center;
       height: 100%;
+      flex-shrink: 0;
     }
     .center-column {
       width: 100%;
       max-width: 600px;
+    }
+  }
+  @media (min-width: 967px) {
+    .left-column {
+      width: 350px;
+    }
+  }
+  @media (max-width: 966px) {
+    .left-column {
+      flex-grow: 1;
+      flex-shrink: 0;
+      width: none;
     }
   }
 }
