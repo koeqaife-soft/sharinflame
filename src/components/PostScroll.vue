@@ -1,14 +1,16 @@
 <template>
-  <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll q-mt-sm">
-    <div v-for="(item, index) in items" :key="index" class="post-div">
-      <PostComponent :post="item" class="q-mb-sm" />
-    </div>
-    <template v-slot:loading>
-      <div class="row justify-center q-my-md">
-        <q-spinner class="loading" size="40px" />
+  <q-scroll-area class="scroll-area" :visible="false">
+    <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll" :key="scrollKey">
+      <div v-for="(item, index) in items" :key="index" class="post-div">
+        <PostComponent :post="item" class="q-mb-sm" />
       </div>
-    </template>
-  </q-infinite-scroll>
+      <template v-slot:loading>
+        <div class="row justify-center q-my-md">
+          <q-spinner class="loading" size="40px" />
+        </div>
+      </template>
+    </q-infinite-scroll>
+  </q-scroll-area>
 </template>
 <script setup lang="ts">
 import { ref, watch } from "vue";
@@ -22,15 +24,16 @@ const props = defineProps<{
 }>();
 
 const items = ref<Post[]>([]);
+const scrollKey = ref<string>(props.type);
 const store = usePostsStore();
 
-watch(
-  () => props.type,
-  () => {
-    items.value = [];
-    store.reset();
-  }
-);
+watch(() => props.type, onTypeChange);
+
+function onTypeChange() {
+  items.value = [];
+  store.reset();
+  scrollKey.value = props.type;
+}
 
 async function onLoad(index: number, done: (stop?: boolean) => void) {
   try {
@@ -49,7 +52,7 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
       const postIds = posts.map((post) => String(post.post_id));
       viewPosts(postIds);
     }
-    done(false);
+    done();
   } catch (e) {
     if (isAxiosError(e)) done(true);
     else throw e;
