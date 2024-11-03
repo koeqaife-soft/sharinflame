@@ -20,5 +20,8 @@ export default {
   username_hint: "4-16 chars, letters/numbers/._ only, no consecutive . or _",
   email_hint: "Enter your email address",
   password_hint: "Create a password (min 8 characters)",
-  confirm_password_hint: "Re-enter your password"
+  confirm_password_hint: "Re-enter your password",
+
+  popular_posts: "Popular",
+  new_posts: "New"
 };
