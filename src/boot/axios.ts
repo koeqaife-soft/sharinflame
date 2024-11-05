@@ -105,6 +105,7 @@ api.interceptors.response.use(
       });
     } else if (response && response.status === 401) {
       deleteAuthToken();
+      clearSubscribers();
       router.push({ path: "/login" });
     }
 
