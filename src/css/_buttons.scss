@@ -31,7 +31,7 @@
 .card-button {
   border-radius: 8px;
   background-color: var(--card-high);
-  height: 40px;
+  min-height: 40px;
   > span {
     color: var(--on-card);
     display: flex;
