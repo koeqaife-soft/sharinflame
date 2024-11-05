@@ -78,6 +78,7 @@ ipcMain.on("close-window", () => {
 });
 
 function createTray() {
+  if (process.env.DEBUGGING) return;
   const iconPath = path.resolve(__dirname, "icons/icon.png");
   tray = new Tray(iconPath);
 
