@@ -13,7 +13,13 @@
       </q-card>
     </div>
     <post-scroll :type="currentType" class="center-column" />
-    <div class="right-column" v-if="isBigScreen"></div>
+    <div class="right-column" v-if="isBigScreen">
+      <q-card class="card profile-menu">
+        <div class="container">
+          <profile-menu buttons-class="card-button" />
+        </div>
+      </q-card>
+    </div>
   </q-page>
 </template>
 
@@ -21,6 +27,7 @@
 import { KeyOfGetPostsTypes } from "src/api/posts";
 import PostScroll from "src/components/PostScroll.vue";
 import CategoryButton, { ButtonProps } from "src/components/CategoryButton.vue";
+import ProfileMenu from "src/components/ProfileMenu.vue";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
