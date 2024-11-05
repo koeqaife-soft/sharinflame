@@ -23,5 +23,10 @@ export default {
   confirm_password_hint: "Re-enter your password",
 
   popular_posts: "Popular",
-  new_posts: "New"
+  new_posts: "New",
+
+  view_profile: "View Profile",
+  dark_mode: "Dark Mode",
+  create_post: "Create Post",
+  settings: "Settings"
 };
