@@ -14,6 +14,7 @@
           aria-label="DarkMode"
           @click="$q.dark.toggle()"
           class="webkit-no-drag"
+          v-if="showDarkModeToggle"
         />
         <window-actions />
       </q-toolbar>
@@ -50,4 +51,13 @@ onBeforeUnmount(() => {
     clearTimeout(animationTimeout);
   }
 });
+
+withDefaults(
+  defineProps<{
+    showDarkModeToggle: boolean;
+  }>(),
+  {
+    showDarkModeToggle: false
+  }
+);
 </script>
