@@ -1,10 +1,16 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, ipcMain, Tray, Menu } from "electron";
 import path from "path";
 import os from "os";
 
 const platform = process.platform || os.platform();
 
 let mainWindow: BrowserWindow | undefined;
+let tray: Tray | null;
+
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+  app.quit();
+}
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -35,7 +41,10 @@ function createWindow() {
   });
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  createWindow();
+  createTray();
+});
 
 app.on("window-all-closed", () => {
   if (platform !== "darwin") {
@@ -67,3 +76,22 @@ ipcMain.on("close-window", () => {
   const win = BrowserWindow.getFocusedWindow();
   if (win) win.close();
 });
+
+function createTray() {
+  const iconPath = path.resolve(__dirname, "icons/icon.png");
+  tray = new Tray(iconPath);
+
+  const contextMenu = Menu.buildFromTemplate([
+    { label: "Show", click: () => mainWindow?.show() },
+    { label: "Exit", click: () => app.quit() }
+  ]);
+
+  tray.setToolTip("SharinFlame");
+  tray.setContextMenu(contextMenu);
+
+  tray.on("click", () => {
+    if (mainWindow) {
+      mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
+    }
+  });
+}
