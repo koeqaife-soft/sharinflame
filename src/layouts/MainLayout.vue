@@ -15,36 +15,7 @@
           @click="$q.dark.toggle()"
           class="webkit-no-drag"
         />
-        <q-btn
-          flat
-          dense
-          round
-          icon="sym_o_minimize"
-          aria-label="Minimize"
-          @click="minimizeWindow"
-          v-if="$q.platform.is.electron"
-          class="webkit-no-drag"
-        />
-        <q-btn
-          flat
-          dense
-          round
-          icon="sym_o_crop_square"
-          aria-label="Maximize"
-          @click="maximizeWindow"
-          v-if="$q.platform.is.electron"
-          class="webkit-no-drag"
-        />
-        <q-btn
-          flat
-          dense
-          round
-          icon="sym_o_close"
-          aria-label="Close"
-          @click="closeWindow"
-          v-if="$q.platform.is.electron"
-          class="webkit-no-drag"
-        />
+        <window-actions />
       </q-toolbar>
     </q-header>
 
@@ -56,6 +27,7 @@
 
 <script setup lang="ts">
 import LogoComponent from "src/components/LogoComponent.vue";
+import WindowActions from "src/components/WindowActions.vue";
 import { onBeforeUnmount, ref } from "vue";
 
 const isIconAnimated = ref(false);
@@ -78,16 +50,4 @@ onBeforeUnmount(() => {
     clearTimeout(animationTimeout);
   }
 });
-
-function minimizeWindow() {
-  window.electron.minimizeWindow();
-}
-
-function maximizeWindow() {
-  window.electron.maximizeWindow();
-}
-
-function closeWindow() {
-  window.electron.closeWindow();
-}
 </script>
