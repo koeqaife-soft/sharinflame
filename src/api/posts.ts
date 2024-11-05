@@ -6,8 +6,8 @@ export const postsEndpoints = {
   create_post: "/posts",
   popular: "/posts/popular",
   new_posts: "/posts/new",
-  post: (id: number) => `/posts/${id}`,
-  post_reactions: (id: number) => `/posts/${id}/reactions`,
+  post: (id: string) => `/posts/${id}`,
+  post_reactions: (id: string) => `/posts/${id}/reactions`,
   view: "/posts/view",
   get_posts_batch: "/posts/batch"
 };
@@ -19,12 +19,12 @@ export const getPostsTypes = {
 
 export type KeyOfGetPostsTypes = keyof typeof getPostsTypes;
 
-async function getPost(id: number) {
+async function getPost(id: string) {
   const r = await api.get<ResponseWithPost>(postsEndpoints.post(id));
   return r;
 }
 
-async function getPostsBatch(posts: string[] | number[]) {
+async function getPostsBatch(posts: string[]) {
   const params = { posts: posts.join(",") };
   const r = await api.get<ApiResponse<{ posts: Post[] }>>(postsEndpoints.get_posts_batch, {
     params: params
@@ -37,7 +37,7 @@ async function getPosts(type: KeyOfGetPostsTypes) {
   return r;
 }
 
-async function viewPosts(postIds: number[] | string[]) {
+async function viewPosts(postIds: string[]) {
   const data = { posts: postIds };
   const r = await api.post<ApiResponse>(postsEndpoints.view, data);
   return r;

@@ -37,7 +37,7 @@ interface Post {
   user: User;
 }
 
-type PostMinimal = [post_id: number, user_id: number];
+type PostMinimal = [post_id: string, user_id: string];
 
 type ResponseWithPost = ApiResponse<Post>;
 type ResponseWithUser = ApiResponse<User>;
