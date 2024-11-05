@@ -15,7 +15,7 @@ declare module "vue" {
 const url = "http://localhost:6169/v1";
 const api = axios.create({ baseURL: url, timeout: 5000, withCredentials: true });
 
-const initFunctions = [() => import("src/api/auth"), () => import("src/api/posts")];
+const initFunctions = [() => import("src/api/auth"), () => import("src/api/posts"), () => import("src/api/users")];
 
 async function initialize() {
   await Promise.all(

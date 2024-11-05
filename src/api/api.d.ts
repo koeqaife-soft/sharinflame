@@ -6,6 +6,15 @@ interface ApiResponse<T = { [key: string]: unknown }> {
 
 type ResponseWithAccess = ApiResponse<{ access: string }>;
 
+interface UpdateProfileValues {
+  display_name?: string;
+  avatar_url?: string;
+  banner_url?: string;
+  bio?: string;
+  gender?: string;
+  languages?: string[];
+}
+
 interface User {
   user_id: string;
   username: string;
