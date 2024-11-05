@@ -7,7 +7,7 @@ interface ApiResponse<T = { [key: string]: unknown }> {
 type ResponseWithAccess = ApiResponse<{ access: string }>;
 
 interface User {
-  user_id: number;
+  user_id: string;
   username: string;
   display_name?: string;
   avatar_url?: string;
@@ -18,8 +18,8 @@ interface User {
 }
 
 interface Post {
-  post_id: number;
-  user_id: number;
+  post_id: string;
+  user_id: string;
   content: string;
   created_at: string;
   updated_at: string;
