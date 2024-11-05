@@ -4,7 +4,7 @@
       <q-toolbar class="toolbar webkit-drag">
         <LogoComponent @icon-click="logoClick" :is-animated="isIconAnimated" icon-class="icon" class="webkit-no-drag" />
 
-        <q-toolbar-title class="webkit-no-drag"> SharinFlame </q-toolbar-title>
+        <q-toolbar-title class="webkit-drag"> SharinFlame </q-toolbar-title>
 
         <q-btn
           flat
