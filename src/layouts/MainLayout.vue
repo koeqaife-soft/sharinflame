@@ -2,9 +2,12 @@
   <q-layout view="lHh Lpr lFf">
     <q-header unelevated>
       <q-toolbar class="toolbar webkit-drag">
+        <slot name="toolbar-before-logo" />
         <LogoComponent @icon-click="logoClick" :is-animated="isIconAnimated" icon-class="icon" class="webkit-no-drag" />
 
         <q-toolbar-title class="webkit-drag"> SharinFlame </q-toolbar-title>
+
+        <slot name="toolbar-actions" />
 
         <q-btn
           flat
@@ -22,6 +25,7 @@
 
     <q-page-container>
       <router-view />
+      <slot />
     </q-page-container>
   </q-layout>
 </template>
