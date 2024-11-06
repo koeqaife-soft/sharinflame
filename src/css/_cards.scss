@@ -32,3 +32,17 @@
     color: var(--on-card);
   }
 }
+
+.menu-card {
+  @include elevation(1);
+  border-radius: 18px;
+  padding: 8px;
+  background-color: var(--card);
+
+  width: 100%;
+  max-width: 300px;
+
+  > div {
+    color: var(--on-card);
+  }
+}
