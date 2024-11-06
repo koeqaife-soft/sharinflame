@@ -11,7 +11,6 @@ export const useProfileStore = defineStore("profile", {
   actions: {
     async getProfile() {
       const currentTime = Math.floor(Date.now() / 1000);
-      const thirtyMinutes = 30 * 60;
 
       if (this.is_loading) {
         return new Promise<User | undefined>((resolve) => {
@@ -24,7 +23,7 @@ export const useProfileStore = defineStore("profile", {
         });
       }
 
-      if (!this.profile || currentTime - this.last_update >= thirtyMinutes) {
+      if (!this.profile || currentTime - this.last_update >= 5 * 60) {
         this.is_loading = true;
         try {
           const r = await getProfile();
