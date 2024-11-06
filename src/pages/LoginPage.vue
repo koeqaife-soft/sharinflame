@@ -37,7 +37,11 @@
             </template>
           </q-input>
 
-          <q-btn :label="$t('login')" type="submit" class="full-width default-button" unelevated />
+          <q-btn :label="$t('login')" type="submit" class="full-width default-button" unelevated :loading="loading">
+            <template v-slot:loading>
+              <q-spinner class="loading" />
+            </template>
+          </q-btn>
           <q-btn
             :label="$t('register')"
             @click="$router.push({ path: '/register' })"
@@ -69,6 +73,8 @@ const errors = ref({
   password: ""
 });
 
+const loading = ref(false);
+
 const _validate = (result: string | boolean) => (result === true ? true : t(result || ""));
 const _validateEmail = (val: string) => _validate(validateEmail(val));
 const _validatePassword = (val: string) => _validate(validatePassword(val));
@@ -76,6 +82,7 @@ const _validatePassword = (val: string) => _validate(validatePassword(val));
 const _login = async () => {
   errors.value.email = "";
   errors.value.password = "";
+  loading.value = true;
   try {
     const r = await login(email.value, password.value);
     if (r.data.success) router.push({ path: "/app" });
@@ -92,6 +99,8 @@ const _login = async () => {
     } else {
       throw error;
     }
+  } finally {
+    loading.value = false;
   }
 };
 </script>

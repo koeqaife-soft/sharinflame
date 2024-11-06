@@ -4,7 +4,8 @@
   border-radius: 8px;
   background-color: var(--primary);
 
-  span {
+  span,
+  .loading {
     color: var(--on-primary);
   }
 }
@@ -13,7 +14,8 @@
   border-radius: 8px;
   background-color: var(--secondary);
 
-  span {
+  span,
+  .loading {
     color: var(--on-secondary);
   }
 }
@@ -23,7 +25,8 @@
   background-color: transparent;
   border: 2px solid var(--primary);
 
-  span {
+  span,
+  .loading {
     color: var(--primary);
   }
 }

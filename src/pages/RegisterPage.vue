@@ -57,7 +57,11 @@
             :hint="t('confirm_password_hint')"
           />
 
-          <q-btn :label="$t('register')" type="submit" class="full-width default-button" unelevated />
+          <q-btn :label="$t('register')" type="submit" class="full-width default-button" unelevated :loading="loading">
+            <template v-slot:loading>
+              <q-spinner class="loading" />
+            </template>
+          </q-btn>
           <q-btn
             :label="$t('login')"
             @click="$router.push({ path: '/login' })"
@@ -90,6 +94,8 @@ const existing = ref<{ username: string | null; email: string | null }>({
   email: null
 });
 
+const loading = ref(false);
+
 const usernameError = computed(() => {
   const message = username.value != existing.value.username;
   return {
@@ -116,6 +122,7 @@ const _validatePassword = (val: string) => _validate(validatePassword(val));
 const validateConfirmPassword = (val: string) => val === password.value || t("passwords_must_match");
 
 const _register = async () => {
+  loading.value = true;
   try {
     const r = await register(username.value, email.value, password.value);
     if (r.data.success) router.push({ path: "/app" });
@@ -127,6 +134,8 @@ const _register = async () => {
         existing.value.email = email.value;
       } else throw error;
     } else throw error;
+  } finally {
+    loading.value = false;
   }
 };
 </script>
