@@ -1,5 +1,8 @@
 <template>
   <main-layout :show-dark-mode-toggle="false">
+    <template #toolbar-actions v-if="!isBigScreen">
+      <open-profile-menu />
+    </template>
     <q-page class="app-page">
       <div class="left-column" v-if="!isSmallScreen">
         <q-card class="card categories">
@@ -16,9 +19,7 @@
       <post-scroll :type="currentType" class="center-column" />
       <div class="right-column" v-if="isBigScreen">
         <q-card class="card profile-menu">
-          <div class="container">
-            <profile-menu buttons-class="card-button" />
-          </div>
+          <profile-menu buttons-class="card-button" />
         </q-card>
       </div>
     </q-page>
@@ -31,6 +32,7 @@ import PostScroll from "src/components/PostScroll.vue";
 import CategoryButton, { ButtonProps } from "src/components/CategoryButton.vue";
 import ProfileMenu from "src/components/ProfileMenu.vue";
 import MainLayout from "src/layouts/MainLayout.vue";
+import OpenProfileMenu from "src/components/OpenProfileMenu.vue";
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
