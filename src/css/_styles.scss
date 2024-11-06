@@ -107,6 +107,23 @@
   color: var(--primary);
 }
 
+.container {
+  display: grid;
+  align-items: start;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.dark-mode {
+  display: flex;
+  align-items: flex-start;
+  .q-toggle {
+    position: absolute;
+    right: 0;
+    margin-right: 6px;
+  }
+}
+
 .app-page {
   display: flex;
   justify-content: center;
@@ -119,23 +136,6 @@
     width: 100%;
     max-width: 350px;
     height: fit-content;
-
-    .container {
-      display: grid;
-      align-items: start;
-      grid-template-columns: 1fr;
-      gap: 8px;
-    }
-  }
-
-  .dark-mode {
-    display: flex;
-    align-items: flex-start;
-    .q-toggle {
-      position: absolute;
-      right: 0;
-      margin-right: 6px;
-    }
   }
 
   .center-column .q-infinite-scroll {
