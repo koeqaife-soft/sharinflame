@@ -37,3 +37,4 @@ jobs:
         with:
           name: quasar-build-${{ matrix.os }}
           path: dist/electron/Packaged
+          retention-days: 1
