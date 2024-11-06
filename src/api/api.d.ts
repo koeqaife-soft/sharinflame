@@ -39,6 +39,7 @@ interface Post {
   media: string[];
   status: string;
   is_deleted: boolean;
+  is_like?: boolean;
 
   created_at_unix: number;
   updated_at_unix: number;
