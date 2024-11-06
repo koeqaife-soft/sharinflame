@@ -33,21 +33,23 @@ import CategoryButton, { ButtonProps } from "src/components/CategoryButton.vue";
 import ProfileMenu from "src/components/ProfileMenu.vue";
 import MainLayout from "src/layouts/MainLayout.vue";
 import OpenProfileMenu from "src/components/OpenProfileMenu.vue";
-import { onBeforeUnmount, onMounted, ref } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
 
 const currentType = ref<KeyOfGetPostsTypes>("popular");
-const isSmallScreen = ref(false);
-const isBigScreen = ref(false);
+
+const screenSize = ref(window.innerWidth);
+const isSmallScreen = computed(() => screenSize.value <= 814);
+const isBigScreen = computed(() => screenSize.value >= 1200);
 
 const changeType = (type: KeyOfGetPostsTypes) => {
   console.log(type);
   currentType.value = type;
 };
 
-const categoriesList: ButtonProps[] = [
+const categoriesList = computed<ButtonProps[]>(() => [
   {
     icon: "sym_o_whatshot",
     label: t("popular_posts"),
@@ -60,11 +62,10 @@ const categoriesList: ButtonProps[] = [
     click: () => changeType("new"),
     type: "new"
   }
-];
+]);
 
 const updateScreenSize = () => {
-  isSmallScreen.value = window.innerWidth <= 814;
-  isBigScreen.value = window.innerWidth >= 1200;
+  screenSize.value = window.innerWidth;
 };
 
 onMounted(() => {

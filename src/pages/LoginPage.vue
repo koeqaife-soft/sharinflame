@@ -33,8 +33,9 @@
                 :name="isPwd ? 'sym_o_visibility_off' : 'sym_o_visibility'"
                 class="cursor-pointer"
                 @click="isPwd = !isPwd"
-              /> </template
-          ></q-input>
+              />
+            </template>
+          </q-input>
 
           <q-btn :label="$t('login')" type="submit" class="full-width default-button" unelevated />
           <q-btn
@@ -58,38 +59,39 @@ import { login } from "src/api/auth";
 import { useRouter } from "vue-router";
 
 const { t } = useI18n();
+const router = useRouter();
 
 const email = ref("");
 const password = ref("");
 const isPwd = ref(true);
-const errors = ref<{
-  email?: string;
-  password?: string;
-}>({
-  email: undefined,
-  password: undefined
+const errors = ref({
+  email: "",
+  password: ""
 });
-
-const router = useRouter();
 
 const _validate = (result: string | boolean) => (result === true ? true : t(result || ""));
 const _validateEmail = (val: string) => _validate(validateEmail(val));
 const _validatePassword = (val: string) => _validate(validatePassword(val));
 
 const _login = async () => {
-  errors.value.email = undefined;
-  errors.value.password = undefined;
+  errors.value.email = "";
+  errors.value.password = "";
   try {
     const r = await login(email.value, password.value);
     if (r.data.success) router.push({ path: "/app" });
   } catch (error) {
     if (isAxiosError(error)) {
-      if (error.response?.data["error"] == "INCORRECT_PASSWORD") {
+      const errorData = error.response?.data?.error;
+      if (errorData === "INCORRECT_PASSWORD") {
         errors.value.password = t("incorrect_password");
-      } else if (error.response?.data["error"] == "USER_DOES_NOT_EXIST") {
+      } else if (errorData === "USER_DOES_NOT_EXIST") {
         errors.value.email = t("user_does_not_exist");
-      } else throw error;
-    } else throw error;
+      } else {
+        throw error;
+      }
+    } else {
+      throw error;
+    }
   }
 };
 </script>
