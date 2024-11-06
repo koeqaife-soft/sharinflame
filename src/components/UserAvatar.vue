@@ -4,7 +4,7 @@
       <img :src="userRef?.avatar_url" />
     </template>
     <template v-else>
-      {{ user?.username.charAt(0).toUpperCase() }}
+      {{ userRef?.username.charAt(0).toUpperCase() }}
     </template>
   </q-avatar>
 </template>
