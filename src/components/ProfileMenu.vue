@@ -1,24 +1,32 @@
 <template>
-  <q-btn :class="['open-profile', buttonsClass]" :key="user?.user_id || 0" unelevated no-caps>
-    <user-avatar :user="user!" />
-    <div class="text-container">
-      <div class="label text-body2">{{ $t("view_profile") }}</div>
-      <div class="username text-caption">{{ `@${user?.username || "unknown"}` }}</div>
-    </div>
-  </q-btn>
-  <q-btn
-    :class="['dark-mode', buttonsClass]"
-    icon="sym_o_dark_mode"
-    :label="$t('dark_mode')"
-    @click="$q.dark.toggle"
-    unelevated
-    no-caps
-  >
-    <q-toggle v-model="darkMode" />
-  </q-btn>
-  <q-btn :class="['create-post', buttonsClass]" icon="sym_o_add_circle" :label="$t('create_post')" unelevated no-caps />
-  <q-separator />
-  <q-btn :class="['settings', buttonsClass]" icon="sym_o_settings" :label="$t('settings')" unelevated no-caps />
+  <div class="container profile-menu-component">
+    <q-btn :class="['open-profile', buttonsClass]" :key="user?.user_id || 0" unelevated no-caps>
+      <user-avatar :user="user!" />
+      <div class="text-container">
+        <div class="label text-body2">{{ $t("view_profile") }}</div>
+        <div class="username text-caption">{{ `@${user?.username || "unknown"}` }}</div>
+      </div>
+    </q-btn>
+    <q-btn
+      :class="['dark-mode', buttonsClass]"
+      icon="sym_o_dark_mode"
+      :label="$t('dark_mode')"
+      @click="$q.dark.toggle"
+      unelevated
+      no-caps
+    >
+      <q-toggle v-model="darkMode" />
+    </q-btn>
+    <q-btn
+      :class="['create-post', buttonsClass]"
+      icon="sym_o_add_circle"
+      :label="$t('create_post')"
+      unelevated
+      no-caps
+    />
+    <q-separator />
+    <q-btn :class="['settings', buttonsClass]" icon="sym_o_settings" :label="$t('settings')" unelevated no-caps />
+  </div>
 </template>
 <script setup lang="ts">
 import { ref, onMounted, watch } from "vue";
