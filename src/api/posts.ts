@@ -43,8 +43,19 @@ async function viewPosts(postIds: string[]) {
   return r;
 }
 
+async function setReaction(id: string, isLike: boolean) {
+  const data = { is_like: isLike };
+  const r = await api.post(postsEndpoints.post_reactions(id), data);
+  return r;
+}
+
+async function remReaction(id: string) {
+  const r = await api.delete(postsEndpoints.post_reactions(id));
+  return r;
+}
+
 async function init(_api: AxiosInstance) {
   api = _api;
 }
 
-export { init, getPost, getPosts, viewPosts, getPostsBatch };
+export { init, getPost, getPosts, viewPosts, getPostsBatch, setReaction, remReaction };
