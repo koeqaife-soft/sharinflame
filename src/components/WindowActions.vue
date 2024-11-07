@@ -3,7 +3,7 @@
     flat
     dense
     round
-    icon="sym_o_minimize"
+    icon="sym_r_minimize"
     aria-label="Minimize"
     @click="minimizeWindow"
     v-if="$q.platform.is.electron"
@@ -13,7 +13,7 @@
     flat
     dense
     round
-    icon="sym_o_crop_square"
+    icon="sym_r_crop_square"
     aria-label="Maximize"
     @click="maximizeWindow"
     v-if="$q.platform.is.electron"
@@ -23,7 +23,7 @@
     flat
     dense
     round
-    icon="sym_o_close"
+    icon="sym_r_close"
     aria-label="Close"
     @click="closeWindow"
     v-if="$q.platform.is.electron"

@@ -51,13 +51,13 @@ const changeType = (type: KeyOfGetPostsTypes) => {
 
 const categoriesList = computed<ButtonProps[]>(() => [
   {
-    icon: "sym_o_whatshot",
+    icon: "sym_r_whatshot",
     label: t("popular_posts"),
     click: () => changeType("popular"),
     type: "popular"
   },
   {
-    icon: "sym_o_update",
+    icon: "sym_r_update",
     label: t("new_posts"),
     click: () => changeType("new"),
     type: "new"

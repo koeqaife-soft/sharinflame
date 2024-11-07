@@ -13,7 +13,7 @@
           flat
           dense
           round
-          icon="sym_o_dark_mode"
+          icon="sym_r_dark_mode"
           aria-label="DarkMode"
           @click="$q.dark.toggle()"
           class="webkit-no-drag"

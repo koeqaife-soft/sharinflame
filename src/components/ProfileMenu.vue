@@ -9,7 +9,7 @@
     </q-btn>
     <q-btn
       :class="['dark-mode', buttonsClass]"
-      icon="sym_o_dark_mode"
+      icon="sym_r_dark_mode"
       :label="$t('dark_mode')"
       @click="$q.dark.toggle"
       unelevated
@@ -19,13 +19,13 @@
     </q-btn>
     <q-btn
       :class="['create-post', buttonsClass]"
-      icon="sym_o_add_circle"
+      icon="sym_r_add_circle"
       :label="$t('create_post')"
       unelevated
       no-caps
     />
     <q-separator />
-    <q-btn :class="['settings', buttonsClass]" icon="sym_o_settings" :label="$t('settings')" unelevated no-caps />
+    <q-btn :class="['settings', buttonsClass]" icon="sym_r_settings" :label="$t('settings')" unelevated no-caps />
   </div>
 </template>
 <script setup lang="ts">
