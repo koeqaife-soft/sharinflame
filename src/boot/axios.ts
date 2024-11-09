@@ -3,6 +3,8 @@ import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import { authEndpoints, deleteAuthToken, getAuthToken, refresh } from "src/api/auth";
 import { postsEndpoints } from "src/api/posts";
 import router from "src/router";
+import { useMainStore } from "src/stores/main-store";
+import { watch } from "vue";
 
 declare module "vue" {
   interface ComponentCustomProperties {
@@ -12,6 +14,7 @@ declare module "vue" {
   }
 }
 
+let mainStore: ReturnType<typeof useMainStore>;
 const url = "http://localhost:6169/v1";
 const api = axios.create({ baseURL: url, timeout: 5000, withCredentials: true });
 
@@ -59,6 +62,41 @@ api.interceptors.request.use(
     return config;
   },
   (error) => {
+    return Promise.reject(error);
+  }
+);
+
+api.interceptors.response.use(
+  (response: AxiosResponse) => {
+    mainStore.setIsOffline(false);
+    return response;
+  },
+  async (error: AxiosError<ApiResponse>) => {
+    if (!error.response || error.code === "ECONNABORTED") {
+      const config = error.config!;
+      mainStore.setIsOffline(true);
+      if (!config.url?.includes("/ping"))
+        return new Promise((resolve) => {
+          const watching = watch(
+            () => mainStore.isOffline,
+            async (newValue) => {
+              if (!newValue) {
+                try {
+                  const retryResponse = await axios(config);
+                  resolve(retryResponse);
+                  watching.stop();
+                } catch {
+                  mainStore.setIsOffline(true);
+                }
+              }
+            },
+            { immediate: true }
+          );
+        });
+    } else {
+      mainStore.setIsOffline(false);
+    }
+
     return Promise.reject(error);
   }
 );
@@ -115,13 +153,15 @@ api.interceptors.response.use(
 
 const apiEndpoints = {
   auth: authEndpoints,
-  posts: postsEndpoints
+  posts: postsEndpoints,
+  ping: "/ping"
 };
 
 export default boot(({ app }) => {
   app.config.globalProperties.$axios = axios;
   app.config.globalProperties.$api = api;
   app.config.globalProperties.$apiEndpoints = apiEndpoints;
+  mainStore = useMainStore();
 });
 
 export { api, apiEndpoints };
