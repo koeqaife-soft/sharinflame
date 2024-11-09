@@ -2,6 +2,7 @@
 
 .login-card,
 .register-card {
+  @include colorTransition();
   @include elevation(2);
   border-radius: 18px;
   padding: 10px;
@@ -21,6 +22,7 @@
 }
 
 .card {
+  @include colorTransition();
   @include elevation(2);
   border-radius: 18px;
   padding: 8px;
@@ -34,6 +36,7 @@
 }
 
 .menu-card {
+  @include colorTransition();
   @include elevation(1);
   border-radius: 18px;
   padding: 8px;

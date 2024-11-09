@@ -10,3 +10,15 @@
     box-shadow: none;
   }
 }
+
+@mixin colorTransition() {
+  transition: background-color var(--animate-duration) ease-in-out, color var(--animate-duration) ease-in-out;
+}
+
+@mixin bgColorTransition() {
+  transition: background-color var(--animate-duration) ease-in-out;
+}
+
+@mixin onlyColorTransition() {
+  transition: color var(--animate-duration) ease-in-out;
+}

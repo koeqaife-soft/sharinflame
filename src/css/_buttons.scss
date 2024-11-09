@@ -1,6 +1,7 @@
 @import "mixins";
 
 .default-button {
+  @include colorTransition();
   border-radius: 8px;
   background-color: var(--primary);
 
@@ -11,6 +12,7 @@
 }
 
 .secondary-button {
+  @include colorTransition();
   border-radius: 8px;
   background-color: var(--secondary);
 
@@ -21,6 +23,7 @@
 }
 
 .outlined-button {
+  @include colorTransition();
   border-radius: 8px;
   background-color: transparent;
   border: 2px solid var(--primary);
@@ -32,10 +35,12 @@
 }
 
 .card-button {
+  @include bgColorTransition();
   border-radius: 8px;
   background-color: var(--card-high);
   min-height: 40px;
   > span {
+    @include onlyColorTransition();
     color: var(--on-card);
     display: flex;
     justify-content: flex-start;
@@ -43,10 +48,10 @@
 }
 
 .category-button {
-  transition: background-color 0.2s ease-in-out;
+  @include bgColorTransition();
 
   > span {
-    transition: color 0.2s ease-in-out;
+    @include onlyColorTransition();
   }
 
   &.selected {
