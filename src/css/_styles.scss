@@ -56,7 +56,6 @@
   span,
   div,
   .icon {
-    @include onlyColorTransition();
     color: var(--on-toolbar);
   }
 
