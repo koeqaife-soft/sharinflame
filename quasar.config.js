@@ -20,6 +20,11 @@ module.exports = configure(function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
     boot: ["i18n", "axios"],
+    htmlVariables: {
+      CSP_POLICY_DEV:
+        "default-src 'self'; script-src * 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src *; connect-src *",
+      CSP_POLICY: "default-src 'self'; script-src 'self'; style-src 'self'; img-src *; connect-src *"
+    },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ["app.scss"],
@@ -109,7 +114,7 @@ module.exports = configure(function (/* ctx */) {
         dark: "auto"
       },
 
-      iconSet: "material-symbols-outlined", // Quasar icon set
+      iconSet: "material-symbols-rounded", // Quasar icon set
       // lang: 'en-US', // Quasar language pack
 
       // For special cases outside of where the auto-import strategy can have an impact
