@@ -81,7 +81,7 @@ ipcMain.on("close-window", () => {
 
 function createTray() {
   if (process.env.DEBUGGING) return;
-  const iconPath = path.resolve(__dirname, "icons/icon.png");
+  const iconPath = path.resolve(__dirname, "icons/tray.png");
   tray = new Tray(iconPath);
 
   const contextMenu = Menu.buildFromTemplate([
