@@ -24,8 +24,8 @@
     </q-header>
 
     <q-page-container>
-      <router-view />
-      <slot />
+      <router-view v-if="inRouter" />
+      <slot v-if="!inRouter" />
     </q-page-container>
   </q-layout>
 </template>
@@ -58,10 +58,12 @@ onBeforeUnmount(() => {
 
 withDefaults(
   defineProps<{
-    showDarkModeToggle: boolean;
+    showDarkModeToggle?: boolean;
+    inRouter?: boolean;
   }>(),
   {
-    showDarkModeToggle: false
+    showDarkModeToggle: false,
+    inRouter: true
   }
 );
 </script>

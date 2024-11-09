@@ -1,5 +1,5 @@
 <template>
-  <main-layout :show-dark-mode-toggle="false">
+  <main-layout :in-router="false">
     <template #toolbar-actions v-if="!isBigScreen">
       <open-profile-menu />
     </template>
