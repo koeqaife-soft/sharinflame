@@ -1,5 +1,5 @@
 import { boot } from "quasar/wrappers";
-import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosInstance, AxiosResponse, isAxiosError } from "axios";
 import { authEndpoints, deleteAuthToken, getAuthToken, refresh } from "src/api/auth";
 import { postsEndpoints } from "src/api/posts";
 import router from "src/router";
@@ -66,27 +66,41 @@ api.interceptors.request.use(
   }
 );
 
+function isConnectionError(e: AxiosError) {
+  return !e.response || e.code === "ECONNABORTED";
+}
+
 api.interceptors.response.use(
   (response: AxiosResponse) => {
     mainStore.setIsOffline(false);
     return response;
   },
-  async (error: AxiosError<ApiResponse>) => {
-    if (!error.response || error.code === "ECONNABORTED") {
-      const config = error.config!;
+  async (error: AxiosError<unknown>) => {
+    const config = error.config as typeof error.config & { __retry: boolean };
+
+    if (config.__retry) return Promise.reject(error);
+    config.__retry = true;
+
+    if (isConnectionError(error)) {
       mainStore.setIsOffline(true);
       if (!config.url?.includes("/ping"))
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
           const watching = watch(
             () => mainStore.isOffline,
             async (newValue) => {
               if (!newValue) {
+                let retryResponse: AxiosResponse<unknown, unknown> | undefined = undefined;
                 try {
-                  const retryResponse = await axios(config);
+                  retryResponse = await api(config);
                   resolve(retryResponse);
                   watching.stop();
-                } catch {
-                  mainStore.setIsOffline(true);
+                } catch (e) {
+                  if (isAxiosError(e) && isConnectionError(e)) {
+                    mainStore.setIsOffline(true);
+                  } else {
+                    watching.stop();
+                    reject(e);
+                  }
                 }
               }
             },
