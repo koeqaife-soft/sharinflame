@@ -36,8 +36,9 @@
 }
 
 .menu-card {
-  @include colorTransition();
   @include elevation(1);
+  transition-duration: 150ms;
+  transition-timing-function: ease-in;
   border-radius: 18px;
   padding: 8px;
   background-color: var(--card);
