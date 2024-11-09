@@ -8,27 +8,6 @@
 .body--dark {
   @include colorTransition();
 
-  --primary: hsl(var(--lvc-h), 83%, 61%);
-  --on-primary: hsl(var(--lvc-h), 83%, 99%);
-  --secondary: hsl(var(--lvc-h), 80%, 58%);
-  --on-secondary: hsl(var(--lvc-h), 80%, 99%);
-  --tertiary: hsl(calc(var(--lvc-h) + 15deg), 80%, 58%);
-  --on-tertiary: hsl(calc(var(--lvc-h) + 15deg), 80%, 99%);
-  --background-color: hsl(var(--lvc-h), 100%, 97%);
-  --text: hsl(0deg, 0%, 0%);
-  --card: hsl(var(--lvc-h), 100%, 95%);
-  --card-hover: hsl(var(--lvc-h), 90%, 93%);
-  --card-high: hsl(var(--lvc-h), 58%, 91%);
-  --on-card: hsl(0deg, 0%, 0%);
-  --toolbar: var(--primary);
-  --on-toolbar: var(--on-primary);
-
-  --q-primary: var(--primary);
-  --q-secondary: var(--secondary);
-  background: var(--background-color) !important;
-}
-
-.body--dark {
   --primary: hsl(var(--lvc-h), 96%, 80%);
   --on-primary: hsl(var(--lvc-h), 96%, 10%);
   --secondary: hsl(var(--lvc-h), 90%, 75%);
@@ -41,6 +20,27 @@
   --card-hover: hsl(var(--lvc-h), 14%, 13%);
   --card-high: hsl(var(--lvc-h), 14%, 16%);
   --on-card: hsl(0deg, 0%, 100%);
+  --toolbar: var(--primary);
+  --on-toolbar: var(--on-primary);
+
+  --q-primary: var(--primary);
+  --q-secondary: var(--secondary);
+  background: var(--background-color) !important;
+}
+
+.body--light {
+  --primary: hsl(var(--lvc-h), 83%, 61%);
+  --on-primary: hsl(var(--lvc-h), 83%, 99%);
+  --secondary: hsl(var(--lvc-h), 80%, 58%);
+  --on-secondary: hsl(var(--lvc-h), 80%, 99%);
+  --tertiary: hsl(calc(var(--lvc-h) + 15deg), 80%, 58%);
+  --on-tertiary: hsl(calc(var(--lvc-h) + 15deg), 80%, 99%);
+  --background-color: hsl(var(--lvc-h), 100%, 97%);
+  --text: hsl(0deg, 0%, 0%);
+  --card: hsl(var(--lvc-h), 100%, 95%);
+  --card-hover: hsl(var(--lvc-h), 90%, 93%);
+  --card-high: hsl(var(--lvc-h), 58%, 91%);
+  --on-card: hsl(0deg, 0%, 0%);
   --toolbar: var(--primary);
   --on-toolbar: var(--on-primary);
 }
