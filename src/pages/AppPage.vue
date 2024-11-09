@@ -27,14 +27,16 @@
 </template>
 
 <script setup lang="ts">
+import { computed, onBeforeUnmount, onMounted, ref, defineAsyncComponent } from "vue";
 import { KeyOfGetPostsTypes } from "src/api/posts";
-import PostScroll from "src/components/PostScroll.vue";
-import CategoryButton, { ButtonProps } from "src/components/CategoryButton.vue";
-import ProfileMenu from "src/components/ProfileMenu.vue";
-import MainLayout from "src/layouts/MainLayout.vue";
-import OpenProfileMenu from "src/components/OpenProfileMenu.vue";
-import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 import { useI18n } from "vue-i18n";
+import type { ButtonProps } from "src/components/CategoryButton.vue";
+import PostScroll from "src/components/PostScroll.vue";
+import MainLayout from "src/layouts/MainLayout.vue";
+
+const CategoryButton = defineAsyncComponent(() => import("src/components/CategoryButton.vue"));
+const ProfileMenu = defineAsyncComponent(() => import("src/components/ProfileMenu.vue"));
+const OpenProfileMenu = defineAsyncComponent(() => import("src/components/OpenProfileMenu.vue"));
 
 const { t } = useI18n();
 

@@ -29,10 +29,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
-import UserAvatar from "./UserAvatar.vue";
+import { ref, onMounted, watch, defineAsyncComponent } from "vue";
 import { useProfileStore } from "src/stores/profile-store";
 import { useQuasar } from "quasar";
+const UserAvatar = defineAsyncComponent(() => import("./UserAvatar.vue"));
 
 const quasar = useQuasar();
 

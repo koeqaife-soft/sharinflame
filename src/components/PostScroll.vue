@@ -13,11 +13,12 @@
   </q-scroll-area>
 </template>
 <script setup lang="ts">
-import { ref, watch } from "vue";
-import PostComponent from "./PostComponent.vue";
+import { ref, watch, defineAsyncComponent } from "vue";
 import { usePostsStore } from "src/stores/posts-store";
 import { KeyOfGetPostsTypes, viewPosts } from "src/api/posts";
 import { isAxiosError } from "axios";
+
+const PostComponent = defineAsyncComponent(() => import("./PostComponent.vue"));
 
 const props = defineProps<{
   type: KeyOfGetPostsTypes;

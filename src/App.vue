@@ -19,11 +19,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, defineAsyncComponent } from "vue";
 import { useMainStore } from "./stores/main-store";
 import { api, apiEndpoints } from "./boot/axios";
-import LogoComponent from "./components/LogoComponent.vue";
-import MainLayout from "./layouts/MainLayout.vue";
+
+const LogoComponent = defineAsyncComponent(() => import("./components/LogoComponent.vue"));
+const MainLayout = defineAsyncComponent(() => import("./layouts/MainLayout.vue"));
 
 const mainStore = useMainStore();
 const offlineDialog = ref(true);

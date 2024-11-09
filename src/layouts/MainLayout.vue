@@ -32,8 +32,9 @@
 
 <script setup lang="ts">
 import LogoComponent from "src/components/LogoComponent.vue";
-import WindowActions from "src/components/WindowActions.vue";
-import { onBeforeUnmount, ref } from "vue";
+import { onBeforeUnmount, ref, defineAsyncComponent } from "vue";
+
+const WindowActions = defineAsyncComponent(() => import("src/components/WindowActions.vue"));
 
 const isIconAnimated = ref(false);
 let animationTimeout: ReturnType<typeof setTimeout>;

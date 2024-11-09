@@ -7,6 +7,8 @@
   </q-btn>
 </template>
 <script setup lang="ts">
-import ProfileMenu from "./ProfileMenu.vue";
-import UserAvatar from "./UserAvatar.vue";
+import { defineAsyncComponent } from "vue";
+
+const ProfileMenu = defineAsyncComponent(() => import("./ProfileMenu.vue"));
+const UserAvatar = defineAsyncComponent(() => import("./UserAvatar.vue"));
 </script>
