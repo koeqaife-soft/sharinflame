@@ -15,7 +15,7 @@
       unelevated
       no-caps
     >
-      <q-toggle v-model="darkMode" />
+      <my-switch v-model="darkMode" />
     </q-btn>
     <q-btn
       :class="['create-post', buttonsClass]"
@@ -32,6 +32,7 @@
 import { ref, onMounted, watch, defineAsyncComponent } from "vue";
 import { useProfileStore } from "src/stores/profile-store";
 import { useQuasar } from "quasar";
+import MySwitch from "./MySwitch.vue";
 const UserAvatar = defineAsyncComponent(() => import("./UserAvatar.vue"));
 
 const quasar = useQuasar();
