@@ -1,19 +1,17 @@
 <template>
-  <main-layout :in-router="false">
+  <main-layout :in-router="false" :menu-opened="categoriesMenuOpened">
     <template #toolbar-actions v-if="!isBigScreen">
       <open-profile-menu />
+    </template>
+    <template #logo-menu v-if="isSmallScreen">
+      <q-menu class="categories-menu menu-card" v-model="categoriesMenuOpened">
+        <category-buttons-container :categories-list="categoriesList" :current-type="currentType" />
+      </q-menu>
     </template>
     <q-page class="app-page">
       <div class="left-column" v-if="!isSmallScreen">
         <q-card class="card categories">
-          <div class="container">
-            <category-button
-              v-for="category in categoriesList"
-              :key="category.label"
-              v-bind="category"
-              :selected="currentType == category.type"
-            />
-          </div>
+          <category-buttons-container :categories-list="categoriesList" :current-type="currentType" />
         </q-card>
       </div>
       <post-scroll :type="currentType" class="center-column" />
@@ -34,13 +32,15 @@ import type { ButtonProps } from "src/components/CategoryButton.vue";
 import PostScroll from "src/components/PostScroll.vue";
 import MainLayout from "src/layouts/MainLayout.vue";
 
-const CategoryButton = defineAsyncComponent(() => import("src/components/CategoryButton.vue"));
+const CategoryButtonsContainer = defineAsyncComponent(() => import("src/components/CategoryButtonsContainer.vue"));
 const ProfileMenu = defineAsyncComponent(() => import("src/components/ProfileMenu.vue"));
 const OpenProfileMenu = defineAsyncComponent(() => import("src/components/OpenProfileMenu.vue"));
 
 const { t } = useI18n();
 
 const currentType = ref<KeyOfGetPostsTypes>("popular");
+
+const categoriesMenuOpened = ref(false);
 
 const screenSize = ref(window.innerWidth);
 const isSmallScreen = computed(() => screenSize.value <= 814);
