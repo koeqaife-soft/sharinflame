@@ -39,3 +39,21 @@
 .animation-fade-in-down {
   animation: fadeInDown 0.5s ease forwards;
 }
+
+@keyframes rotate180 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
+}
+
+@keyframes rotateFrom180To10 {
+  0% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}

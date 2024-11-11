@@ -66,6 +66,30 @@
       animation: pulse 0.5s ease-in-out;
     }
   }
+
+  .title {
+    font-size: 21px;
+    min-width: 1px;
+    max-width: 100%;
+    font-weight: normal;
+    letter-spacing: 0.01em;
+    user-select: none;
+  }
+  .title:not(.in-button) {
+    padding-left: 12px;
+  }
+  .title-button {
+    margin-left: 8px;
+  }
+}
+
+.open-menu {
+  &.active {
+    animation: rotateFrom180To10 0.2s ease-out forwards;
+  }
+  &:not(.active) {
+    animation: rotate180 0.2s ease-out forwards;
+  }
 }
 
 .avatar {
@@ -321,6 +345,6 @@
   }
 
   .q-page-container {
-    height: 100vh;
+    height: 100%;
   }
 }

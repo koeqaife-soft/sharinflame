@@ -5,7 +5,14 @@
         <slot name="toolbar-before-logo" />
         <LogoComponent @icon-click="logoClick" :is-animated="isIconAnimated" icon-class="icon" class="webkit-no-drag" />
 
-        <q-toolbar-title class="webkit-drag"> SharinFlame </q-toolbar-title>
+        <q-btn unelevated no-caps class="webkit-no-drag title-button" v-if="$slots['logo-menu']">
+          <div class="title in-button">SharinFlame</div>
+          <slot name="logo-menu" />
+          <q-icon name="sym_r_arrow_drop_up" :class="['open-menu', { active: menuOpened }]" />
+        </q-btn>
+        <div v-else class="webkit-drag title ellipsis">SharinFlame</div>
+
+        <q-space class="webkit-drag" />
 
         <slot name="toolbar-actions" />
 
@@ -61,6 +68,7 @@ withDefaults(
   defineProps<{
     showDarkModeToggle?: boolean;
     inRouter?: boolean;
+    menuOpened?: boolean;
   }>(),
   {
     showDarkModeToggle: false,
