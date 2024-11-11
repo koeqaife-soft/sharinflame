@@ -26,7 +26,7 @@ async function getPost(id: string) {
 
 async function getPostsBatch(posts: string[]) {
   const params = { posts: posts.join(",") };
-  const r = await api.get<ApiResponse<{ posts: Post[] }>>(postsEndpoints.get_posts_batch, {
+  const r = await api.get<GetPostsBatchResponse>(postsEndpoints.get_posts_batch, {
     params: params
   });
   return r;

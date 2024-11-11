@@ -1,3 +1,4 @@
+import { AxiosError, isAxiosError } from "axios";
 import { defineStore } from "pinia";
 import { getPostsBatch, getPosts, KeyOfGetPostsTypes } from "src/api/posts";
 
@@ -17,12 +18,34 @@ export const usePostsStore = defineStore("posts", {
     },
     async loadPosts(count: number) {
       const itemsToLoad = this.notLoaded.slice(0, count);
+      let idsToLoad = itemsToLoad.map((item) => item[0]);
 
-      const idsToLoad = itemsToLoad.map((item) => item[0]);
-      const loaded = await getPostsBatch(idsToLoad);
+      const loadBatch = async (ids: string[]) => {
+        let loaded: Awaited<ReturnType<typeof getPostsBatch>>;
+        try {
+          loaded = await getPostsBatch(ids);
+          if (loaded.data.success) {
+            this.loaded.push(...loaded.data.data.posts);
+          }
+          return null;
+        } catch (e) {
+          if (isAxiosError(e)) {
+            const errors = (e as AxiosError<GetPostsBatchResponse>).response?.data?.data?.errors;
+            if (errors) {
+              return ids.filter((id) => !errors.some((error) => error.post === id));
+            }
+          }
+          throw e;
+        }
+      };
 
-      if (loaded.data.success) {
-        this.loaded.push(...loaded.data.data.posts);
+      for (let i = 0; i < count; i++) {
+        if (idsToLoad.length == 0) break;
+        const remainingIds = await loadBatch(idsToLoad);
+        if (remainingIds === null) {
+          break;
+        }
+        idsToLoad = remainingIds;
       }
 
       this.notLoaded = this.notLoaded.slice(count);
