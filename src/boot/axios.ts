@@ -33,6 +33,7 @@ initialize();
 
 const endpointsWithoutAuth = [authEndpoints.login, authEndpoints.register, authEndpoints.refresh];
 let isRefreshing = false;
+let refreshTimeout: NodeJS.Timeout | null = null;
 let subscribers: Array<(token: string) => void> = [];
 
 const onRefreshed = (token: string) => {
@@ -121,19 +122,21 @@ api.interceptors.response.use(
     const { response } = error;
 
     if (response && response.status === 401 && response.data?.error === "EXPIRED_TOKEN") {
-      const originalRequest = error.config;
+      const originalRequest = error.config!;
 
       if (!isRefreshing) {
         isRefreshing = true;
 
+        let newToken: string;
+
         try {
           const refreshResponse = await refresh();
-          const newToken = refreshResponse.data.data.access;
+          newToken = refreshResponse.data.data.access;
 
           if (newToken) {
             onRefreshed(newToken);
-            originalRequest!.headers["Authorization"] = newToken;
-            return api(originalRequest!);
+            originalRequest.headers["Authorization"] = newToken;
+            return api(originalRequest);
           } else throw new Error("No new token received");
         } catch (refreshError) {
           deleteAuthToken();
@@ -141,15 +144,23 @@ api.interceptors.response.use(
           router.push({ path: "/login" });
           return Promise.reject(refreshError);
         } finally {
-          isRefreshing = false;
+          if (refreshTimeout) clearTimeout(refreshTimeout);
+          refreshTimeout = setTimeout(() => {
+            isRefreshing = false;
+            if (newToken) {
+              onRefreshed(newToken);
+            } else if (subscribers) {
+              clearSubscribers();
+            }
+          }, 10000);
         }
       }
 
       return new Promise((resolve, reject) => {
         addSubscriber((newToken) => {
           if (newToken) {
-            originalRequest!.headers["Authorization"] = newToken;
-            resolve(api(originalRequest!));
+            originalRequest.headers["Authorization"] = newToken;
+            resolve(api(originalRequest));
           } else {
             reject(new Error("Unable to refresh token"));
           }
