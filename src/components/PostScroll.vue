@@ -1,6 +1,6 @@
 <template>
   <q-pull-to-refresh @refresh="reloadPosts" class="pull-to-refresh">
-    <q-scroll-area class="scroll-area" :visible="true">
+    <q-scroll-area class="scroll-area" :visible="false">
       <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll" :key="scrollKey">
         <div v-for="(item, index) in items" :key="index" class="post-div">
           <PostComponent :post="item" class="q-mb-sm animation-fade-in-down" />
