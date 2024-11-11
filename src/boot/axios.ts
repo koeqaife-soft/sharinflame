@@ -31,7 +31,13 @@ async function initialize() {
 
 initialize();
 
-const endpointsWithoutAuth = [authEndpoints.login, authEndpoints.register, authEndpoints.refresh];
+const apiEndpoints = {
+  auth: authEndpoints,
+  posts: postsEndpoints,
+  ping: "/ping"
+};
+
+const endpointsWithoutAuth = [authEndpoints.login, authEndpoints.register, authEndpoints.refresh, apiEndpoints.ping];
 let isRefreshing = false;
 let refreshTimeout: NodeJS.Timeout | null = null;
 let subscribers: Array<(token: string) => void> = [];
@@ -50,6 +56,10 @@ const addSubscriber = (callback: (token: string) => void) => {
   subscribers.push(callback);
 };
 
+function isConnectionError(e: AxiosError) {
+  return !e.response || e.code === "ECONNABORTED";
+}
+
 api.interceptors.request.use(
   (config) => {
     const token = getAuthToken();
@@ -66,10 +76,6 @@ api.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-
-function isConnectionError(e: AxiosError) {
-  return !e.response || e.code === "ECONNABORTED";
-}
 
 api.interceptors.response.use(
   (response: AxiosResponse) => {
@@ -175,12 +181,6 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-const apiEndpoints = {
-  auth: authEndpoints,
-  posts: postsEndpoints,
-  ping: "/ping"
-};
 
 export default boot(({ app }) => {
   app.config.globalProperties.$axios = axios;
