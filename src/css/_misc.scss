@@ -13,3 +13,10 @@
 .wrap-text {
   word-break: break-word;
 }
+
+.container {
+  display: grid;
+  align-items: start;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}

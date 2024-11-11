@@ -93,18 +93,11 @@
   color: var(--primary);
 }
 
-.container {
-  display: grid;
-  align-items: start;
-  grid-template-columns: 1fr;
-  gap: 8px;
-}
-
 .app-page {
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  height: 50vh;
+  height: 90vh;
   padding-top: 8px;
 
   .categories,
