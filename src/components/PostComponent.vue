@@ -1,13 +1,15 @@
 <template>
   <q-card class="post card" unelevated :key="postRef.post_id">
     <q-card-section class="q-pb-none">
-      <user-avatar :user="postRef.user" />
+      <user-avatar :user="postRef.user" v-if="!postRef.is_system" />
       <div class="text-container">
-        <div class="username">{{ postRef.user.display_name || postRef.user.username }}</div>
-        <div class="content wrap-text">{{ postRef.content }}</div>
+        <div class="username">
+          {{ postRef.is_system ? $t("system") : postRef.user.display_name || postRef.user.username }}
+        </div>
+        <div class="content wrap-text" v-html="formatStringForHtml(postRef.content)" />
       </div>
     </q-card-section>
-    <q-card-actions class="actions">
+    <q-card-actions class="actions" v-if="!postRef.is_system">
       <div class="action-container">
         <q-btn
           unelevated
@@ -37,6 +39,19 @@
         />
       </div>
     </q-card-actions>
+    <q-card-actions class="actions" v-else-if="postRef.actions">
+      <div class="action-container" v-for="action in postRef.actions" :key="action.name">
+        <q-btn
+          unelevated
+          no-caps
+          :icon="action.icon"
+          :label="$t(action.name)"
+          class="round button"
+          size="sm"
+          @click="action.func()"
+        />
+      </div>
+    </q-card-actions>
   </q-card>
 </template>
 
@@ -44,13 +59,13 @@
 import { ref } from "vue";
 import UserAvatar from "./UserAvatar.vue";
 import { remReaction, setReaction } from "src/api/posts";
-import { formatNumber } from "src/utils/format";
+import { formatNumber, formatStringForHtml } from "src/utils/format";
 
 const props = defineProps<{
-  post: Post;
+  post: PostWithSystem;
 }>();
 
-const postRef = ref<Post>(props.post);
+const postRef = ref<PostWithSystem>(props.post);
 let debounceTimeout: NodeJS.Timeout | null = null;
 const clickCount = ref(0);
 
@@ -78,6 +93,8 @@ function dislike() {
 }
 
 async function performLike() {
+  if (postRef.value.is_system) return;
+
   if (postRef.value.is_like === true) {
     await remReaction(postRef.value.post_id);
 
@@ -94,6 +111,8 @@ async function performLike() {
 }
 
 async function performDislike() {
+  if (postRef.value.is_system) return;
+
   if (postRef.value.is_like === false) {
     await remReaction(postRef.value.post_id);
 
