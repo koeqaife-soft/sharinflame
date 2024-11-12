@@ -35,5 +35,7 @@ export default {
   try_reloading_feed: "Please try reloading the feed",
   reload: "Reload",
 
-  an_error_occurred: "An error occurred"
+  an_error_occurred: "An error occurred",
+
+  connecting: "Connecting"
 };

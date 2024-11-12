@@ -11,7 +11,7 @@
     <main-layout :in-router="false" :show-dark-mode-toggle="true" class="layout">
       <div class="_container">
         <logo-component icon-class="logo" />
-        <div class="label">Connecting...</div>
+        <div class="label">{{ $t("connecting") }}...</div>
       </div>
     </main-layout>
   </q-dialog>
