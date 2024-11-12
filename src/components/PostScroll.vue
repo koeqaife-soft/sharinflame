@@ -19,6 +19,7 @@ import { ref, watch, defineAsyncComponent } from "vue";
 import { usePostsStore } from "src/stores/posts-store";
 import { KeyOfGetPostsTypes, viewPosts } from "src/api/posts";
 import { isAxiosError } from "axios";
+import { useI18n } from "vue-i18n";
 
 const PostComponent = defineAsyncComponent(() => import("./PostComponent.vue"));
 
@@ -26,10 +27,12 @@ const props = defineProps<{
   type: KeyOfGetPostsTypes;
 }>();
 
-const items = ref<Post[]>([]);
+const items = ref<PostWithSystem[]>([]);
 const scrollKey = ref<string>(props.type);
 const store = usePostsStore();
 const pullToRefreshDone = ref<(() => void) | undefined>(undefined);
+
+const { t } = useI18n();
 
 watch(() => props.type, onTypeChange);
 
@@ -39,14 +42,15 @@ function onTypeChange() {
   scrollKey.value = `${props.type}-${Date.now()}`;
 }
 
-function reloadPosts(done: () => void) {
+function reloadPosts(done?: () => void) {
   items.value = [];
   store.reset();
   scrollKey.value = `${props.type}-${Date.now()}`;
-  pullToRefreshDone.value = () => {
-    done();
-    pullToRefreshDone.value = undefined;
-  };
+  if (done)
+    pullToRefreshDone.value = () => {
+      done();
+      pullToRefreshDone.value = undefined;
+    };
 }
 
 async function onLoad(index: number, done: (stop?: boolean) => void) {
@@ -69,8 +73,23 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
     }
     done();
   } catch (e) {
-    if (isAxiosError(e)) done(true);
-    else throw e;
+    if (isAxiosError(e)) {
+      const error =
+        e.response?.data?.error == "NO_MORE_POSTS" ? t("no_more_posts") : e.response?.data?.error.toLowerCase();
+      items.value.push({
+        is_system: true,
+        post_id: `${Date.now()}`,
+        content: `<b>${t("an_error_occurred")}:</b> ${error}.\n${t("try_reloading_feed")}.`,
+        actions: [
+          {
+            name: "reload",
+            icon: "sym_r_refresh",
+            func: () => reloadPosts()
+          }
+        ]
+      });
+      done(true);
+    } else throw e;
   } finally {
     if (pullToRefreshDone.value) setTimeout(pullToRefreshDone.value, 250);
   }
