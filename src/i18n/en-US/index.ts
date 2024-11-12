@@ -28,5 +28,12 @@ export default {
   view_profile: "View Profile",
   dark_mode: "Dark Mode",
   create_post: "Create Post",
-  settings: "Settings"
+  settings: "Settings",
+
+  system: "System",
+  no_more_posts: "No more posts",
+  try_reloading_feed: "Please try reloading the feed",
+  reload: "Reload",
+
+  an_error_occurred: "An error occurred"
 };
