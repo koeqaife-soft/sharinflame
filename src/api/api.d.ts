@@ -40,12 +40,27 @@ interface Post {
   status: string;
   is_deleted: boolean;
   is_like?: boolean;
+  is_system?: boolean;
 
   created_at_unix: number;
   updated_at_unix: number;
 
   user: User;
+  actions: undefined;
 }
+
+interface PostSystem {
+  post_id: string;
+  content: string;
+  is_system: true;
+  actions?: {
+    name: string;
+    icon: string;
+    func: () => void;
+  }[];
+}
+
+type PostWithSystem = Post | (PostSystem & { is_system: true });
 
 type PostMinimal = [post_id: string, user_id: string];
 
