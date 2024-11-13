@@ -1,6 +1,6 @@
 import { boot } from "quasar/wrappers";
 import axios, { AxiosError, AxiosInstance, AxiosResponse, isAxiosError } from "axios";
-import { authEndpoints, deleteAuthToken, getAuthToken, refresh } from "src/api/auth";
+import { authEndpoints, refresh } from "src/api/auth";
 import { postsEndpoints } from "src/api/posts";
 import router from "src/router";
 import { useMainStore } from "src/stores/main-store";
@@ -37,45 +37,27 @@ const apiEndpoints = {
   ping: "/ping"
 };
 
-const endpointsWithoutAuth = [authEndpoints.login, authEndpoints.register, authEndpoints.refresh, apiEndpoints.ping];
 let isRefreshing = false;
 let refreshTimeout: NodeJS.Timeout | null = null;
-let subscribers: Array<(token: string) => void> = [];
+let subscribers: Array<(success: boolean) => void> = [];
 
-const onRefreshed = (token: string) => {
-  subscribers.forEach((callback) => callback(token));
+const onRefreshed = () => {
+  subscribers.forEach((callback) => callback(true));
   subscribers = [];
 };
 
 const clearSubscribers = () => {
-  subscribers.forEach((callback) => callback(null!));
+  subscribers.forEach((callback) => callback(false));
   subscribers = [];
 };
 
-const addSubscriber = (callback: (token: string) => void) => {
+const addSubscriber = (callback: (success: boolean) => void) => {
   subscribers.push(callback);
 };
 
 function isConnectionError(e: AxiosError) {
   return !e.response || e.code === "ECONNABORTED";
 }
-
-api.interceptors.request.use(
-  (config) => {
-    const token = getAuthToken();
-
-    const requiresAuth = !endpointsWithoutAuth.some((endpoint) => config.url?.includes(endpoint));
-
-    if (token && requiresAuth) {
-      config.headers["Authorization"] = token;
-    }
-
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
 
 api.interceptors.response.use(
   (response: AxiosResponse) => {
@@ -132,20 +114,17 @@ api.interceptors.response.use(
 
       if (!isRefreshing) {
         isRefreshing = true;
-
-        let newToken: string;
+        let success = false;
 
         try {
           const refreshResponse = await refresh();
-          newToken = refreshResponse.data.data.access;
+          success = refreshResponse.data.success;
 
-          if (newToken) {
-            onRefreshed(newToken);
-            originalRequest.headers["Authorization"] = newToken;
+          if (success) {
+            onRefreshed();
             return api(originalRequest);
-          } else throw new Error("No new token received");
+          } else throw new Error("Unable to refresh token");
         } catch (refreshError) {
-          deleteAuthToken();
           clearSubscribers();
           router.push({ path: "/login" });
           return Promise.reject(refreshError);
@@ -153,8 +132,8 @@ api.interceptors.response.use(
           if (refreshTimeout) clearTimeout(refreshTimeout);
           refreshTimeout = setTimeout(() => {
             isRefreshing = false;
-            if (newToken) {
-              onRefreshed(newToken);
+            if (success) {
+              onRefreshed();
             } else if (subscribers) {
               clearSubscribers();
             }
@@ -163,17 +142,12 @@ api.interceptors.response.use(
       }
 
       return new Promise((resolve, reject) => {
-        addSubscriber((newToken) => {
-          if (newToken) {
-            originalRequest.headers["Authorization"] = newToken;
-            resolve(api(originalRequest));
-          } else {
-            reject(new Error("Unable to refresh token"));
-          }
+        addSubscriber((success: boolean) => {
+          if (success) resolve(api(originalRequest));
+          else reject("Unable to refresh token");
         });
       });
     } else if (response && response.status === 401) {
-      deleteAuthToken();
       clearSubscribers();
       router.push({ path: "/login" });
     }
