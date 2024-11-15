@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header unelevated>
+    <q-header unelevated :class="headersClass">
       <q-toolbar class="toolbar webkit-drag">
         <slot name="toolbar-before-logo" />
         <LogoComponent @icon-click="logoClick" :is-animated="isIconAnimated" icon-class="icon" class="webkit-no-drag" />
@@ -69,6 +69,7 @@ withDefaults(
     showDarkModeToggle?: boolean;
     inRouter?: boolean;
     menuOpened?: boolean;
+    headersClass?: string;
   }>(),
   {
     showDarkModeToggle: false,
