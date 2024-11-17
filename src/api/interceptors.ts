@@ -100,6 +100,7 @@ const refreshInterceptor = () => {
             } else throw new Error("Unable to refresh token");
           } catch (refreshError) {
             clearSubscribers();
+            localStorage.removeItem("auth");
             router.push({ path: "/login" });
             return Promise.reject(refreshError);
           } finally {
@@ -123,6 +124,7 @@ const refreshInterceptor = () => {
         });
       } else if (response && response.status === 401) {
         clearSubscribers();
+        localStorage.removeItem("auth");
         router.push({ path: "/login" });
       }
 

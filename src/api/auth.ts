@@ -16,6 +16,7 @@ async function register(username: string, email: string, password: string) {
     password: password,
     email: email
   });
+  if (r.data.success) localStorage.setItem("auth", "1");
   return r;
 }
 
@@ -24,11 +25,13 @@ async function login(email: string, password: string) {
     password: password,
     email: email
   });
+  if (r.data.success) localStorage.setItem("auth", "1");
   return r;
 }
 
 async function logout() {
   const r = await api.post<ResponseWithAccess>(authEndpoints.logout);
+  localStorage.removeItem("auth");
   return r;
 }
 
