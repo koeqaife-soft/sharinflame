@@ -1,5 +1,6 @@
 <template>
-  <q-pull-to-refresh @refresh="reloadPosts" class="pull-to-refresh">
+  <!--FIXME: Pull to refresh on phone-->
+  <q-pull-to-refresh @refresh="reloadPosts" class="pull-to-refresh" :disable="true">
     <q-scroll-area class="scroll-area" :visible="false">
       <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll" :key="scrollKey">
         <div v-for="(item, index) in items" :key="index" class="post-div">
