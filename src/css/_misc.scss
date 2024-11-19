@@ -20,3 +20,9 @@
   grid-template-columns: 1fr;
   gap: 8px;
 }
+
+.horizontal-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
