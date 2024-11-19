@@ -19,7 +19,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/",
-    redirect: () => (!!localStorage.getItem("access_token") ? "/app" : "/login")
+    redirect: () => (!!localStorage.getItem("auth") ? "/app" : "/login")
   },
 
   {
