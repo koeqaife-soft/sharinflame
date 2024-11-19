@@ -44,15 +44,24 @@
   --text: hsl(0deg, 0%, 0%);
   --card: hsl(var(--lvc-h), 100%, 95%);
   --card-hover: hsl(var(--lvc-h), 90%, 93%);
-  --card-high: hsl(var(--lvc-h), 58%, 91%);
+  --card-high: hsl(var(--lvc-h), 65%, 91%);
   --on-card: hsl(0deg, 0%, 0%);
   --outline: hsl(var(--lvc-h), 4%, 47%);
   --toolbar: var(--primary);
   --on-toolbar: var(--on-primary);
 }
 
+.index-10000 {
+  z-index: 10000;
+}
+
+.index-10 {
+  z-index: 10;
+}
+
 .q-header {
   @include bgColorTransition();
+
   background-color: var(--toolbar);
 
   div {
@@ -227,4 +236,8 @@
   .q-page-container {
     height: 100%;
   }
+}
+
+.q-separator {
+  background-color: var(--outline);
 }
