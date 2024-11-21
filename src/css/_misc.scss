@@ -25,4 +25,7 @@
   display: flex;
   align-items: flex-start;
   gap: 8px;
+  &.align-end {
+    align-items: flex-end;
+  }
 }
