@@ -37,5 +37,9 @@ export default {
 
   an_error_occurred: "An error occurred",
 
-  connecting: "Connecting"
+  connecting: "Connecting",
+
+  comments: "Comments",
+  post: "Post",
+  enter_comment: "Enter comment"
 };

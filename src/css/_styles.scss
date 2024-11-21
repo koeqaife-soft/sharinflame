@@ -241,3 +241,11 @@
 .q-separator {
   background-color: var(--outline);
 }
+
+.sticky-label {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background-color: var(--background-color);
+}

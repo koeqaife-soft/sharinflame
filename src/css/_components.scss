@@ -110,7 +110,8 @@
   }
 }
 
-.post {
+.post,
+.comment {
   @include bgColorTransition();
   @media (hover: hover) {
     &:hover {
@@ -193,5 +194,69 @@
   }
   .round {
     border-radius: 25px;
+  }
+}
+
+.post-dialog {
+  z-index: 1;
+  .q-dialog__inner {
+    margin-top: 58px;
+  }
+  .dialog-content {
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+    transition: border-color 0.25s ease, transform 0.25s ease-out;
+    height: 100%;
+    width: 100%;
+    padding: 8px;
+    max-width: 600px;
+    background-color: var(--background-color);
+    border-radius: 18px 18px 0px 0px !important;
+    display: flex;
+    flex-direction: column;
+  }
+  .card {
+    border-radius: 10px;
+  }
+  .scroll-area {
+    flex: 1;
+    margin-right: -8px;
+    margin-left: -8px;
+  }
+  .q-scrollarea__content {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .label-container {
+    div {
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .icon {
+      padding-left: 8px;
+      height: 22px;
+      width: 22px;
+    }
+    .q-icon,
+    .icon {
+      font-size: 20px;
+    }
+  }
+  .send-comment {
+    .q-card__section {
+      padding: 2px;
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+    .enter-comment {
+      border-radius: 30px;
+      min-height: 42px;
+      background-color: var(--card-high);
+      padding-left: 14px;
+    }
+    .send-button {
+      .q-icon {
+        font-size: 30px;
+      }
+    }
   }
 }
