@@ -5,6 +5,12 @@ interface ApiResponse<T = { [key: string]: unknown }> {
 }
 
 type ResponseWithAccess = ApiResponse<{ access: string }>;
+interface MetaData {
+  cache?: {
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+}
 
 interface UpdateProfileValues {
   display_name?: string;
@@ -46,6 +52,7 @@ interface Post {
   updated_at_unix: number;
 
   user: User;
+  _meta?: MetaData;
   actions: undefined;
 }
 
@@ -58,7 +65,23 @@ interface PostSystem {
     icon: string;
     func: () => void;
   }[];
+  _meta?: MetaData;
 }
+
+interface Comment {
+  comment_id: string;
+  post_id: string;
+  user_id: string;
+  content: string;
+  parent_comment_id?: string;
+  likes_count: number;
+  dislikes_count: number;
+  is_like?: boolean;
+}
+
+type CommentWithUser = Comment & {
+  user: User;
+};
 
 type PostWithSystem = Post | (PostSystem & { is_system: true });
 
@@ -67,3 +90,11 @@ type PostMinimal = [post_id: string, user_id: string];
 type ResponseWithPost = ApiResponse<Post>;
 type ResponseWithUser = ApiResponse<User>;
 type GetPostsBatchResponse = ApiResponse<{ posts: Post[]; errors?: { post: string; error_msg: string }[] }>;
+type GetCommentsResponse = ApiResponse<{
+  comments: Comment[];
+  next_cursor: string;
+  users: {
+    [key: string]: User;
+  };
+  has_more: boolean;
+}>;
