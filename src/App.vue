@@ -6,7 +6,7 @@
     :maximized="true"
     transition-show="fade"
     transition-hide="fade"
-    class="offline-dialog"
+    class="offline-dialog index-10000"
   >
     <main-layout :in-router="false" :show-dark-mode-toggle="true" class="layout">
       <div class="_container">
@@ -32,6 +32,7 @@ const offlineDialog = ref(true);
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function ping() {
+  await delay(Math.random());
   try {
     await api.post(apiEndpoints.ping);
   } catch {
@@ -39,11 +40,16 @@ async function ping() {
   }
 }
 
+function waitTime() {
+  const time = Math.max(mainStore.connectTries - 4, 1) * 2;
+  return Math.min(25, time);
+}
+
 async function pingInterval() {
   await ping();
   while (true) {
     if (mainStore.isOffline) {
-      await delay(Math.min(10, mainStore.connectTries * 2) * 1000);
+      await delay(waitTime() * 1000);
       await ping();
     }
     await delay(500);
