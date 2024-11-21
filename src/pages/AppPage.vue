@@ -1,5 +1,5 @@
 <template>
-  <main-layout :in-router="false" :menu-opened="categoriesMenuOpened">
+  <main-layout :in-router="false" :menu-opened="categoriesMenuOpened" headers-class="index-10">
     <template #toolbar-actions v-if="!isBigScreen">
       <open-profile-menu />
     </template>
@@ -47,7 +47,6 @@ const isSmallScreen = computed(() => screenSize.value <= 814);
 const isBigScreen = computed(() => screenSize.value >= 1200);
 
 const changeType = (type: KeyOfGetPostsTypes) => {
-  console.log(type);
   currentType.value = type;
 };
 
