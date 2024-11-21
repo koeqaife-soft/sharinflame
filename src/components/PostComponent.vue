@@ -36,6 +36,7 @@
           :label="formatNumber(postRef.comments_count)"
           class="comments round button"
           size="sm"
+          @click="postDialog"
         />
       </div>
     </q-card-actions>
@@ -56,40 +57,54 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { defineAsyncComponent, ref } from "vue";
 import UserAvatar from "./UserAvatar.vue";
 import { remReaction, setReaction } from "src/api/posts";
 import { formatNumber, formatStringForHtml } from "src/utils/format";
+import { useQuasar } from "quasar";
+
+const PostDialog = defineAsyncComponent(() => import("./post-dialog/PostDialog.vue"));
+const quasar = useQuasar();
 
 const props = defineProps<{
   post: PostWithSystem;
+  inDialog?: boolean;
 }>();
 
 const postRef = ref<PostWithSystem>(props.post);
-let debounceTimeout: NodeJS.Timeout | null = null;
-const clickCount = ref(0);
 
-function debounceAction(callback: () => void, delay: number) {
+let debounceTimeout: NodeJS.Timeout | null = null;
+
+function updateMeta(key: string, value: number) {
+  postRef.value._meta = postRef.value._meta || {};
+  postRef.value._meta[key] = value;
+}
+
+function getMeta(key: string, defaultValue: number = 0): number {
+  return (postRef.value._meta?.[key] ?? defaultValue) as number;
+}
+
+function debounce(callback: () => void, delay: number) {
   if (debounceTimeout) clearTimeout(debounceTimeout);
   debounceTimeout = setTimeout(callback, delay);
 }
 
-function like() {
-  if (clickCount.value <= 5) {
-    clickCount.value += 1;
-    performLike();
+function handleReaction(action: () => Promise<void>) {
+  const clickCount = getMeta("clickCount");
+  if (clickCount <= 5) {
+    updateMeta("clickCount", clickCount + 1);
+    action();
   } else {
-    debounceAction(performLike, 250);
+    debounce(action, 250);
   }
 }
 
+function like() {
+  handleReaction(performLike);
+}
+
 function dislike() {
-  if (clickCount.value <= 5) {
-    clickCount.value += 1;
-    performDislike();
-  } else {
-    debounceAction(performDislike, 250);
-  }
+  handleReaction(performDislike);
 }
 
 async function performLike() {
@@ -126,5 +141,15 @@ async function performDislike() {
 
     postRef.value.is_like = false;
   }
+}
+
+function postDialog() {
+  if (props.inDialog) return;
+  quasar.dialog({
+    component: PostDialog,
+    componentProps: {
+      post: postRef.value
+    }
+  });
 }
 </script>
