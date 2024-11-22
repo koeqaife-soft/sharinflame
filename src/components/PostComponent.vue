@@ -89,58 +89,55 @@ function debounce(callback: () => void, delay: number) {
   debounceTimeout = setTimeout(callback, delay);
 }
 
-function handleReaction(action: () => Promise<void>) {
+function handleReaction(isLike: boolean) {
   const clickCount = getMeta("clickCount");
-  if (clickCount <= 5) {
-    updateMeta("clickCount", clickCount + 1);
-    action();
+  updateMeta("clickCount", clickCount + 1);
+
+  updateReactionCounters(isLike);
+
+  if (clickCount > 0) {
+    debounce(() => performReaction(isLike), 1000);
   } else {
-    debounce(action, 250);
+    performReaction(isLike);
+  }
+}
+
+function updateReactionCounters(isLike: boolean) {
+  if (postRef.value.is_system) return;
+
+  if (postRef.value.is_like === isLike) {
+    postRef.value.is_like = undefined;
+    isLike ? postRef.value.likes_count-- : postRef.value.dislikes_count--;
+  } else {
+    if (postRef.value.is_like !== undefined) {
+      isLike ? postRef.value.dislikes_count-- : postRef.value.likes_count--;
+    }
+    isLike ? postRef.value.likes_count++ : postRef.value.dislikes_count++;
+    postRef.value.is_like = isLike;
+  }
+}
+
+async function performReaction(isLike: boolean) {
+  if (postRef.value.is_system) return;
+
+  try {
+    if (postRef.value.is_like === undefined) {
+      await remReaction(postRef.value.post_id);
+    } else {
+      await setReaction(postRef.value.post_id, { isLike });
+    }
+  } catch (error) {
+    updateReactionCounters(!isLike);
+    console.error(error);
   }
 }
 
 function like() {
-  handleReaction(performLike);
+  handleReaction(true);
 }
 
 function dislike() {
-  handleReaction(performDislike);
-}
-
-async function performLike() {
-  if (postRef.value.is_system) return;
-
-  if (postRef.value.is_like === true) {
-    await remReaction(postRef.value.post_id);
-
-    postRef.value.is_like = undefined;
-    postRef.value.likes_count -= 1;
-  } else {
-    await setReaction(postRef.value.post_id, true);
-
-    if (postRef.value.is_like === false) postRef.value.dislikes_count -= 1;
-    postRef.value.likes_count += 1;
-
-    postRef.value.is_like = true;
-  }
-}
-
-async function performDislike() {
-  if (postRef.value.is_system) return;
-
-  if (postRef.value.is_like === false) {
-    await remReaction(postRef.value.post_id);
-
-    postRef.value.is_like = undefined;
-    postRef.value.dislikes_count -= 1;
-  } else {
-    await setReaction(postRef.value.post_id, false);
-
-    if (postRef.value.is_like === true) postRef.value.likes_count -= 1;
-    postRef.value.dislikes_count += 1;
-
-    postRef.value.is_like = false;
-  }
+  handleReaction(false);
 }
 
 function postDialog() {
