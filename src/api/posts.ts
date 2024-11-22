@@ -10,7 +10,8 @@ export const postsEndpoints = {
   post_reactions: (id: string) => `/posts/${id}/reactions`,
   view: "/posts/view",
   get_posts_batch: "/posts/batch",
-  comments: (post_id: string) => `/posts/${post_id}/comments`
+  comments: (post_id: string) => `/posts/${post_id}/comments`,
+  comment_reactions: (post_id: string, comment_id: string) => `/posts/${post_id}/comments/${comment_id}/reactions`
 };
 
 export const getPostsTypes = {
@@ -44,14 +45,26 @@ async function viewPosts(postIds: string[]) {
   return r;
 }
 
-async function setReaction(id: string, isLike: boolean) {
+async function setReaction(postId: string, { commentId, isLike }: { commentId?: string; isLike: boolean }) {
   const data = { is_like: isLike };
-  const r = await api.post(postsEndpoints.post_reactions(id), data);
+  let endpoint: string;
+  if (commentId) {
+    endpoint = postsEndpoints.comment_reactions(postId, commentId);
+  } else {
+    endpoint = postsEndpoints.post_reactions(postId);
+  }
+  const r = await api.post(endpoint, data);
   return r;
 }
 
-async function remReaction(id: string) {
-  const r = await api.delete(postsEndpoints.post_reactions(id));
+async function remReaction(postId: string, commentId?: string) {
+  let endpoint: string;
+  if (commentId) {
+    endpoint = postsEndpoints.comment_reactions(postId, commentId);
+  } else {
+    endpoint = postsEndpoints.post_reactions(postId);
+  }
+  const r = await api.delete(endpoint);
   return r;
 }
 
