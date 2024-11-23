@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import LogoComponent from "src/components/LogoComponent.vue";
+import LogoComponent from "src/components/misc/LogoComponent.vue";
 import { onBeforeUnmount, ref, defineAsyncComponent } from "vue";
 
 const WindowActions = defineAsyncComponent(() => import("src/components/WindowActions.vue"));

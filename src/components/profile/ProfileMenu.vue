@@ -32,7 +32,7 @@
 import { ref, onMounted, watch, defineAsyncComponent } from "vue";
 import { useProfileStore } from "src/stores/profile-store";
 import { useQuasar } from "quasar";
-import MySwitch from "./MySwitch.vue";
+import MySwitch from "../misc/MySwitch.vue";
 const UserAvatar = defineAsyncComponent(() => import("./UserAvatar.vue"));
 
 const quasar = useQuasar();

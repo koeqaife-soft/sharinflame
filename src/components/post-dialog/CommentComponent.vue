@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import UserAvatar from "../UserAvatar.vue";
+import UserAvatar from "../profile/UserAvatar.vue";
 import { formatNumber, formatStringForHtml } from "src/utils/format";
 import { remReaction, setReaction } from "src/api/posts";
 

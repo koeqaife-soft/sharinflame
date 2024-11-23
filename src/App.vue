@@ -23,7 +23,7 @@ import { onMounted, ref, watch, defineAsyncComponent } from "vue";
 import { useMainStore } from "./stores/main-store";
 import { api, apiEndpoints } from "./boot/axios";
 
-const LogoComponent = defineAsyncComponent(() => import("./components/LogoComponent.vue"));
+const LogoComponent = defineAsyncComponent(() => import("./components/misc/LogoComponent.vue"));
 const MainLayout = defineAsyncComponent(() => import("./layouts/MainLayout.vue"));
 
 const mainStore = useMainStore();

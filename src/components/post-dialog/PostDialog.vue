@@ -66,14 +66,14 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent, ref, watch } from "vue";
-import PostComponent from "../PostComponent.vue";
+import PostComponent from "../posts/PostComponent.vue";
 import CloseableContent from "../misc/CloseableContent.vue";
 import { useDialogPluginComponent } from "quasar";
 import { createComment, getComments } from "src/api/posts";
 import { useProfileStore } from "src/stores/profile-store";
 
 const CommentComponent = defineAsyncComponent(() => import("./CommentComponent.vue"));
-const UserAvatar = defineAsyncComponent(() => import("../UserAvatar.vue"));
+const UserAvatar = defineAsyncComponent(() => import("../profile/UserAvatar.vue"));
 
 const props = defineProps<{
   post: Post;

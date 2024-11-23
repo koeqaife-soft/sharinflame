@@ -28,13 +28,15 @@
 import { computed, onBeforeUnmount, onMounted, ref, defineAsyncComponent } from "vue";
 import { KeyOfGetPostsTypes } from "src/api/posts";
 import { useI18n } from "vue-i18n";
-import type { ButtonProps } from "src/components/CategoryButton.vue";
-import PostScroll from "src/components/PostScroll.vue";
+import type { ButtonProps } from "src/components/categories/CategoryButton.vue";
+import PostScroll from "src/components/posts/PostScroll.vue";
 import MainLayout from "src/layouts/MainLayout.vue";
 
-const CategoryButtonsContainer = defineAsyncComponent(() => import("src/components/CategoryButtonsContainer.vue"));
-const ProfileMenu = defineAsyncComponent(() => import("src/components/ProfileMenu.vue"));
-const OpenProfileMenu = defineAsyncComponent(() => import("src/components/OpenProfileMenu.vue"));
+const CategoryButtonsContainer = defineAsyncComponent(
+  () => import("src/components/categories/CategoryButtonsContainer.vue")
+);
+const ProfileMenu = defineAsyncComponent(() => import("src/components/profile/ProfileMenu.vue"));
+const OpenProfileMenu = defineAsyncComponent(() => import("src/components/profile/OpenProfileMenu.vue"));
 
 const { t } = useI18n();
 

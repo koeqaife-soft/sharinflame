@@ -10,10 +10,10 @@
 </template>
 <script setup lang="ts">
 import { defineAsyncComponent } from "vue";
-import type { ButtonProps } from "src/components/CategoryButton.vue";
+import type { ButtonProps } from "./CategoryButton.vue";
 import { KeyOfGetPostsTypes } from "src/api/posts";
 
-const CategoryButton = defineAsyncComponent(() => import("src/components/CategoryButton.vue"));
+const CategoryButton = defineAsyncComponent(() => import("./CategoryButton.vue"));
 
 interface Props {
   categoriesList: ButtonProps[];
