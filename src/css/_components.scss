@@ -182,7 +182,7 @@
 
     &.active {
       color: var(--primary);
-      font-variation-settings: "FILL" 1;
+      animation: fillActivate 0.1s ease-out forwards;
     }
   }
 
