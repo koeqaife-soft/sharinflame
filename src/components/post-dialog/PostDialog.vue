@@ -55,8 +55,21 @@
               maxlength="1024"
               :label="$t('enter_comment')"
               class="full-width enter-comment"
+              :disable="sending"
             />
-            <q-btn round flat icon="sym_r_send" class="send-button" @click="sendComment" />
+            <q-btn
+              round
+              flat
+              icon="sym_r_send"
+              class="send-button"
+              @click="sendComment"
+              :loading="sending"
+              :disable="text.length == 0"
+            >
+              <template v-slot:loading>
+                <q-spinner class="loading" />
+              </template>
+            </q-btn>
           </div>
         </q-card-section>
       </q-card>
@@ -85,6 +98,7 @@ const postRef = ref(props.post);
 const scrollKey = ref(Date.now());
 const items = ref((postRef.value._meta?.comments || []) as CommentWithUser[]);
 const text = ref((postRef.value._meta?.text || "") as string);
+const sending = ref(false);
 watch(text, () => updateMeta("text", text.value));
 
 defineEmits([...useDialogPluginComponent.emits]);
@@ -151,17 +165,22 @@ async function loadComments(index: number, done: (stop?: boolean) => void) {
 }
 
 async function sendComment() {
-  const r = await createComment(postRef.value.post_id, text.value);
-  if (r.data.success) {
-    const comment: CommentWithUser = {
-      ...r.data.data,
-      user: (await profileStore.getProfile())!
-    };
-    items.value.unshift(comment);
-    updateMeta("comments", items.value);
+  sending.value = true;
+  try {
+    const r = await createComment(postRef.value.post_id, text.value);
+    if (r.data.success) {
+      const comment: CommentWithUser = {
+        ...r.data.data,
+        user: (await profileStore.getProfile())!
+      };
+      items.value.unshift(comment);
+      updateMeta("comments", items.value);
 
-    text.value = "";
-    postRef.value.comments_count += 1;
+      text.value = "";
+      postRef.value.comments_count += 1;
+    }
+  } finally {
+    sending.value = false;
   }
 }
 </script>
