@@ -16,7 +16,7 @@ function formatNumber(num: number): string {
 
 function formatStringForHtml(str: string): string {
   // NOTE: this code is for “just in case”, mostly the server will handle XSS attacks
-  const allowedTags = /^<\/?(i|b|strong|em|u|br)>$/;
+  const allowedTags = /^<\/?(i|b|strong|em|u|br|mark|blockquote)>$/;
 
   str = str.replace(/<br>/g, "\n");
 
@@ -33,7 +33,12 @@ function formatStringForHtml(str: string): string {
       "'": "&#x27;"
     };
 
-    return match.replace(/([&<>"'])/g, (m) => map[m] || m);
+    return match.replace(/([&<>"'])/g, (m) => {
+      if (m === "&" && /&(?:amp|lt|gt|quot|#x27);/i.test(match)) {
+        return m;
+      }
+      return map[m] || m;
+    });
   });
 
   str = str.replace(/\n/g, "<br>");
