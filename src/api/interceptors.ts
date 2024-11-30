@@ -64,6 +64,12 @@ const refreshInterceptor = () => {
   let refreshTimeout: NodeJS.Timeout | null = null;
   let subscribers: Array<(success: boolean) => void> = [];
 
+  const invalidAuth = () => {
+    clearSubscribers();
+    localStorage.removeItem("auth");
+    router.push({ path: "/login" });
+  };
+
   const onRefreshed = () => {
     subscribers.forEach((callback) => callback(true));
     subscribers = [];
@@ -83,6 +89,9 @@ const refreshInterceptor = () => {
     async (error: AxiosError<ApiResponse>) => {
       const { response } = error;
 
+      console.log(response?.config.url);
+      if (response?.config.url === "/auth/refresh") invalidAuth();
+
       if (response && response.status === 401 && response.data?.error === "EXPIRED_TOKEN") {
         const originalRequest = error.config!;
 
@@ -99,9 +108,7 @@ const refreshInterceptor = () => {
               return api(originalRequest);
             } else throw new Error("Unable to refresh token");
           } catch (refreshError) {
-            clearSubscribers();
-            localStorage.removeItem("auth");
-            router.push({ path: "/login" });
+            invalidAuth();
             return Promise.reject(refreshError);
           } finally {
             if (refreshTimeout) clearTimeout(refreshTimeout);
@@ -122,10 +129,8 @@ const refreshInterceptor = () => {
             else reject("Unable to refresh token");
           });
         });
-      } else if (response && response.status === 401) {
-        clearSubscribers();
-        localStorage.removeItem("auth");
-        router.push({ path: "/login" });
+      } else if (response && response.status === 401 && router.currentRoute.value.path != "/login") {
+        invalidAuth();
       }
 
       return Promise.reject(error);
