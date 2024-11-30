@@ -4,7 +4,7 @@ interface ApiResponse<T = { [key: string]: unknown }> {
   data: T;
 }
 
-type ResponseWithAccess = ApiResponse<{ access: string }>;
+type AuthResponse = ApiResponse<{ access: string; refresh: string }>;
 interface MetaData {
   cache?: {
     [key: string]: unknown;

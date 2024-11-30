@@ -2,7 +2,7 @@ import { AxiosError, AxiosResponse, isAxiosError, AxiosInstance } from "axios";
 import { useMainStore } from "src/stores/main-store";
 import { watch } from "vue";
 import router from "src/router";
-import { refresh } from "src/api/auth";
+import { refresh, getAccessToken, clearTokens, noAuthEndpoints } from "src/api/auth";
 
 let api: AxiosInstance;
 type mainStoreType = ReturnType<typeof useMainStore>;
@@ -66,7 +66,7 @@ const refreshInterceptor = () => {
 
   const invalidAuth = () => {
     clearSubscribers();
-    localStorage.removeItem("auth");
+    clearTokens();
     router.push({ path: "/login" });
   };
 
@@ -138,9 +138,25 @@ const refreshInterceptor = () => {
   );
 };
 
+const authInterceptor = () => {
+  api.interceptors.request.use(
+    (config) => {
+      if (!config.url || noAuthEndpoints.includes(config.url)) return config;
+
+      const token = getAccessToken();
+      if (token) {
+        config.headers["Authorization"] = token;
+      }
+      return config;
+    },
+    (error) => Promise.reject(error)
+  );
+};
+
 async function init(_api: AxiosInstance, _mainStore: mainStoreType) {
   api = _api;
   mainStore = _mainStore;
+  authInterceptor();
   connectionInterceptor();
   refreshInterceptor();
 }
