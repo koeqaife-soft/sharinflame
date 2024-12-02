@@ -27,6 +27,9 @@
   --toolbar: var(--primary);
   --on-toolbar: var(--on-primary);
 
+  --toolbar-alt: var(--card);
+  --on-toolbar-alt: var(--on-card);
+
   --q-primary: var(--primary);
   --q-secondary: var(--secondary);
   background: var(--background-color) !important;
@@ -70,6 +73,7 @@
   span,
   div,
   .icon {
+    @include onlyColorTransition();
     color: var(--on-toolbar);
   }
 
