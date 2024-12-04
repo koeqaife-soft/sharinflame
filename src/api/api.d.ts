@@ -30,6 +30,7 @@ interface User {
   bio?: string;
   gender?: string;
   languages?: string[];
+  created_at: number;
 }
 
 interface Post {
