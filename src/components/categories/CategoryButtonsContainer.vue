@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div :class="containerClass || 'container'">
     <category-button
       v-for="category in categoriesList"
       :key="category.label"
@@ -11,13 +11,13 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from "vue";
 import type { ButtonProps } from "./CategoryButton.vue";
-import { KeyOfGetPostsTypes } from "src/api/posts";
 
 const CategoryButton = defineAsyncComponent(() => import("./CategoryButton.vue"));
 
 interface Props {
   categoriesList: ButtonProps[];
-  currentType: KeyOfGetPostsTypes;
+  currentType: string;
+  containerClass?: string;
 }
 
 defineProps<Props>();
