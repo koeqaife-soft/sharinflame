@@ -4,7 +4,7 @@
     <q-scroll-area class="scroll-area" :visible="false">
       <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll" :key="scrollKey">
         <div v-for="(item, index) in items" :key="index" class="post-div">
-          <PostComponent :post="item" class="q-mb-sm animation-fade-in-down" />
+          <post-component :post="item" class="q-mb-sm animation-fade-in-down" />
         </div>
         <template v-slot:loading v-if="!pullToRefreshDone || items.length > 0">
           <div class="row justify-center q-my-md">
