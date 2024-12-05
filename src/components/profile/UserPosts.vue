@@ -15,6 +15,13 @@
             @update:model-value="reloadPosts"
           />
           <q-space />
+          <q-btn
+            flat
+            round
+            :icon="`sym_r_${expand ? 'collapse_content' : 'expand_content'}`"
+            size="xs"
+            @click="toggleExpand"
+          />
           <q-btn flat round icon="sym_r_refresh" size="xs" @click="reloadPosts" />
         </div>
       </q-card>
@@ -44,10 +51,17 @@ const props = defineProps<{
 
 let cursor: string | undefined;
 
+const expand = defineModel<boolean>("expand");
+
 const items = ref<PostWithSystem[]>([]);
 const scrollKey = ref(Date.now());
 const sortOptions = ["old", "new", "popular"] as const;
 const sort = ref<(typeof sortOptions)[number]>("new");
+
+function toggleExpand() {
+  expand.value ||= false;
+  expand.value = !expand.value;
+}
 
 function reloadPosts() {
   items.value = [];
@@ -59,14 +73,24 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
   try {
     const r = await getUserPosts(props.user.user_id, cursor, sort.value);
     if (r.data.success) {
-      const posts = r.data.data.posts.map(
+      const newPosts = r.data.data.posts.map(
         (post) =>
           ({
             ...post,
             user: props.user
           } as PostWithSystem)
       );
-      items.value.push(...posts);
+      const currentPosts = items.value;
+      newPosts.map((newPost) => {
+        const existingIndex = currentPosts.findIndex((post) => post.post_id === newPost.post_id);
+
+        if (existingIndex !== -1) {
+          currentPosts[existingIndex] = newPost;
+        } else {
+          currentPosts.push(newPost);
+        }
+        return newPost;
+      });
       cursor = r.data.data.next_cursor;
       done(!r.data.data.has_more);
     }
