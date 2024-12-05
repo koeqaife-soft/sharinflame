@@ -8,7 +8,7 @@
     maximized
     :key="user.user_id"
   >
-    <closeable-content v-on:hide="dialogRef!.hide()">
+    <closeable-content v-on:hide="dialogRef!.hide()" :class="{ expand: expand }">
       <div class="profile-info">
         <q-img :src="userRef.banner_url" class="card banner" />
         <div class="profile-inner">
@@ -25,7 +25,7 @@
         container-class="horizontal-container card profile-categories q-mb-sm"
       />
       <user-dialog-info :user="userRef" v-if="currentType == 'info'" :meta="meta" />
-      <user-dialog-posts :user="userRef" v-else-if="currentType == 'posts'" :meta="meta" />
+      <user-dialog-posts :user="userRef" v-else-if="currentType == 'posts'" :meta="meta" v-model:expand="expand" />
     </closeable-content>
   </q-dialog>
 </template>
@@ -48,6 +48,7 @@ const { dialogRef, onDialogHide } = useDialogPluginComponent();
 const { t } = useI18n();
 const mainStore = useMainStore();
 const meta = ref({});
+const expand = ref(false);
 
 const props = defineProps<{
   user: User;
