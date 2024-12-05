@@ -267,3 +267,15 @@ mark {
   padding: 1px;
   border-radius: 2px;
 }
+
+.q-menu {
+  @include elevation(3);
+  outline: 1px solid var(--outline);
+  border-radius: 8px;
+  background-color: var(--background-color);
+  color: var(--text);
+  .q-item--active {
+    color: var(--on-primary);
+    background-color: var(--primary);
+  }
+}
