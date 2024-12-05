@@ -33,11 +33,13 @@
 }
 
 .animation-fade-in-up {
-  animation: fadeInUp 0.5s ease forwards;
+  opacity: 0;
+  animation: fadeInUp var(--anim-duration, 0.5s) ease forwards var(--anim-delay, 0ms);
 }
 
 .animation-fade-in-down {
-  animation: fadeInDown 0.5s ease forwards;
+  opacity: 0;
+  animation: fadeInDown var(--anim-duration, 0.5s) ease forwards var(--anim-delay, 0ms);
 }
 
 @keyframes rotate180 {
