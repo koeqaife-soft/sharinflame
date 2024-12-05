@@ -3,7 +3,11 @@ import { defineStore } from "pinia";
 export const useMainStore = defineStore("main", {
   state: () => ({
     isOffline: true,
-    connectTries: 4
+    connectTries: 4,
+    openedDialogs: {
+      user: () => {},
+      post: () => {}
+    }
   }),
   getters: {},
   actions: {
