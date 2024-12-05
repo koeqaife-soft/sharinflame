@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-const model = defineModel();
+const model = defineModel<boolean>();
 
 function toggle() {
   model.value = !model.value;
