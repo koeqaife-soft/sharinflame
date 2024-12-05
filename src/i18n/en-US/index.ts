@@ -1,4 +1,6 @@
 export default {
+  locale: "en-US",
+
   email: "Email",
   password: "Password",
   confirm_password: "Confirm Password",
@@ -41,5 +43,14 @@ export default {
 
   comments: "Comments",
   post: "Post",
-  enter_comment: "Enter comment"
+  enter_comment: "Enter comment",
+
+  info: "Info",
+  posts: "Posts",
+  about_me: "About Me",
+  created_at: "Created At",
+
+  sort_new: "New",
+  sort_old: "Old",
+  sort_popular: "Popular"
 };
