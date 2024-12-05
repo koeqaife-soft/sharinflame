@@ -46,4 +46,17 @@ function formatStringForHtml(str: string): string {
   return str;
 }
 
-export { formatNumber, formatStringForHtml };
+function formatUnixTime(unixTime: number, locale: string = "en") {
+  const date = new Date(unixTime * 1000);
+  const formatter = new Intl.DateTimeFormat(locale, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
+
+  return formatter.format(date);
+}
+
+export { formatNumber, formatStringForHtml, formatUnixTime };
