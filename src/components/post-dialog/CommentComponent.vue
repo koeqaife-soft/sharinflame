@@ -1,7 +1,7 @@
 <template>
   <q-card class="comment card" unelevated :key="commentRef.comment_id">
     <q-card-section class="q-pb-none">
-      <user-avatar :user="commentRef.user" />
+      <open-user-dialog :user="commentRef.user" />
       <div class="text-container">
         <div class="username">
           {{ commentRef.user.display_name || commentRef.user.username }}
@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import UserAvatar from "../profile/UserAvatar.vue";
+import OpenUserDialog from "../profile/OpenUserDialog.vue";
 import { formatNumber, formatStringForHtml } from "src/utils/format";
 import { remReaction, setReaction } from "src/api/posts";
 

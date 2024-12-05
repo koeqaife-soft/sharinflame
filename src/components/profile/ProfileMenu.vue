@@ -1,6 +1,6 @@
 <template>
   <div class="container profile-menu-component">
-    <q-btn :class="['open-profile', buttonsClass]" :key="user?.user_id || 0" unelevated no-caps>
+    <q-btn :class="['open-profile', buttonsClass]" :key="user?.user_id || 0" unelevated no-caps @click="openUserDialog">
       <user-avatar :user="user!" />
       <div class="text-container">
         <div class="label text-body2">{{ $t("view_profile") }}</div>
@@ -33,7 +33,9 @@ import { ref, onMounted, watch, defineAsyncComponent } from "vue";
 import { useProfileStore } from "src/stores/profile-store";
 import { useQuasar } from "quasar";
 import MySwitch from "../misc/MySwitch.vue";
+
 const UserAvatar = defineAsyncComponent(() => import("./UserAvatar.vue"));
+const UserDialog = defineAsyncComponent(() => import("./UserDialog.vue"));
 
 const quasar = useQuasar();
 
@@ -58,6 +60,15 @@ async function loadUser() {
 
 interface Props {
   buttonsClass: string;
+}
+
+function openUserDialog() {
+  quasar.dialog({
+    component: UserDialog,
+    componentProps: {
+      user: user.value
+    }
+  });
 }
 
 defineProps<Props>();

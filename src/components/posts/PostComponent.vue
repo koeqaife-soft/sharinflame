@@ -1,7 +1,7 @@
 <template>
   <q-card class="post card" unelevated :key="postRef.post_id">
     <q-card-section class="q-pb-none">
-      <user-avatar :user="postRef.user" v-if="!postRef.is_system" />
+      <open-user-dialog :user="postRef.user" v-if="!postRef.is_system" />
       <div class="text-container">
         <div class="username">
           {{ postRef.is_system ? $t("system") : postRef.user.display_name || postRef.user.username }}
@@ -58,7 +58,7 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent, ref } from "vue";
-import UserAvatar from "../profile/UserAvatar.vue";
+import OpenUserDialog from "../profile/OpenUserDialog.vue";
 import { remReaction, setReaction } from "src/api/posts";
 import { formatNumber, formatStringForHtml } from "src/utils/format";
 import { useQuasar } from "quasar";
