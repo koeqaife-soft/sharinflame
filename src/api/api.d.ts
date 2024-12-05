@@ -57,6 +57,10 @@ interface Post {
   actions: undefined;
 }
 
+type PostWithoutUser = Omit<Post, "user"> & {
+  user: undefined;
+};
+
 interface PostSystem {
   post_id: string;
   content: string;
@@ -97,5 +101,10 @@ type GetCommentsResponse = ApiResponse<{
   users: {
     [key: string]: User;
   };
+  has_more: boolean;
+}>;
+type GetUserPostsResponse = ApiResponse<{
+  posts: PostWithoutUser[];
+  next_cursor: string;
   has_more: boolean;
 }>;

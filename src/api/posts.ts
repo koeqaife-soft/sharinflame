@@ -11,7 +11,8 @@ export const postsEndpoints = {
   view: "/posts/view",
   get_posts_batch: "/posts/batch",
   comments: (post_id: string) => `/posts/${post_id}/comments`,
-  comment_reactions: (post_id: string, comment_id: string) => `/posts/${post_id}/comments/${comment_id}/reactions`
+  comment_reactions: (post_id: string, comment_id: string) => `/posts/${post_id}/comments/${comment_id}/reactions`,
+  get_user_posts: (user_id: string) => `/users/${user_id}/posts`
 };
 
 export const getPostsTypes = {
@@ -81,8 +82,29 @@ async function getComments(post_id: string, cursor?: string) {
   return r;
 }
 
+async function getUserPosts(user_id: string, cursor?: string, sort?: "new" | "old" | "popular") {
+  const r = await api.get<GetUserPostsResponse>(postsEndpoints.get_user_posts(user_id), {
+    params: {
+      ...(cursor && { cursor }),
+      ...(sort && { sort })
+    }
+  });
+  return r;
+}
+
 async function init(_api: AxiosInstance) {
   api = _api;
 }
 
-export { init, getPost, getPosts, viewPosts, getPostsBatch, setReaction, remReaction, createComment, getComments };
+export {
+  init,
+  getPost,
+  getPosts,
+  viewPosts,
+  getPostsBatch,
+  setReaction,
+  remReaction,
+  createComment,
+  getComments,
+  getUserPosts
+};
