@@ -2,7 +2,7 @@
   <q-dialog
     transition-show="slide-up"
     transition-hide="slide-down"
-    class="post-dialog"
+    class="post-dialog card-dialog"
     ref="dialogRef"
     @hide="onDialogHide"
     maximized
@@ -30,7 +30,7 @@
             </div>
           </q-card>
         </div>
-        <q-infinite-scroll @load="loadComments" class="posts-infinite-scroll" :key="scrollKey">
+        <q-infinite-scroll @load="loadComments" class="posts-infinite-scroll full-height" :key="scrollKey">
           <div v-for="item in items" :key="item.comment_id" class="comment-div">
             <comment-component :comment="item" class="q-mb-sm animation-fade-in-down" />
           </div>
@@ -78,12 +78,13 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, ref, watch } from "vue";
+import { defineAsyncComponent, onMounted, ref, watch } from "vue";
 import PostComponent from "../posts/PostComponent.vue";
 import CloseableContent from "../misc/CloseableContent.vue";
 import { useDialogPluginComponent } from "quasar";
 import { createComment, getComments } from "src/api/posts";
 import { useProfileStore } from "src/stores/profile-store";
+import { useMainStore } from "src/stores/main-store";
 
 const CommentComponent = defineAsyncComponent(() => import("./CommentComponent.vue"));
 const UserAvatar = defineAsyncComponent(() => import("../profile/UserAvatar.vue"));
@@ -92,10 +93,11 @@ const props = defineProps<{
   post: Post;
 }>();
 
+const mainStore = useMainStore();
 const profileStore = useProfileStore();
 
 const postRef = ref(props.post);
-const scrollKey = ref(Date.now());
+const scrollKey = ref(getMeta("scrollKey", Date.now()));
 const items = ref((postRef.value._meta?.comments || []) as CommentWithUser[]);
 const text = ref((postRef.value._meta?.text || "") as string);
 const sending = ref(false);
@@ -183,4 +185,10 @@ async function sendComment() {
     sending.value = false;
   }
 }
+
+onMounted(async () => {
+  updateMeta("scrollKey", scrollKey.value);
+  mainStore.openedDialogs.post();
+  mainStore.openedDialogs.post = dialogRef.value!.hide;
+});
 </script>
