@@ -9,7 +9,7 @@ import { defineAsyncComponent } from "vue";
 
 const quasar = useQuasar();
 
-const UserAvatar = defineAsyncComponent(() => import("./UserAvatar.vue"));
+const UserAvatar = defineAsyncComponent(() => import("../profile/UserAvatar.vue"));
 const UserDialog = defineAsyncComponent(() => import("./UserDialog.vue"));
 
 const props = defineProps<{

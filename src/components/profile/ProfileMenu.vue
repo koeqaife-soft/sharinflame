@@ -35,7 +35,7 @@ import { useQuasar } from "quasar";
 import MySwitch from "../misc/MySwitch.vue";
 
 const UserAvatar = defineAsyncComponent(() => import("./UserAvatar.vue"));
-const UserDialog = defineAsyncComponent(() => import("./UserDialog.vue"));
+const UserDialog = defineAsyncComponent(() => import("../dialogs/UserDialog.vue"));
 
 const quasar = useQuasar();
 

@@ -58,12 +58,12 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent, ref } from "vue";
-import OpenUserDialog from "../profile/OpenUserDialog.vue";
+import OpenUserDialog from "../dialogs/OpenUserDialog.vue";
 import { remReaction, setReaction } from "src/api/posts";
 import { formatNumber, formatStringForHtml } from "src/utils/format";
 import { useQuasar } from "quasar";
 
-const PostDialog = defineAsyncComponent(() => import("../post-dialog/PostDialog.vue"));
+const PostDialog = defineAsyncComponent(() => import("../dialogs/PostDialog.vue"));
 const quasar = useQuasar();
 
 const props = defineProps<{

@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import OpenUserDialog from "../profile/OpenUserDialog.vue";
+import OpenUserDialog from "../dialogs/OpenUserDialog.vue";
 import { formatNumber, formatStringForHtml } from "src/utils/format";
 import { remReaction, setReaction } from "src/api/posts";
 

@@ -86,7 +86,7 @@ import { createComment, getComments } from "src/api/posts";
 import { useProfileStore } from "src/stores/profile-store";
 import { useMainStore } from "src/stores/main-store";
 
-const CommentComponent = defineAsyncComponent(() => import("./CommentComponent.vue"));
+const CommentComponent = defineAsyncComponent(() => import("../posts/CommentComponent.vue"));
 const UserAvatar = defineAsyncComponent(() => import("../profile/UserAvatar.vue"));
 
 const props = defineProps<{

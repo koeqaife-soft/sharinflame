@@ -31,7 +31,7 @@
 </template>
 <script setup lang="ts">
 import { useDialogPluginComponent } from "quasar";
-import UserAvatar from "./UserAvatar.vue";
+import UserAvatar from "../profile/UserAvatar.vue";
 import CloseableContent from "../misc/CloseableContent.vue";
 import CategoryButtonsContainer from "../categories/CategoryButtonsContainer.vue";
 import { onMounted, ref, computed, defineAsyncComponent } from "vue";
