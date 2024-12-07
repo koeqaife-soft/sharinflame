@@ -21,11 +21,19 @@
       :class="['create-post', buttonsClass]"
       icon="sym_r_add_circle"
       :label="$t('create_post')"
+      @click="emit('close-menu')"
       unelevated
       no-caps
     />
     <q-separator />
-    <q-btn :class="['settings', buttonsClass]" icon="sym_r_settings" :label="$t('settings')" unelevated no-caps />
+    <q-btn
+      :class="['settings', buttonsClass]"
+      icon="sym_r_settings"
+      :label="$t('settings')"
+      unelevated
+      no-caps
+      @click="emit('close-menu')"
+    />
   </div>
 </template>
 <script setup lang="ts">
@@ -62,6 +70,10 @@ interface Props {
   buttonsClass: string;
 }
 
+const emit = defineEmits<{
+  (e: "close-menu"): void;
+}>();
+
 function openUserDialog() {
   quasar.dialog({
     component: UserDialog,
@@ -69,6 +81,7 @@ function openUserDialog() {
       user: user.value
     }
   });
+  emit("close-menu");
 }
 
 defineProps<Props>();
