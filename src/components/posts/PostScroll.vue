@@ -29,6 +29,7 @@ const items = ref<PostWithSystem[]>([]);
 const scrollKey = ref<string>(props.type);
 const store = usePostsStore();
 const pullToRefreshDone = ref<(() => void) | undefined>(undefined);
+const toView: string[] = [];
 
 const { t } = useI18n();
 
@@ -38,6 +39,13 @@ function onTypeChange() {
   items.value = [];
   store.reset();
   scrollKey.value = `${props.type}-${Date.now()}`;
+}
+
+function viewInChunks(posts: string[], chunkSize: number = 10) {
+  while (posts.length > 0) {
+    const chunk = posts.splice(0, chunkSize);
+    viewPosts(chunk);
+  }
 }
 
 function reloadPosts(done?: () => void) {
@@ -55,6 +63,9 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
   const toLoad = items.value.length == 0 ? 10 : 5;
   try {
     if (store.loaded.length == 0 && store.notLoaded.length == 0) {
+      if (toView.length > 0) {
+        viewInChunks(toView);
+      }
       const r = await store.getPosts(props.type);
       if (!r.success) return;
     }
@@ -66,8 +77,11 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
 
       items.value.push(...posts);
 
-      const postIds = posts.map((post) => String(post.post_id));
-      viewPosts(postIds);
+      const postIds = posts.map((post) => post.post_id);
+      toView.push(...postIds);
+      if (toView.length >= 10) {
+        viewInChunks(toView);
+      }
     }
     done();
   } catch (e) {
