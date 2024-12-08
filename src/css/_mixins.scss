@@ -5,9 +5,9 @@
 
   @if $offset {
     @if $element == "self" {
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 $offset $offset rgba(0, 0, 0, 0.14),
+      box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.2), 0 $offset $offset rgba(0, 0, 0, 0.14),
         0 ($offset * 2) ($offset * 2) rgba(0, 0, 0, 0.12);
-    } @else if $element == "after" or $element == "after" {
+    } @else if $element == "before" or $element == "after" {
       position: relative;
       &::#{$element} {
         content: "";
@@ -16,7 +16,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 $offset $offset rgba(0, 0, 0, 0.14),
+        box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.2), 0 $offset $offset rgba(0, 0, 0, 0.14),
           0 ($offset * 2) ($offset * 2) rgba(0, 0, 0, 0.12);
         z-index: -1;
       }
