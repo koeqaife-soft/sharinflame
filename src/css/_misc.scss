@@ -28,3 +28,11 @@
     align-items: flex-end;
   }
 }
+
+.fix-scroll-area {
+  flex: 1;
+  margin: calc(var(--fix-padding, 8px) * -1);
+  .q-scrollarea__content {
+    padding: var(--fix-padding, 8px);
+  }
+}
