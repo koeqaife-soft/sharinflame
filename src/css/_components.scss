@@ -207,15 +207,6 @@
     max-width: 600px;
     border-radius: 18px 18px 0px 0px !important;
   }
-  .scroll-area {
-    flex: 1;
-    margin-right: -8px;
-    margin-left: -8px;
-  }
-  .q-scrollarea__content {
-    padding-left: 8px;
-    padding-right: 8px;
-  }
   .send-comment {
     .q-card__section {
       padding: 2px;
@@ -287,6 +278,17 @@
     transition: height 0.3s ease-out, opacity 0.3s ease-out;
     transition-delay: 0.02s;
     height: 240px;
+    position: relative;
+  }
+  .close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 10;
+    background-color: var(--background-color);
+    .q-icon {
+      color: var(--text);
+    }
   }
   .profile-inner {
     padding-top: 8px;
@@ -344,15 +346,6 @@
   .bio .text {
     font-size: 14px;
     font-weight: 400;
-  }
-  .scroll-area {
-    flex: 1;
-    margin-right: -8px;
-    margin-left: -8px;
-  }
-  .q-scrollarea__content {
-    padding-left: 8px;
-    padding-right: 8px;
   }
   .posts-infinite-scroll {
     z-index: 2;
