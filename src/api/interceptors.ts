@@ -89,7 +89,6 @@ const refreshInterceptor = () => {
     async (error: AxiosError<ApiResponse>) => {
       const { response } = error;
 
-      console.log(response?.config.url);
       if (response?.config.url === "/auth/refresh") invalidAuth();
 
       if (response && response.status === 401 && response.data?.error === "EXPIRED_TOKEN") {
