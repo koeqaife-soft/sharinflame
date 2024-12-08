@@ -41,8 +41,8 @@ import type { ButtonProps } from "../categories/CategoryButton.vue";
 import { useI18n } from "vue-i18n";
 import { useMainStore } from "src/stores/main-store";
 
-const UserDialogInfo = defineAsyncComponent(() => import("./UserInfo.vue"));
-const UserDialogPosts = defineAsyncComponent(() => import("./UserPosts.vue"));
+const UserDialogInfo = defineAsyncComponent(() => import("./user-dialog/UserInfo.vue"));
+const UserDialogPosts = defineAsyncComponent(() => import("./user-dialog/UserPosts.vue"));
 
 defineEmits([...useDialogPluginComponent.emits]);
 const { dialogRef, onDialogHide } = useDialogPluginComponent();

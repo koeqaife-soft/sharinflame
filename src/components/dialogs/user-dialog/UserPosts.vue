@@ -42,7 +42,7 @@
 import { getUserPosts } from "src/api/posts";
 import { defineAsyncComponent, ref } from "vue";
 
-const PostComponent = defineAsyncComponent(() => import("../posts/PostComponent.vue"));
+const PostComponent = defineAsyncComponent(() => import("../../posts/PostComponent.vue"));
 
 const props = defineProps<{
   user: User;
