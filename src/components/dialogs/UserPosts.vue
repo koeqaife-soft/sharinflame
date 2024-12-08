@@ -1,5 +1,5 @@
 <template>
-  <q-scroll-area class="scroll-area full-height" :visible="false">
+  <q-scroll-area class="scroll-area full-height fix-scroll-area" :visible="false">
     <div class="sticky-label">
       <q-card class="card q-mb-sm label-container">
         <div class="horizontal-container">

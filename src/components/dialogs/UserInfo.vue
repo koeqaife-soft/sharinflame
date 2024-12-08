@@ -1,5 +1,5 @@
 <template>
-  <q-scroll-area class="scroll-area full-height" :visible="false">
+  <q-scroll-area class="scroll-area full-height fix-scroll-area" :visible="false">
     <div class="card bio animation-fade-in-down q-mb-sm" v-if="user.bio">
       <div class="header">
         <q-icon name="sym_r_person" />

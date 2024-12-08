@@ -17,7 +17,7 @@
           <q-btn flat round icon="sym_r_close" size="xs" @click="dialogRef!.hide()" />
         </div>
       </q-card>
-      <q-scroll-area class="scroll-area" :visible="false">
+      <q-scroll-area class="scroll-area fix-scroll-area" :visible="false">
         <post-component :post="postRef" :in-dialog="true" class="q-mb-sm" />
         <q-separator class="q-mb-sm" />
         <div class="sticky-label">

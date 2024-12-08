@@ -1,19 +1,16 @@
 <template>
-  <!--FIXME: Pull to refresh on phone-->
-  <q-pull-to-refresh @refresh="reloadPosts" class="pull-to-refresh" :disable="true">
-    <q-scroll-area class="scroll-area" :visible="false">
-      <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll" :key="scrollKey">
-        <div v-for="(item, index) in items" :key="index" class="post-div">
-          <post-component :post="item" class="q-mb-sm animation-fade-in-down" />
+  <q-scroll-area class="scroll-area fix-scroll-area" :visible="false">
+    <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll" :key="scrollKey">
+      <div v-for="(item, index) in items" :key="index" class="post-div">
+        <post-component :post="item" class="q-mb-sm animation-fade-in-down" />
+      </div>
+      <template v-slot:loading v-if="!pullToRefreshDone || items.length > 0">
+        <div class="row justify-center q-my-md">
+          <q-spinner class="loading" size="40px" />
         </div>
-        <template v-slot:loading v-if="!pullToRefreshDone || items.length > 0">
-          <div class="row justify-center q-my-md">
-            <q-spinner class="loading" size="40px" />
-          </div>
-        </template>
-      </q-infinite-scroll>
-    </q-scroll-area>
-  </q-pull-to-refresh>
+      </template>
+    </q-infinite-scroll>
+  </q-scroll-area>
 </template>
 <script setup lang="ts">
 import { ref, watch, defineAsyncComponent } from "vue";
