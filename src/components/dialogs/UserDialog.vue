@@ -11,6 +11,7 @@
     <closeable-content v-on:hide="dialogRef!.hide()" :class="{ expand: expand }">
       <div class="profile-info">
         <q-img :src="userRef.banner_url" class="card banner" />
+        <q-btn round flat class="close" icon="sym_r_close" @click="dialogRef?.hide" />
         <div class="profile-inner">
           <user-avatar :user="userRef" />
           <div class="container name-container">
