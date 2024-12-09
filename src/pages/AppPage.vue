@@ -1,21 +1,21 @@
 <template>
   <main-layout :in-router="false" :menu-opened="categoriesMenuOpened" headers-class="index-10">
-    <template #toolbar-actions v-if="!isBigScreen">
+    <template #toolbar-actions v-if="hideRightColumn">
       <open-profile-menu />
     </template>
-    <template #logo-menu v-if="isSmallScreen">
+    <template #logo-menu v-if="hideLeftColumn">
       <q-menu class="categories-menu menu-card" v-model="categoriesMenuOpened">
         <category-buttons-container :categories-list="categoriesList" :current-type="currentType" />
       </q-menu>
     </template>
     <q-page class="app-page">
-      <div class="left-column" v-if="!isSmallScreen">
+      <div class="left-column" v-if="!hideLeftColumn">
         <q-card class="card categories">
           <category-buttons-container :categories-list="categoriesList" :current-type="currentType" />
         </q-card>
       </div>
       <post-scroll :type="currentType" class="center-column" />
-      <div class="right-column" v-if="isBigScreen">
+      <div class="right-column" v-if="!hideRightColumn">
         <q-card class="card profile-menu">
           <profile-menu buttons-class="card-button" />
         </q-card>
@@ -47,6 +47,9 @@ const categoriesMenuOpened = ref(false);
 const screenSize = ref(window.innerWidth);
 const isSmallScreen = computed(() => screenSize.value <= 814);
 const isBigScreen = computed(() => screenSize.value >= 1200);
+
+const hideLeftColumn = computed(() => !isBigScreen.value);
+const hideRightColumn = computed(() => isSmallScreen.value);
 
 const changeType = (type: KeyOfGetPostsTypes) => {
   currentType.value = type;
