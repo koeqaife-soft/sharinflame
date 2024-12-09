@@ -2,7 +2,7 @@ import { AxiosError, AxiosResponse, isAxiosError, AxiosInstance } from "axios";
 import { useMainStore } from "src/stores/main-store";
 import { watch } from "vue";
 import router from "src/router";
-import { refresh, getAccessToken, clearTokens, noAuthEndpoints } from "src/api/auth";
+import { refresh, getAccessToken, clearTokens, noAuthEndpoints, refreshToken } from "src/api/auth";
 
 let api: AxiosInstance;
 type mainStoreType = ReturnType<typeof useMainStore>;
@@ -59,10 +59,10 @@ const connectionInterceptor = () => {
   );
 };
 
-const refreshInterceptor = () => {
+const authInterceptor = () => {
   let isRefreshing = false;
-  let refreshTimeout: NodeJS.Timeout | null = null;
   let subscribers: Array<(success: boolean) => void> = [];
+  let lastRefresh: number = 0;
 
   const invalidAuth = () => {
     clearSubscribers();
@@ -71,6 +71,7 @@ const refreshInterceptor = () => {
   };
 
   const onRefreshed = () => {
+    lastRefresh = Date.now();
     subscribers.forEach((callback) => callback(true));
     subscribers = [];
   };
@@ -81,8 +82,58 @@ const refreshInterceptor = () => {
   };
 
   const addSubscriber = (callback: (success: boolean) => void) => {
+    if (Date.now() - lastRefresh <= 15000) {
+      callback(true);
+    }
     subscribers.push(callback);
   };
+
+  api.interceptors.request.use(
+    async (config) => {
+      if (!config.url || noAuthEndpoints.includes(config.url)) return config;
+
+      let token = getAccessToken();
+      const _refreshToken = refreshToken();
+
+      if (!token && _refreshToken) {
+        if (!isRefreshing) {
+          isRefreshing = true;
+          let success = false;
+
+          try {
+            const refreshResponse = await refresh();
+            success = refreshResponse.data.success;
+
+            if (success) {
+              onRefreshed();
+            } else throw new Error("Unable to refresh token");
+          } catch (refreshError) {
+            invalidAuth();
+            return Promise.reject(refreshError);
+          }
+        }
+
+        return new Promise((resolve, reject) => {
+          addSubscriber(async (success: boolean) => {
+            if (success) {
+              token = getAccessToken();
+              config.headers["Authorization"] = token;
+              resolve(config);
+            } else {
+              reject("Unable to refresh token");
+            }
+          });
+        });
+      } else if (!_refreshToken) {
+        invalidAuth();
+        throw new Error("No tokens");
+      }
+
+      config.headers["Authorization"] = token;
+      return config;
+    },
+    (error) => Promise.reject(error)
+  );
 
   api.interceptors.response.use(
     (response: AxiosResponse) => response,
@@ -91,7 +142,11 @@ const refreshInterceptor = () => {
 
       if (response?.config.url === "/auth/refresh") invalidAuth();
 
-      if (response && response.status === 401 && response.data?.error === "EXPIRED_TOKEN") {
+      if (
+        response?.status === 401 &&
+        (response.data?.error === "EXPIRED_TOKEN" || response.data?.error === "UNAUTHORIZED") &&
+        refreshToken()
+      ) {
         const originalRequest = error.config!;
 
         if (!isRefreshing) {
@@ -104,21 +159,10 @@ const refreshInterceptor = () => {
 
             if (success) {
               onRefreshed();
-              return api(originalRequest);
             } else throw new Error("Unable to refresh token");
           } catch (refreshError) {
             invalidAuth();
             return Promise.reject(refreshError);
-          } finally {
-            if (refreshTimeout) clearTimeout(refreshTimeout);
-            refreshTimeout = setTimeout(() => {
-              isRefreshing = false;
-              if (success) {
-                onRefreshed();
-              } else if (subscribers) {
-                clearSubscribers();
-              }
-            }, 10000);
           }
         }
 
@@ -137,27 +181,11 @@ const refreshInterceptor = () => {
   );
 };
 
-const authInterceptor = () => {
-  api.interceptors.request.use(
-    (config) => {
-      if (!config.url || noAuthEndpoints.includes(config.url)) return config;
-
-      const token = getAccessToken();
-      if (token) {
-        config.headers["Authorization"] = token;
-      }
-      return config;
-    },
-    (error) => Promise.reject(error)
-  );
-};
-
 async function init(_api: AxiosInstance, _mainStore: mainStoreType) {
   api = _api;
   mainStore = _mainStore;
-  authInterceptor();
   connectionInterceptor();
-  refreshInterceptor();
+  authInterceptor();
 }
 
-export { init, connectionInterceptor, refreshInterceptor };
+export { init, connectionInterceptor, authInterceptor };

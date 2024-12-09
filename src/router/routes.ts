@@ -1,5 +1,5 @@
 import { RouteRecordRaw } from "vue-router";
-import { getAccessToken } from "src/api/auth";
+import { refreshToken } from "src/api/auth";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -20,7 +20,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/",
-    redirect: () => (!!getAccessToken() ? "/app" : "/login")
+    redirect: () => (refreshToken() ? "/app" : "/login")
   },
 
   {

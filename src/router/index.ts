@@ -1,5 +1,5 @@
 import { createMemoryHistory, createRouter, createWebHashHistory, createWebHistory } from "vue-router";
-import { getAccessToken } from "src/api/auth";
+import { refreshToken } from "src/api/auth";
 
 import routes from "./routes";
 
@@ -19,7 +19,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = !!getAccessToken();
+  const isAuthenticated = refreshToken();
 
   if (to.path !== "/login" && to.path !== "/register" && !isAuthenticated) {
     next({ path: "/login" });

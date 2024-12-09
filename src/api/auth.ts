@@ -8,7 +8,7 @@ export const authEndpoints = {
   refresh: "/auth/refresh",
   logout: "/auth/logout"
 };
-export const noAuthEndpoints = ["/auth/register", "/auth/login", "/auth/refresh"];
+export const noAuthEndpoints = ["/auth/register", "/auth/login", "/auth/refresh", "/ping"];
 
 async function register(username: string, email: string, password: string) {
   const r = await api.post<AuthResponse>(authEndpoints.register, {
@@ -62,16 +62,20 @@ async function init(_api: AxiosInstance) {
 
 function setTokens({ refresh, access }: { refresh?: string; access?: string }) {
   if (refresh) localStorage.setItem("refresh_token", refresh);
-  if (access) localStorage.setItem("access_token", access);
+  if (access) sessionStorage.setItem("access_token", access);
 }
 
 function clearTokens() {
-  localStorage.removeItem("access_token");
   localStorage.removeItem("refresh_token");
+  sessionStorage.removeItem("access_token");
 }
 
 function getAccessToken() {
-  return localStorage.getItem("access_token");
+  return sessionStorage.getItem("access_token");
 }
 
-export { register, login, logout, refresh, init, setTokens, clearTokens, getAccessToken };
+function refreshToken() {
+  return !!localStorage.getItem("refresh_token");
+}
+
+export { register, login, logout, refresh, init, setTokens, clearTokens, getAccessToken, refreshToken };
