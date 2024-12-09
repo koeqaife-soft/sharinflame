@@ -1,5 +1,5 @@
 <template>
-  <q-scroll-area class="scroll-area fix-scroll-area" :visible="false">
+  <q-scroll-area class="scroll-area" :visible="false">
     <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll" :key="scrollKey">
       <div v-for="(item, index) in items" :key="index" class="post-div">
         <post-component :post="item" class="q-mb-sm animation-fade-in-down" />
