@@ -14,8 +14,8 @@
       </card-dialog-label>
       <q-scroll-area class="scroll-area fix-scroll-area" :visible="false">
         <post-component :post="postRef" :in-dialog="true" class="q-mb-sm" />
-        <q-separator />
-        <div class="sticky-label q-pt-sm">
+        <q-separator class="q-mb-sm" />
+        <div class="sticky-label">
           <card-dialog-label class="q-mb-sm" :label="$t('comments')" icon="sym_r_chat_bubble">
             <q-btn flat round icon="sym_r_refresh" size="xs" @click="reloadComments" />
           </card-dialog-label>

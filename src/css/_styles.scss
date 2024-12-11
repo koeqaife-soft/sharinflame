@@ -257,6 +257,13 @@
   top: 0;
   z-index: 1;
   background-color: var(--background-color);
+  margin-top: calc(var(--margin, 8px) * -1);
+}
+
+.sticky-label::before {
+  content: "";
+  display: block;
+  height: var(--margin, 8px);
 }
 
 blockquote {
