@@ -1,0 +1,16 @@
+<template>
+  <q-card class="card label-container">
+    <div class="horizontal-container">
+      <q-icon v-if="icon" :name="icon" class="icon" />
+      <div>{{ label }}</div>
+      <q-space />
+      <slot />
+    </div>
+  </q-card>
+</template>
+<script setup lang="ts">
+defineProps<{
+  label: string;
+  icon?: string;
+}>();
+</script>

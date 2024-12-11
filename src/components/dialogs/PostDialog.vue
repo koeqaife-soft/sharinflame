@@ -9,26 +9,16 @@
     :key="post.post_id"
   >
     <closeable-content v-on:hide="dialogRef!.hide()">
-      <q-card class="card q-mb-sm label-container">
-        <div class="horizontal-container">
-          <q-icon name="sym_r_article" class="icon" />
-          <div>{{ $t("post") }}</div>
-          <q-space />
-          <q-btn flat round icon="sym_r_close" size="xs" @click="dialogRef!.hide()" />
-        </div>
-      </q-card>
+      <card-dialog-label class="q-mb-sm" :label="$t('post')" icon="sym_r_article">
+        <q-btn flat round icon="sym_r_close" size="xs" @click="dialogRef!.hide()" />
+      </card-dialog-label>
       <q-scroll-area class="scroll-area fix-scroll-area" :visible="false">
         <post-component :post="postRef" :in-dialog="true" class="q-mb-sm" />
-        <q-separator class="q-mb-sm" />
-        <div class="sticky-label">
-          <q-card class="card q-mb-sm label-container">
-            <div class="horizontal-container">
-              <q-icon name="sym_r_chat_bubble" class="icon" />
-              <div>{{ $t("comments") }}</div>
-              <q-space />
-              <q-btn flat round icon="sym_r_refresh" size="xs" @click="reloadComments" />
-            </div>
-          </q-card>
+        <q-separator />
+        <div class="sticky-label q-pt-sm">
+          <card-dialog-label class="q-mb-sm" :label="$t('comments')" icon="sym_r_chat_bubble">
+            <q-btn flat round icon="sym_r_refresh" size="xs" @click="reloadComments" />
+          </card-dialog-label>
         </div>
         <q-infinite-scroll @load="loadComments" class="posts-infinite-scroll full-height" :key="scrollKey">
           <div v-for="item in items" :key="item.comment_id" class="comment-div">
@@ -81,6 +71,7 @@
 import { defineAsyncComponent, onMounted, ref, watch } from "vue";
 import PostComponent from "../posts/PostComponent.vue";
 import CloseableContent from "../misc/CloseableContent.vue";
+import CardDialogLabel from "../misc/CardDialogLabel.vue";
 import { useDialogPluginComponent } from "quasar";
 import { createComment, getComments } from "src/api/posts";
 import { useProfileStore } from "src/stores/profile-store";
