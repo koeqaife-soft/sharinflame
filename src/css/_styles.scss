@@ -6,7 +6,7 @@
 
 .body--light,
 .body--dark {
-  @include colorTransition();
+  @include bgColorTransition();
 
   --primary: hsl(var(--lvc-h), 96%, 80%);
   --on-primary: hsl(var(--lvc-h), 96%, 10%);
@@ -51,6 +51,11 @@
   --card-high: hsl(var(--lvc-h), 65%, 91%);
   --on-card: hsl(0deg, 0%, 0%);
   --outline: hsl(var(--lvc-h), 4%, 47%);
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
 }
 
 .index-10000 {
@@ -104,11 +109,15 @@
   color: var(--primary);
 }
 
+.q-page-container {
+  height: 100vh;
+}
+
 .app-page {
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: flex-start;
-  height: 90vh;
   padding-top: 8px;
 
   .categories,
@@ -123,12 +132,9 @@
   }
 
   .center-column {
+    height: initial;
     margin-top: -8px;
     margin-bottom: -8px;
-    .q-scrollarea {
-      height: 100%;
-      width: 100%;
-    }
   }
 
   .left-column {

@@ -2,7 +2,6 @@
 
 .login-card,
 .register-card {
-  @include colorTransition();
   @include elevation(2);
   border-radius: 18px;
   padding: 10px;
@@ -22,7 +21,6 @@
 }
 
 .card {
-  @include colorTransition();
   @include elevation(2);
   border-radius: 18px;
   padding: 8px;
@@ -54,6 +52,7 @@
 .card-dialog {
   z-index: 1;
   .dialog-content {
+    will-change: transform, border-color;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
     transition: border-color 0.25s ease, transform 0.25s ease-out;
     padding: 8px;

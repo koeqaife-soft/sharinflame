@@ -1,5 +1,5 @@
 <template>
-  <main-layout :in-router="false" :menu-opened="categoriesMenuOpened" headers-class="index-10">
+  <main-layout :in-router="false" :menu-opened="categoriesMenuOpened" headers-class="index-10" class="full-height">
     <template #toolbar-actions v-if="hideRightColumn">
       <open-profile-menu />
     </template>
@@ -14,7 +14,9 @@
           <category-buttons-container :categories-list="categoriesList" :current-type="currentType" />
         </q-card>
       </div>
-      <post-scroll :type="currentType" class="center-column" />
+      <div class="center-column">
+        <post-scroll :type="currentType" class="full-height full-width" />
+      </div>
       <div class="right-column" v-if="!hideRightColumn">
         <q-card class="card profile-menu">
           <profile-menu buttons-class="card-button" />
