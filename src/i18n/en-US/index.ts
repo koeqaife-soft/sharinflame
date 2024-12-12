@@ -52,5 +52,14 @@ export default {
 
   sort_new: "New",
   sort_old: "Old",
-  sort_popular: "Popular"
+  sort_popular: "Popular",
+
+  add_your_text_here: "Add your text here",
+  tag: {
+    nsfw_label: "Not Safe For Work (NSFW)",
+    nsfw_desc: "Contains explicit, adult, or mature content.",
+    ai_label: "AI-Generated Content",
+    ai_desc: "Content was created or modified by AI."
+  },
+  create: "Create"
 };
