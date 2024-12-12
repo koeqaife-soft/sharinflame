@@ -21,7 +21,7 @@
       :class="['create-post', buttonsClass]"
       icon="sym_r_add_circle"
       :label="$t('create_post')"
-      @click="emit('close-menu')"
+      @click="createPost"
       unelevated
       no-caps
     />
@@ -44,6 +44,7 @@ import MySwitch from "../misc/MySwitch.vue";
 
 const UserAvatar = defineAsyncComponent(() => import("./UserAvatar.vue"));
 const UserDialog = defineAsyncComponent(() => import("../dialogs/UserDialog.vue"));
+const CreatePost = defineAsyncComponent(() => import("../dialogs/CreatePost.vue"));
 
 const quasar = useQuasar();
 
@@ -80,6 +81,14 @@ function openUserDialog() {
     componentProps: {
       user: user.value
     }
+  });
+  emit("close-menu");
+}
+
+function createPost() {
+  quasar.dialog({
+    component: CreatePost,
+    componentProps: {}
   });
   emit("close-menu");
 }
