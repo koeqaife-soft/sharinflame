@@ -26,7 +26,7 @@ const dialogContent = ref<HTMLElement | null>(null);
 const verticalExceeded = ref(false);
 
 const SWIPE_THRESHOLD_X = 100;
-const SWIPE_THRESHOLD_Y = 50;
+const SWIPE_THRESHOLD_Y = 10;
 
 const onTouchStart = (event: TouchEvent) => {
   touchStartX.value = event.touches[0].clientX;
