@@ -93,6 +93,8 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
       });
       cursor = r.data.data.next_cursor;
       done(!r.data.data.has_more);
+    } else {
+      done(true);
     }
   } catch (e) {
     done(true);
