@@ -374,6 +374,11 @@
   .q-dialog__inner {
     margin-top: 58px;
   }
+  .q-scrollarea__content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
   .dialog-content {
     height: 100%;
     width: 100%;
@@ -389,6 +394,25 @@
     will-change: border-color;
     &.q-field--focused {
       border-color: var(--primary);
+    }
+  }
+  .tags-container {
+    padding-left: 16px;
+    padding-right: 16px;
+    .label {
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .icon {
+      font-size: 20px;
+      font-weight: 400;
+      font-variation-settings: "opsz" 20;
+      height: 22px;
+      width: 22px;
+    }
+    .chips {
+      margin-left: -8px;
+      margin-right: -8px;
     }
   }
   .toggle-value {
@@ -422,5 +446,14 @@
   .send-container {
     display: flex;
     justify-content: flex-end;
+  }
+}
+.enter-tag-menu {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 12px;
+  padding-right: 12px;
+  &:has(.q-field--focused) {
+    outline-color: var(--primary);
   }
 }
