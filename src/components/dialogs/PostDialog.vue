@@ -20,7 +20,7 @@
             <q-btn flat round icon="sym_r_refresh" size="xs" @click="reloadComments" />
           </card-dialog-label>
         </div>
-        <q-infinite-scroll @load="loadComments" class="posts-infinite-scroll full-height" :key="scrollKey">
+        <q-infinite-scroll @load="loadComments" class="posts-infinite-scroll full-height" :key="scrollKey" debounce="0">
           <comment-component
             :comment="item"
             class="animation-fade-in-down"
@@ -71,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, onMounted, ref, watch } from "vue";
+import { defineAsyncComponent, onMounted, onUnmounted, ref, watch } from "vue";
 import PostComponent from "../posts/PostComponent.vue";
 import CloseableContent from "../misc/CloseableContent.vue";
 import CardDialogLabel from "../misc/CardDialogLabel.vue";
@@ -91,8 +91,14 @@ const mainStore = useMainStore();
 const profileStore = useProfileStore();
 
 const postRef = ref(props.post);
-const scrollKey = ref(getMeta("scrollKey", Date.now()));
-const items = ref((postRef.value._meta?.comments || []) as CommentWithUser[]);
+const scrollKey = ref(Date.now());
+
+const items = ref<CommentWithUser[]>([]);
+const nextItems = ref<CommentWithUser[]>([]);
+
+let hasMore = true;
+let cursor: string | undefined;
+
 const text = ref((postRef.value._meta?.text || "") as string);
 const sending = ref(false);
 watch(text, () => updateMeta("text", text.value));
@@ -103,9 +109,9 @@ const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
 function reloadComments() {
   items.value = [];
-  updateMeta("comments", []);
-  updateMeta("cursor", undefined);
+  nextItems.value = [];
   scrollKey.value = Date.now();
+  cursor = undefined;
 }
 
 function updateMeta<T>(key: string, value: T) {
@@ -113,28 +119,40 @@ function updateMeta<T>(key: string, value: T) {
   postRef.value._meta[key] = value;
 }
 
-function getMeta<T>(key: string, defaultValue?: T): T {
-  return (postRef.value._meta?.[key] ?? defaultValue) as T;
-}
-
 async function loadComments(index: number, done: (stop?: boolean) => void) {
+  console.log(scrollKey.value);
+  const toAdd: CommentWithUser[] = [];
+  nextItems.value ??= [];
+  let usedApi = false;
   try {
-    const r = await getComments(postRef.value.post_id, getMeta<string>("cursor"));
-    if (r.data.success) {
-      updateMeta("cursor", r.data.data.next_cursor);
+    if (nextItems.value.length === 0) {
+      console.log("LOAD");
+      const r = await getComments(postRef.value.post_id, cursor);
+      const apiLoaded = r.data.data.comments;
+      hasMore = r.data.data.has_more;
+      cursor = r.data.data.next_cursor;
 
-      const usersMap = r.data.data.users;
-      const newComments = r.data.data.comments.map(
-        (comment: Comment) =>
-          ({
-            ...comment,
-            user: usersMap[comment.user_id]
-          } as CommentWithUser)
-      );
+      if (r.data.success) {
+        const usersMap = r.data.data.users;
+        nextItems.value.push(
+          ...apiLoaded.map(
+            (comment: Comment) =>
+              ({
+                ...comment,
+                user: usersMap[comment.user_id]
+              } as CommentWithUser)
+          )
+        );
+        usedApi = true;
+      }
+    }
 
-      const currentComments = getMeta<CommentWithUser[]>("comments", []);
+    toAdd.push(...nextItems.value.splice(0, 5));
+    console.log(toAdd);
 
-      newComments.map((newComment) => {
+    if (toAdd.length > 0) {
+      const currentComments = items.value;
+      toAdd.forEach((newComment) => {
         const existingIndex = currentComments.findIndex((comment) => comment.comment_id === newComment.comment_id);
 
         if (existingIndex !== -1) {
@@ -142,17 +160,19 @@ async function loadComments(index: number, done: (stop?: boolean) => void) {
         } else {
           currentComments.push(newComment);
         }
-        return newComment;
       });
 
-      updateMeta("comments", currentComments);
       items.value = currentComments;
+    }
 
-      done(!r.data.data.has_more);
-    } else if (r.data.error == "NO_MORE_COMMENTS") {
-      done(true);
+    const _done = () => done(!(hasMore || nextItems.value.length > 0));
+
+    if (usedApi) {
+      setTimeout(() => {
+        _done();
+      }, 100);
     } else {
-      setTimeout(() => done(), 1000);
+      _done();
     }
   } catch (e) {
     done(true);
@@ -170,7 +190,6 @@ async function sendComment() {
         user: (await profileStore.getProfile())!
       };
       items.value.unshift(comment);
-      updateMeta("comments", items.value);
 
       text.value = "";
       postRef.value.comments_count += 1;
@@ -181,8 +200,12 @@ async function sendComment() {
 }
 
 onMounted(async () => {
-  updateMeta("scrollKey", scrollKey.value);
   mainStore.openedDialogs.post();
   mainStore.openedDialogs.post = dialogRef.value!.hide;
+});
+
+onUnmounted(async () => {
+  items.value = [];
+  nextItems.value = [];
 });
 </script>
