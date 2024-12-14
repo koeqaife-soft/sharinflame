@@ -21,8 +21,10 @@ function createWindow() {
     minWidth: 450,
     useContentSize: true,
     frame: false,
+    roundedCorners: true,
     webPreferences: {
       contextIsolation: true,
+      sandbox: true,
       preload: path.resolve(__dirname, process.env.QUASAR_ELECTRON_PRELOAD)
     },
     autoHideMenuBar: true
