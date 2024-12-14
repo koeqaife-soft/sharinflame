@@ -37,17 +37,20 @@ watch(() => props.type, onTypeChange);
 
 function onTypeChange() {
   items.value = [];
+  toView.length = 0;
   store.reset();
   scrollKey.value = `${props.type}-${Date.now()}`;
 }
 
-function viewInChunks(posts: string[], chunkSize: number = 10) {
+function viewInChunks(posts: string[], ignoreLastChunk: boolean = false, chunkSize: number = 10) {
   while (posts.length > 0) {
+    if (ignoreLastChunk && posts.length <= chunkSize) break;
+
     const chunk = posts.splice(0, chunkSize);
+
     viewPosts(chunk);
   }
 }
-
 function reloadPosts(done?: () => void) {
   items.value = [];
   store.reset();
@@ -79,8 +82,8 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
 
       const postIds = posts.map((post) => post.post_id);
       toView.push(...postIds);
-      if (toView.length >= 10) {
-        viewInChunks(toView);
+      if (toView.length >= 20) {
+        viewInChunks(toView, true);
       }
     }
     done();
