@@ -21,9 +21,12 @@
           </card-dialog-label>
         </div>
         <q-infinite-scroll @load="loadComments" class="posts-infinite-scroll full-height" :key="scrollKey">
-          <div v-for="item in items" :key="item.comment_id" class="comment-div">
-            <comment-component :comment="item" class="q-mb-sm animation-fade-in-down" />
-          </div>
+          <comment-component
+            :comment="item"
+            class="animation-fade-in-down"
+            v-for="item in items"
+            :key="item.comment_id"
+          />
           <template v-slot:loading>
             <div class="row justify-center q-my-md">
               <q-spinner class="loading" size="40px" />
