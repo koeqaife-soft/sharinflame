@@ -229,6 +229,12 @@
   }
 }
 
+.posts-infinite-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .user-dialog {
   @media (min-width: 630px) {
     .dialog-content {
