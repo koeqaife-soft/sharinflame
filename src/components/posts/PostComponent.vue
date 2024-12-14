@@ -96,7 +96,7 @@ function handleReaction(isLike: boolean) {
   updateReactionCounters(isLike);
 
   if (clickCount > 0) {
-    debounce(() => performReaction(isLike), 1000);
+    debounce(() => performReaction(isLike), 500);
   } else {
     performReaction(isLike);
   }

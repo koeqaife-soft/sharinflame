@@ -54,7 +54,7 @@ function debounce(callback: () => void, delay: number) {
 function handleReaction(isLike: boolean) {
   updateReactionCounters(isLike);
 
-  debounce(() => performReaction(isLike), 1000);
+  debounce(() => performReaction(isLike), 500);
 }
 
 function updateReactionCounters(isLike: boolean) {
