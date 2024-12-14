@@ -61,5 +61,8 @@ export default {
     ai_label: "AI-Generated Content",
     ai_desc: "Content was created or modified by AI."
   },
-  create: "Create"
+  create: "Create",
+  tags: "Tags",
+  add_tag: "Add tag",
+  enter_tag: "Enter Tag"
 };
