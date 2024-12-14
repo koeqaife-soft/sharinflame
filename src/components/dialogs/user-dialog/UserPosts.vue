@@ -26,7 +26,7 @@
         </div>
       </q-card>
     </div>
-    <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll" :key="scrollKey" debounce="0">
+    <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll" :key="scrollKey" debounce="0" :offset="1000">
       <post-component :post="item" class="animation-fade-in-down" v-for="(item, index) in items" :key="index" />
       <template v-slot:loading>
         <div class="row justify-center q-my-md">
