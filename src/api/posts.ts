@@ -92,6 +92,11 @@ async function getUserPosts(user_id: string, cursor?: string, sort?: "new" | "ol
   return r;
 }
 
+async function createPost(values: CreatePostValues) {
+  const r = await api.post<ApiResponse<Post>>(postsEndpoints.create_post, values);
+  return r;
+}
+
 async function init(_api: AxiosInstance) {
   api = _api;
 }
@@ -106,5 +111,6 @@ export {
   remReaction,
   createComment,
   getComments,
-  getUserPosts
+  getUserPosts,
+  createPost
 };

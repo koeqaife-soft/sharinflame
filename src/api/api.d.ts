@@ -92,6 +92,12 @@ type PostWithSystem = Post | (PostSystem & { is_system: true });
 
 type PostMinimal = [post_id: string, user_id: string];
 
+interface CreatePostValues {
+  content: string;
+  tags?: string[];
+  media?: string[];
+}
+
 type ResponseWithPost = ApiResponse<Post>;
 type ResponseWithUser = ApiResponse<User>;
 type GetPostsBatchResponse = ApiResponse<{ posts: Post[]; errors?: { post: string; error_msg: string }[] }>;
