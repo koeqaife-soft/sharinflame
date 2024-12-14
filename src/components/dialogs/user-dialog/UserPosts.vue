@@ -27,9 +27,7 @@
       </q-card>
     </div>
     <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll" :key="scrollKey" debounce="0">
-      <div v-for="(item, index) in items" :key="index" class="post-div">
-        <post-component :post="item" class="q-mb-sm animation-fade-in-down" />
-      </div>
+      <post-component :post="item" class="animation-fade-in-down" v-for="(item, index) in items" :key="index" />
       <template v-slot:loading>
         <div class="row justify-center q-my-md">
           <q-spinner class="loading" size="40px" />
@@ -67,6 +65,7 @@ function toggleExpand() {
 
 function reloadPosts() {
   items.value = [];
+  nextItems.value = [];
   cursor = undefined;
   scrollKey.value = Date.now();
 }
