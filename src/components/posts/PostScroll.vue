@@ -1,10 +1,8 @@
 <template>
   <q-scroll-area class="scroll-area" :visible="false">
-    <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll" :key="scrollKey">
-      <div v-for="(item, index) in items" :key="index" class="post-div">
-        <post-component :post="item" class="q-mb-sm animation-fade-in-down" />
-      </div>
-      <template v-slot:loading v-if="!pullToRefreshDone || items.length > 0">
+    <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll" :key="scrollKey" debounce="0">
+      <post-component :post="item" v-for="(item, index) in items" :key="index" class="animation-fade-in-down" />
+      <template v-slot:loading v-if="items.length > 0">
         <div class="row justify-center q-my-md">
           <q-spinner class="loading" size="40px" />
         </div>
@@ -28,7 +26,6 @@ const props = defineProps<{
 const items = ref<PostWithSystem[]>([]);
 const scrollKey = ref<string>(props.type);
 const store = usePostsStore();
-const pullToRefreshDone = ref<(() => void) | undefined>(undefined);
 const toView: string[] = [];
 
 const { t } = useI18n();
@@ -51,15 +48,10 @@ function viewInChunks(posts: string[], ignoreLastChunk: boolean = false, chunkSi
     viewPosts(chunk);
   }
 }
-function reloadPosts(done?: () => void) {
+function reloadPosts() {
   items.value = [];
   store.reset();
   scrollKey.value = `${props.type}-${Date.now()}`;
-  if (done)
-    pullToRefreshDone.value = () => {
-      done();
-      pullToRefreshDone.value = undefined;
-    };
 }
 
 async function onLoad(index: number, done: (stop?: boolean) => void) {
@@ -86,7 +78,7 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
         viewInChunks(toView, true);
       }
     }
-    done();
+    setTimeout(() => done(), 200);
   } catch (e) {
     if (isAxiosError(e)) {
       const error =
@@ -105,8 +97,6 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
       });
       done(true);
     } else throw e;
-  } finally {
-    if (pullToRefreshDone.value) setTimeout(pullToRefreshDone.value, 250);
   }
 }
 </script>
