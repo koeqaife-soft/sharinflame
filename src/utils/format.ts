@@ -41,6 +41,12 @@ function formatStringForHtml(str: string): string {
     });
   });
 
+  const urlRegex = /(https?:\/\/[^\s<]+|www\.[^\s<]+)/g;
+  str = str.replace(urlRegex, (url) => {
+    const href = url.startsWith("http") ? url : `https://${url}`;
+    return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="link">${url}</a>`;
+  });
+
   str = str.replace(/\n/g, "<br>");
 
   return str;
