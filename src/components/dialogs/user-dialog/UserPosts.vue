@@ -26,7 +26,7 @@
         </div>
       </q-card>
     </div>
-    <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll" :key="scrollKey">
+    <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll" :key="scrollKey" debounce="0">
       <div v-for="(item, index) in items" :key="index" class="post-div">
         <post-component :post="item" class="q-mb-sm animation-fade-in-down" />
       </div>
@@ -50,10 +50,12 @@ const props = defineProps<{
 }>();
 
 let cursor: string | undefined;
+let hasMore = true;
 
 const expand = defineModel<boolean>("expand");
 
 const items = ref<PostWithSystem[]>([]);
+const nextItems = ref<PostWithSystem[]>([]);
 const scrollKey = ref(Date.now());
 const sortOptions = ["old", "new", "popular"] as const;
 const sort = ref<(typeof sortOptions)[number]>("new");
@@ -71,17 +73,33 @@ function reloadPosts() {
 
 async function onLoad(index: number, done: (stop?: boolean) => void) {
   try {
-    const r = await getUserPosts(props.user.user_id, cursor, sort.value);
-    if (r.data.success) {
-      const newPosts = r.data.data.posts.map(
-        (post) =>
-          ({
-            ...post,
-            user: props.user
-          } as PostWithSystem)
-      );
-      const currentPosts = items.value;
-      newPosts.map((newPost) => {
+    const toAdd: PostWithSystem[] = [];
+    let usedApi = false;
+
+    if (nextItems.value.length === 0) {
+      const r = await getUserPosts(props.user.user_id, cursor, sort.value);
+      const apiLoaded = r.data.data.posts;
+      hasMore = r.data.data.has_more;
+      cursor = r.data.data.next_cursor;
+
+      if (r.data.success) {
+        const loadedPosts = apiLoaded.map(
+          (post) =>
+            ({
+              ...post,
+              user: props.user
+            } as PostWithSystem)
+        );
+        nextItems.value.push(...loadedPosts);
+        usedApi = true;
+      }
+    }
+
+    toAdd.push(...nextItems.value.splice(0, 5));
+
+    if (toAdd.length > 0) {
+      const currentPosts = [...items.value];
+      toAdd.forEach((newPost) => {
         const existingIndex = currentPosts.findIndex((post) => post.post_id === newPost.post_id);
 
         if (existingIndex !== -1) {
@@ -89,12 +107,18 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
         } else {
           currentPosts.push(newPost);
         }
-        return newPost;
       });
-      cursor = r.data.data.next_cursor;
-      done(!r.data.data.has_more);
+      items.value = currentPosts;
+    }
+
+    const _done = () => done(!(hasMore || nextItems.value.length > 0));
+
+    if (usedApi) {
+      setTimeout(() => {
+        _done();
+      }, 100);
     } else {
-      done(true);
+      _done();
     }
   } catch (e) {
     done(true);
