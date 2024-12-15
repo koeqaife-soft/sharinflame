@@ -120,13 +120,11 @@ function updateMeta<T>(key: string, value: T) {
 }
 
 async function loadComments(index: number, done: (stop?: boolean) => void) {
-  console.log(scrollKey.value);
   const toAdd: CommentWithUser[] = [];
   nextItems.value ??= [];
   let usedApi = false;
   try {
     if (nextItems.value.length === 0) {
-      console.log("LOAD");
       const r = await getComments(postRef.value.post_id, cursor);
       const apiLoaded = r.data.data.comments;
       hasMore = r.data.data.has_more;
@@ -148,7 +146,6 @@ async function loadComments(index: number, done: (stop?: boolean) => void) {
     }
 
     toAdd.push(...nextItems.value.splice(0, 5));
-    console.log(toAdd);
 
     if (toAdd.length > 0) {
       const currentComments = items.value;
