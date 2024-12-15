@@ -66,8 +66,10 @@ export default {
   tag: {
     nsfw_label: "Not Safe For Work (NSFW)",
     nsfw_desc: "Contains explicit, adult, or mature content.",
+    nsfw_name: "NSFW",
     ai_label: "AI-Generated Content",
-    ai_desc: "Content was created or modified by AI."
+    ai_desc: "Content was created or modified by AI.",
+    ai_name: "AI-Generated"
   },
   create: "Create",
   tags: "Tags",
