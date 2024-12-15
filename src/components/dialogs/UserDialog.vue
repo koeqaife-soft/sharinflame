@@ -40,6 +40,7 @@ import { getProfile } from "src/api/users";
 import type { ButtonProps } from "../categories/CategoryButton.vue";
 import { useI18n } from "vue-i18n";
 import { useMainStore } from "src/stores/main-store";
+import { useProfileStore } from "src/stores/profile-store";
 
 const UserDialogInfo = defineAsyncComponent(() => import("./user-dialog/UserInfo.vue"));
 const UserDialogPosts = defineAsyncComponent(() => import("./user-dialog/UserPosts.vue"));
@@ -48,6 +49,7 @@ defineEmits([...useDialogPluginComponent.emits]);
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
 const { t } = useI18n();
 const mainStore = useMainStore();
+const profileStore = useProfileStore();
 const meta = ref({});
 const expand = ref(false);
 
@@ -80,9 +82,13 @@ const changeType = (type: string) => {
 onMounted(async () => {
   mainStore.openedDialogs.user();
   mainStore.openedDialogs.user = dialogRef.value!.hide;
-  const r = await getProfile(userRef.value.user_id);
-  if (r.data.success) {
-    userRef.value = r.data.data;
+  if (userRef.value.user_id != profileStore.profile?.user_id) {
+    const r = await getProfile(userRef.value.user_id);
+    if (r.data.success) {
+      userRef.value = r.data.data;
+    }
+  } else {
+    userRef.value = (await profileStore.getProfile()) || userRef.value;
   }
 });
 </script>
