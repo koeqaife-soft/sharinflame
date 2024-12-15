@@ -8,7 +8,7 @@
             class="select"
             v-model="sort"
             :options="sortOptions"
-            :option-label="(opt) => $t(`sort_${opt}`)"
+            :option-label="(opt) => $t(`sort.${opt}`)"
             dense
             borderless
             style="min-width: 100px; width: 150px; max-width: 300px"

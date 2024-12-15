@@ -14,7 +14,7 @@
             :rules="[_validateName]"
             :error="usernameError.hasError"
             :error-message="usernameError.message"
-            :hint="t('username_hint')"
+            :hint="t('reg_hints.username')"
             class="q-mb-sm"
           />
           <q-input
@@ -27,7 +27,7 @@
             :error="emailError.hasError"
             :error-message="emailError.message"
             class="q-mb-sm"
-            :hint="t('email_hint')"
+            :hint="t('reg_hints.email')"
           />
           <q-input
             outlined
@@ -37,7 +37,7 @@
             lazy-rules
             :rules="[_validatePassword]"
             class="q-mb-sm"
-            :hint="t('password_hint')"
+            :hint="t('reg_hints.password')"
           >
             <template v-slot:append>
               <q-icon
@@ -54,7 +54,7 @@
             lazy-rules
             :rules="[validateConfirmPassword]"
             class="q-mb-md"
-            :hint="t('confirm_password_hint')"
+            :hint="t('reg_hints.confirm_password')"
           />
 
           <q-btn :label="$t('register')" type="submit" class="full-width default-button" unelevated :loading="loading">

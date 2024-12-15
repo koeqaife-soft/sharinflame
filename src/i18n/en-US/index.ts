@@ -1,31 +1,37 @@
 export default {
   locale: "en-US",
 
+  username: "Username",
   email: "Email",
   password: "Password",
   confirm_password: "Confirm Password",
+
   register: "Register",
+  login: "Login",
+
   email_is_required: "Email is required",
   password_is_required: "Password is required",
   passwords_must_match: "Passwords must match",
-  username: "Username",
   name_is_required: "Name is required",
   incorrect_format: "Incorrect format",
   too_short: "Too short",
   too_long: "Too long",
   email_exists: "Email already exists!",
   username_exists: "Username already exists!",
-
-  login: "Login",
   user_does_not_exist: "User does not exist",
   incorrect_password: "Wrong password",
-  username_hint: "4-16 chars, letters/numbers/._ only, no consecutive . or _",
-  email_hint: "Enter your email address",
-  password_hint: "Create a password (min 8 characters)",
-  confirm_password_hint: "Re-enter your password",
 
-  popular_posts: "Popular",
-  new_posts: "New",
+  reg_hints: {
+    username: "4-16 chars, letters/numbers/._ only, no consecutive . or _",
+    email: "Enter your email address",
+    password: "Create a password (min 8 characters)",
+    confirm_password: "Re-enter your password"
+  },
+
+  categories: {
+    popular: "Popular",
+    new: "New"
+  },
 
   view_profile: "View Profile",
   dark_mode: "Dark Mode",
@@ -50,9 +56,11 @@ export default {
   about_me: "About Me",
   created_at: "Created At",
 
-  sort_new: "New",
-  sort_old: "Old",
-  sort_popular: "Popular",
+  sort: {
+    new: "New",
+    old: "Old",
+    popular: "Popular"
+  },
 
   add_your_text_here: "Add your text here",
   tag: {
