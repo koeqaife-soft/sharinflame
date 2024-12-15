@@ -9,6 +9,11 @@
         <div class="content wrap-text" v-html="formatStringForHtml(postRef.content)" />
       </div>
     </q-card-section>
+    <q-card-section class="q-pb-none tags" v-if="!postRef.is_system && postRef.tags.length > 0">
+      <q-chip v-for="(tag, index) in postRef.tags" :key="index" class="tag" :icon="tagsInfo[tag]?.icon || 'sym_r_tag'">
+        {{ tagsInfo[tag]?.name || tag }}
+      </q-chip>
+    </q-card-section>
     <q-card-actions class="actions" v-if="!postRef.is_system">
       <div class="action-container">
         <q-btn
@@ -57,14 +62,16 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, ref } from "vue";
+import { computed, defineAsyncComponent, ref } from "vue";
 import OpenUserDialog from "../dialogs/OpenUserDialog.vue";
 import { remReaction, setReaction } from "src/api/posts";
 import { formatNumber, formatStringForHtml } from "src/utils/format";
 import { useQuasar } from "quasar";
+import { useI18n } from "vue-i18n";
 
 const PostDialog = defineAsyncComponent(() => import("../dialogs/PostDialog.vue"));
 const quasar = useQuasar();
+const { t } = useI18n();
 
 const props = defineProps<{
   post: PostWithSystem;
@@ -72,6 +79,17 @@ const props = defineProps<{
 }>();
 
 const postRef = ref<PostWithSystem>(props.post);
+
+const tagsInfo = computed<Record<string, { name: string; icon: string }>>(() => ({
+  "ai-generated": {
+    name: t("tag.ai_name"),
+    icon: "sym_r_robot_2"
+  },
+  "is-nsfw": {
+    name: t("tag.nsfw_name"),
+    icon: "sym_r_explicit"
+  }
+}));
 
 let debounceTimeout: NodeJS.Timeout | null = null;
 
