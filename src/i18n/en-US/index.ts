@@ -64,5 +64,9 @@ export default {
   create: "Create",
   tags: "Tags",
   add_tag: "Add tag",
-  enter_tag: "Enter Tag"
+  enter_tag: "Enter Tag",
+  post_created: {
+    msg: "Post created",
+    caption: "You can find your post in your profile."
+  }
 };
