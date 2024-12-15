@@ -19,7 +19,7 @@ module.exports = configure(function (/* ctx */) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ["i18n", "axios"],
+    boot: ["i18n", "axios", "notif-types"],
     htmlVariables: {
       CSP_POLICY_DEV:
         "default-src 'self'; script-src * 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src *; connect-src *",
@@ -125,7 +125,7 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ["Dialog"],
+      plugins: ["Dialog", "Notify"],
       removeDefaultCss: true
     },
 
