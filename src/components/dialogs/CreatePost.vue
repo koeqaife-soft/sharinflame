@@ -38,9 +38,9 @@
             >
               {{ tag }}
             </q-chip>
-            <q-chip clickable icon="sym_r_add" class="tag">
+            <q-chip clickable icon="sym_r_add" class="tag" :disable="tags.length >= MAX_TAGS">
               {{ $t("add_tag") }}
-              <q-menu class="menu-card enter-tag-menu">
+              <q-menu class="menu-card enter-tag-menu" v-if="tags.length < MAX_TAGS">
                 <q-input
                   v-model="addTagValue"
                   :label="$t('enter_tag')"
@@ -108,6 +108,7 @@ const is_nsfw = ref(false);
 const ai_generated = ref(false);
 
 const tags = ref<string[]>([]);
+const MAX_TAGS = 6;
 
 const loading = ref(false);
 
