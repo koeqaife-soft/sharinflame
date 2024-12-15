@@ -116,16 +116,6 @@
 
 .post,
 .comment {
-  @media (hover: hover) {
-    &:hover {
-      background-color: var(--card-hover);
-    }
-  }
-  @media (hover: none) {
-    &:active {
-      background-color: var(--card-hover);
-    }
-  }
   .q-card__section {
     display: flex;
     align-items: flex-start;
@@ -195,6 +185,19 @@
   }
   .round {
     border-radius: 25px;
+  }
+}
+
+.post {
+  .tags {
+    margin-left: -4px;
+    margin-right: -4px;
+  }
+  .tag {
+    .q-icon {
+      font-size: 20px;
+      font-variation-settings: "opsz" 20;
+    }
   }
 }
 
