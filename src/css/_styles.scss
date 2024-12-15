@@ -305,6 +305,7 @@ mark {
   padding-left: 8px;
   padding-right: 8px;
   width: fit-content;
+  user-select: none;
   &:focus {
     box-shadow: none !important;
   }
