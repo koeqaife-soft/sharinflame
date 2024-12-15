@@ -90,13 +90,16 @@ import CardDialogLabel from "../misc/CardDialogLabel.vue";
 import ToggleValue from "./create-post/ToggleValue.vue";
 import { createPost } from "src/api/posts";
 import { useProfileStore } from "src/stores/profile-store";
+import { useI18n } from "vue-i18n";
 
 defineEmits([...useDialogPluginComponent.emits]);
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
 const PostDialog = defineAsyncComponent(() => import("./PostDialog.vue"));
+
 const quasar = useQuasar();
 const profileStore = useProfileStore();
+const { t } = useI18n();
 
 const text = ref<string>("");
 const addTagValue = ref<string>("");
@@ -134,6 +137,14 @@ async function createPostButton() {
         post: post
       }
     });
+    quasar.notify({
+      type: "default-notification",
+      message: t("post_created.msg"),
+      caption: t("post_created.caption"),
+      progress: true,
+      icon: "sym_r_done_outline"
+    });
+
     dialogRef!.value?.hide();
   }
 }
