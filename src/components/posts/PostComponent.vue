@@ -79,6 +79,14 @@ const props = defineProps<{
 }>();
 
 const postRef = ref<PostWithSystem>(props.post);
+let lastReaction: boolean | undefined = false;
+let lastCounters: number[] = [];
+if (!postRef.value.is_system) {
+  lastReaction = postRef.value.is_like;
+  lastCounters = [postRef.value.likes_count, postRef.value.dislikes_count];
+}
+
+let blockLastReaction = false;
 
 const tagsInfo = computed<Record<string, { name: string; icon: string }>>(() => ({
   "ai-generated": {
@@ -93,31 +101,27 @@ const tagsInfo = computed<Record<string, { name: string; icon: string }>>(() => 
 
 let debounceTimeout: NodeJS.Timeout | null = null;
 
-function updateMeta(key: string, value: number) {
-  postRef.value._meta = postRef.value._meta || {};
-  postRef.value._meta[key] = value;
-}
-
-function getMeta(key: string, defaultValue: number = 0): number {
-  return (postRef.value._meta?.[key] ?? defaultValue) as number;
-}
-
 function debounce(callback: () => void, delay: number) {
-  if (debounceTimeout) clearTimeout(debounceTimeout);
+  if (debounceTimeout !== null) clearTimeout(debounceTimeout);
   debounceTimeout = setTimeout(callback, delay);
 }
 
-function handleReaction(isLike: boolean) {
-  const clickCount = getMeta("clickCount");
-  updateMeta("clickCount", clickCount + 1);
+function changeLastReaction(reaction: boolean | undefined, counters: typeof lastCounters) {
+  if (blockLastReaction) return;
+  lastReaction = reaction;
+  lastCounters = counters;
+}
 
+function handleReaction(isLike: boolean) {
+  if (postRef.value.is_system) return;
+
+  const { is_like, likes_count, dislikes_count } = postRef.value;
+
+  changeLastReaction(is_like, [likes_count, dislikes_count]);
+  blockLastReaction = true;
   updateReactionCounters(isLike);
 
-  if (clickCount > 0) {
-    debounce(() => performReaction(isLike), 500);
-  } else {
-    performReaction(isLike);
-  }
+  debounce(() => performReaction(isLike), 500);
 }
 
 function updateReactionCounters(isLike: boolean) {
@@ -135,18 +139,34 @@ function updateReactionCounters(isLike: boolean) {
   }
 }
 
+function backReactionCounters() {
+  if (postRef.value.is_system || postRef.value.is_like === lastReaction) return;
+
+  postRef.value.is_like = lastReaction;
+  postRef.value.likes_count = lastCounters[0];
+  postRef.value.dislikes_count = lastCounters[1];
+}
+
 async function performReaction(isLike: boolean) {
   if (postRef.value.is_system) return;
 
   try {
+    if (postRef.value.is_like === lastReaction) return;
     if (postRef.value.is_like === undefined) {
       await remReaction(postRef.value.post_id);
     } else {
       await setReaction(postRef.value.post_id, { isLike });
     }
   } catch (error) {
-    updateReactionCounters(!isLike);
+    backReactionCounters();
+    quasar.notify({
+      type: "error-notification",
+      message: t("reaction_failed"),
+      progress: true
+    });
     console.error(error);
+  } finally {
+    blockLastReaction = false;
   }
 }
 
