@@ -78,5 +78,7 @@ export default {
   post_created: {
     msg: "Post created",
     caption: "You can find your post in your profile."
-  }
+  },
+
+  reaction_failed: "Failed to put a reaction"
 };
