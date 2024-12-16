@@ -74,6 +74,7 @@ const authInterceptor = () => {
     lastRefresh = Date.now();
     subscribers.forEach((callback) => callback(true));
     subscribers = [];
+    isRefreshing = false;
   };
 
   const clearSubscribers = () => {
@@ -83,7 +84,8 @@ const authInterceptor = () => {
 
   const addSubscriber = (callback: (success: boolean) => void) => {
     if (Date.now() - lastRefresh <= 15000) {
-      callback(true);
+      setTimeout(() => callback(true), 100);
+      return;
     }
     subscribers.push(callback);
   };
@@ -184,8 +186,8 @@ const authInterceptor = () => {
 async function init(_api: AxiosInstance, _mainStore: mainStoreType) {
   api = _api;
   mainStore = _mainStore;
-  connectionInterceptor();
   authInterceptor();
+  connectionInterceptor();
 }
 
 export { init, connectionInterceptor, authInterceptor };
