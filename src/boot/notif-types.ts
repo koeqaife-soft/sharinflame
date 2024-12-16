@@ -7,4 +7,9 @@ export default boot(({}) => {
     classes: "default-notification",
     position: "top-right"
   });
+  Notify.registerType("error-notification", {
+    icon: "sym_r_error",
+    classes: "error-notification",
+    position: "top-right"
+  });
 });
