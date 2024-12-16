@@ -14,5 +14,5 @@
     "**/.DS_Store": true,
     "**/Thumbs.db": true
   },
-  "cSpell.words": ["asar", "autogrow", "Axios", "pinia", "sharinflame"]
+  "cSpell.words": ["asar", "autogrow", "Axios", "opsz", "pinia", "sharinflame"]
 }
