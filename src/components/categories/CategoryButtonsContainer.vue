@@ -5,6 +5,7 @@
       :key="category.label"
       v-bind="category"
       :selected="currentType == category.type"
+      :disabled="disabled"
     />
   </div>
 </template>
@@ -18,6 +19,7 @@ interface Props {
   categoriesList: ButtonProps[];
   currentType: string;
   containerClass?: string;
+  disabled?: boolean;
 }
 
 defineProps<Props>();
