@@ -62,7 +62,6 @@ import UserAvatar from "../profile/UserAvatar.vue";
 import CloseableContent from "../misc/CloseableContent.vue";
 import CategoryButtonsContainer from "../categories/CategoryButtonsContainer.vue";
 import { onMounted, ref, computed, defineAsyncComponent } from "vue";
-import { getProfile } from "src/api/users";
 import type { ButtonProps } from "../categories/CategoryButton.vue";
 import { useI18n } from "vue-i18n";
 import { useMainStore } from "src/stores/main-store";
@@ -114,9 +113,9 @@ onMounted(async () => {
   mainStore.openedDialogs.user();
   mainStore.openedDialogs.user = dialogRef.value!.hide;
   if (userRef.value.user_id != profileStore.profile?.user_id) {
-    const r = await getProfile(userRef.value.user_id);
-    if (r.data.success) {
-      userRef.value = r.data.data;
+    const profile = await profileStore.getProfile(userRef.value.user_id);
+    if (profile) {
+      userRef.value = profile;
     }
   } else {
     userRef.value = (await profileStore.getProfile()) || userRef.value;
