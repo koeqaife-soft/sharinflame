@@ -55,6 +55,7 @@ export default {
   posts: "Posts",
   about_me: "About Me",
   created_at: "Created At",
+  languages: "Languages",
 
   sort: {
     new: "New",
