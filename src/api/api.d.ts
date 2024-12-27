@@ -28,7 +28,7 @@ interface User {
   avatar_url?: string;
   banner_url?: string;
   bio?: string;
-  gender?: string;
+  badges?: number[];
   languages?: string[];
   created_at: number;
 }
