@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, Tray, Menu } from "electron";
+import { app, BrowserWindow, ipcMain, Tray, Menu, shell } from "electron";
 import path from "path";
 import os from "os";
 
@@ -24,6 +24,7 @@ function createWindow() {
     roundedCorners: true,
     webPreferences: {
       contextIsolation: true,
+      nodeIntegration: false,
       sandbox: true,
       preload: path.resolve(__dirname, process.env.QUASAR_ELECTRON_PRELOAD)
     },
@@ -60,6 +61,13 @@ app.on("activate", () => {
   if (mainWindow === undefined) {
     createWindow();
   }
+});
+
+app.on("web-contents-created", (_, contents) => {
+  contents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url);
+    return { action: "deny" };
+  });
 });
 
 ipcMain.on("minimize-window", () => {
