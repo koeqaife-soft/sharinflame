@@ -56,6 +56,21 @@ export default {
   about_me: "About Me",
   created_at: "Created At",
   languages: "Languages",
+  badges_title: "Badges",
+  badges: {
+    owner: {
+      label: "Owner",
+      description: "The owner and developer of this application"
+    },
+    tester: {
+      label: "Tester",
+      description: "User tests a social network"
+    },
+    first: {
+      label: "First",
+      description: "User came in the first month after release"
+    }
+  },
 
   sort: {
     new: "New",
