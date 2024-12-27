@@ -361,6 +361,37 @@
   .posts-infinite-scroll {
     z-index: 2;
   }
+  .languages-container {
+    gap: 8px;
+    display: flex;
+    .q-chip {
+      margin: 0px;
+      border-radius: 4px;
+    }
+  }
+  .badges {
+    .badge {
+      background-color: var(--card-high);
+      padding: 8px;
+      border-radius: 6px;
+    }
+    .label {
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .description {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--on-background-variant);
+    }
+    .icon {
+      font-size: 20px;
+      font-variation-settings: "opsz" 20, "FILL" 1;
+    }
+  }
+  .q-separator {
+    margin-bottom: 8px;
+  }
 }
 
 .create-post-dialog {

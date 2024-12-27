@@ -15,10 +15,26 @@
             <div class="text">{{ formatUnixTime(props.user.created_at, $t("locale")) }}</div>
           </template>
           <template v-else-if="section.key === 'languages'">
-            <div class="text">
+            <div class="languages-container">
               <q-chip v-for="(language, langIndex) in props.user.languages" :key="langIndex">
                 {{ language }}
               </q-chip>
+            </div>
+          </template>
+          <template v-else-if="section.key === 'badges'">
+            <div class="container badges">
+              <div
+                class="badge horizontal-container animation-fade-in-down"
+                v-for="(badge, badgeIndex) in props.user.badges"
+                :style="animationDelayComponent(badgeIndex)"
+                :key="badgeIndex"
+              >
+                <q-icon :name="badgeIcons[badge as BadgesKeys]" class="icon" />
+                <div class="text-container">
+                  <div class="label">{{ $t(getLabelKey(badge)) }}</div>
+                  <div class="description">{{ $t(getDescriptionKey(badge)) }}</div>
+                </div>
+              </div>
             </div>
           </template>
         </div>
@@ -46,6 +62,14 @@ const sections = computed(() => [
     iconStyle: undefined
   },
   {
+    key: "badges",
+    class: "card badges animation-fade-in-down",
+    icon: "sym_r_award_star",
+    titleKey: "badges_title",
+    visible: !!props.user.badges?.length,
+    iconStyle: undefined
+  },
+  {
     key: "created_at",
     class: "card created-at animation-fade-in-down",
     icon: "sym_r_event",
@@ -63,9 +87,36 @@ const sections = computed(() => [
   }
 ]);
 
+const badgesKeys = {
+  0: "owner",
+  1: "tester",
+  2: "first"
+} as const;
+
+const badgeIcons = {
+  0: "sym_r_crown",
+  1: "sym_r_experiment",
+  2: "sym_r_trophy"
+} as const;
+
+type BadgesKeys = keyof typeof badgesKeys;
+
+function getLabelKey(badge: number): string {
+  return `badges.${badgesKeys[badge as BadgesKeys]}.label`;
+}
+
+function getDescriptionKey(badge: number): string {
+  return `badges.${badgesKeys[badge as BadgesKeys]}.description`;
+}
+
 function animationDelay(index: number): string {
   const visibleSections = sections.value.filter((section) => section.visible);
   const delay = Math.max(visibleSections.findIndex((_, i) => i === index) * 75, 0);
+  return `--anim-delay: ${delay}ms`;
+}
+
+function animationDelayComponent(index: number): string {
+  const delay = Math.max(index * 75, 0);
   return `--anim-delay: ${delay}ms`;
 }
 </script>
