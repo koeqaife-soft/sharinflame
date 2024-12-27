@@ -6,3 +6,9 @@
 @import "keyframes";
 @import "components";
 @import "misc";
+
+@font-face {
+  font-family: "NotoColorEmoji";
+  font-style: normal;
+  src: url("./fonts/NotoColorEmoji-Regular.ttf") format("truetype");
+}
