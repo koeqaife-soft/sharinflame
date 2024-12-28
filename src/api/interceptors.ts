@@ -2,7 +2,7 @@ import { AxiosError, AxiosResponse, isAxiosError, AxiosInstance } from "axios";
 import { useMainStore } from "src/stores/main-store";
 import { watch } from "vue";
 import router from "src/router";
-import { refresh, getAccessToken, clearTokens, noAuthEndpoints, refreshToken } from "src/api/auth";
+import { refresh, getAccessToken, noAuthEndpoints, refreshToken, clientLogout } from "src/api/auth";
 
 let api: AxiosInstance;
 type mainStoreType = ReturnType<typeof useMainStore>;
@@ -66,8 +66,7 @@ const authInterceptor = () => {
 
   const invalidAuth = () => {
     clearSubscribers();
-    clearTokens();
-    router.push({ path: "/login" });
+    clientLogout();
   };
 
   const onRefreshed = () => {

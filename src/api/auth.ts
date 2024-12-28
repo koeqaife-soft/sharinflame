@@ -1,4 +1,5 @@
 import { AxiosInstance } from "axios";
+import router from "src/router";
 
 let api: AxiosInstance;
 
@@ -78,4 +79,10 @@ function refreshToken() {
   return !!localStorage.getItem("refresh_token");
 }
 
-export { register, login, logout, refresh, init, setTokens, clearTokens, getAccessToken, refreshToken };
+function clientLogout() {
+  clearTokens();
+  router.push({ path: "/login" });
+  window.location.reload();
+}
+
+export { register, login, logout, refresh, init, setTokens, clearTokens, getAccessToken, refreshToken, clientLogout };
