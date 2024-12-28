@@ -44,6 +44,12 @@
           @click="postDialog"
         />
       </div>
+      <q-space />
+      <div class="action-container circle">
+        <q-btn unelevated icon="sym_r_more_horiz" class="more button circle" size="sm">
+          <more-menu :post="postRef" @action="action" />
+        </q-btn>
+      </div>
     </q-card-actions>
     <q-card-actions class="actions" v-else-if="postRef.actions">
       <div class="action-container" v-for="action in postRef.actions" :key="action.name">
@@ -64,12 +70,13 @@
 <script setup lang="ts">
 import { computed, defineAsyncComponent, ref } from "vue";
 import OpenUserDialog from "../dialogs/OpenUserDialog.vue";
-import { remReaction, setReaction } from "src/api/posts";
+import { deletePost, remReaction, setReaction } from "src/api/posts";
 import { formatNumber, formatStringForHtml } from "src/utils/format";
 import { useQuasar } from "quasar";
 import { useI18n } from "vue-i18n";
 
 const PostDialog = defineAsyncComponent(() => import("../dialogs/PostDialog.vue"));
+const MoreMenu = defineAsyncComponent(() => import("./PostMoreMenu.vue"));
 const quasar = useQuasar();
 const { t } = useI18n();
 
@@ -186,5 +193,17 @@ function postDialog() {
       post: postRef.value
     }
   });
+}
+
+function action(type: string, data: unknown) {
+  console.log(type);
+  switch (type) {
+    case "delete":
+      deletePost(postRef.value.post_id);
+      break;
+    case "copy_id":
+      navigator.clipboard.writeText(data as string);
+      break;
+  }
 }
 </script>
