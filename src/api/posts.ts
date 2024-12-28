@@ -27,6 +27,11 @@ async function getPost(id: string) {
   return r;
 }
 
+async function deletePost(id: string) {
+  const r = await api.delete<ApiResponse>(postsEndpoints.post(id));
+  return r;
+}
+
 async function getPostsBatch(posts: string[]) {
   const params = { posts: posts.join(",") };
   const r = await api.get<GetPostsBatchResponse>(postsEndpoints.get_posts_batch, {
@@ -112,5 +117,6 @@ export {
   createComment,
   getComments,
   getUserPosts,
-  createPost
+  createPost,
+  deletePost
 };
