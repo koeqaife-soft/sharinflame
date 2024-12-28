@@ -42,6 +42,11 @@ export default {
   no_more_posts: "No more posts",
   try_reloading_feed: "Please try reloading the feed",
   reload: "Reload",
+  post_options: {
+    delete: "Delete Post",
+    copy_id: "Copy Id",
+    report: "Report"
+  },
 
   an_error_occurred: "An error occurred",
 
