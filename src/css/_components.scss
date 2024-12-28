@@ -161,7 +161,9 @@
   .button {
     will-change: color;
     height: 100%;
-    min-width: 60px;
+    &:not(.circle) {
+      min-width: 60px;
+    }
 
     > span {
       font-size: 12px;
@@ -171,9 +173,15 @@
       }
     }
 
+    .q-icon {
+      @include iconSize(20);
+    }
+
     &.active {
       color: var(--primary);
-      animation: fillActivate 0.1s ease-out forwards;
+      .q-icon {
+        animation: fillActivate 0.1s ease-out forwards;
+      }
     }
   }
 
@@ -186,6 +194,10 @@
   .round {
     border-radius: 25px;
   }
+  .circle {
+    width: 35px;
+    border-radius: 100%;
+  }
 }
 
 .post {
@@ -195,9 +207,28 @@
   }
   .tag {
     .q-icon {
-      font-size: 20px;
-      font-variation-settings: "opsz" 20;
+      @include iconSize(20);
     }
+  }
+}
+
+.post-more-menu {
+  padding-top: 4px;
+  padding-bottom: 4px;
+  .icon {
+    @include iconSize(22);
+  }
+  .text {
+    font-size: 14px;
+    font-weight: 400;
+    align-self: flex-end;
+  }
+  .horizontal-container {
+    display: flex;
+  }
+  .separator {
+    margin-top: 8px;
+    margin-bottom: 8px;
   }
 }
 
@@ -225,8 +256,7 @@
     }
     .send-button {
       .q-icon {
-        font-size: 30px;
-        font-variation-settings: "opsz" 30;
+        @include iconSize(30);
       }
     }
   }
@@ -298,6 +328,7 @@
     z-index: 10;
     background-color: var(--background-color);
     .q-icon {
+      @include iconSize(24);
       color: var(--text);
     }
   }
@@ -348,9 +379,8 @@
       font-weight: 500;
     }
     .q-icon {
+      @include iconSize(18);
       margin-right: 3px;
-      font-size: 18px;
-      font-variation-settings: "opsz" 18;
       font-weight: 500;
     }
   }
@@ -385,8 +415,12 @@
       color: var(--on-background-variant);
     }
     .icon {
-      font-size: 20px;
-      font-variation-settings: "opsz" 20, "FILL" 1;
+      @include iconSize(
+        20,
+        (
+          "FILL": 1
+        )
+      );
     }
   }
   .q-separator {
@@ -444,9 +478,8 @@
       font-weight: 500;
     }
     .icon {
-      font-size: 20px;
+      @include iconSize(20);
       font-weight: 400;
-      font-variation-settings: "opsz" 20;
       height: 22px;
       width: 22px;
     }
@@ -479,8 +512,7 @@
     }
     .q-icon,
     .icon {
-      font-size: 24px;
-      font-variation-settings: "opsz" 24;
+      @include iconSize(24);
     }
   }
   .send-container {
@@ -495,5 +527,11 @@
   padding-right: 12px;
   &:has(.q-field--focused) {
     outline-color: var(--primary);
+  }
+}
+
+.profile-menu {
+  .q-icon {
+    @include iconSize(24);
   }
 }

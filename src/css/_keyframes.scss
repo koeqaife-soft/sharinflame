@@ -62,18 +62,18 @@
 
 @keyframes fillActivate {
   from {
-    font-variation-settings: "FILL" 0;
+    font-variation-settings: "FILL" 0, "GRAD" var(--grad);
   }
   to {
-    font-variation-settings: "FILL" 1;
+    font-variation-settings: "FILL" 1, "GRAD" var(--grad);
   }
 }
 
 @keyframes fillDeactivate {
   from {
-    font-variation-settings: "FILL" 1;
+    font-variation-settings: "FILL" 1, "GRAD" var(--grad);
   }
   to {
-    font-variation-settings: "FILL" 0;
+    font-variation-settings: "FILL" 0, "GRAD" var(--grad);
   }
 }

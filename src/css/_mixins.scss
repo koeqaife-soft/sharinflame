@@ -37,3 +37,22 @@
 @mixin onlyColorTransition() {
   transition: color var(--animate-duration) ease-in-out;
 }
+
+@mixin iconSize($size, $additional-settings: ()) {
+  $opsz-size: max(20, min($size, 48));
+  font-size: $size * 1px;
+
+  $settings: '"opsz" #{$opsz-size}';
+
+  @each $key, $value in $additional-settings {
+    $settings: #{$settings}, '"#{$key}"' #{$value};
+  }
+
+  body.body--light & {
+    font-variation-settings: #{$settings}, "GRAD" var(--grad);
+  }
+
+  body.body--dark & {
+    font-variation-settings: #{$settings}, "GRAD" var(--grad);
+  }
+}

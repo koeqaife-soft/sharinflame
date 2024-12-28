@@ -77,8 +77,7 @@
     }
     .q-icon,
     .icon {
-      font-size: 20px;
-      font-variation-settings: "opsz" 20;
+      @include iconSize(20);
     }
   }
 }

@@ -2,6 +2,7 @@
   --lvc-h: 8deg;
   --lvc-s: 0%;
   --lvc-l: 0%;
+  color-scheme: light dark;
 }
 
 .body--light,
@@ -36,6 +37,8 @@
   --error: hsl(0, 96%, 80%);
   --on-error: hsl(0, 96%, 10%);
   background: var(--background-color) !important;
+
+  --grad: -25;
 }
 
 .body--light {
@@ -56,6 +59,11 @@
   --outline: hsl(var(--lvc-h), 4%, 47%);
   --error: hsl(0, 83%, 61%);
   --on-error: hsl(0, 83%, 99%);
+
+  --grad: 0;
+}
+
+@media (prefers-color-scheme: dark) {
 }
 
 body {
@@ -92,6 +100,10 @@ body {
     &.animated {
       animation: pulse 0.5s ease-in-out;
     }
+  }
+
+  .q-icon {
+    @include iconSize(24);
   }
 
   .title {
@@ -298,6 +310,7 @@ mark {
   border-radius: 8px;
   background-color: var(--background-color);
   color: var(--text);
+  user-select: none;
   .q-item--active {
     color: var(--on-primary);
     background-color: var(--primary);
@@ -315,9 +328,10 @@ mark {
     box-shadow: none !important;
   }
   .q-icon {
-    font-size: 22px;
+    @include iconSize(22);
     width: 22px;
     height: 22px;
+    color: var(--text);
   }
 }
 
