@@ -292,7 +292,7 @@
   .dialog-content {
     height: 100%;
     width: 100%;
-    transition: max-height 0.2s ease, margin 0.2s ease;
+    transition: max-height 0.2s ease, margin 0.2s ease, transform 0.25s ease-out;
   }
   .dialog-content.expand {
     max-width: 650px;

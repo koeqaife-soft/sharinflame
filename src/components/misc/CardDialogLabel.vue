@@ -1,5 +1,5 @@
 <template>
-  <q-card class="card label-container">
+  <q-card class="card label-container" style="z-index: 2">
     <div class="horizontal-container">
       <q-icon v-if="icon" :name="icon" class="icon" />
       <div>{{ label }}</div>
