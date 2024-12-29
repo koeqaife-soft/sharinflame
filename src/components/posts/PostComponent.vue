@@ -80,6 +80,10 @@ const MoreMenu = defineAsyncComponent(() => import("./PostMoreMenu.vue"));
 const quasar = useQuasar();
 const { t } = useI18n();
 
+const emit = defineEmits<{
+  (event: "deletePost", postId: string): void;
+}>();
+
 const props = defineProps<{
   post: PostWithSystem;
   inDialog?: boolean;
@@ -195,11 +199,28 @@ function postDialog() {
   });
 }
 
-function action(type: string, data: unknown) {
-  console.log(type);
+async function action(type: string, data: unknown) {
   switch (type) {
     case "delete":
-      deletePost(postRef.value.post_id);
+      try {
+        await deletePost(postRef.value.post_id);
+        quasar.notify({
+          type: "default-notification",
+          progress: true,
+          icon: "sym_r_delete_forever",
+          message: t("post_deleted.msg"),
+          caption: t("post_deleted.caption")
+        });
+        emit("deletePost", postRef.value.post_id);
+      } catch (e) {
+        quasar.notify({
+          type: "error-notification",
+          progress: true,
+          message: t("post_deleted.failed")
+        });
+        throw e;
+      }
+
       break;
     case "copy_id":
       navigator.clipboard.writeText(data as string);

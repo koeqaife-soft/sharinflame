@@ -27,7 +27,13 @@
       </q-card>
     </div>
     <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll" :key="scrollKey" debounce="0" :offset="1000">
-      <post-component :post="item" class="animation-fade-in-down" v-for="(item, index) in items" :key="index" />
+      <post-component
+        :post="item"
+        class="animation-fade-in-down"
+        v-for="item in items"
+        :key="item.post_id"
+        @delete-post="handleDeletePost"
+      />
       <template v-slot:loading>
         <div class="row justify-center q-my-md">
           <q-spinner class="loading" size="40px" />
@@ -123,5 +129,9 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
     done(true);
     throw e;
   }
+}
+
+function handleDeletePost(postId: string) {
+  items.value = items.value.filter((post) => post.post_id !== postId);
 }
 </script>

@@ -96,9 +96,15 @@ export default {
   tags: "Tags",
   add_tag: "Add tag",
   enter_tag: "Enter Tag",
+
   post_created: {
     msg: "Post created",
     caption: "You can find your post in your profile."
+  },
+  post_deleted: {
+    msg: "Post deleted",
+    caption: "Your post has been deleted.",
+    failed: "Could not delete the post."
   },
 
   reaction_failed: "Failed to put a reaction"

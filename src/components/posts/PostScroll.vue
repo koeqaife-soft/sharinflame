@@ -1,7 +1,13 @@
 <template>
   <q-scroll-area class="scroll-area" :visible="false">
     <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll" :key="scrollKey" debounce="0">
-      <post-component :post="item" v-for="(item, index) in items" :key="index" class="animation-fade-in-down" />
+      <post-component
+        :post="item"
+        v-for="item in items"
+        :key="item.post_id"
+        class="animation-fade-in-down"
+        @delete-post="handleDeletePost"
+      />
       <template v-slot:loading v-if="items.length > 0">
         <div class="row justify-center q-my-md">
           <q-spinner class="loading" size="40px" />
@@ -98,5 +104,9 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
       done(true);
     } else throw e;
   }
+}
+
+function handleDeletePost(postId: string) {
+  items.value = items.value.filter((post) => post.post_id !== postId);
 }
 </script>

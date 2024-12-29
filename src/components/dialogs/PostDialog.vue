@@ -13,7 +13,7 @@
         <q-btn flat round icon="sym_r_close" size="xs" @click="dialogRef!.hide()" />
       </card-dialog-label>
       <q-scroll-area class="scroll-area fix-scroll-area" :visible="false">
-        <post-component :post="postRef" :in-dialog="true" class="q-mb-sm" />
+        <post-component :post="postRef" :in-dialog="true" @delete-post="handleDeletePost" class="q-mb-sm" />
         <q-separator class="q-mb-sm" />
         <div class="sticky-label">
           <card-dialog-label class="q-mb-sm" :label="$t('comments')" icon="sym_r_chat_bubble">
@@ -194,6 +194,10 @@ async function sendComment() {
   } finally {
     sending.value = false;
   }
+}
+
+function handleDeletePost() {
+  dialogRef.value?.hide();
 }
 
 onMounted(async () => {
