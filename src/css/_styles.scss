@@ -300,8 +300,8 @@ mark {
   @include elevation(3);
   outline: 1px solid var(--outline);
   border-radius: 8px;
-  background-color: var(--background-color);
-  color: var(--text);
+  background-color: var(--card);
+  color: var(--on-card);
   user-select: none;
   .q-item--active {
     color: var(--on-primary);
@@ -395,4 +395,5 @@ mark {
 
 .emoji {
   font-family: "NotoColorEmoji", sans-serif;
+  font-size: 17px;
 }
