@@ -1,4 +1,5 @@
 <template>
+  <!-- FIXME: Lags with a large number of elements -->
   <q-scroll-area class="scroll-area" :visible="false">
     <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll" :key="scrollKey" debounce="0">
       <post-component
