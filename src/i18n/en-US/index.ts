@@ -107,5 +107,6 @@ export default {
     failed: "Could not delete the post."
   },
 
-  reaction_failed: "Failed to put a reaction"
+  reaction_failed: "Failed to put a reaction",
+  favorite_failed: "Failed to add to favorites"
 };
