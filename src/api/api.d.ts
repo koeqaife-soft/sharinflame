@@ -48,6 +48,7 @@ interface Post {
   is_deleted: boolean;
   is_like?: boolean;
   is_system?: boolean;
+  is_fav?: boolean;
 
   created_at_unix: number;
   updated_at_unix: number;
@@ -65,6 +66,8 @@ interface PostSystem {
   post_id: string;
   content: string;
   is_system: true;
+  is_fav?: undefined;
+
   actions?: {
     name: string;
     icon: string;
@@ -82,6 +85,7 @@ interface Comment {
   likes_count: number;
   dislikes_count: number;
   is_like?: boolean;
+  is_fav?: boolean;
 }
 
 type CommentWithUser = Comment & {
