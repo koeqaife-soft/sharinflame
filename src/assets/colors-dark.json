@@ -1,0 +1,61 @@
+{
+  "primary": {
+    "s": ["=", "96"],
+    "l": ["=", "80"]
+  },
+  "secondary": {
+    "s": ["=", "90"],
+    "l": ["=", "75"]
+  },
+  "tertiary": {
+    "h": ["+", "15"],
+    "s": ["=", "96"],
+    "l": ["=", "80"]
+  },
+  "on-primary": {
+    "link": "primary",
+    "l": ["=", "10"]
+  },
+  "on-secondary": {
+    "link": "secondary",
+    "l": ["=", "10"]
+  },
+  "on-tertiary": {
+    "link": "tertiary",
+    "l": ["=", "10"]
+  },
+  "background": {
+    "s": ["=", "14"],
+    "l": ["=", "8"]
+  },
+  "background-variant": {
+    "s": ["=", "14"],
+    "l": ["=", "20"]
+  },
+  "on-background-variant": {
+    "s": ["=", "7"],
+    "l": ["=", "80"]
+  },
+  "text": {
+    "hex": "#ffffff"
+  },
+  "card": {
+    "link": "background",
+    "l": ["=", "12"]
+  },
+  "card-hover": {
+    "link": "background",
+    "l": ["=", "13"]
+  },
+  "card-high": {
+    "link": "background",
+    "l": ["=", "16"]
+  },
+  "on-card": {
+    "hex": "#ffffff"
+  },
+  "outline": {
+    "s": ["=", "5"],
+    "l": ["=", "57"]
+  }
+}

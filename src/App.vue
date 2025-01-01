@@ -19,9 +19,10 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch, defineAsyncComponent } from "vue";
+import { onMounted, ref, watch, defineAsyncComponent, onBeforeMount } from "vue";
 import { useMainStore } from "./stores/main-store";
 import { api, apiEndpoints } from "./boot/axios";
+import { generateAll, setCss } from "./utils/colors";
 
 const LogoComponent = defineAsyncComponent(() => import("./components/misc/LogoComponent.vue"));
 const MainLayout = defineAsyncComponent(() => import("./layouts/MainLayout.vue"));
@@ -83,5 +84,10 @@ defineOptions({
 onMounted(() => {
   onChange();
   pingInterval();
+});
+
+onBeforeMount(() => {
+  const colors = generateAll([8, 0, 0]);
+  setCss(colors);
 });
 </script>
