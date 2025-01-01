@@ -34,6 +34,15 @@
           @click="dislike"
         />
       </div>
+      <div class="action-container circle">
+        <q-btn
+          unelevated
+          icon="sym_r_favorite"
+          :class="['comments button circle', { active: postRef.is_fav }]"
+          size="sm"
+          @click="favoriteButton"
+        />
+      </div>
       <div class="action-container">
         <q-btn
           unelevated
@@ -74,6 +83,7 @@ import { deletePost, remReaction, setReaction } from "src/api/posts";
 import { formatNumber, formatStringForHtml } from "src/utils/format";
 import { useQuasar } from "quasar";
 import { useI18n } from "vue-i18n";
+import { addPostToFavorites, remPostFromFavorites } from "src/api/users";
 
 const PostDialog = defineAsyncComponent(() => import("../dialogs/PostDialog.vue"));
 const MoreMenu = defineAsyncComponent(() => import("./PostMoreMenu.vue"));
@@ -91,6 +101,8 @@ const props = defineProps<{
 
 const postRef = ref<PostWithSystem>(props.post);
 let lastReaction: boolean | undefined = false;
+let lastFavorite: boolean | undefined = postRef.value.is_fav || false;
+
 let lastCounters: number[] = [];
 if (!postRef.value.is_system) {
   lastReaction = postRef.value.is_like;
@@ -111,6 +123,7 @@ const tagsInfo = computed<Record<string, { name: string; icon: string }>>(() => 
 }));
 
 let debounceTimeout: NodeJS.Timeout | null = null;
+let debounceTimeoutFav: NodeJS.Timeout | null = null;
 
 function debounce(callback: () => void, delay: number) {
   if (debounceTimeout !== null) clearTimeout(debounceTimeout);
@@ -187,6 +200,38 @@ function like() {
 
 function dislike() {
   handleReaction(false);
+}
+
+async function performFavorite(to: boolean) {
+  if (postRef.value.is_system) return;
+  if (lastFavorite === to) return;
+  try {
+    if (to === true) {
+      await addPostToFavorites(postRef.value.post_id);
+    } else {
+      await remPostFromFavorites(postRef.value.post_id);
+    }
+    lastFavorite = to;
+  } catch (error) {
+    postRef.value.is_fav = lastFavorite;
+    quasar.notify({
+      type: "error-notification",
+      message: t("favorite_failed"),
+      progress: true
+    });
+    console.error(error);
+  }
+}
+
+async function favoriteButton() {
+  if (postRef.value.is_system) return;
+
+  if (debounceTimeoutFav !== null) clearTimeout(debounceTimeoutFav);
+
+  const changeTo = !postRef.value.is_fav;
+  debounceTimeoutFav = setTimeout(() => performFavorite(changeTo), 500);
+
+  postRef.value.is_fav = changeTo;
 }
 
 function postDialog() {
