@@ -22,7 +22,6 @@
 import { onMounted, ref, watch, defineAsyncComponent, onBeforeMount } from "vue";
 import { useMainStore } from "./stores/main-store";
 import { api, apiEndpoints } from "./boot/axios";
-import { generateAll, setCss } from "./utils/colors";
 
 const LogoComponent = defineAsyncComponent(() => import("./components/misc/LogoComponent.vue"));
 const MainLayout = defineAsyncComponent(() => import("./layouts/MainLayout.vue"));
@@ -87,7 +86,6 @@ onMounted(() => {
 });
 
 onBeforeMount(() => {
-  const colors = generateAll([8, 0, 0]);
-  setCss(colors);
+  mainStore.updateColor();
 });
 </script>
