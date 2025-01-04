@@ -77,13 +77,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent, ref } from "vue";
+import { computed, defineAsyncComponent, Ref, ref } from "vue";
 import OpenUserDialog from "../dialogs/OpenUserDialog.vue";
-import { deletePost, remReaction, setReaction } from "src/api/posts";
+import { deletePost } from "src/api/posts";
 import { formatNumber, formatStringForHtml } from "src/utils/format";
 import { useQuasar } from "quasar";
 import { useI18n } from "vue-i18n";
-import { addPostToFavorites, remPostFromFavorites } from "src/api/users";
+import { useReaction } from "src/composables/useReaction";
 
 const PostDialog = defineAsyncComponent(() => import("../dialogs/PostDialog.vue"));
 const MoreMenu = defineAsyncComponent(() => import("./PostMoreMenu.vue"));
@@ -100,16 +100,14 @@ const props = defineProps<{
 }>();
 
 const postRef = ref<PostWithSystem>(props.post);
-let lastReaction: boolean | undefined = false;
-let lastFavorite: boolean | undefined = postRef.value.is_fav || false;
 
-let lastCounters: number[] = [];
+let like = () => {};
+let dislike = () => {};
+let favoriteButton = () => {};
+
 if (!postRef.value.is_system) {
-  lastReaction = postRef.value.is_like;
-  lastCounters = [postRef.value.likes_count, postRef.value.dislikes_count];
+  ({ like, dislike, favoriteButton } = useReaction(postRef as unknown as Ref<Post>, true));
 }
-
-let blockLastReaction = false;
 
 const tagsInfo = computed<Record<string, { name: string; icon: string }>>(() => ({
   "ai-generated": {
@@ -121,118 +119,6 @@ const tagsInfo = computed<Record<string, { name: string; icon: string }>>(() => 
     icon: "sym_r_explicit"
   }
 }));
-
-let debounceTimeout: NodeJS.Timeout | null = null;
-let debounceTimeoutFav: NodeJS.Timeout | null = null;
-
-function debounce(callback: () => void, delay: number) {
-  if (debounceTimeout !== null) clearTimeout(debounceTimeout);
-  debounceTimeout = setTimeout(callback, delay);
-}
-
-function changeLastReaction(reaction: boolean | undefined, counters: typeof lastCounters) {
-  if (blockLastReaction) return;
-  lastReaction = reaction;
-  lastCounters = counters;
-}
-
-function handleReaction(isLike: boolean) {
-  if (postRef.value.is_system) return;
-
-  const { is_like, likes_count, dislikes_count } = postRef.value;
-
-  changeLastReaction(is_like, [likes_count, dislikes_count]);
-  blockLastReaction = true;
-  updateReactionCounters(isLike);
-
-  debounce(() => performReaction(isLike), 500);
-}
-
-function updateReactionCounters(isLike: boolean) {
-  if (postRef.value.is_system) return;
-
-  if (postRef.value.is_like === isLike) {
-    postRef.value.is_like = undefined;
-    isLike ? postRef.value.likes_count-- : postRef.value.dislikes_count--;
-  } else {
-    if (postRef.value.is_like !== undefined) {
-      isLike ? postRef.value.dislikes_count-- : postRef.value.likes_count--;
-    }
-    isLike ? postRef.value.likes_count++ : postRef.value.dislikes_count++;
-    postRef.value.is_like = isLike;
-  }
-}
-
-function backReactionCounters() {
-  if (postRef.value.is_system || postRef.value.is_like === lastReaction) return;
-
-  postRef.value.is_like = lastReaction;
-  postRef.value.likes_count = lastCounters[0];
-  postRef.value.dislikes_count = lastCounters[1];
-}
-
-async function performReaction(isLike: boolean) {
-  if (postRef.value.is_system) return;
-
-  try {
-    if (postRef.value.is_like === lastReaction) return;
-    if (postRef.value.is_like === undefined) {
-      await remReaction(postRef.value.post_id);
-    } else {
-      await setReaction(postRef.value.post_id, { isLike });
-    }
-  } catch (error) {
-    backReactionCounters();
-    quasar.notify({
-      type: "error-notification",
-      message: t("reaction_failed"),
-      progress: true
-    });
-    console.error(error);
-  } finally {
-    blockLastReaction = false;
-  }
-}
-
-function like() {
-  handleReaction(true);
-}
-
-function dislike() {
-  handleReaction(false);
-}
-
-async function performFavorite(to: boolean) {
-  if (postRef.value.is_system) return;
-  if (lastFavorite === to) return;
-  try {
-    if (to === true) {
-      await addPostToFavorites(postRef.value.post_id);
-    } else {
-      await remPostFromFavorites(postRef.value.post_id);
-    }
-    lastFavorite = to;
-  } catch (error) {
-    postRef.value.is_fav = lastFavorite;
-    quasar.notify({
-      type: "error-notification",
-      message: t("favorite_failed"),
-      progress: true
-    });
-    console.error(error);
-  }
-}
-
-async function favoriteButton() {
-  if (postRef.value.is_system) return;
-
-  if (debounceTimeoutFav !== null) clearTimeout(debounceTimeoutFav);
-
-  const changeTo = !postRef.value.is_fav;
-  debounceTimeoutFav = setTimeout(() => performFavorite(changeTo), 500);
-
-  postRef.value.is_fav = changeTo;
-}
 
 function postDialog() {
   if (props.inDialog) return;
