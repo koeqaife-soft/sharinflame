@@ -1,14 +1,16 @@
 <template>
-  <!-- FIXME: Lags with a large number of elements -->
   <q-scroll-area class="scroll-area" :visible="false">
     <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll" :key="scrollKey" debounce="0">
-      <post-component
-        :post="item"
-        v-for="item in items"
-        :key="item.post_id"
-        class="animation-fade-in-down"
-        @delete-post="handleDeletePost"
-      />
+      <my-virtual-scroll :items="items" :margins="8">
+        <template v-slot:default="{ item }">
+          <post-component
+            class="animation-fade-in q-mb-sm"
+            :post="item as PostWithSystem"
+            @delete-post="handleDeletePost"
+          />
+        </template>
+      </my-virtual-scroll>
+
       <template v-slot:loading v-if="items.length > 0">
         <div class="row justify-center q-my-md">
           <q-spinner class="loading" size="40px" />
@@ -23,6 +25,7 @@ import { usePostsStore } from "src/stores/posts-store";
 import { KeyOfGetPostsTypes, viewPosts } from "src/api/posts";
 import { isAxiosError } from "axios";
 import { useI18n } from "vue-i18n";
+import MyVirtualScroll from "src/components/misc/MyVirtualScroll.vue";
 
 const PostComponent = defineAsyncComponent(() => import("./PostComponent.vue"));
 
