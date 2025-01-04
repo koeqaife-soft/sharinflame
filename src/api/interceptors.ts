@@ -8,6 +8,11 @@ let api: AxiosInstance;
 type mainStoreType = ReturnType<typeof useMainStore>;
 let mainStore: mainStoreType;
 
+function is5xxError(error: AxiosError) {
+  const response = error.response;
+  return response && response.status >= 500 && response.status < 600;
+}
+
 const connectionInterceptor = () => {
   const isConnectionError = (e: AxiosError) => {
     return !e.response || e.code === "ECONNABORTED";
@@ -23,6 +28,10 @@ const connectionInterceptor = () => {
 
       if (config.__retry) return Promise.reject(error);
       config.__retry = true;
+
+      if (is5xxError(error)) {
+        return Promise.reject(error);
+      }
 
       if (isConnectionError(error)) {
         mainStore.setIsOffline(true);
@@ -140,6 +149,10 @@ const authInterceptor = () => {
     (response: AxiosResponse) => response,
     async (error: AxiosError<ApiResponse>) => {
       const { response } = error;
+
+      if (is5xxError(error)) {
+        return Promise.reject(error);
+      }
 
       if (response?.config.url === "/auth/refresh") invalidAuth();
 
