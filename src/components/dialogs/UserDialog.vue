@@ -6,7 +6,6 @@
     ref="dialogRef"
     @hide="onDialogHide"
     maximized
-    :key="user.user_id"
   >
     <closeable-content v-on:hide="dialogRef!.hide()" :class="{ expand: expand }">
       <template v-if="loaded">
@@ -113,8 +112,8 @@ const randomSize = (min: number, max: number) => `${randomIntInRange(min, max)}p
 onMounted(async () => {
   mainStore.openedDialogs.user();
   mainStore.openedDialogs.user = dialogRef.value!.hide;
-  if (userRef.value.user_id != profileStore.profile?.user_id) {
-    const profile = await profileStore.getProfile(userRef.value.user_id);
+  if (userRef.value?.user_id != profileStore.profile?.user_id) {
+    const profile = await profileStore.getProfile(userRef.value?.user_id);
     if (profile) {
       userRef.value = profile;
     }
