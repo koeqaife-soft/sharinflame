@@ -5,8 +5,7 @@ let api: AxiosInstance;
 export const usersEndpoints = {
   profile_me: "/users/me",
   get_profile: (id: string) => `/users/${id}`,
-  favorite_posts: (id: string) => `/users/me/favorites/posts/${id}`,
-  favorite_comments: (id: string) => `/users/me/favorites/comments/${id}`
+  favorites: "/users/me/favorites"
 };
 
 async function getProfile(user_id?: string) {
@@ -22,15 +21,31 @@ async function updateProfile(values: UpdateProfileValues) {
 }
 
 async function addPostToFavorites(id: string) {
-  return await api.post(usersEndpoints.favorite_posts(id));
+  return await api.post(usersEndpoints.favorites, { post_id: id });
 }
 
 async function remPostFromFavorites(id: string) {
-  return await api.delete(usersEndpoints.favorite_posts(id));
+  return await api.delete(usersEndpoints.favorites, { params: { post_id: id } });
+}
+
+async function addCommentToFavorites(post_id: string, id: string) {
+  return await api.post(usersEndpoints.favorites, { post_id: post_id, comment_id: id });
+}
+
+async function remCommentFromFavorites(post_id: string, id: string) {
+  return await api.delete(usersEndpoints.favorites, { params: { post_id: post_id, comment_id: id } });
 }
 
 async function init(_api: AxiosInstance) {
   api = _api;
 }
 
-export { init, getProfile, updateProfile, addPostToFavorites, remPostFromFavorites };
+export {
+  init,
+  getProfile,
+  updateProfile,
+  addPostToFavorites,
+  remPostFromFavorites,
+  addCommentToFavorites,
+  remCommentFromFavorites
+};
