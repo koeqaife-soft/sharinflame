@@ -2,7 +2,7 @@
   <div class="virtual-scroll" ref="scrollContainer">
     <q-scroll-observer @scroll="onScroll" :debounce="debounce" />
     <div class="virtual-filler-top" :style="{ height: `${topFillerHeight}px` }" />
-    <template v-for="(item, index) in items" :key="index">
+    <template v-for="(item, index) in items" :key="getItemKey(item)">
       <div class="virtual-item" v-if="!hasHeight(index) || (index >= visibleIndexes[0] && index <= visibleIndexes[1])">
         <q-resize-observer @resize="(event) => onItemHeightChange(index, event)" />
         <slot :item="item" :index="index" />
@@ -12,22 +12,24 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" generic="T">
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 
-const props = withDefaults(
-  defineProps<{
-    items: unknown[];
-    margins?: number;
-    offset?: number;
-    debounce?: number;
-  }>(),
-  {
-    margins: 0,
-    offset: 250,
-    debounce: 150
-  }
-);
+interface Props {
+  items: T[];
+  margins?: number;
+  offset?: number;
+  bottomOffset?: number;
+  debounce?: number;
+  itemKey: keyof T;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  margins: 0,
+  offset: 250,
+  bottomOffset: 500,
+  debounce: 150
+});
 
 const itemsRef = ref(props.items);
 
@@ -46,12 +48,17 @@ const containerHeight = ref(0);
 const scrollContainer = ref<HTMLElement | null>(null);
 
 const top = ref(0);
-const bottom = computed(() => top.value + containerHeight.value + props.offset * 2);
+const bottom = computed(() => top.value + containerHeight.value + props.offset + props.bottomOffset);
 
 const topFillerHeight = ref(0);
 const bottomFillerHeight = ref(0);
 
 const visibleIndexes = ref<number[]>([]);
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const getItemKey = (item: any) => {
+  return item[props.itemKey];
+};
 
 function updateVisibleItems() {
   let cumulativeHeight = 0;
