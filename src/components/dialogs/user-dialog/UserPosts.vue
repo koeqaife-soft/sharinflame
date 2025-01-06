@@ -27,13 +27,11 @@
       </q-card>
     </div>
     <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll" :key="scrollKey" debounce="0" :offset="1000">
-      <post-component
-        :post="item"
-        class="animation-fade-in-down"
-        v-for="item in items"
-        :key="item.post_id"
-        @delete-post="handleDeletePost"
-      />
+      <my-virtual-scroll :items="items" :margins="8" item-key="post_id">
+        <template v-slot:default="{ item }">
+          <post-component :post="item" class="animation-fade-in q-mb-sm" @delete-post="handleDeletePost" />
+        </template>
+      </my-virtual-scroll>
       <template v-slot:loading>
         <div class="row justify-center q-my-md">
           <q-spinner class="loading" size="40px" />
@@ -45,6 +43,7 @@
 <script setup lang="ts">
 import { getUserPosts } from "src/api/posts";
 import { defineAsyncComponent, ref } from "vue";
+import MyVirtualScroll from "src/components/misc/MyVirtualScroll.vue";
 
 const PostComponent = defineAsyncComponent(() => import("../../posts/PostComponent.vue"));
 

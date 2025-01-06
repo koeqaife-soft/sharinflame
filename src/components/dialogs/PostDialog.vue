@@ -21,12 +21,11 @@
           </card-dialog-label>
         </div>
         <q-infinite-scroll @load="loadComments" class="posts-infinite-scroll full-height" :key="scrollKey" debounce="0">
-          <comment-component
-            :comment="item"
-            class="animation-fade-in-down"
-            v-for="item in items"
-            :key="item.comment_id"
-          />
+          <my-virtual-scroll :items="items" :margins="8" item-key="comment_id">
+            <template v-slot:default="{ item }">
+              <comment-component :comment="item" class="animation-fade-in q-mb-sm" />
+            </template>
+          </my-virtual-scroll>
           <template v-slot:loading>
             <div class="row justify-center q-my-md">
               <q-spinner class="loading" size="40px" />
@@ -75,6 +74,7 @@ import { defineAsyncComponent, onMounted, onUnmounted, ref, watch } from "vue";
 import PostComponent from "../posts/PostComponent.vue";
 import CloseableContent from "../misc/CloseableContent.vue";
 import CardDialogLabel from "../misc/CardDialogLabel.vue";
+import MyVirtualScroll from "../misc/MyVirtualScroll.vue";
 import { useDialogPluginComponent } from "quasar";
 import { createComment, getComments } from "src/api/posts";
 import { useProfileStore } from "src/stores/profile-store";
