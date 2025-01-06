@@ -95,7 +95,6 @@ function onResize() {
 }
 
 function onItemHeightChange(index: number, info: { height: number; width: number }) {
-  console.log("height change", index, info.height);
   heights.value[index] = info.height + (props.margins || 0);
   updateVisibleItems();
 }
