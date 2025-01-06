@@ -1,13 +1,9 @@
 <template>
   <q-scroll-area class="scroll-area" :visible="false">
     <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll" :key="scrollKey" debounce="0">
-      <my-virtual-scroll :items="items" :margins="8">
+      <my-virtual-scroll :items="items" :margins="8" item-key="post_id">
         <template v-slot:default="{ item }">
-          <post-component
-            class="animation-fade-in q-mb-sm"
-            :post="item as PostWithSystem"
-            @delete-post="handleDeletePost"
-          />
+          <post-component class="animation-fade-in q-mb-sm" :post="item" @delete-post="handleDeletePost" />
         </template>
       </my-virtual-scroll>
 
