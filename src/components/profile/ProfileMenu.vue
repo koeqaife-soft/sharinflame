@@ -3,8 +3,8 @@
     <q-btn :class="['open-profile', buttonsClass]" :key="user?.user_id || 0" unelevated no-caps @click="openUserDialog">
       <user-avatar :user="user!" />
       <div class="text-container">
-        <div class="label text-body2">{{ $t("view_profile") }}</div>
-        <div class="username text-caption">{{ `@${user?.username || "unknown"}` }}</div>
+        <div class="label">{{ $t("view_profile") }}</div>
+        <div class="username">{{ `@${user?.username || "unknown"}` }}</div>
       </div>
     </q-btn>
     <q-btn

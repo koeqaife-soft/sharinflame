@@ -534,3 +534,14 @@
     @include iconSize(24);
   }
 }
+
+.profile-menu-component {
+  .label {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .username {
+    font-size: 12px;
+    font-weight: 400;
+  }
+}
