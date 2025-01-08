@@ -66,6 +66,7 @@ import type { ButtonProps } from "../categories/CategoryButton.vue";
 import { useI18n } from "vue-i18n";
 import { useMainStore } from "src/stores/main-store";
 import { useProfileStore } from "src/stores/profile-store";
+import { randomSize } from "src/utils/random";
 
 const UserDialogInfo = defineAsyncComponent(() => import("./user-dialog/UserInfo.vue"));
 const UserDialogPosts = defineAsyncComponent(() => import("./user-dialog/UserPosts.vue"));
@@ -105,9 +106,6 @@ const categoriesList = computed<ButtonProps[]>(() => [
 const changeType = (type: string) => {
   currentType.value = type;
 };
-
-const randomIntInRange = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
-const randomSize = (min: number, max: number) => `${randomIntInRange(min, max)}px`;
 
 onMounted(async () => {
   mainStore.openedDialogs.user();
