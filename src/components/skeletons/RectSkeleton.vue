@@ -6,7 +6,9 @@ import { randomSize } from "src/utils/random";
 
 const props = defineProps<{
   height: string;
+  minSize?: number;
+  maxSize?: number;
 }>();
 
-const height = props.height === "random" ? randomSize(125, 300) : props.height;
+const height = props.height === "random" ? randomSize(props.minSize || 125, props.maxSize || 300) : props.height;
 </script>
