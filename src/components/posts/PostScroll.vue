@@ -13,7 +13,7 @@
         <post-component class="animation-fade-in q-mb-sm" :post="item" @delete-post="handleDeletePost" />
       </template>
       <template v-slot:loading>
-        <post-skeleton v-for="n in 5" :key="n" height="random" class="q-mb-sm" />
+        <rect-skeleton v-for="n in 5" :key="n" height="random" class="q-mb-sm" />
       </template>
     </my-virtual-scroll>
   </q-scroll-area>
@@ -27,7 +27,7 @@ import { useI18n } from "vue-i18n";
 import MyVirtualScroll from "src/components/misc/MyVirtualScroll.vue";
 
 const PostComponent = defineAsyncComponent(() => import("./PostComponent.vue"));
-const PostSkeleton = defineAsyncComponent(() => import("../skeletons/PostSkeleton.vue"));
+const RectSkeleton = defineAsyncComponent(() => import("../skeletons/RectSkeleton.vue"));
 
 const props = defineProps<{
   type: KeyOfGetPostsTypes;
