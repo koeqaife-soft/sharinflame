@@ -3,16 +3,20 @@
     <q-scroll-observer @scroll="onScroll" :debounce="debounce" />
     <div class="virtual-filler-top" :style="{ height: `${topFillerHeight}px` }" />
     <template v-for="(item, index) in items" :key="getItemKey(item)">
-      <div class="virtual-item" v-if="!hasHeight(index) || (index >= visibleIndexes[0] && index <= visibleIndexes[1])">
+      <div class="virtual-item" v-if="showItem(index) != 'deleted'" v-show="showItem(index) != 'hidden'">
         <q-resize-observer @resize="(event) => onItemHeightChange(index, event)" />
         <slot :item="item" :index="index" />
       </div>
     </template>
     <div class="virtual-filler-bottom" :style="{ height: `${bottomFillerHeight}px` }" />
+    <div class="virtual-scroll-loading" :style="{ height: '0px' }">
+      <slot name="loading" v-if="showLoading" />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts" generic="T">
+// NOTE: I didn't add infinite load type "top" because there's many problems with it
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
 
 interface Props {
@@ -22,6 +26,7 @@ interface Props {
   bottomOffset?: number;
   debounce?: number;
   itemKey: keyof T;
+  infiniteLoadType?: "bottom" | "none";
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -32,6 +37,10 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 const itemsRef = ref(props.items);
+
+const emit = defineEmits<{
+  (e: "loadMore", index: number, done: (stop?: boolean) => void): void;
+}>();
 
 watch(
   itemsRef,
@@ -55,10 +64,56 @@ const bottomFillerHeight = ref(0);
 
 const visibleIndexes = ref<number[]>([]);
 
+const isLoading = ref(false);
+const stopInfiniteLoad = ref(false);
+
+let isLoadingTimeout: NodeJS.Timeout | undefined = undefined;
+const showLoading = ref(false);
+
+watch(
+  isLoading,
+  () => {
+    checkLoading();
+  },
+  { immediate: true }
+);
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getItemKey = (item: any) => {
   return item[props.itemKey];
 };
+
+function checkLoading() {
+  if (isLoading.value || stopInfiniteLoad.value) return;
+
+  const loadMore = () => {
+    isLoading.value = true;
+
+    emit("loadMore", 0, (stop?: boolean) => {
+      isLoading.value = false;
+      if (stop) {
+        stopInfiniteLoad.value = true;
+      }
+      showLoading.value = false;
+      if (isLoadingTimeout) {
+        clearTimeout(isLoadingTimeout);
+        isLoadingTimeout = undefined;
+      }
+    });
+  };
+
+  if (props.infiniteLoadType === "bottom" && visibleIndexes.value[1] >= itemsRef.value.length - 1) {
+    if (isLoadingTimeout) {
+      clearTimeout(isLoadingTimeout);
+      isLoadingTimeout = undefined;
+    }
+    isLoadingTimeout = setTimeout(() => {
+      showLoading.value = true;
+      isLoadingTimeout = undefined;
+    }, 250);
+    loadMore();
+  }
+}
 
 function updateVisibleItems() {
   let cumulativeHeight = 0;
@@ -89,6 +144,8 @@ function updateVisibleItems() {
 
   topFillerHeight.value = heights.value.slice(0, topIndex).reduce((acc, height) => acc + (height || 0), 0);
   bottomFillerHeight.value = heights.value.slice(bottomIndex + 1).reduce((acc, height) => acc + (height || 0), 0);
+
+  checkLoading();
 }
 
 function onScroll(info: QScrollObserverDetails) {
@@ -108,6 +165,12 @@ function onItemHeightChange(index: number, info: { height: number; width: number
 
 function hasHeight(index: number) {
   return !!heights.value[index];
+}
+
+function showItem(index: number) {
+  if (index >= visibleIndexes.value[0] && index <= visibleIndexes.value[1]) return "visible";
+  else if (!hasHeight(index)) return "hidden";
+  else return "deleted";
 }
 
 onMounted(() => {
