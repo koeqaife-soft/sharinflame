@@ -1,18 +1,21 @@
 <template>
   <q-scroll-area class="scroll-area" :visible="false">
-    <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll" :key="scrollKey" debounce="0">
-      <my-virtual-scroll :items="items" :margins="8" item-key="post_id">
-        <template v-slot:default="{ item }">
-          <post-component class="animation-fade-in q-mb-sm" :post="item" @delete-post="handleDeletePost" />
-        </template>
-      </my-virtual-scroll>
-
-      <template v-slot:loading v-if="items.length > 0">
-        <div class="row justify-center q-my-md">
-          <q-spinner class="loading" size="40px" />
-        </div>
+    <my-virtual-scroll
+      :items="items"
+      :margins="8"
+      item-key="post_id"
+      infinite-load-type="bottom"
+      class="posts-infinite-scroll"
+      @load-more="onLoad"
+      :key="scrollKey"
+    >
+      <template v-slot:default="{ item }">
+        <post-component class="animation-fade-in q-mb-sm" :post="item" @delete-post="handleDeletePost" />
       </template>
-    </q-infinite-scroll>
+      <template v-slot:loading>
+        <post-skeleton v-for="n in 5" :key="n" height="random" class="q-mb-sm" />
+      </template>
+    </my-virtual-scroll>
   </q-scroll-area>
 </template>
 <script setup lang="ts">
@@ -24,6 +27,7 @@ import { useI18n } from "vue-i18n";
 import MyVirtualScroll from "src/components/misc/MyVirtualScroll.vue";
 
 const PostComponent = defineAsyncComponent(() => import("./PostComponent.vue"));
+const PostSkeleton = defineAsyncComponent(() => import("../skeletons/PostSkeleton.vue"));
 
 const props = defineProps<{
   type: KeyOfGetPostsTypes;
