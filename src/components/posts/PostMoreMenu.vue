@@ -1,24 +1,22 @@
 <template>
-  <q-menu class="post-more-menu" self="top right">
-    <q-list style="min-width: 230px">
-      <template v-for="(option, index) in options" :key="index">
-        <q-item
-          v-if="option.visible && option.type === 'item'"
-          clickable
-          v-close-popup
-          @click="emit('action', option.key!, option.data)"
-        >
-          <q-item-section>
-            <div class="horizontal-container">
-              <q-icon :name="option.icon" class="icon" />
-              <div class="text">{{ $t(`post_options.${option.key}`) }}</div>
-            </div>
-          </q-item-section>
-        </q-item>
-        <q-separator v-else-if="option.visible && option.type === 'separator'" class="separator" />
-      </template>
-    </q-list>
-  </q-menu>
+  <q-list style="min-width: 230px">
+    <template v-for="(option, index) in options" :key="index">
+      <q-item
+        v-if="option.visible && option.type === 'item'"
+        clickable
+        v-close-popup
+        @click="emit('action', option.key!, option.data)"
+      >
+        <q-item-section>
+          <div class="horizontal-container">
+            <q-icon :name="option.icon" class="icon" />
+            <div class="text">{{ $t(`post_options.${option.key}`) }}</div>
+          </div>
+        </q-item-section>
+      </q-item>
+      <q-separator v-else-if="option.visible && option.type === 'separator'" class="separator" />
+    </template>
+  </q-list>
 </template>
 
 <script setup lang="ts">

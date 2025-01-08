@@ -56,7 +56,9 @@
       <q-space />
       <div class="action-container circle">
         <q-btn unelevated icon="sym_r_more_horiz" class="more button circle" size="sm">
-          <more-menu :post="postRef" @action="action" />
+          <q-menu class="post-more-menu" self="top right">
+            <more-menu :post="postRef" @action="action" />
+          </q-menu>
         </q-btn>
       </div>
     </q-card-actions>
