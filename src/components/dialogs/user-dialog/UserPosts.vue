@@ -26,18 +26,21 @@
         </div>
       </q-card>
     </div>
-    <q-infinite-scroll @load="onLoad" class="posts-infinite-scroll" :key="scrollKey" debounce="0" :offset="1000">
-      <my-virtual-scroll :items="items" :margins="8" item-key="post_id">
-        <template v-slot:default="{ item }">
-          <post-component :post="item" class="animation-fade-in q-mb-sm" @delete-post="handleDeletePost" />
-        </template>
-      </my-virtual-scroll>
-      <template v-slot:loading>
-        <div class="row justify-center q-my-md">
-          <q-spinner class="loading" size="40px" />
-        </div>
+    <my-virtual-scroll
+      :items="items"
+      :margins="8"
+      item-key="post_id"
+      @load-more="onLoad"
+      infinite-load-type="bottom"
+      :key="scrollKey"
+    >
+      <template v-slot:default="{ item }">
+        <post-component :post="item" class="animation-fade-in q-mb-sm" @delete-post="handleDeletePost" />
       </template>
-    </q-infinite-scroll>
+      <template v-slot:loading>
+        <q-spinner class="loading full-height q-my-md" size="40px" />
+      </template>
+    </my-virtual-scroll>
   </q-scroll-area>
 </template>
 <script setup lang="ts">

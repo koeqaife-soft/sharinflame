@@ -20,18 +20,23 @@
             <q-btn flat round icon="sym_r_refresh" size="xs" @click="reloadComments" />
           </card-dialog-label>
         </div>
-        <q-infinite-scroll @load="loadComments" class="posts-infinite-scroll full-height" :key="scrollKey" debounce="0">
-          <my-virtual-scroll :items="items" :margins="8" item-key="comment_id">
-            <template v-slot:default="{ item }">
-              <comment-component :comment="item" class="animation-fade-in q-mb-sm" />
-            </template>
-          </my-virtual-scroll>
-          <template v-slot:loading>
-            <div class="row justify-center q-my-md">
-              <q-spinner class="loading" size="40px" />
-            </div>
+        <my-virtual-scroll
+          :items="items"
+          :margins="8"
+          item-key="comment_id"
+          @load-more="loadComments"
+          infinite-load-type="bottom"
+          :key="scrollKey"
+          class="posts-infinite-scroll"
+          :bottom-offset="250"
+        >
+          <template v-slot:default="{ item }">
+            <comment-component :comment="item" class="animation-fade-in q-mb-sm" />
           </template>
-        </q-infinite-scroll>
+          <template v-slot:loading>
+            <q-spinner class="loading full-height q-my-md" size="40px" />
+          </template>
+        </my-virtual-scroll>
       </q-scroll-area>
       <q-separator class="q-mb-sm q-mt-sm" />
       <q-card class="card send-comment">
