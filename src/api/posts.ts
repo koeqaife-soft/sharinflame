@@ -33,10 +33,24 @@ async function deletePost(id: string) {
 }
 
 async function getPostsBatch(posts: string[]) {
-  const params = { posts: posts.join(",") };
+  const originalOrderMap = new Map(posts.map((id, index) => [id, index]));
+
+  const sortedPosts = [...posts].sort();
+
+  const params = { posts: sortedPosts.join(",") };
   const r = await api.get<GetPostsBatchResponse>(postsEndpoints.get_posts_batch, {
     params: params
   });
+
+  if (r.data.success) {
+    const restoredOrder = r.data.data.posts.sort((a, b) => {
+      const indexA = originalOrderMap.get(a.post_id);
+      const indexB = originalOrderMap.get(b.post_id);
+      return (indexA ?? 0) - (indexB ?? 0);
+    });
+    r.data.data.posts = restoredOrder;
+  }
+
   return r;
 }
 
