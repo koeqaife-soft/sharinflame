@@ -98,10 +98,15 @@ function checkLoading() {
       if (stop) {
         stopInfiniteLoad.value = true;
       }
-      showLoading.value = false;
       if (isLoadingTimeout) {
         clearTimeout(isLoadingTimeout);
         isLoadingTimeout = undefined;
+      }
+      if (showLoading.value) {
+        isLoadingTimeout = setTimeout(() => {
+          showLoading.value = false;
+          isLoadingTimeout = undefined;
+        }, 250);
       }
       updateVisibleItems();
       nextTick(() => {
