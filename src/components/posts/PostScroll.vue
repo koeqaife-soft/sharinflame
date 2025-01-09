@@ -13,7 +13,9 @@
         <post-component class="animation-fade-in q-mb-sm" :post="item" @delete-post="handleDeletePost" />
       </template>
       <template v-slot:loading>
-        <rect-skeleton v-for="n in 5" :key="n" height="random" class="q-mb-sm" />
+        <div class="container full-width">
+          <rect-skeleton v-for="n in 5" :key="n" height="150px" />
+        </div>
       </template>
     </my-virtual-scroll>
   </q-scroll-area>
