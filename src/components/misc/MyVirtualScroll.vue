@@ -9,8 +9,8 @@
       </div>
     </template>
     <div class="virtual-filler-bottom" :style="{ height: `${bottomFillerHeight}px` }" />
-    <div class="virtual-scroll-loading" :style="{ height: '0px' }">
-      <slot name="loading" v-if="showLoading" />
+    <div class="virtual-scroll-loading" :class="{ invisible: !showLoading }">
+      <slot name="loading" v-if="!stopInfiniteLoad" />
     </div>
   </div>
 </template>
