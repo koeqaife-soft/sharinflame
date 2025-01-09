@@ -1,16 +1,23 @@
 <template>
   <div class="virtual-scroll" ref="scrollContainer">
     <q-scroll-observer @scroll="onScroll" :debounce="debounce" />
-    <div class="virtual-filler-top" :style="{ height: `${topFillerHeight}px` }" />
-    <template v-for="(item, index) in items" :key="getItemKey(item)">
-      <div class="virtual-item" v-if="showItem(index) != 'deleted'" v-show="showItem(index) != 'hidden'">
-        <q-resize-observer @resize="(event) => onItemHeightChange(index, event)" />
-        <slot :item="item" :index="index" />
-      </div>
-    </template>
-    <div class="virtual-filler-bottom" :style="{ height: `${bottomFillerHeight}px` }" />
-    <div class="virtual-scroll-loading" :class="{ invisible: !showLoading }">
-      <slot name="loading" v-if="!stopInfiniteLoad" />
+    <div class="virtual-scroll-content" ref="scrollContent">
+      <div class="virtual-filler-top" :style="{ height: `${topFillerHeight}px` }" />
+      <template v-for="(item, index) in items" :key="getItemKey(item)">
+        <div class="virtual-item" v-if="showItem(index) != 'deleted'" v-show="showItem(index) != 'hidden'">
+          <q-resize-observer @resize="(event) => onItemHeightChange(index, event)" />
+          <slot :item="item" :index="index" />
+        </div>
+      </template>
+      <div class="virtual-filler-bottom" :style="{ height: `${bottomFillerHeight}px` }" />
+    </div>
+    <div
+      class="virtual-scroll-loading"
+      :class="[{ invisible: !showLoading }, 'full-width']"
+      style="justify-content: center; display: flex; min-height: 50px"
+      v-if="!stopInfiniteLoad && infiniteLoadType === 'bottom'"
+    >
+      <slot name="loading" />
     </div>
   </div>
 </template>
@@ -36,17 +43,14 @@ const props = withDefaults(defineProps<Props>(), {
   debounce: 150
 });
 
-const itemsRef = ref(props.items);
-
 const emit = defineEmits<{
   (e: "loadMore", index: number, done: (stop?: boolean) => void): void;
 }>();
 
 watch(
-  itemsRef,
+  props.items,
   () => {
-    itemsRef.value = props.items;
-    updateVisibleItems();
+    if (!isLoading.value) updateVisibleItems();
   },
   { deep: true }
 );
@@ -54,6 +58,7 @@ watch(
 const heights = ref<number[]>([]);
 const containerHeight = ref(0);
 
+const scrollContent = ref<HTMLElement | null>(null);
 const scrollContainer = ref<HTMLElement | null>(null);
 
 const top = ref(0);
@@ -89,8 +94,7 @@ function checkLoading() {
   const loadMore = () => {
     isLoading.value = true;
 
-    emit("loadMore", 0, (stop?: boolean) => {
-      isLoading.value = false;
+    emit("loadMore", props.items.length - 1, (stop?: boolean) => {
       if (stop) {
         stopInfiniteLoad.value = true;
       }
@@ -99,10 +103,15 @@ function checkLoading() {
         clearTimeout(isLoadingTimeout);
         isLoadingTimeout = undefined;
       }
+      updateVisibleItems();
+      nextTick(() => {
+        isLoading.value = false;
+      });
     });
   };
 
-  if (props.infiniteLoadType === "bottom" && visibleIndexes.value[1] >= itemsRef.value.length - 1) {
+  if (props.infiniteLoadType === "bottom" && bottom.value >= (scrollContent.value?.clientHeight || 0)) {
+    console.log("bottom", bottom.value, scrollContent.value?.clientHeight);
     if (isLoadingTimeout) {
       clearTimeout(isLoadingTimeout);
       isLoadingTimeout = undefined;
@@ -116,36 +125,38 @@ function checkLoading() {
 }
 
 function updateVisibleItems() {
-  let cumulativeHeight = 0;
-  let topIndex = -1;
-  let bottomIndex = -1;
+  nextTick(() => {
+    let cumulativeHeight = 0;
+    let topIndex = -1;
+    let bottomIndex = -1;
 
-  for (let i = 0; i < heights.value.length; i++) {
-    const itemHeight = heights.value[i] || 0;
-    const nextCumulativeHeight = cumulativeHeight + itemHeight;
+    for (let i = 0; i < heights.value.length; i++) {
+      const itemHeight = heights.value[i] || 0;
+      const nextCumulativeHeight = cumulativeHeight + itemHeight;
 
-    if (topIndex === -1 && top.value < nextCumulativeHeight) {
-      topIndex = i;
+      if (topIndex === -1 && top.value < nextCumulativeHeight) {
+        topIndex = i;
+      }
+
+      if (bottom.value <= nextCumulativeHeight) {
+        bottomIndex = i;
+        break;
+      }
+
+      cumulativeHeight = nextCumulativeHeight;
     }
 
-    if (bottom.value <= nextCumulativeHeight) {
-      bottomIndex = i;
-      break;
+    if (bottomIndex === -1) {
+      bottomIndex = heights.value.length - 1;
     }
 
-    cumulativeHeight = nextCumulativeHeight;
-  }
+    visibleIndexes.value = [topIndex, bottomIndex];
 
-  if (bottomIndex === -1) {
-    bottomIndex = heights.value.length - 1;
-  }
+    topFillerHeight.value = heights.value.slice(0, topIndex).reduce((acc, height) => acc + (height || 0), 0);
+    bottomFillerHeight.value = heights.value.slice(bottomIndex + 1).reduce((acc, height) => acc + (height || 0), 0);
 
-  visibleIndexes.value = [topIndex, bottomIndex];
-
-  topFillerHeight.value = heights.value.slice(0, topIndex).reduce((acc, height) => acc + (height || 0), 0);
-  bottomFillerHeight.value = heights.value.slice(bottomIndex + 1).reduce((acc, height) => acc + (height || 0), 0);
-
-  checkLoading();
+    checkLoading();
+  });
 }
 
 function onScroll(info: QScrollObserverDetails) {
