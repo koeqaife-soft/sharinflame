@@ -54,8 +54,13 @@ async function getPostsBatch(posts: string[]) {
   return r;
 }
 
-async function getPosts(type: KeyOfGetPostsTypes) {
-  const r = await api.get<ApiResponse<{ posts: PostMinimal[] }>>(getPostsTypes[type]);
+async function getPosts(type: KeyOfGetPostsTypes, cursor?: string, hide_viewed?: boolean) {
+  const r = await api.get<ApiResponse<{ posts: string[]; next_cursor: string }>>(getPostsTypes[type], {
+    params: {
+      ...(cursor && { cursor }),
+      ...(hide_viewed !== undefined && { hide_viewed })
+    }
+  });
   return r;
 }
 
