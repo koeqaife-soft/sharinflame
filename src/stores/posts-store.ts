@@ -4,7 +4,7 @@ import { getPostsBatch, getPosts, KeyOfGetPostsTypes } from "src/api/posts";
 
 export const usePostsStore = defineStore("posts", {
   state: () => ({
-    notLoaded: [] as PostMinimal[],
+    notLoaded: [] as string[],
     loaded: [] as Post[]
   }),
   getters: {},
@@ -17,8 +17,7 @@ export const usePostsStore = defineStore("posts", {
       return r.data;
     },
     async loadPosts(count: number) {
-      const itemsToLoad = this.notLoaded.slice(0, count);
-      let idsToLoad = itemsToLoad.map((item) => item[0]);
+      let idsToLoad = this.notLoaded.slice(0, count);
 
       const loadBatch = async (ids: string[]) => {
         let loaded: Awaited<ReturnType<typeof getPostsBatch>>;

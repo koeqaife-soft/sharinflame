@@ -94,8 +94,6 @@ type CommentWithUser = Comment & {
 
 type PostWithSystem = Post | (PostSystem & { is_system: true });
 
-type PostMinimal = [post_id: string, user_id: string];
-
 interface CreatePostValues {
   content: string;
   tags?: string[];
@@ -118,3 +116,9 @@ type GetUserPostsResponse = ApiResponse<{
   next_cursor: string;
   has_more: boolean;
 }>;
+type FavoritesResponse = ApiResponse<
+  ({ posts: Post[] } | { comments: Comment[] } | { posts: undefined; comments: undefined }) & {
+    errors?: [post_id: string | null, comment_id: string | null, error_msg: string][];
+    next_cursor: string;
+  }
+>;
