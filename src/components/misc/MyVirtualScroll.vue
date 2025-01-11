@@ -116,7 +116,6 @@ function checkLoading() {
   };
 
   if (props.infiniteLoadType === "bottom" && bottom.value >= (scrollContent.value?.clientHeight || 0)) {
-    console.log("bottom", bottom.value, scrollContent.value?.clientHeight);
     if (isLoadingTimeout) {
       clearTimeout(isLoadingTimeout);
       isLoadingTimeout = undefined;
@@ -131,6 +130,7 @@ function checkLoading() {
 
 function updateVisibleItems() {
   nextTick(() => {
+    if (!scrollContent.value?.checkVisibility()) return;
     let cumulativeHeight = 0;
     let topIndex = -1;
     let bottomIndex = -1;
