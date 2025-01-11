@@ -26,8 +26,10 @@
           container-class="horizontal-container card profile-categories q-mb-sm"
           style="z-index: 2"
         />
-        <user-dialog-info :user="userRef" v-if="currentType == 'info'" :meta="meta" />
-        <user-dialog-posts :user="userRef" v-else-if="currentType == 'posts'" :meta="meta" v-model:expand="expand" />
+        <keep-alive>
+          <user-dialog-info :user="userRef" v-if="currentType == 'info'" :meta="meta" />
+          <user-dialog-posts :user="userRef" v-else-if="currentType == 'posts'" :meta="meta" v-model:expand="expand" />
+        </keep-alive>
       </template>
       <template v-else>
         <div class="profile-info">
