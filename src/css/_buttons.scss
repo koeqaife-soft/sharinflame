@@ -33,7 +33,7 @@
 
 .card-button {
   border-radius: 8px;
-  background-color: var(--card-high);
+  background-color: var(--card);
   min-height: 40px;
   > span {
     font-size: 15px;
@@ -41,6 +41,11 @@
     display: flex;
     justify-content: flex-start;
   }
+}
+
+.card .card-button,
+.menu-card .card-button {
+  background-color: var(--card-high);
 }
 
 .category-button {
