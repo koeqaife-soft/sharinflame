@@ -288,7 +288,8 @@ mark {
   border-radius: 2px;
 }
 
-.q-menu {
+.q-menu,
+.q-select__dialog {
   @include elevation(3);
   outline: 1px solid var(--outline);
   border-radius: 8px;
@@ -298,6 +299,13 @@ mark {
   .q-item--active {
     color: var(--on-primary);
     background-color: var(--primary);
+  }
+}
+
+.q-select__dialog .q-field {
+  background-color: var(--card);
+  .q-field__control {
+    background-color: transparent;
   }
 }
 
@@ -388,4 +396,8 @@ mark {
 .emoji {
   font-family: "NotoColorEmoji", sans-serif;
   font-size: 17px;
+}
+
+.q-dialog__backdrop {
+  background-color: rgba(0, 0, 0, 0.6);
 }
