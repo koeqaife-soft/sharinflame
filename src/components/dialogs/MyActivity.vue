@@ -15,7 +15,7 @@
         <q-btn flat round icon="sym_r_close" @click="dialogRef?.hide()" />
       </div>
       <div class="content horizontal-container">
-        <div class="sidebar container">
+        <div class="sidebar container" v-show="!isSmallScreen || current == 0">
           <template v-for="(item, index) in items" :key="index">
             <q-btn
               :label="$t(item.labelKey)"
@@ -24,11 +24,11 @@
               unelevated
               class="card-button category-button"
               :class="{ selected: item.key == selected && !isSmallScreen }"
-              @click="() => (selected = item.key)"
+              @click="setSelected(item.key)"
             />
           </template>
         </div>
-        <div class="view full-width full-height">
+        <div class="view full-width full-height" v-show="!isSmallScreen || current == 1">
           <keep-alive>
             <main-view type="favorites" v-if="selected == 'favorites'" />
             <main-view type="liked" v-else-if="selected == 'liked'" />
@@ -41,23 +41,17 @@
 </template>
 <script setup lang="ts">
 import { useDialogPluginComponent } from "quasar";
-import { getFavorites } from "src/api/users";
 import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from "vue";
 
 defineEmits([...useDialogPluginComponent.emits]);
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
-
-onMounted(async () => {
-  const r = await getFavorites("posts");
-  const rr = await getFavorites("comments");
-  console.log(r.data, rr.data);
-});
 
 const MainView = defineAsyncComponent(() => import("./my-activity/MainView.vue"));
 const views = ["favorites", "liked", "disliked"] as const;
 
 const screenSize = ref(window.innerWidth);
 const isSmallScreen = computed(() => screenSize.value < 750);
+const current = ref(0);
 
 const selected = ref<(typeof views)[number]>("favorites");
 
@@ -82,6 +76,11 @@ const items = [
 const updateScreenSize = () => {
   screenSize.value = window.innerWidth;
 };
+
+function setSelected(value: (typeof views)[number]) {
+  selected.value = value;
+  current.value = 1;
+}
 
 onMounted(() => {
   updateScreenSize();
