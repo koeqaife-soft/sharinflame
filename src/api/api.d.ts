@@ -116,9 +116,13 @@ type GetUserPostsResponse = ApiResponse<{
   next_cursor: string;
   has_more: boolean;
 }>;
-type FavoritesResponse = ApiResponse<
-  ({ posts: Post[] } | { comments: Comment[] } | { posts: undefined; comments: undefined }) & {
+type ListsResponse = ApiResponse<
+  {
     errors?: [post_id: string | null, comment_id: string | null, error_msg: string][];
     next_cursor: string;
-  }
+  } & (
+    | { posts: Post[]; comments?: undefined }
+    | { comments: CommentWithUser[]; posts?: undefined }
+    | { posts?: undefined; comments?: undefined }
+  )
 >;
