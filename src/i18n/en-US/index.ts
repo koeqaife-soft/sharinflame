@@ -37,6 +37,7 @@ export default {
   dark_mode: "Dark Mode",
   create_post: "Create Post",
   settings: "Settings",
+  my_activity: "My Activity",
 
   system: "System",
   no_more_posts: "No more posts",
@@ -108,5 +109,9 @@ export default {
   },
 
   reaction_failed: "Failed to put a reaction",
-  favorite_failed: "Failed to add to favorites"
+  favorite_failed: "Failed to add to favorites",
+
+  favorites: "Favorites",
+  liked: "Liked",
+  disliked: "Disliked"
 };

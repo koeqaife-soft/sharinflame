@@ -437,7 +437,7 @@
       border-radius: 18px !important;
     }
   }
-  @media (max-width: 489px) {
+  @media (max-width: 589px) {
     .dialog-content {
       max-height: 100%;
       padding: 8px;
@@ -543,5 +543,68 @@
   .username {
     font-size: 12px;
     font-weight: 400;
+  }
+}
+
+.my-activity-dialog {
+  @media (min-width: 750px) {
+    .dialog-content {
+      max-width: 916px;
+      margin-left: 8px;
+      margin-right: 8px;
+      border-radius: 18px !important;
+    }
+    .q-dialog__inner {
+      margin-top: 74px;
+      margin-bottom: 16px;
+    }
+    .sidebar {
+      max-width: 300px;
+    }
+  }
+  @media (max-width: 749px) {
+    .dialog-content {
+      max-height: 100%;
+      border-radius: 0px;
+    }
+    .q-dialog__inner {
+      margin-top: 50px;
+    }
+    .view {
+      position: absolute;
+    }
+  }
+  .sidebar {
+    width: 100%;
+  }
+  .dialog-content {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    transition: max-height 0.2s ease, margin 0.2s ease;
+  }
+  .content {
+    padding: 8px;
+    height: 100%;
+    position: relative;
+  }
+  .card-button {
+    @include elevation(1);
+  }
+  .header {
+    @include elevation(1);
+    background-color: var(--card);
+    color: var(--on-card);
+    align-items: center;
+    padding: 4px 4px 4px 16px;
+    height: 50px;
+
+    .label {
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .q-icon {
+      @include iconSize(20);
+    }
   }
 }
