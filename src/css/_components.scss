@@ -570,9 +570,6 @@
     .q-dialog__inner {
       margin-top: 50px;
     }
-    .view {
-      position: absolute;
-    }
   }
   .sidebar {
     width: 100%;
@@ -586,7 +583,6 @@
   .content {
     padding: 8px;
     height: 100%;
-    position: relative;
   }
   .card-button {
     @include elevation(1);

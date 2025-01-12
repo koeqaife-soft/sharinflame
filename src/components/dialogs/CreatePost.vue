@@ -124,7 +124,7 @@ async function createPostButton() {
   const tags = generateTags();
   const r = await createPost({
     content: text.value!,
-    tags: tags
+    tags: tags!
   });
   loading.value = false;
   if (r.data.success && r.data.data) {

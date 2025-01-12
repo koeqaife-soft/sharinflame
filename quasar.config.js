@@ -8,10 +8,10 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
 
-const { configure } = require("quasar/wrappers");
-const path = require("path");
+import { defineConfig } from "#q-app/wrappers";
+import { fileURLToPath } from "node:url";
 
-module.exports = configure(function (/* ctx */) {
+export default defineConfig((ctx) => {
   return {
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
     // preFetch: true,
@@ -55,8 +55,6 @@ module.exports = configure(function (/* ctx */) {
       // vueDevtools,
       // vueOptionsAPI: false,
 
-      // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
-
       // publicPath: '/',
       // analyze: true,
       // env: {},
@@ -71,17 +69,10 @@ module.exports = configure(function (/* ctx */) {
 
       vitePlugins: [
         [
-          "@intlify/vite-plugin-vue-i18n",
+          "@intlify/unplugin-vue-i18n/vite",
           {
-            // if you want to use Vue I18n Legacy API, you need to set `compositionOnly: false`
-            // compositionOnly: false,
-
-            // if you want to use named tokens in your Vue I18n messages, such as 'Hello {name}',
-            // you need to set `runtimeOnly: false`
-            // runtimeOnly: false,
-
-            // you need to set i18n resource including paths !
-            include: path.resolve(__dirname, "./src/i18n/**")
+            include: [fileURLToPath(new URL("./src/i18n", import.meta.url))],
+            ssr: ctx.modeName === "ssr"
           }
         ],
         [
@@ -96,7 +87,15 @@ module.exports = configure(function (/* ctx */) {
           },
           { server: false }
         ]
-      ]
+      ],
+      typescript: {
+        strict: true, // (recommended) enables strict settings for TypeScript
+        vueShim: true // required when using ESLint with type-checked rules, will generate a shim file for `*.vue` files
+        // extendTsConfig(tsConfig) {
+        //   // You can use this hook to extend tsConfig dynamically
+        //   // For basic use cases, you can still update the usual tsconfig.json file to override some settings
+        // }
+      }
       // alias: {
       //   "quasar/dist/quasar.sass": path.resolve(__dirname, "./src/css/app.scss")
       // }
@@ -216,7 +215,9 @@ module.exports = configure(function (/* ctx */) {
       builder: {
         // https://www.electron.build/configuration/configuration
         appId: "sharinflame"
-      }
+      },
+
+      preloadScripts: ["electron-preload"]
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-browser-extensions/configuring-bex

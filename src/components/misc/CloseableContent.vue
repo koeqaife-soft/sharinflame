@@ -29,15 +29,15 @@ const SWIPE_THRESHOLD_X = 100;
 const SWIPE_THRESHOLD_Y = 10;
 
 const onTouchStart = (event: TouchEvent) => {
-  touchStartX.value = event.touches[0].clientX;
-  touchStartY.value = event.touches[0].clientY;
+  touchStartX.value = event.touches[0]!.clientX;
+  touchStartY.value = event.touches[0]!.clientY;
   isSwiping.value = false;
   verticalExceeded.value = false;
 };
 
 const onTouchMove = (event: TouchEvent) => {
-  touchEndX.value = event.touches[0].clientX;
-  touchEndY.value = event.touches[0].clientY;
+  touchEndX.value = event.touches[0]!.clientX;
+  touchEndY.value = event.touches[0]!.clientY;
 
   const deltaX = touchEndX.value - touchStartX.value;
   const deltaY = Math.abs(touchEndY.value - touchStartY.value);

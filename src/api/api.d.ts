@@ -46,9 +46,9 @@ interface Post {
   media: string[];
   status: string;
   is_deleted: boolean;
-  is_like?: boolean;
-  is_system?: boolean;
-  is_fav?: boolean;
+  is_like?: boolean | undefined;
+  is_system?: boolean | undefined;
+  is_fav?: boolean | undefined;
 
   created_at_unix: number;
   updated_at_unix: number;

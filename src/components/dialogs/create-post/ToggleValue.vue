@@ -10,7 +10,7 @@
         <div class="description">{{ description }}</div>
       </div>
       <q-space />
-      <my-switch v-model="model" />
+      <my-switch v-model="model!" />
     </div>
   </q-card>
 </template>

@@ -73,14 +73,14 @@ export function generateColors(palette: Palette, baseHsl: Hsl, suffix: string = 
   const generated: { [key: string]: string } = {};
 
   for (const key in palette) {
-    const entry = palette[key];
+    const entry = palette[key]!;
     if (entry.hex) {
       generated[key] = entry.hex;
     } else if (entry.link && generated[entry.link]) {
-      generated[key] = generated[entry.link];
+      generated[key] = generated[entry.link]!;
     } else {
       if (entry.link && generatedHsl[entry.link]) {
-        generatedHsl[key] = generateColor(generatedHsl[entry.link], entry);
+        generatedHsl[key] = generateColor(generatedHsl[entry.link]!, entry);
       } else {
         generatedHsl[key] = generateColor(baseHsl, entry);
       }
@@ -88,7 +88,7 @@ export function generateColors(palette: Palette, baseHsl: Hsl, suffix: string = 
   }
 
   for (const key in generatedHsl) {
-    const hsl = generatedHsl[key];
+    const hsl = generatedHsl[key]!;
     generated[key] = hslToHex(hsl[0], hsl[1], hsl[2]);
   }
 
@@ -106,6 +106,6 @@ export function generateAll(Hsl: Hsl) {
 
 export function setCss(colors: ReturnType<typeof generateAll>) {
   for (const key in colors) {
-    document.documentElement.style.setProperty(`--${key}`, colors[key]);
+    document.documentElement.style.setProperty(`--${key}`, colors[key]!);
   }
 }

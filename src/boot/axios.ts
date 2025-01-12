@@ -1,4 +1,4 @@
-import { boot } from "quasar/wrappers";
+import { defineBoot } from "#q-app/wrappers";
 import axios, { AxiosInstance } from "axios";
 import { authEndpoints } from "src/api/auth";
 import { postsEndpoints } from "src/api/posts";
@@ -14,7 +14,7 @@ declare module "vue" {
 }
 
 let mainStore: ReturnType<typeof useMainStore>;
-const url = "http://localhost:6169/v1";
+const url = "https://koeqaife.ddns.net:6169/v1";
 const api = axios.create({ baseURL: url, timeout: 15000, withCredentials: true });
 
 const initFunctions = [
@@ -39,7 +39,7 @@ const apiEndpoints = {
   ping: "/ping"
 };
 
-export default boot(({ app }) => {
+export default defineBoot(({ app }) => {
   app.config.globalProperties.$axios = axios;
   app.config.globalProperties.$api = api;
   app.config.globalProperties.$apiEndpoints = apiEndpoints;

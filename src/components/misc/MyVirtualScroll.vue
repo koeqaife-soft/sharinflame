@@ -178,8 +178,6 @@ function updateVisibleItems() {
 
     topFillerHeight.value = heights.value.slice(0, topIndex).reduce((acc, height) => acc + (height || 0), 0);
     bottomFillerHeight.value = heights.value.slice(bottomIndex + 1).reduce((acc, height) => acc + (height || 0), 0);
-
-    checkLoading();
   });
 }
 
@@ -205,7 +203,7 @@ function hasHeight(index: number) {
 }
 
 function showItem(index: number) {
-  if (index >= visibleIndexes.value[0] && index <= visibleIndexes.value[1]) return "visible";
+  if (index >= visibleIndexes.value[0]! && index <= visibleIndexes.value[1]!) return "visible";
   else if (!hasHeight(index)) return "hidden";
   else return "deleted";
 }

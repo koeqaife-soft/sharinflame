@@ -80,7 +80,7 @@ const generateInitialParticles = () => {
   };
 
   for (let layerIndex = 0; layerIndex < numLayers; layerIndex++) {
-    generateWaveLayer(particlesPerLayer[layerIndex], layerIndex);
+    generateWaveLayer(particlesPerLayer[layerIndex]!, layerIndex);
   }
 };
 

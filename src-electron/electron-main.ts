@@ -2,6 +2,10 @@ import { app, BrowserWindow, ipcMain, Tray, Menu, shell } from "electron";
 import path from "path";
 import os from "os";
 
+import { fileURLToPath } from "node:url";
+
+const currentDir = fileURLToPath(new URL(".", import.meta.url));
+
 const platform = process.platform || os.platform();
 
 let mainWindow: BrowserWindow | undefined;
@@ -14,7 +18,7 @@ if (!gotTheLock) {
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    icon: path.resolve(__dirname, "icons/icon.png"),
+    icon: path.resolve(currentDir, "icons/icon.png"),
     width: 1000,
     height: 600,
     minHeight: 850,
@@ -26,12 +30,22 @@ function createWindow() {
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: true,
-      preload: path.resolve(__dirname, process.env.QUASAR_ELECTRON_PRELOAD)
+      preload: path.resolve(
+        currentDir,
+        path.join(
+          process.env.QUASAR_ELECTRON_PRELOAD_FOLDER!,
+          "electron-preload" + process.env.QUASAR_ELECTRON_PRELOAD_EXTENSION
+        )
+      )
     },
     autoHideMenuBar: true
   });
 
-  mainWindow.loadURL(process.env.APP_URL);
+  if (process.env.DEV) {
+    mainWindow.loadURL(process.env.APP_URL);
+  } else {
+    mainWindow.loadFile("index.html");
+  }
 
   if (process.env.DEBUGGING) {
     mainWindow.webContents.openDevTools();

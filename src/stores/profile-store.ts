@@ -84,7 +84,7 @@ export const useProfileStore = defineStore("profile", {
         for (const id in this.profiles) {
           if (id == "me") continue;
 
-          const profile = this.profiles[id];
+          const profile = this.profiles[id]!;
           if (currentTime - profile.lastUpdate > this.ttl) {
             delete this.profiles[id];
           }

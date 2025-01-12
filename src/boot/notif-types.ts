@@ -1,7 +1,7 @@
 import { Notify } from "quasar";
-import { boot } from "quasar/wrappers";
+import { defineBoot } from "#q-app/wrappers";
 
-export default boot(({}) => {
+export default defineBoot(({}) => {
   Notify.registerType("default-notification", {
     icon: "sym_r_notifications",
     classes: "default-notification",

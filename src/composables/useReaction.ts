@@ -16,8 +16,8 @@ export interface ReactionItem {
   likes_count: number;
   dislikes_count: number;
 
-  is_fav?: boolean;
-  is_like?: boolean;
+  is_fav?: boolean | undefined;
+  is_like?: boolean | undefined;
 }
 
 export function useReaction(itemRef: Ref<ReactionItem>, isComment = false) {
@@ -70,8 +70,8 @@ export function useReaction(itemRef: Ref<ReactionItem>, isComment = false) {
     if (itemRef.value.is_like === lastReaction) return;
 
     itemRef.value.is_like = lastReaction;
-    itemRef.value.likes_count = lastCounters[0];
-    itemRef.value.dislikes_count = lastCounters[1];
+    itemRef.value.likes_count = lastCounters[0]!;
+    itemRef.value.dislikes_count = lastCounters[1]!;
   }
 
   async function performReaction(isLike: boolean) {

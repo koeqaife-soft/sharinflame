@@ -70,7 +70,7 @@ async function viewPosts(postIds: string[]) {
   return r;
 }
 
-async function setReaction(postId: string, { commentId, isLike }: { commentId?: string; isLike: boolean }) {
+async function setReaction(postId: string, { commentId, isLike }: { commentId?: string | undefined; isLike: boolean }) {
   const data = { is_like: isLike };
   let endpoint: string;
   if (commentId) {

@@ -5,7 +5,7 @@
       :key="category.label"
       v-bind="category"
       :selected="currentType == category.type"
-      :disabled="disabled"
+      :disabled="disabled!"
     />
   </div>
 </template>
