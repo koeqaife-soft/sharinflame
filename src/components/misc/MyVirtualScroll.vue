@@ -13,11 +13,13 @@
     </div>
     <div
       class="virtual-scroll-loading"
-      :class="[{ invisible: !showLoading }, 'full-width']"
-      style="justify-content: center; display: flex; min-height: 50px"
+      :class="{ invisible: !(showLoading && isLoading) }"
       v-if="!stopInfiniteLoad && infiniteLoadType === 'bottom'"
+      ref="loadingRef"
     >
-      <slot name="loading" />
+      <div class="row justify-center q-my-md">
+        <slot name="loading" />
+      </div>
     </div>
   </div>
 </template>
@@ -60,6 +62,7 @@ const containerHeight = ref(0);
 
 const scrollContent = ref<HTMLElement | null>(null);
 const scrollContainer = ref<HTMLElement | null>(null);
+const loadingRef = ref<HTMLElement | null>(null);
 
 const top = ref(0);
 const bottom = computed(() => top.value + containerHeight.value + props.offset + props.bottomOffset);
@@ -74,6 +77,31 @@ const stopInfiniteLoad = ref(false);
 
 let isLoadingTimeout: NodeJS.Timeout | undefined = undefined;
 const showLoading = ref(false);
+
+function updateSvgAnimations(isRetry?: boolean) {
+  if (renderLoadingSlot.value === true) {
+    if (loadingRef.value === null) {
+      isRetry !== true &&
+        nextTick(() => {
+          updateSvgAnimations(true);
+        });
+      return;
+    }
+
+    const isVisible = isLoading.value && showLoading.value;
+
+    const action = `${isVisible === true ? "un" : ""}pauseAnimations` as const;
+    Array.from(loadingRef.value.getElementsByTagName("svg")).forEach((el) => {
+      el[action]();
+    });
+  }
+}
+
+const renderLoadingSlot = computed(() => props.infiniteLoadType === "bottom" && !stopInfiniteLoad.value === true);
+
+watch([isLoading, renderLoadingSlot], () => {
+  updateSvgAnimations();
+});
 
 watch(
   isLoading,
@@ -95,6 +123,7 @@ function checkLoading() {
     isLoading.value = true;
 
     emit("loadMore", props.items.length - 1, (stop?: boolean) => {
+      isLoading.value = false;
       if (stop) {
         stopInfiniteLoad.value = true;
       }
@@ -109,9 +138,6 @@ function checkLoading() {
         }, 250);
       }
       updateVisibleItems();
-      nextTick(() => {
-        isLoading.value = false;
-      });
     });
   };
 
