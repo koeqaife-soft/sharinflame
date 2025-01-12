@@ -25,6 +25,14 @@
       unelevated
       no-caps
     />
+    <q-btn
+      :class="['my-activity', buttonsClass]"
+      icon="sym_r_browse_activity"
+      :label="$t('my_activity')"
+      @click="openMyActivity"
+      unelevated
+      no-caps
+    />
     <q-separator />
     <q-btn
       :class="['settings', buttonsClass]"
@@ -41,10 +49,11 @@ import { ref, onMounted, watch, defineAsyncComponent } from "vue";
 import { useProfileStore } from "src/stores/profile-store";
 import { useQuasar } from "quasar";
 import MySwitch from "../misc/MySwitch.vue";
+import UserAvatar from "./UserAvatar.vue";
 
-const UserAvatar = defineAsyncComponent(() => import("./UserAvatar.vue"));
 const UserDialog = defineAsyncComponent(() => import("../dialogs/UserDialog.vue"));
 const CreatePost = defineAsyncComponent(() => import("../dialogs/CreatePost.vue"));
+const MyActivity = defineAsyncComponent(() => import("../dialogs/MyActivity.vue"));
 
 const quasar = useQuasar();
 
@@ -81,6 +90,14 @@ function openUserDialog() {
     componentProps: {
       user: user.value
     }
+  });
+  emit("close-menu");
+}
+
+function openMyActivity() {
+  quasar.dialog({
+    component: MyActivity,
+    componentProps: {}
   });
   emit("close-menu");
 }
