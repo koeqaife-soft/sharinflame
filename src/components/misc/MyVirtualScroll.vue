@@ -13,7 +13,7 @@
     </div>
     <div
       class="virtual-scroll-loading"
-      :class="{ invisible: !(showLoading && isLoading) }"
+      :class="{ invisible: !isLoading && !showLoading }"
       v-if="!stopInfiniteLoad && infiniteLoadType === 'bottom'"
       ref="loadingRef"
     >
@@ -26,7 +26,7 @@
 
 <script setup lang="ts" generic="T">
 // NOTE: I didn't add infinite load type "top" because there's many problems with it
-import { computed, nextTick, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, onUnmounted, ref, watch } from "vue";
 
 interface Props {
   items: T[];
@@ -49,14 +49,6 @@ const emit = defineEmits<{
   (e: "loadMore", index: number, done: (stop?: boolean) => void): void;
 }>();
 
-watch(
-  props.items,
-  () => {
-    if (!isLoading.value) updateVisibleItems();
-  },
-  { deep: true }
-);
-
 const heights = ref<number[]>([]);
 const containerHeight = ref(0);
 
@@ -74,6 +66,8 @@ const visibleIndexes = ref<number[]>([]);
 
 const isLoading = ref(false);
 const stopInfiniteLoad = ref(false);
+
+const isContentVisible = ref(false);
 
 let isLoadingTimeout: NodeJS.Timeout | undefined = undefined;
 const showLoading = ref(false);
@@ -103,13 +97,10 @@ watch([isLoading, renderLoadingSlot], () => {
   updateSvgAnimations();
 });
 
-watch(
-  isLoading,
-  () => {
-    checkLoading();
-  },
-  { immediate: true }
-);
+watch(isContentVisible, () => {
+  updateVisibleItems();
+  checkLoading();
+});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getItemKey = (item: any) => {
@@ -118,8 +109,10 @@ const getItemKey = (item: any) => {
 
 function checkLoading() {
   if (isLoading.value || stopInfiniteLoad.value) return;
+  if (!isContentVisible.value || !scrollContent.value) return;
 
   const loadMore = () => {
+    if (isLoading.value) return;
     isLoading.value = true;
 
     emit("loadMore", props.items.length - 1, (stop?: boolean) => {
@@ -141,7 +134,7 @@ function checkLoading() {
     });
   };
 
-  if (props.infiniteLoadType === "bottom" && bottom.value >= (scrollContent.value?.clientHeight || 0)) {
+  if (props.infiniteLoadType === "bottom" && bottom.value >= (scrollContent.value?.offsetHeight || 0)) {
     if (isLoadingTimeout) {
       clearTimeout(isLoadingTimeout);
       isLoadingTimeout = undefined;
@@ -156,7 +149,7 @@ function checkLoading() {
 
 function updateVisibleItems() {
   nextTick(() => {
-    if (!scrollContent.value?.checkVisibility()) return;
+    if (!isContentVisible.value) return;
     let cumulativeHeight = 0;
     let topIndex = -1;
     let bottomIndex = -1;
@@ -193,11 +186,13 @@ function updateVisibleItems() {
 function onScroll(info: QScrollObserverDetails) {
   top.value = Math.max(info.position.top - props.offset, 0);
   updateVisibleItems();
+  checkLoading();
 }
 
 function onResize() {
   containerHeight.value = window.innerHeight;
   updateVisibleItems();
+  checkLoading();
 }
 
 function onItemHeightChange(index: number, info: { height: number; width: number }) {
@@ -215,19 +210,32 @@ function showItem(index: number) {
   else return "deleted";
 }
 
+let requestNumber: number;
+
+const checkVisibility = () => {
+  isContentVisible.value = scrollContainer.value?.checkVisibility() || false;
+  requestNumber = requestAnimationFrame(checkVisibility);
+};
+
 onMounted(() => {
   nextTick(() => {
     if (scrollContainer.value) {
       containerHeight.value = window.innerHeight;
     }
     updateVisibleItems();
+    checkLoading();
   });
 });
 
 onMounted(() => {
   window.addEventListener("resize", onResize);
-
   onResize();
+
+  requestNumber = requestAnimationFrame(checkVisibility);
+});
+
+onBeforeUnmount(() => {
+  cancelAnimationFrame(requestNumber);
 });
 
 onUnmounted(() => {
