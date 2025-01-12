@@ -149,7 +149,7 @@ function checkLoading() {
 
 function updateVisibleItems() {
   nextTick(() => {
-    if (!isContentVisible.value) return;
+    if (!scrollContainer.value?.checkVisibility()) return;
     let cumulativeHeight = 0;
     let topIndex = -1;
     let bottomIndex = -1;
@@ -182,18 +182,21 @@ function updateVisibleItems() {
 }
 
 function onScroll(info: QScrollObserverDetails) {
+  if (!scrollContainer.value?.checkVisibility()) return;
   top.value = Math.max(info.position.top - props.offset, 0);
   updateVisibleItems();
   checkLoading();
 }
 
 function onResize() {
+  if (!scrollContainer.value?.checkVisibility()) return;
   containerHeight.value = window.innerHeight;
   updateVisibleItems();
   checkLoading();
 }
 
 function onItemHeightChange(index: number, info: { height: number; width: number }) {
+  if (!scrollContainer.value?.checkVisibility()) return;
   heights.value[index] = info.height + (props.margins || 0);
   updateVisibleItems();
 }
@@ -212,6 +215,7 @@ let requestNumber: number;
 
 const checkVisibility = () => {
   isContentVisible.value = scrollContainer.value?.checkVisibility() || false;
+  updateVisibleItems();
   requestNumber = requestAnimationFrame(checkVisibility);
 };
 
