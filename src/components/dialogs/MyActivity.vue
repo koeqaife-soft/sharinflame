@@ -9,32 +9,42 @@
   >
     <div class="dialog-content">
       <div class="header horizontal-container">
-        <q-icon name="sym_r_browse_activity" />
-        <div class="label">{{ $t("my_activity") }}</div>
+        <div v-show="!isSmallScreen || current == 0" class="main-page-label horizontal-container label-container">
+          <q-icon name="sym_r_browse_activity" class="header-icon" />
+          <div class="label">{{ $t("my_activity") }}</div>
+        </div>
+        <div v-show="isSmallScreen && current == 1" class="inner-page-label horizontal-container label-container">
+          <q-btn flat round icon="sym_r_arrow_back" @click="() => (current = 0)" />
+          <div class="label">{{ $t(getItemByKey(selected).key) }}</div>
+        </div>
         <q-space />
         <q-btn flat round icon="sym_r_close" @click="dialogRef?.hide()" />
       </div>
       <div class="content horizontal-container">
-        <div class="sidebar container" v-show="!isSmallScreen || current == 0">
-          <template v-for="(item, index) in items" :key="index">
-            <q-btn
-              :label="$t(item.labelKey)"
-              :icon="item.icon"
-              no-caps
-              unelevated
-              class="card-button category-button"
-              :class="{ selected: item.key == selected && !isSmallScreen }"
-              @click="setSelected(item.key)"
-            />
-          </template>
-        </div>
-        <div class="view full-width full-height" v-show="!isSmallScreen || current == 1">
-          <keep-alive>
-            <main-view type="favorites" v-if="selected == 'favorites'" />
-            <main-view type="liked" v-else-if="selected == 'liked'" />
-            <main-view type="disliked" v-else-if="selected == 'disliked'" />
-          </keep-alive>
-        </div>
+        <transition name="scale" :css="isSmallScreen">
+          <div class="sidebar container" v-show="!isSmallScreen || current == 0">
+            <template v-for="(item, index) in items" :key="index">
+              <q-btn
+                :label="$t(item.labelKey)"
+                :icon="item.icon"
+                no-caps
+                unelevated
+                class="card-button category-button"
+                :class="{ selected: item.key == selected && !isSmallScreen }"
+                @click="setSelected(item.key)"
+              />
+            </template>
+          </div>
+        </transition>
+        <transition name="scale" :css="isSmallScreen">
+          <div class="view full-width full-height" v-show="!isSmallScreen || current == 1" key="view">
+            <keep-alive>
+              <main-view type="favorites" v-if="selected == 'favorites'" />
+              <main-view type="liked" v-else-if="selected == 'liked'" />
+              <main-view type="disliked" v-else-if="selected == 'disliked'" />
+            </keep-alive>
+          </div>
+        </transition>
       </div>
     </div>
   </q-dialog>
@@ -73,10 +83,10 @@ const items = [
   }
 ] as const;
 
-const updateScreenSize = () => {
-  screenSize.value = window.innerWidth;
-};
+type ItemKey = (typeof items)[number]["key"];
 
+const updateScreenSize = () => (screenSize.value = window.innerWidth);
+const getItemByKey = (key: ItemKey) => items.find((item) => item.key === key)!;
 function setSelected(value: (typeof views)[number]) {
   selected.value = value;
   current.value = 1;
