@@ -21,9 +21,11 @@
           infinite-load-type="bottom"
           :margins="8"
           @load-more="(i, done) => onLoadData(0, 'posts', done)"
+          style="--anim-duration: 200ms"
+          ref="virtualScroll"
         >
           <template v-slot:default="{ item }">
-            <post-component :post="item" class="animation-fade-in q-mb-sm" />
+            <post-component :post="item" class="animation-fade-in q-mb-sm" @delete-post="handleDeletePost" />
           </template>
           <template v-slot:loading>
             <q-spinner class="loading full-height q-my-md" size="40px" />
@@ -41,6 +43,7 @@
           infinite-load-type="bottom"
           :margins="8"
           @load-more="(i, done) => onLoadData(1, 'comments', done)"
+          style="--anim-duration: 200ms"
         >
           <template v-slot:default="{ item }">
             <comment-component :comment="item" class="animation-fade-in q-mb-sm" />
@@ -55,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, ref } from "vue";
+import { defineAsyncComponent, DefineComponent, ref } from "vue";
 import MyVirtualScroll from "src/components/misc/MyVirtualScroll.vue";
 import { getFavorites, getReactions } from "src/api/users";
 
@@ -78,6 +81,8 @@ const selected = ref<Category>("posts");
 
 const items = ref<[Post[], CommentWithUser[]]>([[], []]);
 let cursor: [string | undefined, string | undefined] = [undefined, undefined];
+
+const virtualScroll = ref<DefineComponent | null>(null);
 
 function select(value: Category) {
   selected.value = value;
@@ -105,5 +110,10 @@ async function onLoadData(index: number, category: Category, done: (stop?: boole
   } catch (e) {
     done(true);
   }
+}
+
+function handleDeletePost(postId: string) {
+  items.value[0] = items.value[0].filter((post) => post.post_id !== postId);
+  virtualScroll.value?.updateShowedItems();
 }
 </script>

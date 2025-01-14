@@ -33,6 +33,8 @@
       @load-more="onLoad"
       infinite-load-type="bottom"
       :key="scrollKey"
+      ref="virtualScroll"
+      style="--anim-duration: 200ms"
     >
       <template v-slot:default="{ item }">
         <post-component :post="item" class="animation-fade-in q-mb-sm" @delete-post="handleDeletePost" />
@@ -45,7 +47,7 @@
 </template>
 <script setup lang="ts">
 import { getUserPosts } from "src/api/posts";
-import { defineAsyncComponent, ref } from "vue";
+import { defineAsyncComponent, DefineComponent, ref } from "vue";
 import MyVirtualScroll from "src/components/misc/MyVirtualScroll.vue";
 
 const PostComponent = defineAsyncComponent(() => import("../../posts/PostComponent.vue"));
@@ -57,6 +59,8 @@ const props = defineProps<{
 
 let cursor: string | undefined;
 let hasMore = true;
+
+const virtualScroll = ref<DefineComponent | null>(null);
 
 const expand = defineModel<boolean>("expand");
 
@@ -135,5 +139,6 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
 
 function handleDeletePost(postId: string) {
   items.value = items.value.filter((post) => post.post_id !== postId);
+  virtualScroll.value?.updateShowedItems();
 }
 </script>

@@ -8,6 +8,8 @@
       class="posts-infinite-scroll"
       @load-more="onLoad"
       :key="scrollKey"
+      ref="virtualScroll"
+      style="--anim-duration: 200ms"
     >
       <template v-slot:default="{ item }">
         <post-component class="animation-fade-in q-mb-sm" :post="item" @delete-post="handleDeletePost" />
@@ -19,7 +21,7 @@
   </q-scroll-area>
 </template>
 <script setup lang="ts">
-import { ref, watch, defineAsyncComponent } from "vue";
+import { ref, watch, defineAsyncComponent, DefineComponent } from "vue";
 import { usePostsStore } from "src/stores/posts-store";
 import { KeyOfGetPostsTypes, viewPosts } from "src/api/posts";
 import { isAxiosError } from "axios";
@@ -36,6 +38,8 @@ const items = ref<PostWithSystem[]>([]);
 const scrollKey = ref<string>(props.type);
 const store = usePostsStore();
 const toView: string[] = [];
+
+const virtualScroll = ref<DefineComponent | null>(null);
 
 const { t } = useI18n();
 
@@ -87,7 +91,7 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
         viewInChunks(toView, true);
       }
     }
-    setTimeout(() => done(), 100);
+    done();
   } catch (e) {
     if (isAxiosError(e)) {
       const error =
@@ -111,5 +115,6 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
 
 function handleDeletePost(postId: string) {
   items.value = items.value.filter((post) => post.post_id !== postId);
+  virtualScroll.value?.updateShowedItems();
 }
 </script>
