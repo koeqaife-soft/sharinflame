@@ -28,7 +28,7 @@
           infinite-load-type="bottom"
           :key="scrollKey"
           class="posts-infinite-scroll"
-          :bottom-offset="250"
+          style="--anim-duration: 200ms"
         >
           <template v-slot:default="{ item }">
             <comment-component :comment="item" class="animation-fade-in q-mb-sm" />
