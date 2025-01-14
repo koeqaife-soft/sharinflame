@@ -20,7 +20,7 @@
         <q-space />
         <q-btn flat round icon="sym_r_close" @click="dialogRef?.hide()" />
       </div>
-      <div class="content horizontal-container">
+      <div class="dialog-content-inner horizontal-container">
         <transition name="scale" :css="isSmallScreen">
           <div class="sidebar container" v-show="!isSmallScreen || current == 0">
             <template v-for="(item, index) in items" :key="index">
