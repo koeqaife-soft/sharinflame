@@ -3,9 +3,9 @@
     <q-scroll-observer @scroll="onScroll" :debounce="debounce" />
     <div class="virtual-scroll-content" ref="scrollContent">
       <div class="virtual-filler-top" :style="{ height: `${topFillerHeight}px` }" />
-      <template v-for="(item, index) in items" :key="getItemKey(item)">
-        <div class="virtual-item" v-if="showItem(index) != 'deleted'" v-show="showItem(index) != 'hidden'">
-          <q-resize-observer @resize="(event) => onItemHeightChange(index, event)" />
+      <template v-for="(item, index) in showedItems" :key="getItemKey(item)">
+        <div class="virtual-item" v-if="index >= visibleIndexes[0]! && index <= visibleIndexes[1]!">
+          <q-resize-observer @resize="(event) => onItemHeightChange(index, item, event)" />
           <slot :item="item" :index="index" />
         </div>
       </template>
@@ -13,7 +13,7 @@
     </div>
     <div
       class="virtual-scroll-loading"
-      :class="{ invisible: !isLoading && !showLoading }"
+      :class="{ invisible: !showLoadingSlot }"
       v-if="!stopInfiniteLoad && infiniteLoadType === 'bottom'"
       ref="loadingRef"
     >
@@ -26,7 +26,7 @@
 
 <script setup lang="ts" generic="T">
 // NOTE: I didn't add infinite load type "top" because there's many problems with it
-import { computed, nextTick, onBeforeUnmount, onMounted, onUnmounted, ref, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, onUnmounted, Ref, ref, watch } from "vue";
 
 interface Props {
   items: T[];
@@ -36,20 +36,28 @@ interface Props {
   debounce?: number;
   itemKey: keyof T;
   infiniteLoadType?: "bottom" | "none";
+  defaultHeight?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   margins: 0,
   offset: 250,
   bottomOffset: 500,
-  debounce: 150
+  debounce: 150,
+  defaultHeight: 125
 });
 
 const emit = defineEmits<{
   (e: "loadMore", index: number, done: (stop?: boolean) => void): void;
 }>();
 
-const heights = ref<number[]>([]);
+defineExpose({ updateShowedItems });
+
+const heights: number[] = [];
+
+type KeyType = string | number | symbol;
+const keyHeights: Record<KeyType, number> = {};
+
 const containerHeight = ref(0);
 
 const scrollContent = ref<HTMLElement | null>(null);
@@ -64,6 +72,9 @@ const bottomFillerHeight = ref(0);
 
 const visibleIndexes = ref<number[]>([]);
 
+const showedItems: Ref<T[]> = ref([]);
+let showedItemsTickLock = false;
+
 const isLoading = ref(false);
 const stopInfiniteLoad = ref(false);
 
@@ -71,6 +82,8 @@ const isContentVisible = ref(false);
 
 let isLoadingTimeout: NodeJS.Timeout | undefined = undefined;
 const showLoading = ref(false);
+
+const showLoadingSlot = computed(() => isLoading.value && showLoading.value);
 
 function updateSvgAnimations(isRetry?: boolean) {
   if (renderLoadingSlot.value === true) {
@@ -82,7 +95,7 @@ function updateSvgAnimations(isRetry?: boolean) {
       return;
     }
 
-    const isVisible = isLoading.value && showLoading.value;
+    const isVisible = showLoadingSlot.value;
 
     const action = `${isVisible === true ? "un" : ""}pauseAnimations` as const;
     Array.from(loadingRef.value.getElementsByTagName("svg")).forEach((el) => {
@@ -93,7 +106,7 @@ function updateSvgAnimations(isRetry?: boolean) {
 
 const renderLoadingSlot = computed(() => props.infiniteLoadType === "bottom" && !stopInfiniteLoad.value === true);
 
-watch([isLoading, renderLoadingSlot], () => {
+watch([isLoading, showLoadingSlot, renderLoadingSlot], () => {
   updateSvgAnimations();
 });
 
@@ -102,10 +115,41 @@ watch(isContentVisible, () => {
   checkLoading();
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getItemKey = (item: any) => {
+watch(
+  props.items,
+  () => {
+    if (props.infiniteLoadType === "none" || !isLoading.value) updateShowedItems();
+  },
+  { deep: true }
+);
+
+const getItemKey = (item: T) => {
   return item[props.itemKey];
 };
+
+function updateShowedItems() {
+  if (showedItemsTickLock) return;
+  showedItemsTickLock = true;
+  nextTick(() => {
+    try {
+      const newHeights: number[] = [];
+
+      props.items.forEach((item: T, index: number) => {
+        const key = getItemKey(item) as KeyType;
+
+        if (key in keyHeights) newHeights[index] = keyHeights[key]!;
+        else newHeights[index] = props.defaultHeight;
+      });
+
+      heights.length = 0;
+      heights.push(...newHeights);
+
+      showedItems.value = { ...props.items };
+    } finally {
+      showedItemsTickLock = false;
+    }
+  });
+}
 
 function checkLoading() {
   if (isLoading.value || stopInfiniteLoad.value) return;
@@ -117,19 +161,19 @@ function checkLoading() {
 
     emit("loadMore", props.items.length - 1, (stop?: boolean) => {
       isLoading.value = false;
-      if (stop) {
-        stopInfiniteLoad.value = true;
-      }
+      if (stop) stopInfiniteLoad.value = true;
+
       if (isLoadingTimeout) {
         clearTimeout(isLoadingTimeout);
         isLoadingTimeout = undefined;
       }
-      if (showLoading.value) {
+      if (showLoading.value)
         isLoadingTimeout = setTimeout(() => {
           showLoading.value = false;
           isLoadingTimeout = undefined;
         }, 250);
-      }
+
+      updateShowedItems();
       updateVisibleItems();
     });
   };
@@ -153,9 +197,11 @@ function updateVisibleItems() {
     let cumulativeHeight = 0;
     let topIndex = -1;
     let bottomIndex = -1;
+    const lastTopIndex = visibleIndexes.value[0];
+    const lastBottomIndex = visibleIndexes.value[1];
 
-    for (let i = 0; i < heights.value.length; i++) {
-      const itemHeight = heights.value[i] || 0;
+    for (let i = 0; i < heights.length; i++) {
+      const itemHeight = heights[i] || props.defaultHeight;
       const nextCumulativeHeight = cumulativeHeight + itemHeight;
 
       if (topIndex === -1 && top.value < nextCumulativeHeight) {
@@ -170,53 +216,71 @@ function updateVisibleItems() {
       cumulativeHeight = nextCumulativeHeight;
     }
 
-    if (bottomIndex === -1) {
-      bottomIndex = heights.value.length - 1;
-    }
+    if (bottomIndex === -1) bottomIndex = heights.length - 1;
 
     visibleIndexes.value = [topIndex, bottomIndex];
 
-    topFillerHeight.value = heights.value.slice(0, topIndex).reduce((acc, height) => acc + (height || 0), 0);
-    bottomFillerHeight.value = heights.value.slice(bottomIndex + 1).reduce((acc, height) => acc + (height || 0), 0);
+    if (lastTopIndex != topIndex)
+      topFillerHeight.value = heights.slice(0, topIndex).reduce((acc, height) => acc + (height || 0), 0);
+    if (lastBottomIndex != bottomIndex)
+      bottomFillerHeight.value = heights.slice(bottomIndex + 1).reduce((acc, height) => acc + (height || 0), 0);
   });
 }
+
+let updateDebounce: NodeJS.Timeout | null = null;
 
 function onScroll(info: QScrollObserverDetails) {
   if (!scrollContainer.value?.checkVisibility()) return;
   top.value = Math.max(info.position.top - props.offset, 0);
-  updateVisibleItems();
+
   checkLoading();
+  console.log(info.delta.top);
+  if (Math.abs(info.delta.top) >= 1000) {
+    if (updateDebounce) {
+      clearTimeout(updateDebounce);
+      updateDebounce = null;
+    }
+    updateDebounce = setTimeout(updateVisibleItems, 250);
+  } else {
+    if (updateDebounce) {
+      clearTimeout(updateDebounce);
+      updateDebounce = null;
+    }
+    updateVisibleItems();
+  }
 }
 
 function onResize() {
   if (!scrollContainer.value?.checkVisibility()) return;
   containerHeight.value = window.innerHeight;
-  updateVisibleItems();
-  checkLoading();
+  if (!updateDebounce) {
+    updateVisibleItems();
+    checkLoading();
+  }
 }
 
-function onItemHeightChange(index: number, info: { height: number; width: number }) {
+function onItemHeightChange(index: number, item: T, info: { height: number; width: number }) {
   if (!scrollContainer.value?.checkVisibility()) return;
-  heights.value[index] = info.height + (props.margins || 0);
+  const height = info.height + (props.margins || 0);
+
+  keyHeights[getItemKey(item) as KeyType] = height;
+  heights[index] = height;
+
   updateVisibleItems();
-}
-
-function hasHeight(index: number) {
-  return !!heights.value[index];
-}
-
-function showItem(index: number) {
-  if (index >= visibleIndexes.value[0]! && index <= visibleIndexes.value[1]!) return "visible";
-  else if (!hasHeight(index)) return "hidden";
-  else return "deleted";
 }
 
 let requestNumber: number;
+let lastUpdateTime = 0;
 
 const checkVisibility = () => {
-  isContentVisible.value = scrollContainer.value?.checkVisibility() || false;
-  updateVisibleItems();
-  requestNumber = requestAnimationFrame(checkVisibility);
+  const now = Date.now();
+  if (now - lastUpdateTime > (isContentVisible.value ? 500 : 100)) {
+    let lastValue = isContentVisible.value;
+    isContentVisible.value = scrollContainer.value?.checkVisibility() || false;
+    if (lastValue != isContentVisible.value) updateVisibleItems();
+    lastUpdateTime = now;
+  }
+  requestAnimationFrame(checkVisibility);
 };
 
 onMounted(() => {
@@ -232,6 +296,8 @@ onMounted(() => {
 onMounted(() => {
   window.addEventListener("resize", onResize);
   onResize();
+
+  showedItems.value = { ...props.items };
 
   requestNumber = requestAnimationFrame(checkVisibility);
 });
