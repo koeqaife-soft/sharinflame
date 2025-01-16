@@ -120,6 +120,7 @@ type ListsResponse = ApiResponse<
   {
     errors?: [post_id: string | null, comment_id: string | null, error_msg: string][];
     next_cursor: string;
+    has_more: boolean;
   } & (
     | { posts: Post[]; comments?: undefined }
     | { comments: CommentWithUser[]; posts?: undefined }
