@@ -34,7 +34,9 @@
             <comment-component :comment="item" class="animation-fade-in q-mb-sm" />
           </template>
           <template v-slot:loading>
-            <q-spinner class="loading full-height q-my-md" size="40px" />
+            <div class="row justify-center q-my-md">
+              <q-spinner class="loading full-height q-my-md" size="40px" />
+            </div>
           </template>
         </my-virtual-scroll>
       </q-scroll-area>
