@@ -17,9 +17,7 @@
       v-if="!stopInfiniteLoad && infiniteLoadType === 'bottom'"
       ref="loadingRef"
     >
-      <div class="row justify-center q-my-md">
-        <slot name="loading" />
-      </div>
+      <slot name="loading" />
     </div>
   </div>
 </template>
@@ -44,7 +42,8 @@ const props = withDefaults(defineProps<Props>(), {
   offset: 250,
   bottomOffset: 500,
   debounce: 150,
-  defaultHeight: 125
+  defaultHeight: 125,
+  infiniteLoadType: "none"
 });
 
 const emit = defineEmits<{
@@ -147,6 +146,9 @@ function updateShowedItems() {
       showedItems.value = { ...props.items };
     } finally {
       showedItemsTickLock = false;
+      showLoading.value = false;
+
+      nextTick(() => checkLoading());
     }
   });
 }
@@ -167,11 +169,6 @@ function checkLoading() {
         clearTimeout(isLoadingTimeout);
         isLoadingTimeout = undefined;
       }
-      if (showLoading.value)
-        isLoadingTimeout = setTimeout(() => {
-          showLoading.value = false;
-          isLoadingTimeout = undefined;
-        }, 250);
 
       updateShowedItems();
       updateVisibleItems();
