@@ -28,7 +28,9 @@
             <post-component :post="item" class="animation-fade-in q-mb-sm" @delete-post="handleDeletePost" />
           </template>
           <template v-slot:loading>
-            <q-spinner class="loading full-height q-my-md" size="40px" />
+            <div class="row justify-center q-my-md">
+              <q-spinner class="loading full-height q-my-md" size="40px" />
+            </div>
           </template>
         </my-virtual-scroll>
       </q-scroll-area>
@@ -49,7 +51,9 @@
             <comment-component :comment="item" class="animation-fade-in q-mb-sm" />
           </template>
           <template v-slot:loading>
-            <q-spinner class="loading full-height q-my-md" size="40px" />
+            <div class="row justify-center q-my-md">
+              <q-spinner class="loading full-height q-my-md" size="40px" />
+            </div>
           </template>
         </my-virtual-scroll>
       </q-scroll-area>
@@ -103,7 +107,7 @@ async function onLoadData(index: number, category: Category, done: (stop?: boole
       } else {
         items.value[1].push(...r.data.data[category]);
       }
-      done();
+      done(!r.data.data.has_more);
     } else {
       done(true);
     }
