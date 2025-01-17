@@ -15,7 +15,9 @@
         <post-component class="animation-fade-in q-mb-sm" :post="item" @delete-post="handleDeletePost" />
       </template>
       <template v-slot:loading>
-        <q-spinner class="loading" size="40px" />
+        <div class="row justify-center q-my-md">
+          <q-spinner class="loading" size="40px" />
+        </div>
       </template>
     </my-virtual-scroll>
   </q-scroll-area>
