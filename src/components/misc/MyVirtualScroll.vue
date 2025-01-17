@@ -32,6 +32,7 @@ interface Props {
   offset?: number;
   bottomOffset?: number;
   debounce?: number;
+  virtualDebounce?: number;
   itemKey: keyof T;
   infiniteLoadType?: "bottom" | "none";
   defaultHeight?: number;
@@ -41,7 +42,7 @@ const props = withDefaults(defineProps<Props>(), {
   margins: 0,
   offset: 250,
   bottomOffset: 500,
-  debounce: 150,
+  debounce: 50,
   defaultHeight: 125,
   infiniteLoadType: "none"
 });
@@ -52,7 +53,7 @@ const emit = defineEmits<{
 
 defineExpose({ updateShowedItems });
 
-const heights: number[] = [];
+const heights: (number | undefined)[] = [];
 
 type KeyType = string | number | symbol;
 const keyHeights: Record<KeyType, number> = {};
@@ -68,6 +69,8 @@ const bottom = computed(() => top.value + containerHeight.value + props.offset +
 
 const topFillerHeight = ref(0);
 const bottomFillerHeight = ref(0);
+
+const fastScrollDelta = computed(() => 900 * (Math.log2(props.debounce + 1) / Math.log2(150 + 1)));
 
 const visibleIndexes = ref<number[]>([]);
 
@@ -131,13 +134,13 @@ function updateShowedItems() {
   showedItemsTickLock = true;
   nextTick(() => {
     try {
-      const newHeights: number[] = [];
+      const newHeights: (number | undefined)[] = [];
 
       props.items.forEach((item: T, index: number) => {
         const key = getItemKey(item) as KeyType;
 
         if (key in keyHeights) newHeights[index] = keyHeights[key]!;
-        else newHeights[index] = props.defaultHeight;
+        else newHeights[index] = undefined;
       });
 
       heights.length = 0;
@@ -147,8 +150,6 @@ function updateShowedItems() {
     } finally {
       showedItemsTickLock = false;
       showLoading.value = false;
-
-      nextTick(() => checkLoading());
     }
   });
 }
@@ -183,45 +184,85 @@ function checkLoading() {
     isLoadingTimeout = setTimeout(() => {
       showLoading.value = true;
       isLoadingTimeout = undefined;
-    }, 250);
+    }, 150);
     loadMore();
   }
 }
 
-function updateVisibleItems() {
-  nextTick(() => {
-    if (!scrollContainer.value?.checkVisibility()) return;
-    let cumulativeHeight = 0;
-    let topIndex = -1;
-    let bottomIndex = -1;
-    const lastTopIndex = visibleIndexes.value[0];
-    const lastBottomIndex = visibleIndexes.value[1];
+let updateLock = false;
+let updateVisibleDebounce: NodeJS.Timeout | null = null;
+let generatedCumulativeHeights: number[] = [];
+let lastPosition = 0;
 
-    for (let i = 0; i < heights.length; i++) {
-      const itemHeight = heights[i] || props.defaultHeight;
-      const nextCumulativeHeight = cumulativeHeight + itemHeight;
+function generateCumulativeHeights(heights: (number | undefined)[]) {
+  const cumulativeHeights = [];
+  let cumulativeHeight = 0;
 
-      if (topIndex === -1 && top.value < nextCumulativeHeight) {
-        topIndex = i;
+  for (let i = 0; i < heights.length; i++) {
+    const itemHeight = heights[i] ?? props.defaultHeight;
+    cumulativeHeight += itemHeight;
+    cumulativeHeights.push(cumulativeHeight);
+  }
+
+  return cumulativeHeights;
+}
+
+function updateVisibleItems(fullUpdate = true, noDebounce = false) {
+  const func = () =>
+    nextTick(() => {
+      if (updateLock || !scrollContainer.value?.checkVisibility()) return;
+      updateLock = true;
+      let topIndex = -1;
+      let bottomIndex = -1;
+      const lastTopIndex = visibleIndexes.value[0];
+      const lastBottomIndex = visibleIndexes.value[1];
+
+      const update = (h: number[], endIndex?: number, startIndex?: number) => {
+        const end = (endIndex && endIndex + 1) || h.length;
+        const start = startIndex || 0;
+        for (let i = start; i < end; i++) {
+          const currentHeight = h[i]!;
+
+          if (topIndex === -1 && top.value < currentHeight) {
+            topIndex = i;
+          }
+
+          if (bottom.value <= currentHeight) {
+            bottomIndex = i;
+            break;
+          }
+        }
+        if (bottomIndex === -1) bottomIndex = end - 1;
+      };
+
+      if (fullUpdate || lastTopIndex === undefined || lastBottomIndex === undefined || !generatedCumulativeHeights) {
+        const cumulativeHeights = generateCumulativeHeights(heights);
+        generatedCumulativeHeights = cumulativeHeights;
+        update(cumulativeHeights);
+      } else {
+        console.log(top.value, bottom.value, lastPosition, lastTopIndex, lastBottomIndex);
+        if (top.value < lastPosition) update(generatedCumulativeHeights, lastBottomIndex, undefined);
+        else update(generatedCumulativeHeights, undefined, lastTopIndex);
       }
 
-      if (bottom.value <= nextCumulativeHeight) {
-        bottomIndex = i;
-        break;
-      }
+      visibleIndexes.value = [topIndex, bottomIndex];
 
-      cumulativeHeight = nextCumulativeHeight;
-    }
+      if (lastTopIndex != topIndex)
+        topFillerHeight.value = heights
+          .slice(0, topIndex)
+          .reduce((acc, height) => (acc || props.defaultHeight) + (height || 0), 0)!;
+      if (lastBottomIndex != bottomIndex)
+        bottomFillerHeight.value = heights
+          .slice(bottomIndex + 1)
+          .reduce((acc, height) => (acc || props.defaultHeight) + (height || 0), 0)!;
 
-    if (bottomIndex === -1) bottomIndex = heights.length - 1;
-
-    visibleIndexes.value = [topIndex, bottomIndex];
-
-    if (lastTopIndex != topIndex)
-      topFillerHeight.value = heights.slice(0, topIndex).reduce((acc, height) => acc + (height || 0), 0);
-    if (lastBottomIndex != bottomIndex)
-      bottomFillerHeight.value = heights.slice(bottomIndex + 1).reduce((acc, height) => acc + (height || 0), 0);
-  });
+      updateLock = false;
+      lastPosition = top.value;
+    });
+  if (noDebounce && props.virtualDebounce) {
+    if (updateVisibleDebounce) clearTimeout(updateVisibleDebounce);
+    updateVisibleDebounce = setTimeout(func, props.virtualDebounce);
+  } else func();
 }
 
 let updateDebounce: NodeJS.Timeout | null = null;
@@ -231,19 +272,20 @@ function onScroll(info: QScrollObserverDetails) {
   top.value = Math.max(info.position.top - props.offset, 0);
 
   checkLoading();
-  console.log(info.delta.top);
-  if (Math.abs(info.delta.top) >= 1000) {
+  const delta = Math.abs(info.delta.top);
+
+  if (delta >= fastScrollDelta.value) {
     if (updateDebounce) {
       clearTimeout(updateDebounce);
       updateDebounce = null;
     }
-    updateDebounce = setTimeout(updateVisibleItems, 250);
+    updateDebounce = setTimeout(() => updateVisibleItems(false), 250);
   } else {
     if (updateDebounce) {
       clearTimeout(updateDebounce);
       updateDebounce = null;
     }
-    updateVisibleItems();
+    updateVisibleItems(false);
   }
 }
 
@@ -251,7 +293,7 @@ function onResize() {
   if (!scrollContainer.value?.checkVisibility()) return;
   containerHeight.value = window.innerHeight;
   if (!updateDebounce) {
-    updateVisibleItems();
+    updateVisibleItems(false);
     checkLoading();
   }
 }
@@ -261,9 +303,10 @@ function onItemHeightChange(index: number, item: T, info: { height: number; widt
   const height = info.height + (props.margins || 0);
 
   keyHeights[getItemKey(item) as KeyType] = height;
-  heights[index] = height;
-
-  updateVisibleItems();
+  if (heights[index] !== height) {
+    heights[index] = height;
+    updateVisibleItems();
+  }
 }
 
 let requestNumber: number;
