@@ -240,7 +240,6 @@ function updateVisibleItems(fullUpdate = true, noDebounce = false) {
         generatedCumulativeHeights = cumulativeHeights;
         update(cumulativeHeights);
       } else {
-        console.log(top.value, bottom.value, lastPosition, lastTopIndex, lastBottomIndex);
         if (top.value < lastPosition) update(generatedCumulativeHeights, lastBottomIndex, undefined);
         else update(generatedCumulativeHeights, undefined, lastTopIndex);
       }
