@@ -2,14 +2,14 @@
   <div class="virtual-scroll" ref="scrollContainer">
     <q-scroll-observer @scroll="onScroll" :debounce="debounce" />
     <div class="virtual-scroll-content" ref="scrollContent">
-      <div class="virtual-filler-top" :style="{ height: `${topFillerHeight}px` }" />
+      <div class="virtual-filler-top" :style="{ height: `${topFillerHeight}px`, width: '0px' }" />
       <template v-for="(item, index) in showedItems" :key="getItemKey(item)">
         <div class="virtual-item" v-if="index >= visibleIndexes[0]! && index <= visibleIndexes[1]!">
           <q-resize-observer @resize="(event) => onItemHeightChange(index, item, event)" />
           <slot :item="item" :index="index" />
         </div>
       </template>
-      <div class="virtual-filler-bottom" :style="{ height: `${bottomFillerHeight}px` }" />
+      <div class="virtual-filler-bottom" :style="{ height: `${bottomFillerHeight}px`, width: '0px' }" />
     </div>
     <div
       class="virtual-scroll-loading"
@@ -129,6 +129,10 @@ const getItemKey = (item: T) => {
   return item[props.itemKey];
 };
 
+function shouldLoadMore() {
+  return props.infiniteLoadType === "bottom" && bottom.value >= (scrollContent.value?.offsetHeight || 0);
+}
+
 function updateShowedItems() {
   if (showedItemsTickLock) return;
   showedItemsTickLock = true;
@@ -145,6 +149,7 @@ function updateShowedItems() {
 
       heights.length = 0;
       heights.push(...newHeights);
+      generatedCumulativeHeights = generateCumulativeHeights();
 
       showedItems.value = { ...props.items };
     } finally {
@@ -176,7 +181,7 @@ function checkLoading() {
     });
   };
 
-  if (props.infiniteLoadType === "bottom" && bottom.value >= (scrollContent.value?.offsetHeight || 0)) {
+  if (shouldLoadMore()) {
     if (isLoadingTimeout) {
       clearTimeout(isLoadingTimeout);
       isLoadingTimeout = undefined;
@@ -194,7 +199,7 @@ let updateVisibleDebounce: NodeJS.Timeout | null = null;
 let generatedCumulativeHeights: number[] = [];
 let lastPosition = 0;
 
-function generateCumulativeHeights(heights: (number | undefined)[]) {
+function generateCumulativeHeights() {
   const cumulativeHeights = [];
   let cumulativeHeight = 0;
 
@@ -207,53 +212,54 @@ function generateCumulativeHeights(heights: (number | undefined)[]) {
   return cumulativeHeights;
 }
 
+function calculateVisibleIndexes(h: number[], endIndex?: number, startIndex?: number) {
+  let topIndex = -1;
+  let bottomIndex = -1;
+
+  const end = (endIndex && endIndex + 1) ?? h.length;
+  const start = startIndex ?? 0;
+  for (let i = start; i < end; i++) {
+    const currentHeight = h[i]!;
+
+    if (topIndex === -1 && top.value < currentHeight) {
+      topIndex = i;
+    }
+
+    if (bottom.value <= currentHeight) {
+      bottomIndex = i;
+      break;
+    }
+  }
+  if (bottomIndex === -1) bottomIndex = end - 1;
+
+  visibleIndexes.value = [topIndex, bottomIndex];
+}
+
 function updateVisibleItems(fullUpdate = true, noDebounce = false) {
   const func = () =>
     nextTick(() => {
       if (updateLock || !scrollContainer.value?.checkVisibility()) return;
-      updateLock = true;
-      let topIndex = -1;
-      let bottomIndex = -1;
+      if (noDebounce && props.virtualDebounce) updateLock = true;
       const lastTopIndex = visibleIndexes.value[0];
       const lastBottomIndex = visibleIndexes.value[1];
 
-      const update = (h: number[], endIndex?: number, startIndex?: number) => {
-        const end = (endIndex && endIndex + 1) || h.length;
-        const start = startIndex || 0;
-        for (let i = start; i < end; i++) {
-          const currentHeight = h[i]!;
-
-          if (topIndex === -1 && top.value < currentHeight) {
-            topIndex = i;
-          }
-
-          if (bottom.value <= currentHeight) {
-            bottomIndex = i;
-            break;
-          }
-        }
-        if (bottomIndex === -1) bottomIndex = end - 1;
-      };
-
       if (fullUpdate || lastTopIndex === undefined || lastBottomIndex === undefined || !generatedCumulativeHeights) {
-        const cumulativeHeights = generateCumulativeHeights(heights);
-        generatedCumulativeHeights = cumulativeHeights;
-        update(cumulativeHeights);
+        generatedCumulativeHeights = generateCumulativeHeights();
+        calculateVisibleIndexes(generatedCumulativeHeights);
       } else {
-        if (top.value < lastPosition) update(generatedCumulativeHeights, lastBottomIndex, undefined);
-        else update(generatedCumulativeHeights, undefined, lastTopIndex);
+        if (top.value < lastPosition) calculateVisibleIndexes(generatedCumulativeHeights, lastBottomIndex, undefined);
+        else calculateVisibleIndexes(generatedCumulativeHeights, undefined, lastTopIndex);
       }
 
-      visibleIndexes.value = [topIndex, bottomIndex];
+      const topIndex = visibleIndexes.value[0]!;
+      const bottomIndex = visibleIndexes.value[1]!;
 
-      if (lastTopIndex != topIndex)
-        topFillerHeight.value = heights
-          .slice(0, topIndex)
-          .reduce((acc, height) => (acc || props.defaultHeight) + (height || 0), 0)!;
+      if (lastTopIndex != visibleIndexes.value[0])
+        topFillerHeight.value = heights.slice(0, topIndex).reduce((acc, height) => (acc ?? 0) + (height ?? 0), 0)!;
       if (lastBottomIndex != bottomIndex)
         bottomFillerHeight.value = heights
           .slice(bottomIndex + 1)
-          .reduce((acc, height) => (acc || props.defaultHeight) + (height || 0), 0)!;
+          .reduce((acc, height) => (acc ?? 0) + (height ?? 0), 0)!;
 
       updateLock = false;
       lastPosition = top.value;
@@ -304,6 +310,7 @@ function onItemHeightChange(index: number, item: T, info: { height: number; widt
   keyHeights[getItemKey(item) as KeyType] = height;
   if (heights[index] !== height) {
     heights[index] = height;
+    generatedCumulativeHeights = generateCumulativeHeights();
     updateVisibleItems();
   }
 }
