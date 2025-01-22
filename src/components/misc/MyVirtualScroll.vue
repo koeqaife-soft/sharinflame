@@ -7,7 +7,7 @@
         <div
           class="virtual-item"
           v-if="index >= visibleIndexes[0]! && index <= visibleIndexes[1]!"
-          :style="{ minHeight: `${heights[index] || 0}px` }"
+          :style="{ minHeight: `${(heights[index] ?? minItemHeight) - props.margins}px` }"
         >
           <q-resize-observer
             @resize="(event) => onItemHeightChange(index, item, event)"
@@ -42,7 +42,7 @@ interface Props {
   virtualDebounce?: number;
   itemKey: keyof T;
   infiniteLoadType?: "bottom" | "none";
-  defaultHeight?: number;
+  minItemHeight?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -50,7 +50,7 @@ const props = withDefaults(defineProps<Props>(), {
   offset: 250,
   bottomOffset: 500,
   debounce: 50,
-  defaultHeight: 125,
+  minItemHeight: 125,
   infiniteLoadType: "none"
 });
 
@@ -66,6 +66,8 @@ type KeyType = string | number | symbol;
 const keyHeights: Record<KeyType, number> = {};
 
 const containerHeight = ref(0);
+
+const minItemHeight = computed(() => props.minItemHeight + props.margins);
 
 const scrollContent = ref<HTMLElement | null>(null);
 const scrollContainer = ref<HTMLElement | null>(null);
@@ -206,17 +208,27 @@ let updateVisibleDebounce: NodeJS.Timeout | null = null;
 let generatedCumulativeHeights: number[] = [];
 let lastPosition = 0;
 
-function generateCumulativeHeights() {
-  const cumulativeHeights = [];
-  let cumulativeHeight = 0;
+function generateCumulativeHeights(afterIndex = 0) {
+  if (afterIndex > 0 && generatedCumulativeHeights.length > 0) {
+    let cumulativeHeight = generatedCumulativeHeights[afterIndex - 1]!;
 
-  for (let i = 0; i < heights.value.length; i++) {
-    const itemHeight = heights.value[i] ?? props.defaultHeight;
-    cumulativeHeight += itemHeight;
-    cumulativeHeights.push(cumulativeHeight);
+    for (let i = afterIndex; i < heights.value.length; i++) {
+      const itemHeight = heights.value[i] ?? minItemHeight.value;
+      cumulativeHeight += itemHeight;
+      generatedCumulativeHeights[i] = cumulativeHeight;
+    }
+  } else {
+    let cumulativeHeight = 0;
+    generatedCumulativeHeights = [];
+
+    for (let i = 0; i < heights.value.length; i++) {
+      const itemHeight = heights.value[i] ?? minItemHeight.value;
+      cumulativeHeight += itemHeight;
+      generatedCumulativeHeights.push(cumulativeHeight);
+    }
   }
 
-  return cumulativeHeights;
+  return generatedCumulativeHeights;
 }
 
 function calculateVisibleIndexes(h: number[], endIndex?: number, startIndex?: number) {
@@ -321,7 +333,7 @@ function onItemHeightChange(index: number, item: T, info: { height: number; widt
   if (heights.value[index] !== height) {
     console.log("UPDATED", heights.value[index], height);
     heights.value[index] = height;
-    generatedCumulativeHeights = generateCumulativeHeights();
+    generatedCumulativeHeights = generateCumulativeHeights(index);
     updateVisibleItems();
   }
 }
