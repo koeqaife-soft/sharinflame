@@ -4,8 +4,15 @@
     <div class="virtual-scroll-content" ref="scrollContent">
       <div class="virtual-filler-top" :style="{ height: `${topFillerHeight}px`, width: '0px' }" />
       <template v-for="(item, index) in showedItems" :key="getItemKey(item)">
-        <div class="virtual-item" v-if="index >= visibleIndexes[0]! && index <= visibleIndexes[1]!">
-          <q-resize-observer @resize="(event) => onItemHeightChange(index, item, event)" />
+        <div
+          class="virtual-item"
+          v-if="index >= visibleIndexes[0]! && index <= visibleIndexes[1]!"
+          :style="{ minHeight: `${heights[index] || 0}px` }"
+        >
+          <q-resize-observer
+            @resize="(event) => onItemHeightChange(index, item, event)"
+            v-if="heights[index] === undefined"
+          />
           <slot :item="item" :index="index" />
         </div>
       </template>
@@ -53,7 +60,7 @@ const emit = defineEmits<{
 
 defineExpose({ updateShowedItems });
 
-const heights: (number | undefined)[] = [];
+const heights: Ref<(number | undefined)[]> = ref([]);
 
 type KeyType = string | number | symbol;
 const keyHeights: Record<KeyType, number> = {};
@@ -147,8 +154,8 @@ function updateShowedItems() {
         else newHeights[index] = undefined;
       });
 
-      heights.length = 0;
-      heights.push(...newHeights);
+      heights.value.length = 0;
+      heights.value.push(...newHeights);
       generatedCumulativeHeights = generateCumulativeHeights();
 
       showedItems.value = { ...props.items };
@@ -203,8 +210,8 @@ function generateCumulativeHeights() {
   const cumulativeHeights = [];
   let cumulativeHeight = 0;
 
-  for (let i = 0; i < heights.length; i++) {
-    const itemHeight = heights[i] ?? props.defaultHeight;
+  for (let i = 0; i < heights.value.length; i++) {
+    const itemHeight = heights.value[i] ?? props.defaultHeight;
     cumulativeHeight += itemHeight;
     cumulativeHeights.push(cumulativeHeight);
   }
@@ -232,7 +239,7 @@ function calculateVisibleIndexes(h: number[], endIndex?: number, startIndex?: nu
   }
   if (bottomIndex === -1) bottomIndex = end - 1;
 
-  visibleIndexes.value = [topIndex, bottomIndex];
+  visibleIndexes.value = [Math.max(topIndex - 2, 0), Math.min(bottomIndex + 2, end)];
 }
 
 function updateVisibleItems(fullUpdate = true, noDebounce = false) {
@@ -255,9 +262,11 @@ function updateVisibleItems(fullUpdate = true, noDebounce = false) {
       const bottomIndex = visibleIndexes.value[1]!;
 
       if (lastTopIndex != visibleIndexes.value[0])
-        topFillerHeight.value = heights.slice(0, topIndex).reduce((acc, height) => (acc ?? 0) + (height ?? 0), 0)!;
+        topFillerHeight.value = heights.value
+          .slice(0, topIndex)
+          .reduce((acc, height) => (acc ?? 0) + (height ?? 0), 0)!;
       if (lastBottomIndex != bottomIndex)
-        bottomFillerHeight.value = heights
+        bottomFillerHeight.value = heights.value
           .slice(bottomIndex + 1)
           .reduce((acc, height) => (acc ?? 0) + (height ?? 0), 0)!;
 
@@ -305,11 +314,13 @@ function onResize() {
 
 function onItemHeightChange(index: number, item: T, info: { height: number; width: number }) {
   if (!scrollContainer.value?.checkVisibility()) return;
+  if (info.height === 0) return;
   const height = info.height + (props.margins || 0);
 
   keyHeights[getItemKey(item) as KeyType] = height;
-  if (heights[index] !== height) {
-    heights[index] = height;
+  if (heights.value[index] !== height) {
+    console.log("UPDATED", heights.value[index], height);
+    heights.value[index] = height;
     generatedCumulativeHeights = generateCumulativeHeights();
     updateVisibleItems();
   }
@@ -320,7 +331,7 @@ let intersectionObserver: IntersectionObserver;
 const checkVisibility = () => {
   let lastValue = isContentVisible.value;
   isContentVisible.value = scrollContainer.value?.checkVisibility() || false;
-  if (lastValue != isContentVisible.value) updateVisibleItems();
+  if (lastValue != isContentVisible.value) updateVisibleItems(true, true);
 };
 
 onMounted(() => {
