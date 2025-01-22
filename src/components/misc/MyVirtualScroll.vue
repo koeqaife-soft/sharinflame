@@ -24,7 +24,7 @@
 
 <script setup lang="ts" generic="T">
 // NOTE: I didn't add infinite load type "top" because there's many problems with it
-import { computed, nextTick, onBeforeUnmount, onMounted, onUnmounted, Ref, ref, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, Ref, ref, watch } from "vue";
 
 interface Props {
   items: T[];
@@ -315,18 +315,12 @@ function onItemHeightChange(index: number, item: T, info: { height: number; widt
   }
 }
 
-let requestNumber: number;
-let lastUpdateTime = 0;
+let intersectionObserver: IntersectionObserver;
 
 const checkVisibility = () => {
-  const now = Date.now();
-  if (now - lastUpdateTime > (isContentVisible.value ? 500 : 100)) {
-    let lastValue = isContentVisible.value;
-    isContentVisible.value = scrollContainer.value?.checkVisibility() || false;
-    if (lastValue != isContentVisible.value) updateVisibleItems();
-    lastUpdateTime = now;
-  }
-  requestAnimationFrame(checkVisibility);
+  let lastValue = isContentVisible.value;
+  isContentVisible.value = scrollContainer.value?.checkVisibility() || false;
+  if (lastValue != isContentVisible.value) updateVisibleItems();
 };
 
 onMounted(() => {
@@ -336,6 +330,11 @@ onMounted(() => {
     }
     updateVisibleItems();
     checkLoading();
+    intersectionObserver = new IntersectionObserver(checkVisibility, {
+      root: scrollContainer.value,
+      threshold: 0.1
+    });
+    intersectionObserver.observe(scrollContent.value!);
   });
 });
 
@@ -344,15 +343,11 @@ onMounted(() => {
   onResize();
 
   showedItems.value = { ...props.items };
-
-  requestNumber = requestAnimationFrame(checkVisibility);
 });
 
 onBeforeUnmount(() => {
-  cancelAnimationFrame(requestNumber);
-});
-
-onUnmounted(() => {
   window.removeEventListener("resize", onResize);
+  intersectionObserver.unobserve(scrollContent.value!);
+  intersectionObserver.disconnect();
 });
 </script>
