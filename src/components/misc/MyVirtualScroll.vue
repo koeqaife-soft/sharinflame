@@ -273,14 +273,12 @@ function updateVisibleItems(fullUpdate = true, noDebounce = false) {
       const topIndex = visibleIndexes.value[0]!;
       const bottomIndex = visibleIndexes.value[1]!;
 
-      if (lastTopIndex != visibleIndexes.value[0])
-        topFillerHeight.value = heights.value
-          .slice(0, topIndex)
-          .reduce((acc, height) => (acc ?? 0) + (height ?? 0), 0)!;
+      if (lastTopIndex != topIndex)
+        topFillerHeight.value = heights.value.slice(0, topIndex).reduce((acc, height) => acc! + (height ?? 0), 0)!;
       if (lastBottomIndex != bottomIndex)
         bottomFillerHeight.value = heights.value
           .slice(bottomIndex + 1)
-          .reduce((acc, height) => (acc ?? 0) + (height ?? 0), 0)!;
+          .reduce((acc, height) => acc! + (height ?? 0), 0)!;
 
       updateLock = false;
       lastPosition = top.value;
