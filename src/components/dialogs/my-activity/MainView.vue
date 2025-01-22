@@ -21,11 +21,10 @@
           infinite-load-type="bottom"
           :margins="8"
           @load-more="(i, done) => onLoadData(0, 'posts', done)"
-          style="--anim-duration: 200ms"
           ref="virtualScroll"
         >
           <template v-slot:default="{ item }">
-            <post-component :post="item" class="animation-fade-in q-mb-sm" @delete-post="handleDeletePost" />
+            <post-component :post="item" class="q-mb-sm" @delete-post="handleDeletePost" />
           </template>
           <template v-slot:loading>
             <div class="row justify-center q-my-md">
@@ -45,10 +44,9 @@
           infinite-load-type="bottom"
           :margins="8"
           @load-more="(i, done) => onLoadData(1, 'comments', done)"
-          style="--anim-duration: 200ms"
         >
           <template v-slot:default="{ item }">
-            <comment-component :comment="item" class="animation-fade-in q-mb-sm" />
+            <comment-component :comment="item" class="q-mb-sm" />
           </template>
           <template v-slot:loading>
             <div class="row justify-center q-my-md">

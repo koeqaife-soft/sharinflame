@@ -28,10 +28,9 @@
           infinite-load-type="bottom"
           :key="scrollKey"
           class="posts-infinite-scroll"
-          style="--anim-duration: 200ms"
         >
           <template v-slot:default="{ item }">
-            <comment-component :comment="item" class="animation-fade-in q-mb-sm" />
+            <comment-component :comment="item" class="q-mb-sm" />
           </template>
           <template v-slot:loading>
             <div class="row justify-center q-my-md">

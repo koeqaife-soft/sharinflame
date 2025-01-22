@@ -9,10 +9,9 @@
       @load-more="onLoad"
       :key="scrollKey"
       ref="virtualScroll"
-      style="--anim-duration: 200ms"
     >
       <template v-slot:default="{ item }">
-        <post-component class="animation-fade-in q-mb-sm" :post="item" @delete-post="handleDeletePost" />
+        <post-component class="q-mb-sm" :post="item" @delete-post="handleDeletePost" />
       </template>
       <template v-slot:loading>
         <div class="row justify-center q-my-md">
