@@ -251,7 +251,7 @@ function calculateVisibleIndexes(h: number[], endIndex?: number, startIndex?: nu
   }
   if (bottomIndex === -1) bottomIndex = end - 1;
 
-  visibleIndexes.value = [Math.max(topIndex - 2, 0), Math.min(bottomIndex + 2, end)];
+  visibleIndexes.value = [Math.max(topIndex - 2, 0), Math.min(bottomIndex + 2, end - 1)];
 }
 
 function updateVisibleItems(fullUpdate = true, noDebounce = false) {
