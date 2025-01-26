@@ -1,5 +1,8 @@
 <template>
   <q-scroll-area class="scroll-area" :visible="false">
+    <div class="sticky-label post-scroll-header" :class="{ 'is-visible': headerVisible }">
+      <slot />
+    </div>
     <my-virtual-scroll
       :items="items"
       :margins="8"
@@ -7,6 +10,7 @@
       infinite-load-type="bottom"
       class="posts-infinite-scroll"
       @load-more="onLoad"
+      @scroll="onScroll"
       :key="scrollKey"
       ref="virtualScroll"
     >
@@ -40,11 +44,17 @@ const scrollKey = ref<string>(props.type);
 const store = usePostsStore();
 const toView: string[] = [];
 
+const headerVisible = ref(true);
+
 const virtualScroll = ref<DefineComponent | null>(null);
 
 const { t } = useI18n();
 
 watch(() => props.type, onTypeChange);
+
+function onScroll(info: QScrollObserverDetails) {
+  headerVisible.value = info.position.top < 60 || info.direction == "up";
+}
 
 function onTypeChange() {
   items.value = [];

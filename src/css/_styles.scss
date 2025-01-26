@@ -142,8 +142,8 @@ body {
 
   .center-column {
     height: initial;
-    margin-top: -8px;
     margin-bottom: -8px;
+    margin-top: -8px;
   }
 
   .left-column {
@@ -154,6 +154,19 @@ body {
   .right-column {
     justify-content: flex-start;
     padding-right: 8px;
+  }
+
+  .sticky-label {
+    z-index: 1;
+    background-color: transparent;
+  }
+
+  .categories-label {
+    margin: 8px 8px 0px 8px;
+    .q-btn {
+      width: fit-content;
+      border-radius: 10px;
+    }
   }
 
   @media (min-width: 1200px) {
@@ -216,6 +229,7 @@ body {
   width: 4px;
   height: 4px;
   opacity: 0.25;
+  z-index: 2;
 }
 
 .offline-dialog {

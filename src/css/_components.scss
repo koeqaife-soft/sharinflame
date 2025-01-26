@@ -621,3 +621,12 @@
     }
   }
 }
+
+.post-scroll-header {
+  transform: translate3d(0, -150%, 0);
+  transition: transform 0.3s ease, visibility 0s 0.3s linear;
+
+  &.is-visible {
+    transform: translate3d(0, 0, 0);
+  }
+}

@@ -3,11 +3,6 @@
     <template #toolbar-actions v-if="hideRightColumn">
       <open-profile-menu />
     </template>
-    <template #logo-menu v-if="hideLeftColumn">
-      <q-menu class="categories-menu menu-card" v-model="categoriesMenuOpened">
-        <category-buttons-container :categories-list="categoriesList" :current-type="currentType" />
-      </q-menu>
-    </template>
     <q-page class="app-page">
       <div class="left-column" v-if="!hideLeftColumn">
         <q-card class="card categories">
@@ -15,7 +10,16 @@
         </q-card>
       </div>
       <div class="center-column">
-        <post-scroll :type="currentType" class="full-height full-width" />
+        <post-scroll :type="currentType" class="full-height full-width">
+          <div class="container categories-label card" v-if="hideLeftColumn">
+            <q-btn :label="currentCategory?.label" :icon="currentCategory?.icon" no-caps unelevated>
+              <q-menu class="categories-menu menu-card" v-model="categoriesMenuOpened">
+                <category-buttons-container :categories-list="categoriesList" :current-type="currentType" />
+              </q-menu>
+              <q-icon name="sym_r_arrow_drop_up" :class="['open-menu', { active: categoriesMenuOpened }]" />
+            </q-btn>
+          </div>
+        </post-scroll>
       </div>
       <div class="right-column" v-if="!hideRightColumn">
         <q-card class="card profile-menu">
@@ -43,6 +47,7 @@ const OpenProfileMenu = defineAsyncComponent(() => import("src/components/profil
 const { t } = useI18n();
 
 const currentType = ref<KeyOfGetPostsTypes>("popular");
+const currentCategory = computed(() => categoriesList.value.find((category) => category.type === currentType.value));
 
 const categoriesMenuOpened = ref(false);
 
