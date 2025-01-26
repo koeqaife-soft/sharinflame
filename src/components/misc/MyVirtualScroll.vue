@@ -67,6 +67,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<{
   (e: "loadMore", index: number, done: (stop?: boolean) => void): void;
+  (e: "scroll", info: QScrollObserverDetails): void;
 }>();
 
 defineExpose({ updateShowedItems });
@@ -340,6 +341,7 @@ let updateDebounce: NodeJS.Timeout | null = null;
 
 function onScroll(info: QScrollObserverDetails) {
   if (!isContentVisible.value) return;
+  emit("scroll", info);
   top.value = Math.max(info.position.top - props.offset, 0);
 
   checkLoading();
