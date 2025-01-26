@@ -11,14 +11,16 @@
       </div>
       <div class="center-column">
         <post-scroll :type="currentType" class="full-height full-width">
-          <div class="container categories-label card" v-if="hideLeftColumn">
-            <q-btn :label="currentCategory?.label" :icon="currentCategory?.icon" no-caps unelevated>
-              <q-menu class="categories-menu menu-card" v-model="categoriesMenuOpened">
-                <category-buttons-container :categories-list="categoriesList" :current-type="currentType" />
-              </q-menu>
-              <q-icon name="sym_r_arrow_drop_up" :class="['open-menu', { active: categoriesMenuOpened }]" />
-            </q-btn>
-          </div>
+          <template #default v-if="hideLeftColumn">
+            <div class="container categories-label card">
+              <q-btn :label="currentCategory?.label" :icon="currentCategory?.icon" no-caps unelevated>
+                <q-menu class="categories-menu menu-card" v-model="categoriesMenuOpened">
+                  <category-buttons-container :categories-list="categoriesList" :current-type="currentType" />
+                </q-menu>
+                <q-icon name="sym_r_arrow_drop_up" :class="['open-menu', { active: categoriesMenuOpened }]" />
+              </q-btn>
+            </div>
+          </template>
         </post-scroll>
       </div>
       <div class="right-column" v-if="!hideRightColumn">
