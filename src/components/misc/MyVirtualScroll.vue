@@ -59,7 +59,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   margins: 0,
   offset: 250,
-  bottomOffset: 500,
+  bottomOffset: 250,
   debounce: 50,
   minItemHeight: 125,
   infiniteLoadType: "none"
@@ -187,10 +187,6 @@ const getItemKey = (item: T) => {
   return item[props.itemKey];
 };
 
-function shouldLoadMore() {
-  return props.infiniteLoadType === "bottom" && bottom.value >= (scrollContent.value?.offsetHeight || 0);
-}
-
 function updateShowedItems() {
   if (showedItemsTickLock) return;
   showedItemsTickLock = true;
@@ -215,6 +211,14 @@ function updateShowedItems() {
       showLoading.value = false;
     }
   });
+}
+
+function shouldLoadMore() {
+  return (
+    (heights.value.at(-1) !== undefined || heights.value.length == 0) &&
+    props.infiniteLoadType === "bottom" &&
+    bottom.value >= (scrollContent.value?.offsetHeight || 0)
+  );
 }
 
 function checkLoading() {
@@ -381,6 +385,7 @@ function onItemHeightChange(index: number, height: number) {
     heights.value[index] = height;
     generatedCumulativeHeights = generateCumulativeHeights(index);
     updateVisibleItems(false);
+    if (index == showedItems.value.length - 1) checkLoading();
   }
 }
 
@@ -417,9 +422,15 @@ onMounted(() => {
     if (!resizeObserver) {
       resizeObserver = new ResizeObserver((entries) => {
         for (const entry of entries) {
-          onItemHeightChange(Number(entry.target.getAttribute("data-index")!), entry.contentRect.height);
+          const index = entry.target.getAttribute("data-index");
+          if (index !== null) {
+            onItemHeightChange(Number(index), entry.contentRect.height);
+          } else {
+            checkLoading();
+          }
         }
       });
+      resizeObserver.observe(scrollContainer.value!);
       updateObservedElements(divs.value);
     }
   });
@@ -438,6 +449,7 @@ onBeforeUnmount(() => {
   intersectionObserver.disconnect();
 
   observedElements.forEach((el) => resizeObserver?.unobserve(el));
+  resizeObserver?.unobserve(scrollContainer.value!);
   resizeObserver?.disconnect();
   resizeObserver = null;
   observedElements.clear();
