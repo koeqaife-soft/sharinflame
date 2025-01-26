@@ -10,14 +10,16 @@
   >
     <closeable-content v-on:hide="dialogRef!.hide()">
       <card-dialog-label class="q-mb-sm" :label="$t('post')" icon="sym_r_article">
-        <q-btn flat round icon="sym_r_close" size="xs" @click="dialogRef!.hide()" />
+        <q-btn flat round icon="sym_r_close" @click="dialogRef!.hide()" />
       </card-dialog-label>
       <q-scroll-area class="scroll-area fix-scroll-area" :visible="false">
-        <post-component :post="postRef" :in-dialog="true" @delete-post="handleDeletePost" class="q-mb-sm" />
-        <q-separator />
-        <div class="sticky-label q-pt-sm">
+        <div ref="postComponentRef">
+          <post-component :post="postRef" :in-dialog="true" @delete-post="handleDeletePost" style="z-index: 2" />
+        </div>
+
+        <div class="sticky-label scroll-header q-pt-sm" :class="{ 'is-visible': headerVisible }">
           <card-dialog-label class="q-mb-sm" :label="$t('comments')" icon="sym_r_chat_bubble">
-            <q-btn flat round icon="sym_r_refresh" size="xs" @click="reloadComments" />
+            <q-btn flat round icon="sym_r_refresh" @click="reloadComments" />
           </card-dialog-label>
         </div>
         <my-virtual-scroll
@@ -25,6 +27,7 @@
           :margins="8"
           item-key="comment_id"
           @load-more="loadComments"
+          @scroll="onScroll"
           infinite-load-type="bottom"
           :key="scrollKey"
           class="posts-infinite-scroll"
@@ -102,6 +105,9 @@ const scrollKey = ref(Date.now());
 const items = ref<CommentWithUser[]>([]);
 const nextItems = ref<CommentWithUser[]>([]);
 
+const headerVisible = ref(true);
+const postComponentRef = ref<HTMLElement | null>(null);
+
 let hasMore = true;
 let cursor: string | undefined;
 
@@ -112,6 +118,10 @@ watch(text, () => updateMeta("text", text.value));
 defineEmits([...useDialogPluginComponent.emits]);
 
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
+
+function onScroll(info: QScrollObserverDetails) {
+  headerVisible.value = info.position.top < postComponentRef.value!.scrollHeight + 58 || info.direction == "up";
+}
 
 function reloadComments() {
   items.value = [];
