@@ -1,6 +1,6 @@
 <template>
   <q-scroll-area class="scroll-area full-height fix-scroll-area" :visible="false">
-    <div class="sticky-label">
+    <div class="sticky-label q-pt-sm">
       <q-card class="card q-mb-sm label-container">
         <div class="horizontal-container">
           <q-icon name="sym_r_sort" class="icon" />
@@ -15,14 +15,10 @@
             @update:model-value="reloadPosts"
           />
           <q-space />
-          <q-btn
-            flat
-            round
-            :icon="`sym_r_${expand ? 'collapse_content' : 'expand_content'}`"
-            size="xs"
-            @click="toggleExpand"
-          />
-          <q-btn flat round icon="sym_r_refresh" size="xs" @click="reloadPosts" />
+          <div class="horizontal-container" style="gap: 0">
+            <q-btn flat round :icon="`sym_r_${expand ? 'collapse_content' : 'expand_content'}`" @click="toggleExpand" />
+            <q-btn flat round icon="sym_r_refresh" @click="reloadPosts" />
+          </div>
         </div>
       </q-card>
     </div>
@@ -84,6 +80,7 @@ function reloadPosts() {
 }
 
 async function onLoad(index: number, done: (stop?: boolean) => void) {
+  const addCount = items.value.length == 0 ? 10 : 5;
   try {
     const toAdd: PostWithSystem[] = [];
     let usedApi = false;
@@ -107,7 +104,7 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
       }
     }
 
-    toAdd.push(...nextItems.value.splice(0, 5));
+    toAdd.push(...nextItems.value.splice(0, addCount));
 
     if (toAdd.length > 0) {
       const currentPosts = [...items.value];
