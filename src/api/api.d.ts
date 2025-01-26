@@ -37,21 +37,16 @@ interface Post {
   post_id: string;
   user_id: string;
   content: string;
-  created_at: string;
-  updated_at: string;
+  created_at: number;
+  updated_at: number;
   likes_count: number;
   dislikes_count: number;
   comments_count: number;
   tags: string[];
   media: string[];
-  status: string;
-  is_deleted: boolean;
   is_like?: boolean | undefined;
   is_system?: boolean | undefined;
   is_fav?: boolean | undefined;
-
-  created_at_unix: number;
-  updated_at_unix: number;
 
   user: User;
   _meta?: MetaData;

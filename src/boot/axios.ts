@@ -20,7 +20,7 @@ declare module "vue" {
 
 let mainStore: ReturnType<typeof useMainStore>;
 const url = "https://koeqaife.ddns.net:6169/v1";
-const api = axios.create({ baseURL: url, timeout: 15000, withCredentials: true });
+const api = axios.create({ baseURL: url, timeout: 15000 });
 
 async function initialize() {
   await Promise.all(
