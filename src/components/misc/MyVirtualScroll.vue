@@ -7,12 +7,13 @@
         <div
           class="virtual-item"
           v-if="index >= visibleIndexes[0]! && index <= visibleIndexes[1]!"
-          :style="{ minHeight: `${(heights[index] ?? minItemHeight) - props.margins}px` }"
+          :data-index="index"
+          :ref="
+            (el) => {
+              if (el) divs[index] = el;
+            }
+          "
         >
-          <q-resize-observer
-            @resize="(event) => onItemHeightChange(index, item, event)"
-            v-if="heights[index] === undefined"
-          />
           <slot :item="item" :index="index" />
         </div>
       </template>
@@ -31,7 +32,17 @@
 
 <script setup lang="ts" generic="T">
 // NOTE: I didn't add infinite load type "top" because there's many problems with it
-import { computed, nextTick, onBeforeUnmount, onMounted, Ref, ref, watch } from "vue";
+import {
+  ComponentPublicInstance,
+  computed,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  Ref,
+  ref,
+  watch,
+  onBeforeUpdate
+} from "vue";
 
 interface Props {
   items: T[];
@@ -95,6 +106,43 @@ let isLoadingTimeout: NodeJS.Timeout | undefined = undefined;
 const showLoading = ref(false);
 
 const showLoadingSlot = computed(() => isLoading.value && showLoading.value);
+
+const divs = ref<(Element | ComponentPublicInstance)[]>([]);
+const observedElements = new Set<Element>();
+let resizeObserver: ResizeObserver | null = null;
+
+onBeforeUpdate(() => {
+  divs.value = [];
+});
+
+watch(
+  divs,
+  () => {
+    nextTick(() => updateObservedElements(divs.value));
+  },
+  { flush: "post" }
+);
+
+function updateObservedElements(elements: (Element | ComponentPublicInstance)[]) {
+  if (!resizeObserver) return;
+
+  const newElements = elements
+    .map((el) => (el instanceof Element ? el : (el.$el as Element)))
+    .filter((el): el is Element => el instanceof Element);
+
+  const toAdd = newElements.filter((el) => !observedElements.has(el));
+  const toRemove = Array.from(observedElements).filter((el) => !newElements.includes(el));
+
+  toRemove.forEach((el) => {
+    resizeObserver!.unobserve(el);
+    observedElements.delete(el);
+  });
+
+  toAdd.forEach((el) => {
+    resizeObserver!.observe(el);
+    observedElements.add(el);
+  });
+}
 
 function updateSvgAnimations(isRetry?: boolean) {
   if (renderLoadingSlot.value === true) {
@@ -214,7 +262,7 @@ function generateCumulativeHeights(afterIndex = 0) {
 
     for (let i = afterIndex; i < heights.value.length; i++) {
       const itemHeight = heights.value[i] ?? minItemHeight.value;
-      cumulativeHeight += itemHeight;
+      cumulativeHeight += itemHeight + props.margins;
       generatedCumulativeHeights[i] = cumulativeHeight;
     }
   } else {
@@ -223,7 +271,7 @@ function generateCumulativeHeights(afterIndex = 0) {
 
     for (let i = 0; i < heights.value.length; i++) {
       const itemHeight = heights.value[i] ?? minItemHeight.value;
-      cumulativeHeight += itemHeight;
+      cumulativeHeight += itemHeight + props.margins;
       generatedCumulativeHeights.push(cumulativeHeight);
     }
   }
@@ -257,7 +305,7 @@ function calculateVisibleIndexes(h: number[], endIndex?: number, startIndex?: nu
 function updateVisibleItems(fullUpdate = true, noDebounce = false) {
   const func = () =>
     nextTick(() => {
-      if (updateLock || !scrollContainer.value?.checkVisibility()) return;
+      if (updateLock || !isContentVisible.value) return;
       if (noDebounce && props.virtualDebounce) updateLock = true;
       const lastTopIndex = visibleIndexes.value[0];
       const lastBottomIndex = visibleIndexes.value[1];
@@ -273,12 +321,11 @@ function updateVisibleItems(fullUpdate = true, noDebounce = false) {
       const topIndex = visibleIndexes.value[0]!;
       const bottomIndex = visibleIndexes.value[1]!;
 
-      if (lastTopIndex != topIndex)
-        topFillerHeight.value = heights.value.slice(0, topIndex).reduce((acc, height) => acc! + (height ?? 0), 0)!;
+      if (lastTopIndex != topIndex) topFillerHeight.value = generatedCumulativeHeights[topIndex - 1] ?? 0;
+
       if (lastBottomIndex != bottomIndex)
-        bottomFillerHeight.value = heights.value
-          .slice(bottomIndex + 1)
-          .reduce((acc, height) => acc! + (height ?? 0), 0)!;
+        bottomFillerHeight.value =
+          (generatedCumulativeHeights[heights.value.length - 1] ?? 0) - (generatedCumulativeHeights[bottomIndex] ?? 0);
 
       updateLock = false;
       lastPosition = top.value;
@@ -292,7 +339,7 @@ function updateVisibleItems(fullUpdate = true, noDebounce = false) {
 let updateDebounce: NodeJS.Timeout | null = null;
 
 function onScroll(info: QScrollObserverDetails) {
-  if (!scrollContainer.value?.checkVisibility()) return;
+  if (!isContentVisible.value) return;
   top.value = Math.max(info.position.top - props.offset, 0);
 
   checkLoading();
@@ -314,7 +361,7 @@ function onScroll(info: QScrollObserverDetails) {
 }
 
 function onResize() {
-  if (!scrollContainer.value?.checkVisibility()) return;
+  if (!isContentVisible.value) return;
   containerHeight.value = window.innerHeight;
   if (!updateDebounce) {
     updateVisibleItems(false);
@@ -322,17 +369,16 @@ function onResize() {
   }
 }
 
-function onItemHeightChange(index: number, item: T, info: { height: number; width: number }) {
-  if (!scrollContainer.value?.checkVisibility()) return;
-  if (info.height === 0) return;
-  const height = info.height + (props.margins || 0);
+function onItemHeightChange(index: number, height: number) {
+  if (!isContentVisible.value) return;
+  if (height === 0) return;
 
+  const item = showedItems.value[index]!;
   keyHeights[getItemKey(item) as KeyType] = height;
   if (heights.value[index] !== height) {
-    console.log("UPDATED", heights.value[index], height);
     heights.value[index] = height;
     generatedCumulativeHeights = generateCumulativeHeights(index);
-    updateVisibleItems();
+    updateVisibleItems(false);
   }
 }
 
@@ -341,7 +387,13 @@ let intersectionObserver: IntersectionObserver;
 const checkVisibility = () => {
   let lastValue = isContentVisible.value;
   isContentVisible.value = scrollContainer.value?.checkVisibility() || false;
-  if (lastValue != isContentVisible.value) updateVisibleItems(true, true);
+  if (lastValue != isContentVisible.value) {
+    updateVisibleItems(true, true);
+    if (!isContentVisible.value) {
+      observedElements.forEach((el) => resizeObserver?.unobserve(el));
+      observedElements.clear();
+    }
+  }
 };
 
 onMounted(() => {
@@ -351,11 +403,23 @@ onMounted(() => {
     }
     updateVisibleItems();
     checkLoading();
-    intersectionObserver = new IntersectionObserver(checkVisibility, {
-      root: scrollContainer.value,
-      threshold: 0.1
-    });
-    intersectionObserver.observe(scrollContent.value!);
+
+    if (!intersectionObserver) {
+      intersectionObserver = new IntersectionObserver(checkVisibility, {
+        root: scrollContainer.value,
+        threshold: 0.1
+      });
+      intersectionObserver.observe(scrollContent.value!);
+    }
+
+    if (!resizeObserver) {
+      resizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          onItemHeightChange(Number(entry.target.getAttribute("data-index")!), entry.contentRect.height);
+        }
+      });
+      updateObservedElements(divs.value);
+    }
   });
 });
 
@@ -370,5 +434,10 @@ onBeforeUnmount(() => {
   window.removeEventListener("resize", onResize);
   intersectionObserver.unobserve(scrollContent.value!);
   intersectionObserver.disconnect();
+
+  observedElements.forEach((el) => resizeObserver?.unobserve(el));
+  resizeObserver?.disconnect();
+  resizeObserver = null;
+  observedElements.clear();
 });
 </script>
