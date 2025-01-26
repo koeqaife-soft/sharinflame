@@ -1,6 +1,6 @@
 <template>
   <q-scroll-area class="scroll-area" :visible="false">
-    <div class="sticky-label post-scroll-header" :class="{ 'is-visible': headerVisible }" v-if="$slots['default']">
+    <div class="sticky-label scroll-header" :class="{ 'is-visible': headerVisible }" v-if="$slots['default']">
       <slot />
     </div>
     <my-virtual-scroll
