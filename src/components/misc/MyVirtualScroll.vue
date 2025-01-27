@@ -335,7 +335,7 @@ function updateVisibleItems(fullUpdate = true, noDebounce = false) {
       updateLock = false;
       lastPosition = top.value;
     });
-  if (noDebounce && props.virtualDebounce) {
+  if (!noDebounce && props.virtualDebounce) {
     if (updateVisibleDebounce) clearTimeout(updateVisibleDebounce);
     updateVisibleDebounce = setTimeout(func, props.virtualDebounce);
   } else func();
@@ -391,9 +391,21 @@ function onItemHeightChange(index: number, height: number) {
 
 let intersectionObserver: IntersectionObserver;
 
-const checkVisibility = () => {
+const isVisible = (entry: IntersectionObserverEntry) => {
+  const rect = entry.boundingClientRect;
+  const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+  return entry.isIntersecting && isInViewport;
+};
+
+const checkVisibility = (entry: IntersectionObserverEntry[]) => {
   let lastValue = isContentVisible.value;
-  isContentVisible.value = scrollContainer.value?.checkVisibility() || false;
+  if (scrollContainer.value?.checkVisibility) {
+    isContentVisible.value = scrollContainer.value?.checkVisibility() || false;
+  } else if (entry.length === 0) {
+    isContentVisible.value = false;
+  } else {
+    isContentVisible.value = isVisible(entry[0]!) || false;
+  }
   if (lastValue != isContentVisible.value) {
     updateVisibleItems(true, true);
     if (!isContentVisible.value) {
