@@ -23,8 +23,7 @@
         <category-buttons-container
           :categories-list="categoriesList"
           :current-type="currentType"
-          container-class="horizontal-container card profile-categories"
-          :class="{ 'q-mb-sm': currentType !== 'posts' }"
+          container-class="horizontal-container card profile-categories q-mb-sm"
           style="z-index: 2"
         />
         <keep-alive>
