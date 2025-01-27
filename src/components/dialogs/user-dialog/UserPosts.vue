@@ -1,27 +1,25 @@
 <template>
-  <q-scroll-area class="scroll-area full-height fix-scroll-area" :visible="false">
-    <div class="sticky-label q-pt-sm">
-      <q-card class="card q-mb-sm label-container">
-        <div class="horizontal-container">
-          <q-icon name="sym_r_sort" class="icon" />
-          <q-select
-            class="select"
-            v-model="sort"
-            :options="sortOptions"
-            :option-label="(opt) => $t(`sort.${opt}`)"
-            dense
-            borderless
-            style="min-width: 100px; width: 150px; max-width: 300px"
-            @update:model-value="reloadPosts"
-          />
-          <q-space />
-          <div class="horizontal-container" style="gap: 0">
-            <q-btn flat round :icon="`sym_r_${expand ? 'collapse_content' : 'expand_content'}`" @click="toggleExpand" />
-            <q-btn flat round icon="sym_r_refresh" @click="reloadPosts" />
-          </div>
-        </div>
-      </q-card>
+  <q-card class="card q-mb-sm label-container" style="z-index: 2">
+    <div class="horizontal-container">
+      <q-icon name="sym_r_sort" class="icon" />
+      <q-select
+        class="select"
+        v-model="sort"
+        :options="sortOptions"
+        :option-label="(opt) => $t(`sort.${opt}`)"
+        dense
+        borderless
+        style="min-width: 100px; width: 150px; max-width: 300px"
+        @update:model-value="reloadPosts"
+      />
+      <q-space />
+      <div class="horizontal-container" style="gap: 0">
+        <q-btn flat round :icon="`sym_r_${expand ? 'collapse_content' : 'expand_content'}`" @click="toggleExpand" />
+        <q-btn flat round icon="sym_r_refresh" @click="reloadPosts" />
+      </div>
     </div>
+  </q-card>
+  <q-scroll-area class="scroll-area full-height fix-scroll-area" :visible="false">
     <my-virtual-scroll
       :items="items"
       :margins="8"
