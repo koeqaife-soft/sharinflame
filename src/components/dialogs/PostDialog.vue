@@ -138,7 +138,6 @@ function updateMeta<T>(key: string, value: T) {
 async function loadComments(index: number, done: (stop?: boolean) => void) {
   const toAdd: CommentWithUser[] = [];
   nextItems.value ??= [];
-  let usedApi = false;
   try {
     if (nextItems.value.length === 0) {
       const r = await getComments(postRef.value.post_id, cursor);
@@ -157,7 +156,6 @@ async function loadComments(index: number, done: (stop?: boolean) => void) {
               } as CommentWithUser)
           )
         );
-        usedApi = true;
       }
     }
 
@@ -178,15 +176,7 @@ async function loadComments(index: number, done: (stop?: boolean) => void) {
       items.value = currentComments;
     }
 
-    const _done = () => done(!(hasMore || nextItems.value.length > 0));
-
-    if (usedApi) {
-      setTimeout(() => {
-        _done();
-      }, 100);
-    } else {
-      _done();
-    }
+    done(!(hasMore || nextItems.value.length > 0));
   } catch (e) {
     done(true);
     throw e;

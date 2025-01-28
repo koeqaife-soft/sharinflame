@@ -81,7 +81,6 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
   const addCount = items.value.length == 0 ? 10 : 5;
   try {
     const toAdd: PostWithSystem[] = [];
-    let usedApi = false;
 
     if (nextItems.value.length === 0) {
       const r = await getUserPosts(props.user.user_id, cursor, sort.value);
@@ -98,7 +97,6 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
             } as PostWithSystem)
         );
         nextItems.value.push(...loadedPosts);
-        usedApi = true;
       }
     }
 
@@ -118,15 +116,7 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
       items.value = currentPosts;
     }
 
-    const _done = () => done(!(hasMore || nextItems.value.length > 0));
-
-    if (usedApi) {
-      setTimeout(() => {
-        _done();
-      }, 100);
-    } else {
-      _done();
-    }
+    done(!(hasMore || nextItems.value.length > 0));
   } catch (e) {
     done(true);
     throw e;
