@@ -2,7 +2,7 @@
   <div class="virtual-scroll" ref="scrollContainer">
     <q-scroll-observer @scroll="onScroll" :debounce="debounce" />
     <div class="virtual-scroll-content" ref="scrollContent">
-      <div class="virtual-filler-top" :style="{ height: `${topFillerHeight}px`, width: '0px' }" />
+      <div class="virtual-filler-top" :style="{ height: `${fillersHeight[0]}px`, width: '0px' }" />
       <template v-for="(item, index) in showedItems" :key="getItemKey(item)">
         <div
           class="virtual-item"
@@ -17,7 +17,7 @@
           <slot :item="item" :index="index" />
         </div>
       </template>
-      <div class="virtual-filler-bottom" :style="{ height: `${bottomFillerHeight}px`, width: '0px' }" />
+      <div class="virtual-filler-bottom" :style="{ height: `${fillersHeight[1]}px`, width: '0px' }" />
     </div>
     <div
       class="virtual-scroll-loading"
@@ -77,7 +77,7 @@ const heights: Ref<(number | undefined)[]> = ref([]);
 type KeyType = string | number | symbol;
 const keyHeights: Record<KeyType, number> = {};
 
-const containerHeight = ref(0);
+let containerHeight = 0;
 
 const minItemHeight = computed(() => props.minItemHeight + props.margins);
 
@@ -85,15 +85,16 @@ const scrollContent = ref<HTMLElement | null>(null);
 const scrollContainer = ref<HTMLElement | null>(null);
 const loadingRef = ref<HTMLElement | null>(null);
 
-const top = ref(0);
-const bottom = computed(() => top.value + containerHeight.value + props.offset + props.bottomOffset);
+let scrollPosition = 0;
 
-const topFillerHeight = ref(0);
-const bottomFillerHeight = ref(0);
+const top = ref(0);
+const bottom = ref(0);
+
+const fillersHeight = ref([0, 0]);
 
 const fastScrollDelta = computed(() => 900 * (Math.log2(props.debounce + 1) / Math.log2(150 + 1)));
 
-const visibleIndexes = ref<number[]>([]);
+const visibleIndexes = ref(new Uint32Array([0, 0]));
 
 const showedItems: Ref<T[]> = ref([]);
 let showedItemsTickLock = false;
@@ -304,7 +305,8 @@ function calculateVisibleIndexes(h: number[], endIndex?: number, startIndex?: nu
   }
   if (bottomIndex === -1) bottomIndex = end - 1;
 
-  visibleIndexes.value = [Math.max(topIndex - 2, 0), Math.min(bottomIndex + 2, end - 1)];
+  visibleIndexes.value[0] = Math.max(topIndex - 2, 0);
+  visibleIndexes.value[1] = Math.min(bottomIndex + 2, end - 1);
 }
 
 function updateVisibleItems(fullUpdate = true, noDebounce = false) {
@@ -326,10 +328,10 @@ function updateVisibleItems(fullUpdate = true, noDebounce = false) {
       const topIndex = visibleIndexes.value[0]!;
       const bottomIndex = visibleIndexes.value[1]!;
 
-      if (lastTopIndex != topIndex) topFillerHeight.value = generatedCumulativeHeights[topIndex - 1] ?? 0;
+      if (lastTopIndex != topIndex) fillersHeight.value[0] = generatedCumulativeHeights[topIndex - 1] ?? 0;
 
       if (lastBottomIndex != bottomIndex)
-        bottomFillerHeight.value =
+        fillersHeight.value[1] =
           (generatedCumulativeHeights[heights.value.length - 1] ?? 0) - (generatedCumulativeHeights[bottomIndex] ?? 0);
 
       updateLock = false;
@@ -346,7 +348,8 @@ let updateDebounce: NodeJS.Timeout | null = null;
 function onScroll(info: QScrollObserverDetails) {
   if (!isContentVisible.value) return;
   emit("scroll", info);
-  top.value = Math.max(info.position.top - props.offset, 0);
+  scrollPosition = info.position.top;
+  recalculatePositionVariables();
 
   checkLoading();
   const delta = Math.abs(info.delta.top);
@@ -368,7 +371,8 @@ function onScroll(info: QScrollObserverDetails) {
 
 function onResize() {
   if (!isContentVisible.value) return;
-  containerHeight.value = window.innerHeight;
+  containerHeight = window.innerHeight;
+  recalculatePositionVariables();
   if (!updateDebounce) {
     updateVisibleItems(false);
     checkLoading();
@@ -407,6 +411,7 @@ const checkVisibility = (entry: IntersectionObserverEntry[]) => {
     isContentVisible.value = isVisible(entry[0]!) || false;
   }
   if (lastValue != isContentVisible.value) {
+    recalculatePositionVariables();
     updateVisibleItems(true, true);
     if (!isContentVisible.value) {
       observedElements.forEach((el) => resizeObserver?.unobserve(el));
@@ -415,11 +420,14 @@ const checkVisibility = (entry: IntersectionObserverEntry[]) => {
   }
 };
 
+function recalculatePositionVariables() {
+  top.value = Math.max(scrollPosition - props.offset, 0);
+  bottom.value = scrollPosition + containerHeight + props.bottomOffset;
+}
+
 onMounted(() => {
   nextTick(() => {
-    if (scrollContainer.value) {
-      containerHeight.value = window.innerHeight;
-    }
+    containerHeight = window.innerHeight;
     updateVisibleItems();
     checkLoading();
 
