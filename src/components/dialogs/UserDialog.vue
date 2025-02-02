@@ -18,6 +18,17 @@
               <div class="display-name">{{ userRef.display_name || userRef.username }}</div>
               <div class="username">@{{ userRef.username }}</div>
             </div>
+            <q-space />
+            <q-btn
+              :label="userRef.followed ? $t('unfollow') : $t('follow')"
+              no-caps
+              unelevated
+              icon="sym_r_add"
+              class="follow-button"
+              :class="userRef.followed ? 'outlined-button' : 'default-button'"
+              @click="followButton"
+              v-if="!isMe"
+            />
           </div>
         </div>
         <category-buttons-container
@@ -69,6 +80,7 @@ import { useI18n } from "vue-i18n";
 import { useMainStore } from "src/stores/main-store";
 import { useProfileStore } from "src/stores/profile-store";
 import { randomSize } from "src/utils/random";
+import { follow, unfollow } from "src/api/users";
 
 const UserDialogInfo = defineAsyncComponent(() => import("./user-dialog/UserInfo.vue"));
 const UserDialogPosts = defineAsyncComponent(() => import("./user-dialog/UserPosts.vue"));
@@ -82,6 +94,7 @@ const meta = ref({});
 const expand = ref(false);
 
 const loaded = ref(false);
+const isMe = ref(false);
 
 const props = defineProps<{
   user: User;
@@ -105,6 +118,22 @@ const categoriesList = computed<ButtonProps[]>(() => [
   }
 ]);
 
+async function followButton() {
+  const followed = userRef.value.followed;
+  try {
+    if (followed) {
+      delete userRef.value.followed;
+      await unfollow(userRef.value.user_id);
+    } else {
+      userRef.value.followed = true;
+      await follow(userRef.value.user_id);
+    }
+  } catch {
+    if (followed) userRef.value.followed = true;
+    else delete userRef.value.followed;
+  }
+}
+
 const changeType = (type: string) => {
   currentType.value = type;
 };
@@ -118,6 +147,7 @@ onMounted(async () => {
       userRef.value = profile;
     }
   } else {
+    isMe.value = true;
     userRef.value = (await profileStore.getProfile()) || userRef.value;
   }
   loaded.value = true;
