@@ -23,7 +23,7 @@ export const useProfileStore = defineStore("profile", {
   actions: {
     async getProfile(id: string = "me") {
       if (!this.cleanupInterval) {
-        this.startCleanup(this.ttl * 2);
+        this.startCleanup(this.ttl * 3);
       }
       const currentTime = Math.floor(Date.now() / 1000);
 
@@ -33,6 +33,19 @@ export const useProfileStore = defineStore("profile", {
         isLoading: false
       };
       const profile = this.profiles[id];
+
+      const getFunction = async () => {
+        profile.isLoading = true;
+        try {
+          const r = await getProfile(id);
+          if (r.status === 200 && r.data.success) {
+            profile.data = r.data.data;
+            profile.lastUpdate = Math.floor(Date.now() / 1000);
+          }
+        } finally {
+          profile.isLoading = false;
+        }
+      };
 
       if (profile.isLoading) {
         return new Promise<User | undefined>((resolve) => {
@@ -45,17 +58,10 @@ export const useProfileStore = defineStore("profile", {
         });
       }
 
-      if (!profile.data || currentTime - profile.lastUpdate >= this.ttl) {
-        profile.isLoading = true;
-        try {
-          const r = await getProfile(id);
-          if (r.status === 200 && r.data.success) {
-            profile.data = r.data.data;
-            profile.lastUpdate = currentTime;
-          }
-        } finally {
-          profile.isLoading = false;
-        }
+      if (!profile.data) {
+        await getFunction();
+      } else if (currentTime - profile.lastUpdate >= this.ttl) {
+        getFunction();
       }
 
       return profile.data;
@@ -85,7 +91,7 @@ export const useProfileStore = defineStore("profile", {
           if (id == "me") continue;
 
           const profile = this.profiles[id]!;
-          if (currentTime - profile.lastUpdate > this.ttl) {
+          if (currentTime - profile.lastUpdate > this.ttl * 2) {
             delete this.profiles[id];
           }
         }
