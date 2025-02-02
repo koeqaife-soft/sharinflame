@@ -77,6 +77,8 @@ export default {
       description: "User came in the first month after release"
     }
   },
+  follow: "Follow",
+  unfollow: "Unfollow",
 
   sort: {
     new: "New",
