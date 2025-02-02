@@ -79,7 +79,7 @@ const keyHeights: Record<KeyType, number> = {};
 
 let containerHeight = 0;
 
-const minItemHeight = computed(() => props.minItemHeight + props.margins);
+const itemHeightMargins = computed(() => props.minItemHeight + props.margins);
 
 const scrollContent = ref<HTMLElement | null>(null);
 const scrollContainer = ref<HTMLElement | null>(null);
@@ -128,22 +128,27 @@ watch(
 function updateObservedElements(elements: (Element | ComponentPublicInstance)[]) {
   if (!resizeObserver) return;
 
-  const newElements = elements
-    .map((el) => (el instanceof Element ? el : (el.$el as Element)))
-    .filter((el): el is Element => el instanceof Element);
+  if (isContentVisible.value) {
+    const newElements = elements
+      .map((el) => (el instanceof Element ? el : (el.$el as Element)))
+      .filter((el): el is Element => el instanceof Element && getComputedStyle(el).display !== "none");
 
-  const toAdd = newElements.filter((el) => !observedElements.has(el));
-  const toRemove = Array.from(observedElements).filter((el) => !newElements.includes(el));
+    const toAdd = newElements.filter((el) => !observedElements.has(el));
+    const toRemove = Array.from(observedElements).filter((el) => !newElements.includes(el));
 
-  toRemove.forEach((el) => {
-    resizeObserver!.unobserve(el);
-    observedElements.delete(el);
-  });
+    toRemove.forEach((el) => {
+      resizeObserver!.unobserve(el);
+      observedElements.delete(el);
+    });
 
-  toAdd.forEach((el) => {
-    resizeObserver!.observe(el);
-    observedElements.add(el);
-  });
+    toAdd.forEach((el) => {
+      resizeObserver!.observe(el);
+      observedElements.add(el);
+    });
+  } else {
+    observedElements.forEach((el) => resizeObserver?.unobserve(el));
+    observedElements.clear();
+  }
 }
 
 function updateSvgAnimations(isRetry?: boolean) {
@@ -267,7 +272,7 @@ function generateCumulativeHeights(afterIndex = 0) {
     let cumulativeHeight = generatedCumulativeHeights[afterIndex - 1]!;
 
     for (let i = afterIndex; i < heights.value.length; i++) {
-      const itemHeight = heights.value[i] ?? minItemHeight.value;
+      const itemHeight = heights.value[i] ?? itemHeightMargins.value;
       cumulativeHeight += itemHeight + props.margins;
       generatedCumulativeHeights[i] = cumulativeHeight;
     }
@@ -276,7 +281,7 @@ function generateCumulativeHeights(afterIndex = 0) {
     generatedCumulativeHeights = [];
 
     for (let i = 0; i < heights.value.length; i++) {
-      const itemHeight = heights.value[i] ?? minItemHeight.value;
+      const itemHeight = heights.value[i] ?? itemHeightMargins.value;
       cumulativeHeight += itemHeight + props.margins;
       generatedCumulativeHeights.push(cumulativeHeight);
     }
@@ -305,8 +310,8 @@ function calculateVisibleIndexes(h: number[], endIndex?: number, startIndex?: nu
   }
   if (bottomIndex === -1) bottomIndex = end - 1;
 
-  visibleIndexes.value[0] = Math.max(topIndex - 2, 0);
-  visibleIndexes.value[1] = Math.min(bottomIndex + 2, end - 1);
+  visibleIndexes.value[0] = Math.max(topIndex - 5, 0);
+  visibleIndexes.value[1] = Math.min(bottomIndex + 2, h.length - 1);
 }
 
 function updateVisibleItems(fullUpdate = true, noDebounce = false) {
@@ -351,22 +356,23 @@ function onScroll(info: QScrollObserverDetails) {
   scrollPosition = info.position.top;
   recalculatePositionVariables();
 
-  checkLoading();
-  const delta = Math.abs(info.delta.top);
-
-  if (delta >= fastScrollDelta.value) {
-    if (updateDebounce) {
-      clearTimeout(updateDebounce);
-      updateDebounce = null;
+  requestAnimationFrame(() => {
+    checkLoading();
+    const delta = Math.abs(info.delta.top);
+    if (delta >= fastScrollDelta.value) {
+      if (updateDebounce) {
+        clearTimeout(updateDebounce);
+        updateDebounce = null;
+      }
+      updateDebounce = setTimeout(() => updateVisibleItems(false), 250);
+    } else {
+      if (updateDebounce) {
+        clearTimeout(updateDebounce);
+        updateDebounce = null;
+      }
+      updateVisibleItems(false);
     }
-    updateDebounce = setTimeout(() => updateVisibleItems(false), 250);
-  } else {
-    if (updateDebounce) {
-      clearTimeout(updateDebounce);
-      updateDebounce = null;
-    }
-    updateVisibleItems(false);
-  }
+  });
 }
 
 function onResize() {
@@ -413,10 +419,7 @@ const checkVisibility = (entry: IntersectionObserverEntry[]) => {
   if (lastValue != isContentVisible.value) {
     recalculatePositionVariables();
     updateVisibleItems(true, true);
-    if (!isContentVisible.value) {
-      observedElements.forEach((el) => resizeObserver?.unobserve(el));
-      observedElements.clear();
-    }
+    nextTick(() => updateObservedElements(divs.value));
   }
 };
 
@@ -424,6 +427,8 @@ function recalculatePositionVariables() {
   top.value = Math.max(scrollPosition - props.offset, 0);
   bottom.value = scrollPosition + containerHeight + props.bottomOffset;
 }
+
+let resizeFrame: number;
 
 onMounted(() => {
   nextTick(() => {
@@ -441,14 +446,17 @@ onMounted(() => {
 
     if (!resizeObserver) {
       resizeObserver = new ResizeObserver((entries) => {
-        for (const entry of entries) {
-          const index = entry.target.getAttribute("data-index");
-          if (index !== null) {
-            onItemHeightChange(Number(index), entry.contentRect.height);
-          } else {
-            checkLoading();
+        cancelAnimationFrame(resizeFrame);
+        resizeFrame = requestAnimationFrame(() => {
+          for (const entry of entries) {
+            const index = entry.target.getAttribute("data-index");
+            if (index !== null) {
+              onItemHeightChange(Number(index), entry.contentRect.height);
+            } else {
+              checkLoading();
+            }
           }
-        }
+        });
       });
       resizeObserver.observe(scrollContainer.value!);
       updateObservedElements(divs.value);
@@ -457,7 +465,7 @@ onMounted(() => {
 });
 
 onMounted(() => {
-  window.addEventListener("resize", onResize);
+  window.addEventListener("resize", onResize, { passive: true });
   onResize();
 
   showedItems.value = { ...props.items };
@@ -465,13 +473,22 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   window.removeEventListener("resize", onResize);
-  intersectionObserver.unobserve(scrollContent.value!);
-  intersectionObserver.disconnect();
+  if (intersectionObserver) {
+    intersectionObserver.unobserve(scrollContent.value!);
+    intersectionObserver.disconnect();
+  }
+  if (resizeObserver) {
+    observedElements.forEach((el) => resizeObserver?.unobserve(el));
+    resizeObserver?.unobserve(scrollContainer.value!);
+    resizeObserver?.disconnect();
+    resizeObserver = null;
+    observedElements.clear();
+  }
+  if (isLoadingTimeout) clearTimeout(isLoadingTimeout);
+  if (updateDebounce) clearTimeout(updateDebounce);
+  if (updateVisibleDebounce) clearTimeout(updateVisibleDebounce);
+  if (resizeFrame) cancelAnimationFrame(resizeFrame);
 
-  observedElements.forEach((el) => resizeObserver?.unobserve(el));
-  resizeObserver?.unobserve(scrollContainer.value!);
-  resizeObserver?.disconnect();
-  resizeObserver = null;
-  observedElements.clear();
+  keyHeights.length = 0;
 });
 </script>
