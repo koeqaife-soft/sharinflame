@@ -6,7 +6,8 @@ export const usersEndpoints = {
   profile_me: "/users/me",
   get_profile: (id: string) => `/users/${id}`,
   favorites: "/users/me/favorites",
-  reactions: "/users/me/reactions"
+  reactions: "/users/me/reactions",
+  follow: (id: string) => `/users/me/following/${id}`
 };
 
 async function getProfile(user_id?: string) {
@@ -58,6 +59,14 @@ async function getReactions(isLike?: boolean, type?: "posts" | "comments", curso
   });
 }
 
+async function follow(userId: string) {
+  return await api.post(usersEndpoints.follow(userId));
+}
+
+async function unfollow(userId: string) {
+  return await api.delete(usersEndpoints.follow(userId));
+}
+
 async function init(_api: AxiosInstance) {
   api = _api;
 }
@@ -71,5 +80,7 @@ export {
   addCommentToFavorites,
   remCommentFromFavorites,
   getFavorites,
-  getReactions
+  getReactions,
+  follow,
+  unfollow
 };
