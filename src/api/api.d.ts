@@ -31,6 +31,7 @@ interface User {
   badges?: number[];
   languages?: string[];
   created_at: number;
+  followed?: true;
 }
 
 interface Post {
