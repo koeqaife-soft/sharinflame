@@ -31,6 +31,7 @@
           infinite-load-type="bottom"
           :key="scrollKey"
           class="posts-infinite-scroll"
+          ref="virtualScroll"
         >
           <template v-slot:default="{ item }">
             <comment-component :comment="item" class="q-mb-sm" />
@@ -79,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, onMounted, onUnmounted, ref, watch } from "vue";
+import { defineAsyncComponent, DefineComponent, onMounted, onUnmounted, ref, watch } from "vue";
 import PostComponent from "../posts/PostComponent.vue";
 import CloseableContent from "../misc/CloseableContent.vue";
 import CardDialogLabel from "../misc/CardDialogLabel.vue";
@@ -107,6 +108,8 @@ const nextItems = ref<CommentWithUser[]>([]);
 
 const headerVisible = ref(true);
 const postComponentRef = ref<HTMLElement | null>(null);
+
+const virtualScroll = ref<DefineComponent | null>(null);
 
 let hasMore = true;
 let cursor: string | undefined;
@@ -199,6 +202,7 @@ async function sendComment() {
     }
   } finally {
     sending.value = false;
+    virtualScroll.value?.updateShowedItems(1);
   }
 }
 

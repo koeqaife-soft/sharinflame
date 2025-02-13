@@ -193,7 +193,7 @@ const getItemKey = (item: T) => {
   return item[props.itemKey];
 };
 
-function updateShowedItems() {
+function updateShowedItems(addedOnTop?: number) {
   if (showedItemsTickLock) return;
   showedItemsTickLock = true;
   nextTick(() => {
@@ -212,6 +212,10 @@ function updateShowedItems() {
       generatedCumulativeHeights = generateCumulativeHeights();
 
       showedItems.value = { ...props.items };
+
+      if (addedOnTop && addedOnTop > 0) {
+        visibleIndexes.value[1] = (visibleIndexes.value[1] || 0) + addedOnTop;
+      }
     } finally {
       showedItemsTickLock = false;
       showLoading.value = false;
