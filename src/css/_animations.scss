@@ -76,19 +76,19 @@
 
 @keyframes fillActivate {
   from {
-    font-variation-settings: "FILL" 0, "GRAD" var(--grad);
+    font-variation-settings: "FILL" 0, "GRAD" var(--grad), "opsz" var(--opsz, 24);
   }
   to {
-    font-variation-settings: "FILL" 1, "GRAD" var(--grad);
+    font-variation-settings: "FILL" 1, "GRAD" var(--grad), "opsz" var(--opsz, 24);
   }
 }
 
 @keyframes fillDeactivate {
   from {
-    font-variation-settings: "FILL" 1, "GRAD" var(--grad);
+    font-variation-settings: "FILL" 1, "GRAD" var(--grad), "opsz" var(--opsz, 24);
   }
   to {
-    font-variation-settings: "FILL" 0, "GRAD" var(--grad);
+    font-variation-settings: "FILL" 0, "GRAD" var(--grad), "opsz" var(--opsz, 24);
   }
 }
 
