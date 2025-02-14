@@ -42,6 +42,7 @@
               <main-view type="favorites" v-if="selected == 'favorites'" />
               <main-view type="liked" v-else-if="selected == 'liked'" />
               <main-view type="disliked" v-else-if="selected == 'disliked'" />
+              <following-view v-else-if="selected == 'following'" />
             </keep-alive>
           </div>
         </transition>
@@ -57,7 +58,8 @@ defineEmits([...useDialogPluginComponent.emits]);
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
 const MainView = defineAsyncComponent(() => import("./my-activity/MainView.vue"));
-const views = ["favorites", "liked", "disliked"] as const;
+const FollowingView = defineAsyncComponent(() => import("./my-activity/FollowingView.vue"));
+const views = ["favorites", "liked", "disliked", "following"] as const;
 
 const screenSize = ref(window.innerWidth);
 const isSmallScreen = computed(() => screenSize.value < 750);
@@ -80,6 +82,11 @@ const items = [
     labelKey: "disliked",
     key: "disliked",
     icon: "sym_r_thumb_down"
+  },
+  {
+    labelKey: "following",
+    key: "following",
+    icon: "sym_r_group"
   }
 ] as const;
 
