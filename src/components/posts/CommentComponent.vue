@@ -9,7 +9,7 @@
         <div class="content wrap-text" v-html="formatStringForHtml(commentRef.content)" />
       </div>
     </q-card-section>
-    <q-card-actions class="actions">
+    <q-card-actions class="actions" :class="{ 'can-animate': canAnimate }">
       <div class="action-container">
         <q-btn
           unelevated
@@ -52,6 +52,12 @@ const props = defineProps<{
   comment: CommentWithUser;
 }>();
 
+const canAnimate = ref(false);
+
 const commentRef = ref(props.comment);
-const { like, dislike, favoriteButton } = useReaction(commentRef, true);
+const { like, dislike, favoriteButton } = useReaction(commentRef, true, allowAnimate);
+
+function allowAnimate() {
+  canAnimate.value = true;
+}
 </script>

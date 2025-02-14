@@ -14,7 +14,7 @@
         {{ tagsInfo[tag]?.name || tag }}
       </q-chip>
     </q-card-section>
-    <q-card-actions class="actions" v-if="!postRef.is_system">
+    <q-card-actions class="actions" :class="{ 'can-animate': canAnimate }" v-if="!postRef.is_system">
       <div class="action-container">
         <q-btn
           unelevated
@@ -103,12 +103,18 @@ const props = defineProps<{
 
 const postRef = ref<PostWithSystem>(props.post);
 
+const canAnimate = ref(false);
+
 let like = () => {};
 let dislike = () => {};
 let favoriteButton = () => {};
 
 if (!postRef.value.is_system) {
-  ({ like, dislike, favoriteButton } = useReaction(postRef as unknown as Ref<Post>, true));
+  ({ like, dislike, favoriteButton } = useReaction(postRef as unknown as Ref<Post>, true, allowAnimate));
+}
+
+function allowAnimate() {
+  canAnimate.value = true;
 }
 
 const tagsInfo = computed<Record<string, { name: string; icon: string }>>(() => ({

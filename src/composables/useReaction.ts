@@ -20,7 +20,7 @@ export interface ReactionItem {
   is_like?: boolean | undefined;
 }
 
-export function useReaction(itemRef: Ref<ReactionItem>, isComment = false) {
+export function useReaction(itemRef: Ref<ReactionItem>, isComment = false, beforeAction: () => void = () => {}) {
   const quasar = useQuasar();
   const { t } = useI18n();
 
@@ -96,10 +96,12 @@ export function useReaction(itemRef: Ref<ReactionItem>, isComment = false) {
   }
 
   function like() {
+    beforeAction();
     handleReaction(true);
   }
 
   function dislike() {
+    beforeAction();
     handleReaction(false);
   }
 
@@ -132,6 +134,7 @@ export function useReaction(itemRef: Ref<ReactionItem>, isComment = false) {
   }
 
   async function favoriteButton() {
+    beforeAction();
     if (debounceTimeoutFav !== null) clearTimeout(debounceTimeoutFav);
 
     const changeTo = !itemRef.value.is_fav;
