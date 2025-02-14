@@ -123,3 +123,9 @@ type ListsResponse = ApiResponse<
     | { posts?: undefined; comments?: undefined }
   )
 >;
+type FollowingResponse = ApiResponse<{
+  errors?: [followed_to: string, error_msg: string][];
+  next_cursor: string;
+  has_more: boolean;
+  following: User[];
+}>;

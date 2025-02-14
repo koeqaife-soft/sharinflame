@@ -7,7 +7,8 @@ export const usersEndpoints = {
   get_profile: (id: string) => `/users/${id}`,
   favorites: "/users/me/favorites",
   reactions: "/users/me/reactions",
-  follow: (id: string) => `/users/me/following/${id}`
+  follow: (id: string) => `/users/me/following/${id}`,
+  following: "/users/me/following"
 };
 
 async function getProfile(user_id?: string) {
@@ -59,6 +60,15 @@ async function getReactions(isLike?: boolean, type?: "posts" | "comments", curso
   });
 }
 
+async function getFollowing(cursor?: string) {
+  return await api.get<FollowingResponse>(usersEndpoints.following, {
+    params: {
+      ...(cursor && { cursor }),
+      preload: "true"
+    }
+  });
+}
+
 async function follow(userId: string) {
   return await api.post(usersEndpoints.follow(userId));
 }
@@ -81,6 +91,7 @@ export {
   remCommentFromFavorites,
   getFavorites,
   getReactions,
+  getFollowing,
   follow,
   unfollow
 };
