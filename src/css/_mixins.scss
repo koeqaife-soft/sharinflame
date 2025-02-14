@@ -42,16 +42,14 @@
   $opsz-size: max(20, min($size, 48));
   font-size: $size * 1px;
 
+  --opsz: #{$opsz-size};
   $settings: '"opsz" #{$opsz-size}';
 
   @each $key, $value in $additional-settings {
     $settings: #{$settings}, '"#{$key}"' #{$value};
   }
 
-  body.body--light & {
-    font-variation-settings: #{$settings}, "GRAD" var(--grad);
-  }
-
+  body.body--light &,
   body.body--dark & {
     font-variation-settings: #{$settings}, "GRAD" var(--grad);
   }
