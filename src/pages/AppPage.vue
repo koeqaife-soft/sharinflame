@@ -85,7 +85,7 @@ const updateScreenSize = () => {
 
 onMounted(() => {
   updateScreenSize();
-  window.addEventListener("resize", updateScreenSize);
+  window.addEventListener("resize", updateScreenSize, { passive: true });
 });
 
 onBeforeUnmount(() => {
