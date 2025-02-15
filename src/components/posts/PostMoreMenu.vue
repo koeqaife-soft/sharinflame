@@ -3,6 +3,7 @@
     <template v-for="(option, index) in options" :key="index">
       <q-item
         v-if="option.visible && option.type === 'item'"
+        :disable="option.disable"
         clickable
         v-close-popup
         @click="emit('action', option.key!, option.data)"
@@ -33,6 +34,13 @@ const props = defineProps<{
   post: Post;
 }>();
 const options = computed(() => [
+  {
+    key: "edit",
+    icon: "sym_r_edit",
+    visible: props.post.user_id == profileStore.profile?.user_id,
+    disable: !(Date.now() / 1000 - props.post.created_at < 86400),
+    type: "item"
+  },
   {
     key: "delete",
     icon: "sym_r_delete_forever",
