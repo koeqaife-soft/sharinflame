@@ -2,7 +2,7 @@
   <q-scroll-area class="scroll-area full-height fix-scroll-area" :visible="false">
     <div class="container">
       <template v-for="(section, index) in sections">
-        <div v-if="section.visible" :key="index" :class="section.class" :style="animationDelay(index)">
+        <div v-if="section.visible" :key="index" :class="section.class" :style="animationDelay(section.key)">
           <div class="header">
             <q-icon :name="section.icon" :style="section.iconStyle" />
             <div>{{ $t(section.titleKey) }}</div>
@@ -109,9 +109,10 @@ function getDescriptionKey(badge: number): string {
   return `badges.${badgesKeys[badge as BadgesKeys]}.description`;
 }
 
-function animationDelay(index: number): string {
+function animationDelay(key: string): string {
   const visibleSections = sections.value.filter((section) => section.visible);
-  const delay = Math.max(visibleSections.findIndex((_, i) => i === index) * 75, 0);
+  const delay = Math.max(visibleSections.findIndex((section) => section.key === key) * 75, 0);
+
   return `--anim-delay: ${delay}ms`;
 }
 
