@@ -52,7 +52,7 @@ import MySwitch from "../misc/MySwitch.vue";
 import UserAvatar from "./UserAvatar.vue";
 
 const UserDialog = defineAsyncComponent(() => import("../dialogs/UserDialog.vue"));
-const CreatePost = defineAsyncComponent(() => import("../dialogs/CreatePost.vue"));
+const PostEditor = defineAsyncComponent(() => import("../dialogs/PostEditor.vue"));
 const MyActivity = defineAsyncComponent(() => import("../dialogs/MyActivity.vue"));
 
 const quasar = useQuasar();
@@ -104,7 +104,7 @@ function openMyActivity() {
 
 function createPost() {
   quasar.dialog({
-    component: CreatePost,
+    component: PostEditor,
     componentProps: {}
   });
   emit("close-menu");
