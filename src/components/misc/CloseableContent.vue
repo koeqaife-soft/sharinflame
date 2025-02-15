@@ -3,7 +3,7 @@
     class="dialog-content"
     ref="dialogContent"
     @touchstart.passive="onTouchStart"
-    @touchmove="onTouchMove"
+    @touchmove.passive="onTouchMove"
     @touchend.passive="onTouchEnd"
   >
     <slot />
@@ -53,8 +53,6 @@ const onTouchMove = (event: TouchEvent) => {
     if (dialogContent.value) {
       dialogContent.value.style.transform = `translateY(${deltaX}px)`;
     }
-
-    event.preventDefault();
   }
 };
 
