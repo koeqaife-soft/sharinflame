@@ -8,7 +8,11 @@
     maximized
   >
     <div class="dialog-content">
-      <card-dialog-label class="q-mb-sm" icon="sym_r_article" :label="$t('create_post')">
+      <card-dialog-label
+        class="q-mb-sm"
+        :icon="editMode ? 'sym_r_edit' : 'sym_r_article'"
+        :label="editMode ? $t('edit_post') : $t('create_post')"
+      >
         <q-btn flat round icon="sym_r_close" size="xs" @click="dialogRef!.hide()" />
       </card-dialog-label>
       <q-separator class="separator q-mb-sm" />
@@ -72,10 +76,10 @@
       <div class="send-container">
         <q-btn
           class="default-button"
-          icon-right="sym_r_add"
-          :label="$t('create')"
+          :icon-right="editMode ? 'sym_r_edit' : 'sym_r_add'"
+          :label="editMode ? $t('apply') : $t('create')"
           no-caps
-          @click="createPostButton"
+          @click="buttonClick"
           :disable="text.length == 0"
           :loading="loading"
         />
@@ -85,12 +89,16 @@
 </template>
 <script setup lang="ts">
 import { useDialogPluginComponent, useQuasar } from "quasar";
-import { defineAsyncComponent, ref } from "vue";
+import { defineAsyncComponent, onMounted, Ref, ref } from "vue";
 import CardDialogLabel from "../misc/CardDialogLabel.vue";
 import ToggleValue from "./create-post/ToggleValue.vue";
-import { createPost } from "src/api/posts";
+import { createPost, editPost } from "src/api/posts";
 import { useProfileStore } from "src/stores/profile-store";
 import { useI18n } from "vue-i18n";
+
+const props = defineProps<{
+  originalPost?: Post;
+}>();
 
 defineEmits([...useDialogPluginComponent.emits]);
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
@@ -112,11 +120,72 @@ const MAX_TAGS = 6;
 
 const loading = ref(false);
 
+const editMode = ref(false);
+
 function generateTags() {
-  const generatedTags = tags.value;
-  if (is_nsfw.value) generatedTags.push("is-nsfw");
-  if (ai_generated.value) generatedTags.push("ai-generated");
+  const generatedTags = [...tags.value];
+  if (is_nsfw.value && !generatedTags.includes("is-nsfw")) generatedTags.push("is-nsfw");
+  if (ai_generated.value && !generatedTags.includes("ai-generated")) generatedTags.push("ai-generated");
   return generatedTags.length > 0 ? generatedTags : undefined;
+}
+
+function buttonClick() {
+  if (editMode.value) editPostButton();
+  else createPostButton();
+}
+
+function arraysEqualUnordered<T>(arr1: T[], arr2: T[]) {
+  if (arr1.length !== arr2.length) return false;
+  return arr1
+    .slice()
+    .sort()
+    .every((val, index) => val === arr2.slice().sort()[index]);
+}
+
+async function editPostButton() {
+  if (!props.originalPost) return;
+  loading.value = true;
+  const tags = generateTags();
+  const content = text.value;
+  const data = {
+    ...(!arraysEqualUnordered(tags!, props.originalPost.tags!) && { tags }),
+    ...(content != props.originalPost.content && { content })
+  };
+  try {
+    if (Object.keys(data).length === 0) {
+      quasar.notify({
+        type: "error-notification",
+        message: t("post_edited.not_changed"),
+        progress: true
+      });
+      return;
+    }
+
+    await editPost(props.originalPost.post_id, data);
+
+    // I used ref because I can't change props.originalPost directly.
+    const ogPostRef = ref(props.originalPost);
+    ogPostRef.value.content = content;
+    ogPostRef.value.tags = tags!;
+
+    quasar.notify({
+      type: "default-notification",
+      message: t("post_edited.msg"),
+      caption: t("post_edited.caption"),
+      progress: true,
+      icon: "sym_r_done_outline"
+    });
+
+    dialogRef!.value?.hide();
+  } catch {
+    quasar.notify({
+      type: "error-notification",
+      message: t("post_edited.failed"),
+      progress: true
+    });
+  } finally {
+    loading.value = false;
+  }
 }
 
 async function createPostButton() {
@@ -160,4 +229,25 @@ const addTag = () => {
 const removeTag = (index: number) => {
   tags.value.splice(index, 1);
 };
+
+onMounted(() => {
+  if (props.originalPost) {
+    editMode.value = true;
+
+    tags.value = [...props.originalPost.tags];
+
+    const checkAndRemoveTag = (tag: string, ref: Ref<boolean>) => {
+      const index = tags.value.indexOf(tag);
+      if (index !== -1) {
+        ref.value = true;
+        tags.value.splice(index, 1);
+      }
+    };
+
+    checkAndRemoveTag("is-nsfw", is_nsfw);
+    checkAndRemoveTag("ai-generated", ai_generated);
+
+    text.value = props.originalPost.content;
+  }
+});
 </script>
