@@ -80,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, DefineComponent, onMounted, onUnmounted, ref, watch } from "vue";
+import { defineAsyncComponent, type DefineComponent, onMounted, onUnmounted, ref, watch } from "vue";
 import PostComponent from "../posts/PostComponent.vue";
 import CloseableContent from "../misc/CloseableContent.vue";
 import CardDialogLabel from "../misc/CardDialogLabel.vue";
@@ -156,7 +156,7 @@ async function loadComments(index: number, done: (stop?: boolean) => void) {
               ({
                 ...comment,
                 user: usersMap[comment.user_id]
-              } as CommentWithUser)
+              }) as CommentWithUser
           )
         );
       }
@@ -210,12 +210,12 @@ function handleDeletePost() {
   dialogRef.value?.hide();
 }
 
-onMounted(async () => {
+onMounted(() => {
   mainStore.openedDialogs.post();
   mainStore.openedDialogs.post = dialogRef.value!.hide;
 });
 
-onUnmounted(async () => {
+onUnmounted(() => {
   items.value = [];
   nextItems.value = [];
 });

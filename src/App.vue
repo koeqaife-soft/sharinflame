@@ -82,7 +82,7 @@ defineOptions({
 
 onMounted(() => {
   onChange();
-  pingInterval();
+  void pingInterval();
 });
 
 onBeforeMount(() => {

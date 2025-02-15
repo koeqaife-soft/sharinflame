@@ -1,4 +1,4 @@
-import { Ref } from "vue";
+import type { Ref } from "vue";
 import { useQuasar } from "quasar";
 import { useI18n } from "vue-i18n";
 import { remReaction, setReaction } from "src/api/posts";
@@ -50,18 +50,21 @@ export function useReaction(itemRef: Ref<ReactionItem>, isComment = false, befor
     blockLastReaction = true;
     updateReactionCounters(isLike);
 
-    debounce(() => performReaction(isLike), 500);
+    debounce(() => void performReaction(isLike), 500);
   }
 
   function updateReactionCounters(isLike: boolean) {
     if (itemRef.value.is_like === isLike) {
       itemRef.value.is_like = undefined;
-      isLike ? itemRef.value.likes_count-- : itemRef.value.dislikes_count--;
+      if (isLike) itemRef.value.likes_count--;
+      else itemRef.value.dislikes_count--;
     } else {
       if (itemRef.value.is_like !== undefined) {
-        isLike ? itemRef.value.dislikes_count-- : itemRef.value.likes_count--;
+        if (isLike) itemRef.value.dislikes_count--;
+        else itemRef.value.likes_count--;
       }
-      isLike ? itemRef.value.likes_count++ : itemRef.value.dislikes_count++;
+      if (isLike) itemRef.value.likes_count++;
+      else itemRef.value.dislikes_count++;
       itemRef.value.is_like = isLike;
     }
   }
@@ -133,12 +136,12 @@ export function useReaction(itemRef: Ref<ReactionItem>, isComment = false, befor
     }
   }
 
-  async function favoriteButton() {
+  function favoriteButton() {
     beforeAction();
     if (debounceTimeoutFav !== null) clearTimeout(debounceTimeoutFav);
 
     const changeTo = !itemRef.value.is_fav;
-    debounceTimeoutFav = setTimeout(() => performFavorite(changeTo), 500);
+    debounceTimeoutFav = setTimeout(() => void performFavorite(changeTo), 500);
 
     itemRef.value.is_fav = changeTo;
   }

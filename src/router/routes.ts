@@ -1,4 +1,4 @@
-import { RouteRecordRaw } from "vue-router";
+import type { RouteRecordRaw } from "vue-router";
 import { refreshToken } from "src/api/auth";
 
 const routes: RouteRecordRaw[] = [

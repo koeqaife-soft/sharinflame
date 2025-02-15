@@ -26,9 +26,9 @@
   </q-scroll-area>
 </template>
 <script setup lang="ts">
-import { ref, watch, defineAsyncComponent, DefineComponent } from "vue";
+import { ref, watch, defineAsyncComponent, type DefineComponent } from "vue";
 import { usePostsStore } from "src/stores/posts-store";
-import { KeyOfGetPostsTypes, viewPosts } from "src/api/posts";
+import { type KeyOfGetPostsTypes, viewPosts } from "src/api/posts";
 import { isAxiosError } from "axios";
 import { useI18n } from "vue-i18n";
 import MyVirtualScroll from "src/components/misc/MyVirtualScroll.vue";
@@ -104,7 +104,7 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
       const postIds = posts.map((post) => post.post_id);
       toView.push(...postIds);
       if (toView.length >= 20) {
-        viewInChunks(toView, true);
+        void viewInChunks(toView, true);
       }
     }
     done();

@@ -64,7 +64,9 @@ export default defineConfig((ctx) => {
       // polyfillModulePreload: true,
       // distDir
 
-      // extendViteConf (viteConf) {},
+      // extendViteConf(viteConf) {
+      //   viteConf.server.allowedHosts = ["koeqaife.ddns.net"];
+      // },
       // viteVuePluginOptions: {},
 
       vitePlugins: [
@@ -82,7 +84,8 @@ export default defineConfig((ctx) => {
               tsconfigPath: "tsconfig.vue-tsc.json"
             },
             eslint: {
-              lintCommand: 'eslint "./**/*.{js,ts,mjs,cjs,vue}"'
+              lintCommand: 'eslint -c ./eslint.config.js "./src*/**/*.{ts,js,mjs,cjs,vue}"',
+              useFlatConfig: true
             }
           },
           { server: false }

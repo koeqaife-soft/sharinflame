@@ -91,7 +91,7 @@
 </template>
 <script setup lang="ts">
 import { useDialogPluginComponent, useQuasar } from "quasar";
-import { defineAsyncComponent, onMounted, Ref, ref } from "vue";
+import { defineAsyncComponent, onMounted, type Ref, ref } from "vue";
 import ToggleValue from "./create-post/ToggleValue.vue";
 import { createPost, editPost } from "src/api/posts";
 import { useProfileStore } from "src/stores/profile-store";
@@ -131,8 +131,8 @@ function generateTags() {
 }
 
 function buttonClick() {
-  if (editMode.value) editPostButton();
-  else createPostButton();
+  if (editMode.value) void editPostButton();
+  else void createPostButton();
 }
 
 function arraysEqualUnordered<T>(arr1: T[], arr2: T[]) {
@@ -149,7 +149,7 @@ async function editPostButton() {
   const tags = generateTags();
   const content = text.value;
   const data = {
-    ...(!arraysEqualUnordered(tags!, props.originalPost.tags!) && { tags }),
+    ...(!arraysEqualUnordered(tags!, props.originalPost.tags) && { tags }),
     ...(content != props.originalPost.content && { content })
   };
   try {
@@ -177,7 +177,7 @@ async function editPostButton() {
       icon: "sym_r_done_outline"
     });
 
-    dialogRef!.value?.hide();
+    dialogRef.value?.hide();
   } catch {
     quasar.notify({
       type: "error-notification",
@@ -193,7 +193,7 @@ async function createPostButton() {
   loading.value = true;
   const tags = generateTags();
   const r = await createPost({
-    content: text.value!,
+    content: text.value,
     tags: tags!
   });
   loading.value = false;
@@ -216,7 +216,7 @@ async function createPostButton() {
       icon: "sym_r_done_outline"
     });
 
-    dialogRef!.value?.hide();
+    dialogRef.value?.hide();
   }
 }
 

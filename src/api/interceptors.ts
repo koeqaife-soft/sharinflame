@@ -1,5 +1,6 @@
-import { AxiosError, AxiosResponse, isAxiosError, AxiosInstance } from "axios";
-import { useMainStore } from "src/stores/main-store";
+import { isAxiosError } from "axios";
+import type { AxiosError, AxiosResponse, AxiosInstance } from "axios";
+import type { useMainStore } from "src/stores/main-store";
 import { watch } from "vue";
 import router from "src/router";
 import { refresh, getAccessToken, noAuthEndpoints, refreshToken, clientLogout } from "src/api/auth";
@@ -51,7 +52,7 @@ const connectionInterceptor = () => {
                       mainStore.setIsOffline(true);
                     } else {
                       watching.stop();
-                      reject(e);
+                      reject(e as Error);
                     }
                   }
                 }
@@ -119,18 +120,18 @@ const authInterceptor = () => {
             } else throw new Error("Unable to refresh token");
           } catch (refreshError) {
             invalidAuth();
-            return Promise.reject(refreshError);
+            return Promise.reject(refreshError as Error);
           }
         }
 
         return new Promise((resolve, reject) => {
-          addSubscriber(async (success: boolean) => {
+          addSubscriber((success: boolean) => {
             if (success) {
               token = getAccessToken();
               config.headers["Authorization"] = token;
               resolve(config);
             } else {
-              reject("Unable to refresh token");
+              reject(new Error("Unable to refresh token"));
             }
           });
         });
@@ -142,7 +143,7 @@ const authInterceptor = () => {
       config.headers["Authorization"] = token;
       return config;
     },
-    (error) => Promise.reject(error)
+    (error) => Promise.reject(error as Error)
   );
 
   api.interceptors.response.use(
@@ -176,14 +177,14 @@ const authInterceptor = () => {
             } else throw new Error("Unable to refresh token");
           } catch (refreshError) {
             invalidAuth();
-            return Promise.reject(refreshError);
+            return Promise.reject(refreshError as Error);
           }
         }
 
         return new Promise((resolve, reject) => {
           addSubscriber((success: boolean) => {
             if (success) resolve(api(originalRequest));
-            else reject("Unable to refresh token");
+            else reject(new Error("Unable to refresh token"));
           });
         });
       } else if (response && response.status === 401 && router.currentRoute.value.path != "/login") {
@@ -195,7 +196,7 @@ const authInterceptor = () => {
   );
 };
 
-async function init(_api: AxiosInstance, _mainStore: mainStoreType) {
+function init(_api: AxiosInstance, _mainStore: mainStoreType) {
   api = _api;
   mainStore = _mainStore;
   authInterceptor();

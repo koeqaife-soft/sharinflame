@@ -1,6 +1,6 @@
-import { AxiosError, isAxiosError } from "axios";
+import { type AxiosError, isAxiosError } from "axios";
 import { defineStore } from "pinia";
-import { getPostsBatch, getPosts, KeyOfGetPostsTypes } from "src/api/posts";
+import { getPostsBatch, getPosts, type KeyOfGetPostsTypes } from "src/api/posts";
 
 export const usePostsStore = defineStore("posts", {
   state: () => ({

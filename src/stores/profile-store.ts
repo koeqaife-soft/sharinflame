@@ -61,7 +61,7 @@ export const useProfileStore = defineStore("profile", {
       if (!profile.data) {
         await getFunction();
       } else if (currentTime - profile.lastUpdate >= this.ttl) {
-        getFunction();
+        void getFunction();
       }
 
       return profile.data;

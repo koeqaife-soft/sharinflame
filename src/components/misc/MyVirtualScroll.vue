@@ -33,12 +33,12 @@
 <script setup lang="ts" generic="T">
 // NOTE: I didn't add infinite load type "top" because there's many problems with it
 import {
-  ComponentPublicInstance,
+  type ComponentPublicInstance,
   computed,
   nextTick,
   onBeforeUnmount,
   onMounted,
-  Ref,
+  type Ref,
   ref,
   watch,
   onBeforeUpdate
@@ -120,7 +120,7 @@ onBeforeUpdate(() => {
 watch(
   divs,
   () => {
-    nextTick(() => updateObservedElements(divs.value));
+    void nextTick(() => updateObservedElements(divs.value));
   },
   { flush: "post" }
 );
@@ -154,8 +154,8 @@ function updateObservedElements(elements: (Element | ComponentPublicInstance)[])
 function updateSvgAnimations(isRetry?: boolean) {
   if (renderLoadingSlot.value === true) {
     if (loadingRef.value === null) {
-      isRetry !== true &&
-        nextTick(() => {
+      if (isRetry !== true)
+        void nextTick(() => {
           updateSvgAnimations(true);
         });
       return;
@@ -196,7 +196,7 @@ const getItemKey = (item: T) => {
 function updateShowedItems(addedOnTop?: number) {
   if (showedItemsTickLock) return;
   showedItemsTickLock = true;
-  nextTick(() => {
+  void nextTick(() => {
     try {
       const newHeights: (number | undefined)[] = [];
 
@@ -348,8 +348,8 @@ function updateVisibleItems(fullUpdate = true, noDebounce = false) {
     });
   if (!noDebounce && props.virtualDebounce) {
     if (updateVisibleDebounce) clearTimeout(updateVisibleDebounce);
-    updateVisibleDebounce = setTimeout(func, props.virtualDebounce);
-  } else func();
+    updateVisibleDebounce = setTimeout(() => void func, props.virtualDebounce);
+  } else void func();
 }
 
 let updateDebounce: NodeJS.Timeout | null = null;
@@ -412,7 +412,7 @@ const isVisible = (entry: IntersectionObserverEntry) => {
 };
 
 const checkVisibility = (entry: IntersectionObserverEntry[]) => {
-  let lastValue = isContentVisible.value;
+  const lastValue = isContentVisible.value;
   if (scrollContainer.value?.checkVisibility) {
     isContentVisible.value = scrollContainer.value?.checkVisibility() || false;
   } else if (entry.length === 0) {
@@ -423,7 +423,7 @@ const checkVisibility = (entry: IntersectionObserverEntry[]) => {
   if (lastValue != isContentVisible.value) {
     recalculatePositionVariables();
     updateVisibleItems(true, true);
-    nextTick(() => updateObservedElements(divs.value));
+    void nextTick(() => updateObservedElements(divs.value));
   }
 };
 
@@ -435,7 +435,7 @@ function recalculatePositionVariables() {
 let resizeFrame: number;
 
 onMounted(() => {
-  nextTick(() => {
+  void nextTick(() => {
     containerHeight = window.innerHeight;
     updateVisibleItems();
     checkLoading();

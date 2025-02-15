@@ -1,4 +1,4 @@
-import { AxiosInstance } from "axios";
+import type { AxiosInstance } from "axios";
 
 let api: AxiosInstance;
 
@@ -77,7 +77,7 @@ async function unfollow(userId: string) {
   return await api.delete(usersEndpoints.follow(userId));
 }
 
-async function init(_api: AxiosInstance) {
+function init(_api: AxiosInstance) {
   api = _api;
 }
 

@@ -20,7 +20,7 @@
           item-key="post_id"
           infinite-load-type="bottom"
           :margins="8"
-          @load-more="(i, done) => onLoadData(0, 'posts', done)"
+          @load-more="(i: number, done: DoneType) => onLoadData(0, 'posts', done)"
           ref="virtualScroll"
         >
           <template v-slot:default="{ item }">
@@ -43,7 +43,7 @@
           item-key="comment_id"
           infinite-load-type="bottom"
           :margins="8"
-          @load-more="(i, done) => onLoadData(1, 'comments', done)"
+          @load-more="(i: number, done: DoneType) => onLoadData(1, 'comments', done)"
         >
           <template v-slot:default="{ item }">
             <comment-component :comment="item" class="q-mb-sm" />
@@ -60,12 +60,14 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, DefineComponent, ref } from "vue";
+import { defineAsyncComponent, type DefineComponent, ref } from "vue";
 import MyVirtualScroll from "src/components/misc/MyVirtualScroll.vue";
 import { getFavorites, getReactions } from "src/api/users";
 
 const PostComponent = defineAsyncComponent(() => import("../../posts/PostComponent.vue"));
 const CommentComponent = defineAsyncComponent(() => import("../../posts/CommentComponent.vue"));
+
+type DoneType = (stop?: boolean) => void;
 
 const props = defineProps<{
   type: "favorites" | "liked" | "disliked";
@@ -82,7 +84,7 @@ const icons = {
 const selected = ref<Category>("posts");
 
 const items = ref<[Post[], CommentWithUser[]]>([[], []]);
-let cursor: [string | undefined, string | undefined] = [undefined, undefined];
+const cursor: [string | undefined, string | undefined] = [undefined, undefined];
 
 const virtualScroll = ref<DefineComponent | null>(null);
 
@@ -90,7 +92,7 @@ function select(value: Category) {
   selected.value = value;
 }
 
-async function onLoadData(index: number, category: Category, done: (stop?: boolean) => void) {
+async function onLoadData(index: number, category: Category, done: DoneType) {
   try {
     let r: Awaited<ReturnType<typeof getFavorites | typeof getReactions>>;
     if (props.type == "favorites") {
@@ -109,7 +111,7 @@ async function onLoadData(index: number, category: Category, done: (stop?: boole
     } else {
       done(true);
     }
-  } catch (e) {
+  } catch {
     done(true);
   }
 }

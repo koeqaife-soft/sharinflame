@@ -79,7 +79,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent, Ref, ref } from "vue";
+import { computed, defineAsyncComponent, type Ref, ref } from "vue";
 import OpenUserDialog from "../dialogs/OpenUserDialog.vue";
 import { deletePost } from "src/api/posts";
 import { formatNumber, formatStringForHtml } from "src/utils/format";
@@ -171,7 +171,7 @@ async function action(type: string, data: unknown) {
       });
       break;
     case "copy_id":
-      navigator.clipboard.writeText(data as string);
+      void navigator.clipboard.writeText(data as string);
       break;
   }
 }

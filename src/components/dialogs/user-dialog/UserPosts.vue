@@ -42,7 +42,7 @@
 </template>
 <script setup lang="ts">
 import { getUserPosts } from "src/api/posts";
-import { defineAsyncComponent, DefineComponent, ref } from "vue";
+import { defineAsyncComponent, type DefineComponent, ref } from "vue";
 import MyVirtualScroll from "src/components/misc/MyVirtualScroll.vue";
 
 const PostComponent = defineAsyncComponent(() => import("../../posts/PostComponent.vue"));
@@ -94,7 +94,7 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
             ({
               ...post,
               user: props.user
-            } as PostWithSystem)
+            }) as PostWithSystem
         );
         nextItems.value.push(...loadedPosts);
       }

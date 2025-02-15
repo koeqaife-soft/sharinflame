@@ -1,4 +1,4 @@
-import { AxiosInstance } from "axios";
+import type { AxiosInstance } from "axios";
 
 let api: AxiosInstance;
 
@@ -100,7 +100,7 @@ async function createComment(post_id: string, content: string) {
 
 async function getComments(post_id: string, cursor?: string) {
   return await api.get<GetCommentsResponse>(postsEndpoints.comments(post_id), {
-    params: !!cursor ? { cursor } : undefined
+    params: cursor ? { cursor } : undefined
   });
 }
 
@@ -117,7 +117,7 @@ async function createPost(values: CreatePostValues) {
   return await api.post<ApiResponse<Post>>(postsEndpoints.create_post, values);
 }
 
-async function init(_api: AxiosInstance) {
+function init(_api: AxiosInstance) {
   api = _api;
 }
 

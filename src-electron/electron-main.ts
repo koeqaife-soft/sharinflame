@@ -42,9 +42,9 @@ function createWindow() {
   });
 
   if (process.env.DEV) {
-    mainWindow.loadURL(process.env.APP_URL);
+    void mainWindow.loadURL(process.env.APP_URL);
   } else {
-    mainWindow.loadFile("index.html");
+    void mainWindow.loadFile("index.html");
   }
 
   if (process.env.DEBUGGING) {
@@ -60,7 +60,7 @@ function createWindow() {
   });
 }
 
-app.whenReady().then(() => {
+void app.whenReady().then(() => {
   createWindow();
   createTray();
 });
@@ -79,7 +79,7 @@ app.on("activate", () => {
 
 app.on("web-contents-created", (_, contents) => {
   contents.setWindowOpenHandler(({ url }) => {
-    shell.openExternal(url);
+    void shell.openExternal(url);
     return { action: "deny" };
   });
 });
@@ -118,7 +118,8 @@ function createTray() {
 
   tray.on("click", () => {
     if (mainWindow) {
-      mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
+      if (mainWindow.isVisible()) mainWindow.hide();
+      else mainWindow.show();
     }
   });
 }

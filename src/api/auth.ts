@@ -1,4 +1,4 @@
-import { AxiosInstance } from "axios";
+import type { AxiosInstance } from "axios";
 import router from "src/router";
 
 let api: AxiosInstance;
@@ -57,7 +57,7 @@ async function refresh() {
   return r;
 }
 
-async function init(_api: AxiosInstance) {
+function init(_api: AxiosInstance) {
   api = _api;
 }
 
@@ -81,7 +81,7 @@ function refreshToken() {
 
 function clientLogout() {
   clearTokens();
-  router.push({ path: "/login" });
+  void router.push({ path: "/login" });
   window.location.reload();
 }
 

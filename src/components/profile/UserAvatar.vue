@@ -27,6 +27,6 @@ async function loadUser() {
 
 onMounted(() => {
   if (props.user) userRef.value = props.user;
-  else if (props.me) loadUser();
+  else if (props.me) void loadUser();
 });
 </script>

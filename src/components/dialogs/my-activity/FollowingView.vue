@@ -25,7 +25,7 @@
 <script setup lang="ts">
 import { getFollowing } from "src/api/users";
 import MyVirtualScroll from "src/components/misc/MyVirtualScroll.vue";
-import { defineAsyncComponent, DefineComponent, ref } from "vue";
+import { defineAsyncComponent, type DefineComponent, ref } from "vue";
 
 const UserCard = defineAsyncComponent(() => import("../../profile/UserCard.vue"));
 

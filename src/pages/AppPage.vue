@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, defineAsyncComponent } from "vue";
-import { KeyOfGetPostsTypes } from "src/api/posts";
+import type { KeyOfGetPostsTypes } from "src/api/posts";
 import { useI18n } from "vue-i18n";
 import type { ButtonProps } from "src/components/categories/CategoryButton.vue";
 import PostScroll from "src/components/posts/PostScroll.vue";

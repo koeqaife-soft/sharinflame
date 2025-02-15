@@ -32,7 +32,7 @@ export const useMainStore = defineStore("main", {
   actions: {
     setIsOffline(v: boolean) {
       this.isOffline = v;
-      if (!v) this.connectTries == 0;
+      if (!v) this.connectTries = 0;
     },
     setSettings(key: KeyOfSettings, value: unknown) {
       this.settings[key] = value;

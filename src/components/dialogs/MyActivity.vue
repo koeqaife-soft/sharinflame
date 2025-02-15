@@ -59,13 +59,13 @@ const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
 const MainView = defineAsyncComponent(() => import("./my-activity/MainView.vue"));
 const FollowingView = defineAsyncComponent(() => import("./my-activity/FollowingView.vue"));
-const views = ["favorites", "liked", "disliked", "following"] as const;
+type views = ["favorites", "liked", "disliked", "following"];
 
 const screenSize = ref(window.innerWidth);
 const isSmallScreen = computed(() => screenSize.value < 750);
 const current = ref(0);
 
-const selected = ref<(typeof views)[number]>("favorites");
+const selected = ref<views[number]>("favorites");
 
 const items = [
   {
@@ -94,7 +94,7 @@ type ItemKey = (typeof items)[number]["key"];
 
 const updateScreenSize = () => (screenSize.value = window.innerWidth);
 const getItemByKey = (key: ItemKey) => items.find((item) => item.key === key)!;
-function setSelected(value: (typeof views)[number]) {
+function setSelected(value: views[number]) {
   selected.value = value;
   current.value = 1;
 }

@@ -85,7 +85,7 @@ const _login = async () => {
   loading.value = true;
   try {
     const r = await login(email.value, password.value);
-    if (r.data.success) router.push({ path: "/app" });
+    if (r.data.success) void router.push({ path: "/app" });
   } catch (error) {
     if (isAxiosError(error)) {
       const errorData = error.response?.data?.error;
