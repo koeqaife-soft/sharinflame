@@ -44,6 +44,7 @@ export default {
   try_reloading_feed: "Please try reloading the feed",
   reload: "Reload",
   post_options: {
+    edit: "Edit Post",
     delete: "Delete Post",
     copy_id: "Copy Id",
     report: "Report"
@@ -99,6 +100,8 @@ export default {
   tags: "Tags",
   add_tag: "Add tag",
   enter_tag: "Enter Tag",
+  edit_post: "Edit Post",
+  apply: "Apply",
 
   post_created: {
     msg: "Post created",
@@ -108,6 +111,12 @@ export default {
     msg: "Post deleted",
     caption: "Your post has been deleted.",
     failed: "Could not delete the post."
+  },
+  post_edited: {
+    msg: "Post edited",
+    caption: "Your post has been edited",
+    failed: "Failed to edit post",
+    not_changed: "Edit the post!"
   },
 
   reaction_failed: "Failed to put a reaction",
