@@ -89,6 +89,7 @@ import { useReaction } from "src/composables/useReaction";
 
 const PostDialog = defineAsyncComponent(() => import("../dialogs/PostDialog.vue"));
 const MoreMenu = defineAsyncComponent(() => import("./PostMoreMenu.vue"));
+const PostEditor = defineAsyncComponent(() => import("../dialogs/PostEditor.vue"));
 const quasar = useQuasar();
 const { t } = useI18n();
 
@@ -160,6 +161,14 @@ async function action(type: string, data: unknown) {
         throw e;
       }
 
+      break;
+    case "edit":
+      quasar.dialog({
+        component: PostEditor,
+        componentProps: {
+          originalPost: props.post
+        }
+      });
       break;
     case "copy_id":
       navigator.clipboard.writeText(data as string);
