@@ -23,13 +23,18 @@ export const getPostsTypes = {
 export type KeyOfGetPostsTypes = keyof typeof getPostsTypes;
 
 async function getPost(id: string) {
-  const r = await api.get<ResponseWithPost>(postsEndpoints.post(id));
-  return r;
+  return await api.get<ResponseWithPost>(postsEndpoints.post(id));
 }
 
 async function deletePost(id: string) {
-  const r = await api.delete<ApiResponse>(postsEndpoints.post(id));
-  return r;
+  return await api.delete<ApiResponse>(postsEndpoints.post(id));
+}
+
+async function editPost(id: string, { content, tags }: { content?: string | undefined; tags?: string[] | undefined }) {
+  return await api.patch(postsEndpoints.post(id), {
+    ...(content && { content }),
+    ...(tags && { tags })
+  });
 }
 
 async function getPostsBatch(posts: string[]) {
@@ -55,19 +60,16 @@ async function getPostsBatch(posts: string[]) {
 }
 
 async function getPosts(type: KeyOfGetPostsTypes, cursor?: string, hide_viewed?: boolean) {
-  const r = await api.get<ApiResponse<{ posts: string[]; next_cursor: string }>>(getPostsTypes[type], {
+  return await api.get<ApiResponse<{ posts: string[]; next_cursor: string }>>(getPostsTypes[type], {
     params: {
       ...(cursor && { cursor }),
       ...(hide_viewed !== undefined && { hide_viewed })
     }
   });
-  return r;
 }
 
 async function viewPosts(postIds: string[]) {
-  const data = { posts: postIds };
-  const r = await api.post<ApiResponse>(postsEndpoints.view, data);
-  return r;
+  return await api.post<ApiResponse>(postsEndpoints.view, { posts: postIds });
 }
 
 async function setReaction(postId: string, { commentId, isLike }: { commentId?: string | undefined; isLike: boolean }) {
@@ -78,8 +80,7 @@ async function setReaction(postId: string, { commentId, isLike }: { commentId?: 
   } else {
     endpoint = postsEndpoints.post_reactions(postId);
   }
-  const r = await api.post(endpoint, data);
-  return r;
+  return await api.post(endpoint, data);
 }
 
 async function remReaction(postId: string, commentId?: string) {
@@ -89,36 +90,31 @@ async function remReaction(postId: string, commentId?: string) {
   } else {
     endpoint = postsEndpoints.post_reactions(postId);
   }
-  const r = await api.delete(endpoint);
-  return r;
+  return await api.delete(endpoint);
 }
 
 async function createComment(post_id: string, content: string) {
   const data = { content };
-  const r = await api.post<ApiResponse<Comment>>(postsEndpoints.comments(post_id), data);
-  return r;
+  return await api.post<ApiResponse<Comment>>(postsEndpoints.comments(post_id), data);
 }
 
 async function getComments(post_id: string, cursor?: string) {
-  const r = await api.get<GetCommentsResponse>(postsEndpoints.comments(post_id), {
+  return await api.get<GetCommentsResponse>(postsEndpoints.comments(post_id), {
     params: !!cursor ? { cursor } : undefined
   });
-  return r;
 }
 
 async function getUserPosts(user_id: string, cursor?: string, sort?: "new" | "old" | "popular") {
-  const r = await api.get<GetUserPostsResponse>(postsEndpoints.get_user_posts(user_id), {
+  return await api.get<GetUserPostsResponse>(postsEndpoints.get_user_posts(user_id), {
     params: {
       ...(cursor && { cursor }),
       ...(sort && { sort })
     }
   });
-  return r;
 }
 
 async function createPost(values: CreatePostValues) {
-  const r = await api.post<ApiResponse<Post>>(postsEndpoints.create_post, values);
-  return r;
+  return await api.post<ApiResponse<Post>>(postsEndpoints.create_post, values);
 }
 
 async function init(_api: AxiosInstance) {
@@ -129,6 +125,7 @@ export {
   init,
   getPost,
   getPosts,
+  editPost,
   viewPosts,
   getPostsBatch,
   setReaction,
