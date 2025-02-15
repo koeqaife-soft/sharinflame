@@ -30,7 +30,9 @@ let emojiRanges: string[] | null = [
   "\\u{2764}"
 ];
 
-const COMBINED_REGEX = new RegExp(`(https?:\/\/[^\s<]+|www\.[^\s<]+)|(${emojiRanges.join("|")})|(\n)`, "giu");
+// URL_REGEX is separate from COMBINED_REGEX because not all links work correctly
+const URL_REGEX = /https?:\/\/[^\s<]+|www\.[^\s<]+/giu;
+const COMBINED_REGEX = new RegExp(`(${emojiRanges.join("|")})|(\n)`, "giu");
 
 // Remove emojiRanges from memory since it is not used
 emojiRanges.length = 0;
@@ -54,21 +56,26 @@ export function formatNumber(num: number): string {
 export function formatStringForHtml(str: string): string {
   const sanitized = sanitize(str, { ALLOWED_TAGS: ALLOWED_TAGS as string[] });
 
-  return sanitized.replace(COMBINED_REGEX, (...args) => {
+  // First, replace URLs with links
+  let result = sanitized.replace(URL_REGEX, (match) => {
+    const href = match.startsWith("http") ? match : `https://${match}`;
+    return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="link">${match}</a>`;
+  });
+
+  // Then, replace emojis and newlines
+  result = result.replace(COMBINED_REGEX, (...args) => {
     const match = args[0];
-    // args[1] -> Url,
-    // args[2] -> Emoji,
-    // args[3] -> Newlines.
+    // args[1] -> Emoji,
+    // args[2] -> Newlines.
     if (args[1]) {
-      const href = match.startsWith("http") ? match : `https://${match}`;
-      return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="link">${match}</a>`;
-    } else if (args[2]) {
       return `<span class="emoji">${match}</span>`;
-    } else if (args[3]) {
+    } else if (args[2]) {
       return "<br>";
     }
     return match;
   });
+
+  return result;
 }
 
 export function formatUnixTime(unixTime: number, locale: string = "en"): string {
