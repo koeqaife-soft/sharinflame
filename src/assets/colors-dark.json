@@ -4,8 +4,9 @@
     "luminance": "0.85"
   },
   "secondary": {
+    "link": "primary",
     "s": ["=", "90"],
-    "luminance": "0.78"
+    "l": ["-", "8"]
   },
   "tertiary": {
     "h": ["-", "40"],
