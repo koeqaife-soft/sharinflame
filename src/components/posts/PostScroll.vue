@@ -63,12 +63,10 @@ function onTypeChange() {
   scrollKey.value = `${props.type}-${Date.now()}`;
 }
 
-async function viewInChunks(posts: string[], ignoreLastChunk: boolean = false, chunkSize: number = 10) {
+async function viewInChunks(posts: string[], chunkSize: number = 10) {
   const promises = [];
 
   while (posts.length > 0) {
-    if (ignoreLastChunk && posts.length <= chunkSize) break;
-
     const chunk = posts.splice(0, chunkSize);
 
     promises.push(viewPosts(chunk));
@@ -103,8 +101,8 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
 
       const postIds = posts.map((post) => post.post_id);
       toView.push(...postIds);
-      if (toView.length >= 20) {
-        void viewInChunks(toView, true);
+      if (items.value.length >= 20 && toView.length >= 10) {
+        void viewInChunks(toView);
       }
     }
     done();
