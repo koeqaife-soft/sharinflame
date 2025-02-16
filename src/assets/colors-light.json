@@ -1,16 +1,16 @@
 {
   "primary": {
     "s": ["=", "85"],
-    "l": ["=", "35"]
+    "luminance": "0.25"
   },
   "secondary": {
     "s": ["=", "75"],
-    "l": ["=", "30"]
+    "luminance": "0.23"
   },
   "tertiary": {
     "h": ["-", "40"],
     "s": ["=", "85"],
-    "l": ["=", "35"]
+    "luminance": "0.25"
   },
   "on-primary": {
     "hex": "#ffffff"
@@ -27,11 +27,11 @@
   },
   "background-variant": {
     "s": ["=", "14"],
-    "l": ["=", "75"]
+    "luminance": "0.85"
   },
   "on-background-variant": {
     "s": ["=", "7"],
-    "l": ["=", "25"]
+    "luminance": "0.3"
   },
   "text": {
     "hex": "#000000"
@@ -53,6 +53,6 @@
   },
   "outline": {
     "s": ["=", "4"],
-    "l": ["=", "47"]
+    "luminance": "0.47"
   }
 }

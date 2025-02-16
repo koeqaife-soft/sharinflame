@@ -1,61 +1,61 @@
 {
   "primary": {
     "s": ["=", "96"],
-    "l": ["=", "80"]
+    "luminance": "0.85"
   },
   "secondary": {
     "s": ["=", "90"],
-    "l": ["=", "75"]
+    "luminance": "0.78"
   },
   "tertiary": {
     "h": ["-", "40"],
     "s": ["=", "96"],
-    "l": ["=", "80"]
+    "luminance": "0.85"
   },
   "on-primary": {
     "link": "primary",
-    "l": ["=", "10"]
+    "luminance": "0.035"
   },
   "on-secondary": {
     "link": "secondary",
-    "l": ["=", "10"]
+    "luminance": "0.035"
   },
   "on-tertiary": {
     "link": "tertiary",
-    "l": ["=", "10"]
+    "luminance": "0.035"
   },
   "background": {
     "s": ["=", "14"],
-    "l": ["=", "8"]
+    "luminance": "0.07"
   },
   "background-variant": {
     "s": ["=", "14"],
-    "l": ["=", "20"]
+    "luminance": "0.1"
   },
   "on-background-variant": {
     "s": ["=", "7"],
-    "l": ["=", "80"]
+    "luminance": "0.8"
   },
   "text": {
     "hex": "#ffffff"
   },
   "card": {
     "link": "background",
-    "l": ["=", "12"]
+    "luminance": "0.1"
   },
   "card-hover": {
     "link": "background",
-    "l": ["=", "13"]
+    "luminance": "0.12"
   },
   "card-high": {
     "link": "background",
-    "l": ["=", "16"]
+    "luminance": "0.14"
   },
   "on-card": {
     "hex": "#ffffff"
   },
   "outline": {
     "s": ["=", "5"],
-    "l": ["=", "57"]
+    "luminance": "0.6"
   }
 }

@@ -10,6 +10,7 @@ interface PaletteEntry {
   l?: HslAction;
   hex?: string;
   link?: string;
+  luminance?: string;
 }
 
 interface Palette {
@@ -45,7 +46,58 @@ function adjustHue(hue: number, delta: number): number {
   return (hue + delta) % 360;
 }
 
-function generateColor(hsl: Hsl, entry: PaletteEntry): Hsl {
+function calculatePerceptualLightness(h: number, s: number, l: number): number {
+  h /= 360;
+  s /= 100;
+  l /= 100;
+
+  const a = s * Math.min(l, 1 - l);
+  const f = (n: number) => {
+    const k = (n + h * 12) % 12;
+    return l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
+  };
+
+  const r = f(0);
+  const g = f(8);
+  const b = f(4);
+
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+function findLightnessForLuminance(hue: number, saturation: number, targetLuminance: number): number {
+  let low = 0,
+    high = 100,
+    mid = 50;
+
+  for (let i = 0; i < 10; i++) {
+    const luminance = calculatePerceptualLightness(hue, saturation, mid);
+    if (Math.abs(luminance - targetLuminance) < 0.01) break;
+    if (luminance < targetLuminance) low = mid;
+    else high = mid;
+    mid = (low + high) / 2;
+  }
+
+  return mid;
+}
+
+function beautifyColor(h: number, s: number, l: number, isDarkMode: boolean): Hsl {
+  if (h > 54 && h < 88) {
+    s = Math.max(10, s * Math.pow(0.9, 4.5));
+  }
+
+  if (isDarkMode) {
+    if (l > 80) {
+      l = Math.floor(80 + (l - 80) * 0.2);
+    }
+
+    if (h >= 180 && h <= 260) {
+      s *= Math.floor(Math.pow(1.05, Math.abs(h - 180) / 10));
+    }
+  }
+
+  return [h, s, l];
+}
+function generateColor(hsl: Hsl, entry: PaletteEntry, isDarkMode: boolean): Hsl {
   let [hue, saturation, lightness] = hsl;
 
   const applyValue = (from: number, hslAction: HslAction, func: typeof adjustValue | typeof adjustHue) => {
@@ -53,7 +105,6 @@ function generateColor(hsl: Hsl, entry: PaletteEntry): Hsl {
     const delta = parseFloat(value);
 
     let result = from;
-
     if (action === "+") result = func(from, delta);
     else if (action === "-") result = func(from, -delta);
     else if (action === "=") result = delta;
@@ -63,12 +114,17 @@ function generateColor(hsl: Hsl, entry: PaletteEntry): Hsl {
 
   if (entry.h) hue = applyValue(hue, entry.h, adjustHue);
   if (entry.s) saturation = applyValue(saturation, entry.s, adjustValue);
-  if (entry.l) lightness = applyValue(lightness, entry.l, adjustValue);
 
-  return [hue, saturation, lightness];
+  if (entry.luminance !== undefined) {
+    lightness = findLightnessForLuminance(hue, saturation, parseFloat(entry.luminance));
+  } else if (entry.l) {
+    lightness = applyValue(lightness, entry.l, adjustValue);
+  }
+
+  return beautifyColor(hue, saturation, lightness, isDarkMode);
 }
 
-export function generateColors(palette: Palette, baseHsl: Hsl, suffix: string = "") {
+export function generateColors(palette: Palette, baseHsl: Hsl, suffix: string = "", isDarkMode: boolean) {
   const generatedHsl: { [key: string]: Hsl } = {};
   const generated: { [key: string]: string } = {};
 
@@ -80,9 +136,9 @@ export function generateColors(palette: Palette, baseHsl: Hsl, suffix: string = 
       generated[key] = generated[entry.link]!;
     } else {
       if (entry.link && generatedHsl[entry.link]) {
-        generatedHsl[key] = generateColor(generatedHsl[entry.link]!, entry);
+        generatedHsl[key] = generateColor(generatedHsl[entry.link]!, entry, isDarkMode);
       } else {
-        generatedHsl[key] = generateColor(baseHsl, entry);
+        generatedHsl[key] = generateColor(baseHsl, entry, isDarkMode);
       }
     }
   }
@@ -98,8 +154,8 @@ export function generateColors(palette: Palette, baseHsl: Hsl, suffix: string = 
 }
 
 export function generateAll(Hsl: Hsl) {
-  const dark = generateColors(DarkPalette, Hsl, "-dark");
-  const light = generateColors(LightPalette, Hsl, "-light");
+  const dark = generateColors(DarkPalette, Hsl, "-dark", true);
+  const light = generateColors(LightPalette, Hsl, "-light", false);
 
   return { ...dark, ...light };
 }
