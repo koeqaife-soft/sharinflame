@@ -123,7 +123,7 @@ defineEmits([...useDialogPluginComponent.emits]);
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
 function onScroll(info: QScrollObserverDetails) {
-  headerVisible.value = info.position.top < postComponentRef.value!.scrollHeight + 58 || info.direction == "up";
+  headerVisible.value = info.position.top < postComponentRef.value!.scrollHeight + 66 || info.direction == "up";
 }
 
 function reloadComments() {
