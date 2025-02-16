@@ -47,11 +47,12 @@ function adjustHue(hue: number, delta: number): number {
 }
 
 function calculatePerceptualLightness(h: number, s: number, l: number): number {
-  h /= 360;
-  s /= 100;
-  l /= 100;
+  h = h / 360;
+  s = s / 100;
+  l = l / 100;
 
   const a = s * Math.min(l, 1 - l);
+
   const f = (n: number) => {
     const k = (n + h * 12) % 12;
     return l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
@@ -71,10 +72,10 @@ function findLightnessForLuminance(hue: number, saturation: number, targetLumina
 
   for (let i = 0; i < 10; i++) {
     const luminance = calculatePerceptualLightness(hue, saturation, mid);
-    if (Math.abs(luminance - targetLuminance) < 0.01) break;
+    if (Math.abs(luminance - targetLuminance) < 0.001) return mid;
     if (luminance < targetLuminance) low = mid;
     else high = mid;
-    mid = (low + high) / 2;
+    mid = low + (high - low) / 2;
   }
 
   return mid;
@@ -97,6 +98,7 @@ function beautifyColor(h: number, s: number, l: number, isDarkMode: boolean): Hs
 
   return [h, s, l];
 }
+
 function generateColor(hsl: Hsl, entry: PaletteEntry, isDarkMode: boolean): Hsl {
   let [hue, saturation, lightness] = hsl;
 
@@ -104,12 +106,8 @@ function generateColor(hsl: Hsl, entry: PaletteEntry, isDarkMode: boolean): Hsl 
     const [action, value] = hslAction;
     const delta = parseFloat(value);
 
-    let result = from;
-    if (action === "+") result = func(from, delta);
-    else if (action === "-") result = func(from, -delta);
-    else if (action === "=") result = delta;
-
-    return result;
+    if (action === "=") return delta;
+    return func(from, action === "+" ? delta : -delta);
   };
 
   if (entry.h) hue = applyValue(hue, entry.h, adjustHue);
