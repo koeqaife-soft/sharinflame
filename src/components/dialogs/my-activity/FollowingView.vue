@@ -41,7 +41,10 @@ async function loadMore(index: number, done: (stop?: boolean) => void) {
 
       nextCursor = data.next_cursor;
 
-      items.value.push(...data.following);
+      const following = data.following.map((v) => {
+        return { followed: true, ...v };
+      });
+      items.value.push(...(following as User[]));
       done(!data.has_more);
     } else {
       done(true);
