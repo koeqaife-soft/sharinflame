@@ -13,7 +13,9 @@
     height: 28px;
     border-radius: 28px;
     border: 2px solid var(--outline);
-    transition: background-color 0.1s ease-in-out, border-color 0.1s ease-in-out;
+    transition:
+      background-color 0.1s ease-in-out,
+      border-color 0.1s ease-in-out;
 
     will-change: background-color, border-color;
   }
@@ -27,8 +29,12 @@
     margin: 6px;
     background-color: var(--outline);
     border-radius: 28px;
-    transition: left 175ms cubic-bezier(0, 0.5, 0.5, 1.5), background-color 0.1s ease-in-out, height 100ms ease-in-out,
-      width 100ms ease-in-out, margin 100ms ease-in-out;
+    transition:
+      left 175ms cubic-bezier(0, 0.5, 0.5, 1.5),
+      background-color 0.1s ease-in-out,
+      height 100ms ease-in-out,
+      width 100ms ease-in-out,
+      margin 100ms ease-in-out;
 
     will-change: left, width, height, margin, background-color;
   }
@@ -119,6 +125,10 @@
 
 .post,
 .comment {
+  .avatar-container {
+    height: 42px;
+    width: 42px;
+  }
   .q-card__section {
     display: flex;
     align-items: flex-start;
@@ -318,7 +328,10 @@
   .dialog-content {
     height: 100%;
     width: 100%;
-    transition: max-height 0.2s ease, margin 0.2s ease, transform 0.25s ease-out;
+    transition:
+      max-height 0.2s ease,
+      margin 0.2s ease,
+      transform 0.25s ease-out;
   }
   .dialog-content.expand {
     max-width: 650px;
@@ -345,7 +358,9 @@
     mask-image: radial-gradient(circle at 92px 170px, transparent 75px, black 76px);
   }
   .profile-info {
-    transition: height 0.3s ease-out, opacity 0.3s ease-out;
+    transition:
+      height 0.3s ease-out,
+      opacity 0.3s ease-out;
     transition-delay: 0.02s;
     height: 240px;
     position: relative;
@@ -402,7 +417,9 @@
   }
   .profile-categories {
     height: 56px;
-    transition: height 0.1s ease-out, opacity 0.1s ease-out;
+    transition:
+      height 0.1s ease-out,
+      opacity 0.1s ease-out;
     width: fit-content;
     align-self: center;
     .category-button {
@@ -494,7 +511,9 @@
     padding: 0;
     height: 100%;
     width: 100%;
-    transition: max-height 0.2s ease, margin 0.2s ease;
+    transition:
+      max-height 0.2s ease,
+      margin 0.2s ease;
   }
   .dialog-content-inner {
     display: flex;
@@ -633,7 +652,9 @@
     height: 100%;
     width: 100%;
     padding: 0;
-    transition: max-height 0.2s ease, margin 0.2s ease;
+    transition:
+      max-height 0.2s ease,
+      margin 0.2s ease;
   }
   .dialog-content-inner {
     padding: 8px;
@@ -670,7 +691,9 @@
 
 .scroll-header {
   transform: translate3d(0, -150%, 0);
-  transition: transform 0.3s ease, visibility 0s 0.3s linear;
+  transition:
+    transform 0.3s ease,
+    visibility 0s 0.3s linear;
 
   &.is-visible {
     transform: translate3d(0, 0, 0);
@@ -699,4 +722,20 @@
       display: none;
     }
   }
+}
+
+.more-btn {
+  font-weight: 500;
+  margin-left: 8px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  opacity: 0.95;
+  font-size: 15px;
+  color: var(--primary);
+}
+
+.more-btn:hover {
+  opacity: 0.8;
 }
