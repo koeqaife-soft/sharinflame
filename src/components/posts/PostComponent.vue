@@ -1,12 +1,14 @@
 <template>
   <q-card class="post card" unelevated :key="postRef.post_id">
     <q-card-section class="q-pb-none">
-      <open-user-dialog :user="postRef.user" v-if="!postRef.is_system" />
+      <div class="avatar-container">
+        <open-user-dialog :user="postRef.user" v-if="!postRef.is_system" />
+      </div>
       <div class="text-container">
         <div class="username">
           {{ postRef.is_system ? $t("system") : postRef.user.display_name || postRef.user.username }}
         </div>
-        <div class="content wrap-text" v-html="formatStringForHtml(postRef.content)" />
+        <text-parts class="content wrap-text" :text="formatStringForHtml(postRef.content)" :html="true" />
       </div>
     </q-card-section>
     <q-card-section class="q-pb-none tags" v-if="!postRef.is_system && postRef.tags.length > 0">
@@ -80,13 +82,14 @@
 
 <script setup lang="ts">
 import { computed, defineAsyncComponent, type Ref, ref } from "vue";
-import OpenUserDialog from "../dialogs/OpenUserDialog.vue";
 import { deletePost } from "src/api/posts";
 import { formatNumber, formatStringForHtml } from "src/utils/format";
 import { useQuasar } from "quasar";
 import { useI18n } from "vue-i18n";
 import { useReaction } from "src/composables/useReaction";
+import TextParts from "../misc/TextParts.vue";
 
+const OpenUserDialog = defineAsyncComponent(() => import("../dialogs/OpenUserDialog.vue"));
 const PostDialog = defineAsyncComponent(() => import("../dialogs/PostDialog.vue"));
 const MoreMenu = defineAsyncComponent(() => import("./PostMoreMenu.vue"));
 const PostEditor = defineAsyncComponent(() => import("../dialogs/PostEditor.vue"));
