@@ -125,5 +125,7 @@ export default {
   favorites: "Favorites",
   liked: "Liked",
   disliked: "Disliked",
-  following: "Following"
+  following: "Following",
+
+  more: "More"
 };
