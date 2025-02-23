@@ -82,10 +82,6 @@ function findLightnessForLuminance(hue: number, saturation: number, targetLumina
 }
 
 function beautifyColor(h: number, s: number, l: number, isDarkMode: boolean): Hsl {
-  if (h > 54 && h < 88) {
-    s = Math.max(10, s * Math.pow(0.9, 4.5));
-  }
-
   if (isDarkMode) {
     if (l > 80) {
       l = Math.floor(80 + (l - 80) * 0.2);
