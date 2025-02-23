@@ -11,7 +11,7 @@
         <text-parts class="content wrap-text" :text="formatStringForHtml(postRef.content)" :html="true" />
       </div>
     </q-card-section>
-    <q-card-section class="q-pb-none tags" v-if="!postRef.is_system && postRef.tags.length > 0">
+    <q-card-section class="q-pb-none tags" v-if="!postRef.is_system && postRef.tags?.length > 0">
       <q-chip v-for="(tag, index) in postRef.tags" :key="index" class="tag" :icon="tagsInfo[tag]?.icon || 'sym_r_tag'">
         {{ tagsInfo[tag]?.name || tag }}
       </q-chip>
