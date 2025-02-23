@@ -136,6 +136,7 @@ function buttonClick() {
 }
 
 function arraysEqualUnordered<T>(arr1: T[], arr2: T[]) {
+  if (!arr1 || !arr2) return false;
   if (arr1.length !== arr2.length) return false;
   return arr1
     .slice()
