@@ -17,46 +17,55 @@ import { computed, ref } from "vue";
 interface Props {
   text: string;
   html?: boolean;
-  defaultPart?: number;
+  defaultSize?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   html: false,
-  defaultPart: 1750
+  defaultSize: 1750
 });
 
+const TOKEN_REGEX = /(<[^>]+>|[^<]+)/g;
+const SELF_CLOSING_REGEX = /\/>$/;
+const BR_TAG_REGEX = /^<br\s*\/?>/i;
+const HR_TAG_REGEX = /^<hr\s*\/?>/i;
+const CLOSING_TAG_REGEX = /^<\/(\w+)>/;
+const OPENING_TAG_REGEX = /^<(\w+)/;
+
 function splitHtml(html: string, maxCount: number): string[] {
-  const tokens = html.match(/(<[^>]+>|[^<]+)/g) || [];
+  const tokens = html.match(TOKEN_REGEX) || [];
   const parts: string[] = [];
   let currentPart = "";
   let charCount = 0;
-
   const openTagsStack: string[] = [];
 
-  const closeOpenTags = () =>
+  const getClosingTags = () =>
     openTagsStack
       .slice()
       .reverse()
       .map((tag) => `</${tag}>`)
       .join("");
-  const openTags = () => openTagsStack.map((tag) => `<${tag}>`).join("");
+
+  const getOpeningTags = () => openTagsStack.map((tag) => `<${tag}>`).join("");
 
   for (const token of tokens) {
     if (token.startsWith("<")) {
       currentPart += token;
-      const isSelfClosing = /\/>$/.test(token) || /^<br\s*\/?>/i.test(token) || /^<hr\s*\/?>/i.test(token);
+
+      const isSelfClosing = SELF_CLOSING_REGEX.test(token) || BR_TAG_REGEX.test(token) || HR_TAG_REGEX.test(token);
+
       if (!isSelfClosing) {
-        if (/^<\/\w+>/.test(token)) {
-          const tagMatch = token.match(/^<\/(\w+)>/);
+        if (CLOSING_TAG_REGEX.test(token)) {
+          const tagMatch = token.match(CLOSING_TAG_REGEX);
           if (tagMatch) {
-            const tagName = tagMatch[1];
-            const index = openTagsStack.lastIndexOf(tagName!);
+            const tagName = tagMatch[1]!;
+            const index = openTagsStack.lastIndexOf(tagName);
             if (index !== -1) {
               openTagsStack.splice(index, 1);
             }
           }
-        } else {
-          const tagMatch = token.match(/^<(\w+)/);
+        } else if (OPENING_TAG_REGEX.test(token)) {
+          const tagMatch = token.match(OPENING_TAG_REGEX);
           if (tagMatch) {
             openTagsStack.push(tagMatch[1]!);
           }
@@ -65,45 +74,37 @@ function splitHtml(html: string, maxCount: number): string[] {
     } else {
       let remainingText = token;
       while (remainingText.length > 0) {
-        const remainingChars = maxCount - charCount;
-        if (remainingText.length <= remainingChars) {
-          currentPart += remainingText;
-          charCount += remainingText.length;
-          remainingText = "";
-        } else {
-          currentPart += remainingText.slice(0, remainingChars);
-          parts.push(currentPart + closeOpenTags());
-          currentPart = openTags();
-          remainingText = remainingText.slice(remainingChars);
-          charCount = 0;
-        }
+        const available = maxCount - charCount;
+        const take = remainingText.slice(0, available);
+        currentPart += take;
+        charCount += take.length;
+        remainingText = remainingText.slice(take.length);
+
         if (charCount === maxCount) {
-          parts.push(currentPart + closeOpenTags());
-          currentPart = openTags();
+          parts.push(currentPart + getClosingTags());
+          currentPart = getOpeningTags();
           charCount = 0;
         }
       }
     }
   }
+
   if (currentPart) {
-    parts.push(currentPart + closeOpenTags());
+    parts.push(currentPart + getClosingTags());
   }
+
   return parts;
 }
 
 const parts = computed(() => {
   if (!props.text) return [];
-  if (props.text.length < props.defaultPart) return [props.text];
+  if (props.text.length < props.defaultSize) return [props.text];
 
-  if (props.html) {
-    return splitHtml(props.text, props.defaultPart);
-  } else {
-    const result: string[] = [];
-    for (let i = 0; i < props.text.length; i += props.defaultPart) {
-      result.push(props.text.slice(i, i + props.defaultPart));
-    }
-    return result;
-  }
+  return props.html
+    ? splitHtml(props.text, props.defaultSize)
+    : Array.from({ length: Math.ceil(props.text.length / props.defaultSize) }, (_, i) =>
+        props.text.slice(i * props.defaultSize, (i + 1) * props.defaultSize)
+      );
 });
 
 const showedIndex = ref(0);
