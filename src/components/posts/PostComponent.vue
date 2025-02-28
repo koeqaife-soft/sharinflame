@@ -9,6 +9,23 @@
           {{ postRef.is_system ? $t("system") : postRef.user.display_name || postRef.user.username }}
         </div>
         <text-parts class="content wrap-text" :text="formatStringForHtml(postRef.content)" :html="true" />
+        <q-carousel
+          v-if="!postRef.is_system && postRef.media?.length > 0"
+          class="post-image q-mt-sm"
+          animated
+          arrows
+          keep-alive
+          swipeable
+          transition-prev="slide-right"
+          transition-next="slide-left"
+          navigation
+          v-model="currentSlide"
+          v-model:fullscreen="isFullscreen"
+        >
+          <q-carousel-slide v-for="(src, index) in postRef.media" :key="index" :name="index" class="q-pa-none">
+            <q-img :src="src" fit="contain" class="full-width full-height" />
+          </q-carousel-slide>
+        </q-carousel>
       </div>
     </q-card-section>
     <q-card-section class="q-pb-none tags" v-if="!postRef.is_system && postRef.tags?.length > 0">
@@ -106,6 +123,9 @@ const props = defineProps<{
 }>();
 
 const postRef = ref<PostWithSystem>(props.post);
+
+const currentSlide = ref(0);
+const isFullscreen = ref(false);
 
 const canAnimate = ref(false);
 

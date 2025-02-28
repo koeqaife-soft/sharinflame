@@ -229,6 +229,16 @@
       @include iconSize(20);
     }
   }
+  .text-container {
+    width: 100%;
+  }
+  .post-image {
+    border-radius: 8px;
+    background-color: var(--card-high);
+    height: 300px;
+    max-height: 300px;
+    width: 100%;
+  }
 }
 
 .post-more-menu {
