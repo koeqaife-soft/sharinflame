@@ -31,7 +31,7 @@
   },
   "background-variant": {
     "s": ["=", "14"],
-    "luminance": "0.1"
+    "luminance": "0.05"
   },
   "on-background-variant": {
     "s": ["=", "7"],
