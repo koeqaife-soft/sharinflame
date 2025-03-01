@@ -1,7 +1,8 @@
 {
   "primary": {
     "s": ["=", "96"],
-    "luminance": "0.85"
+    "luminance": "0.85",
+    "min_l": "70"
   },
   "secondary": {
     "link": "primary",
@@ -11,7 +12,8 @@
   "tertiary": {
     "h": ["-", "40"],
     "s": ["=", "96"],
-    "luminance": "0.85"
+    "luminance": "0.85",
+    "min_l": "70"
   },
   "on-primary": {
     "link": "primary",

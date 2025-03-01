@@ -8,6 +8,8 @@ interface PaletteEntry {
   h?: HslAction;
   s?: HslAction;
   l?: HslAction;
+  min_l?: string;
+  max_l?: string;
   hex?: string;
   link?: string;
   luminance?: string;
@@ -113,6 +115,13 @@ function generateColor(hsl: Hsl, entry: PaletteEntry, isDarkMode: boolean): Hsl 
     lightness = findLightnessForLuminance(hue, saturation, parseFloat(entry.luminance));
   } else if (entry.l) {
     lightness = applyValue(lightness, entry.l, adjustValue);
+  }
+
+  if (entry.min_l && lightness < Number(entry.min_l)) {
+    lightness = Number(entry.min_l);
+  }
+  if (entry.max_l && lightness > Number(entry.max_l)) {
+    lightness = Number(entry.max_l);
   }
 
   return beautifyColor(hue, saturation, lightness, isDarkMode);
