@@ -125,7 +125,7 @@ const props = defineProps<{
 
 const postRef = ref<PostWithSystem>(props.post);
 
-const currentSlide = ref(0);
+const currentSlide: Ref<string | number> = ref(0);
 const isFullscreen = ref(false);
 
 const canAnimate = ref(false);
