@@ -15,9 +15,7 @@ interface PaletteEntry {
   luminance?: string;
 }
 
-interface Palette {
-  [key: string]: PaletteEntry;
-}
+type Palette = Record<string, PaletteEntry>;
 
 export const LightPalette = LightPaletteJson as unknown as Palette;
 export const DarkPalette = DarkPaletteJson as unknown as Palette;
