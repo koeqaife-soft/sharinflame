@@ -1,7 +1,7 @@
 {
   "primary": {
     "s": ["=", "96"],
-    "luminance": "0.85",
+    "luminance": "0.7",
     "min_l": "70"
   },
   "secondary": {
@@ -32,8 +32,8 @@
     "luminance": "0.07"
   },
   "background-variant": {
-    "s": ["=", "14"],
-    "luminance": "0.05"
+    "s": ["=", "8"],
+    "luminance": "0.16"
   },
   "on-background-variant": {
     "s": ["=", "7"],
