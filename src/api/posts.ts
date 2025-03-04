@@ -6,6 +6,7 @@ export const postsEndpoints = {
   create_post: "/posts",
   popular: "/posts/popular",
   new_posts: "/posts/new",
+  following: "/posts/following",
   post: (id: string) => `/posts/${id}`,
   post_reactions: (id: string) => `/posts/${id}/reactions`,
   view: "/posts/view",
@@ -17,7 +18,8 @@ export const postsEndpoints = {
 
 export const getPostsTypes = {
   popular: postsEndpoints.popular,
-  new: postsEndpoints.new_posts
+  new: postsEndpoints.new_posts,
+  following: postsEndpoints.following
 };
 
 export type KeyOfGetPostsTypes = keyof typeof getPostsTypes;
