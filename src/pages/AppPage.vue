@@ -10,7 +10,7 @@
         </q-card>
       </div>
       <div class="center-column">
-        <post-scroll :type="currentType" class="full-height full-width">
+        <post-scroll :type="currentType" :key="reloadKey" class="full-height full-width">
           <template #default v-if="hideLeftColumn">
             <div class="container categories-label card">
               <q-btn :label="currentCategory?.label" :icon="currentCategory?.icon" no-caps unelevated>
@@ -49,6 +49,7 @@ const OpenProfileMenu = defineAsyncComponent(() => import("src/components/profil
 const { t } = useI18n();
 
 const currentType = ref<KeyOfGetPostsTypes>("popular");
+const reloadKey = ref(Date.now());
 const currentCategory = computed(() => categoriesList.value.find((category) => category.type === currentType.value));
 
 const categoriesMenuOpened = ref(false);
@@ -61,7 +62,8 @@ const hideLeftColumn = computed(() => !isBigScreen.value);
 const hideRightColumn = computed(() => isSmallScreen.value);
 
 const changeType = (type: KeyOfGetPostsTypes) => {
-  currentType.value = type;
+  if (currentType.value == type) reloadKey.value = Date.now();
+  else currentType.value = type;
 };
 
 const categoriesList = computed<ButtonProps[]>(() => [
@@ -76,6 +78,12 @@ const categoriesList = computed<ButtonProps[]>(() => [
     label: t("categories.new"),
     click: () => changeType("new"),
     type: "new"
+  },
+  {
+    icon: "sym_r_group",
+    label: t("categories.following"),
+    click: () => changeType("following"),
+    type: "following"
   }
 ]);
 
