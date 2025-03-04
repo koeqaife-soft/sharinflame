@@ -27,9 +27,8 @@
 </template>
 <script setup lang="ts">
 import { ref, watch, defineAsyncComponent, type DefineComponent } from "vue";
-import { usePostsStore } from "src/stores/posts-store";
-import { type KeyOfGetPostsTypes, viewPosts } from "src/api/posts";
-import { isAxiosError } from "axios";
+import { getPosts, getPostsBatch, type KeyOfGetPostsTypes, viewPosts } from "src/api/posts";
+import { type AxiosError, isAxiosError } from "axios";
 import { useI18n } from "vue-i18n";
 import MyVirtualScroll from "src/components/misc/MyVirtualScroll.vue";
 
@@ -41,8 +40,10 @@ const props = defineProps<{
 
 const items = ref<PostWithSystem[]>([]);
 const scrollKey = ref<string>(props.type);
-const store = usePostsStore();
 const toView: string[] = [];
+
+const notLoaded: string[] = [];
+const loaded: Post[] = [];
 
 const headerVisible = ref(true);
 
@@ -59,8 +60,13 @@ function onScroll(info: QScrollObserverDetails) {
 function onTypeChange() {
   items.value = [];
   toView.length = 0;
-  store.reset();
+  reset();
   scrollKey.value = `${props.type}-${Date.now()}`;
+}
+
+function reset() {
+  notLoaded.length = 0;
+  loaded.length = 0;
 }
 
 async function viewInChunks(posts: string[], chunkSize: number = 10) {
@@ -77,25 +83,79 @@ async function viewInChunks(posts: string[], chunkSize: number = 10) {
 
 function reloadPosts() {
   items.value = [];
-  store.reset();
+  reset();
   scrollKey.value = `${props.type}-${Date.now()}`;
+}
+
+async function getPostsIds(type: KeyOfGetPostsTypes) {
+  const r = await getPosts(type);
+  if (r.data.success) {
+    notLoaded.push(...r.data.data.posts);
+  }
+  return r.data;
+}
+
+async function loadPosts(count: number) {
+  let idsToLoad = notLoaded.slice(0, count);
+
+  const loadBatch = async (ids: string[]) => {
+    let response: Awaited<ReturnType<typeof getPostsBatch>>;
+    try {
+      response = await getPostsBatch(ids);
+      if (response.data.success) {
+        loaded.push(...response.data.data.posts);
+      }
+      return null;
+    } catch (e) {
+      if (isAxiosError(e)) {
+        const errors = (e as AxiosError<GetPostsBatchResponse>).response?.data?.data?.errors;
+        if (errors) {
+          return ids.filter((id) => !errors.some((error) => error.post === id));
+        }
+      }
+      throw e;
+    }
+  };
+
+  for (let i = 0; i < count; i++) {
+    if (idsToLoad.length == 0) break;
+    const remainingIds = await loadBatch(idsToLoad);
+    if (remainingIds === null) {
+      break;
+    }
+    idsToLoad = remainingIds;
+  }
+
+  notLoaded.splice(0, count);
+}
+
+function getLoaded(count: number) {
+  if (count > loaded.length) {
+    const elements = [...loaded];
+    loaded.length = 0;
+    return elements;
+  }
+
+  const elements = loaded.slice(-count);
+  loaded.splice(-count);
+  return elements;
 }
 
 async function onLoad(index: number, done: (stop?: boolean) => void) {
   const toLoad = items.value.length == 0 ? 10 : 5;
   try {
-    if (store.loaded.length == 0 && store.notLoaded.length == 0) {
+    if (loaded.length == 0 && notLoaded.length == 0) {
       if (toView.length > 0) {
         await viewInChunks(toView);
       }
-      const r = await store.getPosts(props.type);
+      const r = await getPostsIds(props.type);
       if (!r.success) return;
     }
-    if (store.loaded.length == 0) {
-      await store.loadPosts(toLoad);
+    if (loaded.length == 0) {
+      await loadPosts(toLoad);
     }
-    if (store.loaded.length != 0) {
-      const posts = store.viewPosts(toLoad);
+    if (loaded.length != 0) {
+      const posts = getLoaded(toLoad);
 
       items.value.push(...posts);
 
