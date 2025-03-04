@@ -30,7 +30,8 @@ export default {
 
   categories: {
     popular: "Popular",
-    new: "New"
+    new: "New",
+    following: "Following"
   },
 
   view_profile: "View Profile",
