@@ -22,6 +22,7 @@
             <q-btn flat round icon="sym_r_refresh" @click="reloadComments" />
           </card-dialog-label>
         </div>
+        <div class="no-comments" v-if="showNoComments">{{ $t("no_comments") }}</div>
         <my-virtual-scroll
           :items="items"
           :margins="8"
@@ -80,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, type DefineComponent, onMounted, onUnmounted, ref, watch } from "vue";
+import { defineAsyncComponent, type DefineComponent, onMounted, onUnmounted, ref, toRef, watch } from "vue";
 import PostComponent from "../posts/PostComponent.vue";
 import CloseableContent from "../misc/CloseableContent.vue";
 import CardDialogLabel from "../misc/CardDialogLabel.vue";
@@ -97,10 +98,12 @@ const props = defineProps<{
   post: Post;
 }>();
 
+const showNoComments = ref(false);
+
 const mainStore = useMainStore();
 const profileStore = useProfileStore();
 
-const postRef = ref(props.post);
+const postRef = toRef(props.post);
 const scrollKey = ref(Date.now());
 
 const items = ref<CommentWithUser[]>([]);
@@ -127,6 +130,7 @@ function onScroll(info: QScrollObserverDetails) {
 }
 
 function reloadComments() {
+  showNoComments.value = false;
   items.value = [];
   nextItems.value = [];
   scrollKey.value = Date.now();
@@ -139,6 +143,8 @@ function updateMeta<T>(key: string, value: T) {
 }
 
 async function loadComments(index: number, done: (stop?: boolean) => void) {
+  showNoComments.value = false;
+
   const toAdd: CommentWithUser[] = [];
   nextItems.value ??= [];
   try {
@@ -183,6 +189,10 @@ async function loadComments(index: number, done: (stop?: boolean) => void) {
   } catch (e) {
     done(true);
     throw e;
+  } finally {
+    if (items.value.length == 0) {
+      showNoComments.value = true;
+    }
   }
 }
 
@@ -201,6 +211,7 @@ async function sendComment() {
       postRef.value.comments_count += 1;
     }
   } finally {
+    showNoComments.value = false;
     sending.value = false;
     virtualScroll.value?.updateShowedItems(1);
   }
