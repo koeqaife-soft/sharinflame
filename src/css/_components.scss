@@ -125,6 +125,12 @@
 
 .post,
 .comment {
+  .reaction-buttons {
+    min-width: 164px;
+    min-height: 35px;
+    display: flex;
+    gap: 8px;
+  }
   .avatar-container {
     min-height: 42px;
     min-width: 42px;
@@ -235,8 +241,7 @@
   .post-image {
     border-radius: 8px;
     background-color: var(--card-high);
-    height: 300px;
-    max-height: 300px;
+    height: 400px;
     width: 100%;
   }
 }
@@ -264,6 +269,12 @@
 .post-dialog {
   .q-dialog__inner {
     margin-top: 58px;
+  }
+  .no-comments {
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    color: var(--on-background-variant);
   }
   .dialog-content {
     height: 100%;
