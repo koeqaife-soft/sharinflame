@@ -135,6 +135,7 @@ function reloadComments() {
   nextItems.value = [];
   scrollKey.value = Date.now();
   cursor = undefined;
+  headerVisible.value = true;
 }
 
 function updateMeta<T>(key: string, value: T) {

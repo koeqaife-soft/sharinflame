@@ -62,6 +62,7 @@ function onTypeChange() {
   toView.length = 0;
   reset();
   scrollKey.value = `${props.type}-${Date.now()}`;
+  headerVisible.value = true;
 }
 
 function reset() {
