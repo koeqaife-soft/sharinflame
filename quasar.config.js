@@ -19,7 +19,7 @@ export default defineConfig((ctx) => {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ["i18n", "axios", "notif-types"],
+    boot: ["i18n", "axios", "notif-types", "computed"],
     htmlVariables: {
       CSP_POLICY_DEV:
         "default-src 'self'; script-src * 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src *; connect-src *",
