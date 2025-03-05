@@ -31,9 +31,10 @@ let emojiRanges: string[] | null = [
   "\\u{2764}"
 ];
 
-// URL_REGEX is separate from COMBINED_REGEX because not all links work correctly
 const URL_REGEX = /https?:\/\/[^\s<]+|www\.[^\s<]+/giu;
-const COMBINED_REGEX = new RegExp(`(${emojiRanges.join("|")})|(\n)`, "giu");
+const EMOJI_REGEX = new RegExp(emojiRanges.join("|"), "giu");
+const THREE_NEWLINES_REGEX = /\n{3,}/g;
+const NEWLINE_REGEX = /\n/g;
 
 // Remove emojiRanges from memory since it is not used
 emojiRanges.length = 0;
@@ -74,24 +75,19 @@ export function formatStringForHtml(str: string) {
 
   const sanitized = sanitize(str, { ALLOWED_TAGS: ALLOWED_TAGS as string[] });
 
-  // First, replace URLs with links
   let result = sanitized.replace(URL_REGEX, (match) => {
     const href = match.startsWith("http") ? match : `https://${match}`;
     return `<a href="${href}" target="_blank" rel="noopener noreferrer" class="link">${match}</a>`;
   });
 
-  // Then, replace emojis and newlines
-  result = result.replace(COMBINED_REGEX, (...args) => {
-    const match = args[0];
-    // args[1] -> Emoji,
-    // args[2] -> Newlines.
-    if (args[1]) {
-      return `<span class="emoji">${match}</span>`;
-    } else if (args[2]) {
-      return "<br>";
-    }
-    return match;
+  result = result.replace(EMOJI_REGEX, (match) => {
+    return `<span class="emoji">${match}</span>`;
   });
+
+  result = result
+    .trim()
+    .replace(THREE_NEWLINES_REGEX, () => "\n\n")
+    .replace(NEWLINE_REGEX, () => "<br>");
 
   formatCache.put(hash, result);
 
