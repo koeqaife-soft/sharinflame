@@ -55,6 +55,7 @@ export default {
 
   connecting: "Connecting",
 
+  no_comments: "No Comments",
   comments: "Comments",
   post: "Post",
   enter_comment: "Enter comment",
