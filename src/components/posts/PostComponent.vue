@@ -41,7 +41,7 @@
     </q-card-section>
     <q-card-actions class="actions" :class="{ 'can-animate': canAnimate }" v-if="!postRef.is_system">
       <div class="reaction-buttons">
-        <reaction-buttons :object="postRef" :before-action="allowAnimate" />
+        <reaction-buttons :object="postRef" :before-action="allowAnimate" :is-comment="false" />
       </div>
       <div class="action-container">
         <q-btn
