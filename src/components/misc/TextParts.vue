@@ -13,16 +13,21 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import { splitHtmlCache, effectiveLinesCache, simpleHash256 } from "src/utils/lru";
 
 interface Props {
   text: string;
   html?: boolean;
   defaultSize?: number;
+  defaultLines?: number;
+  lineCharacters?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   html: false,
-  defaultSize: 1750
+  defaultSize: 1450,
+  defaultLines: 25,
+  lineCharacters: 58
 });
 
 const TOKEN_REGEX = /(<[^>]+>|[^<]+)/g;
@@ -31,12 +36,21 @@ const BR_TAG_REGEX = /^<br\s*\/?>/i;
 const HR_TAG_REGEX = /^<hr\s*\/?>/i;
 const CLOSING_TAG_REGEX = /^<\/(\w+)>/;
 const OPENING_TAG_REGEX = /^<(\w+)/;
+const NEWLINE_REGEX = /\n/g;
+const BR_HR_REGEX = /<br\s*\/?>|<hr\s*\/?>/gi;
+const TAG_REGEX = /<[^>]*>/g;
 
-function splitHtml(html: string, maxCount: number): string[] {
+function splitHtml(html: string, maxCount: number, maxLines: number): string[] {
+  const hash = simpleHash256(html + maxCount + maxLines);
+  const cached = splitHtmlCache.get(hash);
+  if (cached) return cached as string[];
+
   const tokens = html.match(TOKEN_REGEX) || [];
   const parts: string[] = [];
   let currentPart = "";
   let charCount = 0;
+  let lineCount = 0;
+  let lineCharCount = 0;
   const openTagsStack: string[] = [];
 
   const getClosingTags = () =>
@@ -51,9 +65,18 @@ function splitHtml(html: string, maxCount: number): string[] {
   for (const token of tokens) {
     if (token.startsWith("<")) {
       currentPart += token;
-
+      if (BR_TAG_REGEX.test(token) || HR_TAG_REGEX.test(token)) {
+        lineCount++;
+        lineCharCount = 0;
+        if (lineCount >= maxLines) {
+          parts.push(currentPart + getClosingTags());
+          currentPart = getOpeningTags();
+          charCount = 0;
+          lineCount = 0;
+          lineCharCount = 0;
+        }
+      }
       const isSelfClosing = SELF_CLOSING_REGEX.test(token) || BR_TAG_REGEX.test(token) || HR_TAG_REGEX.test(token);
-
       if (!isSelfClosing) {
         if (CLOSING_TAG_REGEX.test(token)) {
           const tagMatch = token.match(CLOSING_TAG_REGEX);
@@ -74,16 +97,32 @@ function splitHtml(html: string, maxCount: number): string[] {
     } else {
       let remainingText = token;
       while (remainingText.length > 0) {
-        const available = maxCount - charCount;
-        const take = remainingText.slice(0, available);
+        const availableOverall = maxCount - charCount;
+        const availableImplicit = props.lineCharacters - lineCharCount;
+        const takeLength = Math.min(availableOverall, availableImplicit, remainingText.length);
+        const take = remainingText.slice(0, takeLength);
         currentPart += take;
-        charCount += take.length;
-        remainingText = remainingText.slice(take.length);
+        charCount += takeLength;
+        lineCharCount += takeLength;
+        remainingText = remainingText.slice(takeLength);
 
+        if (lineCharCount >= props.lineCharacters) {
+          lineCount++;
+          lineCharCount = 0;
+          if (lineCount >= maxLines) {
+            parts.push(currentPart + getClosingTags());
+            currentPart = getOpeningTags();
+            charCount = 0;
+            lineCount = 0;
+            lineCharCount = 0;
+          }
+        }
         if (charCount === maxCount) {
           parts.push(currentPart + getClosingTags());
           currentPart = getOpeningTags();
           charCount = 0;
+          lineCharCount = 0;
+          lineCount = 0;
         }
       }
     }
@@ -93,18 +132,79 @@ function splitHtml(html: string, maxCount: number): string[] {
     parts.push(currentPart + getClosingTags());
   }
 
+  splitHtmlCache.put(hash, parts);
+
+  return parts;
+}
+
+function splitPlainText(text: string, maxCount: number, maxLines: number): string[] {
+  const parts: string[] = [];
+  let currentPart = "";
+  let charCount = 0;
+  let lineCount = 0;
+  let lineCharCount = 0;
+  let i = 0;
+  while (i < text.length) {
+    const availableOverall = maxCount - charCount;
+    const availableImplicit = props.lineCharacters - lineCharCount;
+    const newlineIndex = text.indexOf("\n", i);
+    const availableToNewline = newlineIndex !== -1 ? newlineIndex - i + 1 : Infinity;
+    const takeLength = Math.min(availableOverall, availableImplicit, availableToNewline, text.length - i);
+    currentPart += text.slice(i, i + takeLength);
+    charCount += takeLength;
+    lineCharCount += takeLength;
+    i += takeLength;
+
+    if (newlineIndex !== -1 && newlineIndex < i) {
+      lineCount++;
+      lineCharCount = 0;
+    }
+    if (lineCharCount >= props.lineCharacters) {
+      lineCount++;
+      lineCharCount = 0;
+    }
+    if (charCount === maxCount || lineCount === maxLines) {
+      parts.push(currentPart);
+      currentPart = "";
+      charCount = 0;
+      lineCount = 0;
+      lineCharCount = 0;
+    }
+  }
+  if (currentPart) {
+    parts.push(currentPart);
+  }
   return parts;
 }
 
 const parts = computed(() => {
   if (!props.text) return [];
-  if (props.text.length < props.defaultSize) return [props.text];
+  const effectiveLinesKey = simpleHash256(
+    props.text + props.html + props.defaultSize + props.defaultLines + props.lineCharacters
+  );
+  let effectiveLines: number;
+  const cachedEffective = effectiveLinesCache.get(effectiveLinesKey);
+  if (cachedEffective !== undefined) {
+    effectiveLines = cachedEffective as number;
+  } else if (props.html) {
+    const explicitLines = (props.text.match(BR_HR_REGEX) || []).length;
+    const stripped = props.text.replace(TAG_REGEX, "");
+    const implicitLines = Math.floor(stripped.length / props.lineCharacters);
+    effectiveLines = explicitLines + implicitLines;
+  } else {
+    const explicitLines = (props.text.match(NEWLINE_REGEX) || []).length;
+    const implicitLines = Math.floor(props.text.length / props.lineCharacters);
+    effectiveLines = explicitLines + implicitLines;
+  }
 
+  effectiveLinesCache.put(effectiveLinesKey, effectiveLines);
+
+  if (props.text.length < props.defaultSize && effectiveLines < props.defaultLines) {
+    return [props.text];
+  }
   return props.html
-    ? splitHtml(props.text, props.defaultSize)
-    : Array.from({ length: Math.ceil(props.text.length / props.defaultSize) }, (_, i) =>
-        props.text.slice(i * props.defaultSize, (i + 1) * props.defaultSize)
-      );
+    ? splitHtml(props.text, props.defaultSize, props.defaultLines)
+    : splitPlainText(props.text, props.defaultSize, props.defaultLines);
 });
 
 const showedIndex = ref(0);
