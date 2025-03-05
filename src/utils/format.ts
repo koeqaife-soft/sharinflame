@@ -1,4 +1,5 @@
 import DOMPurify from "dompurify";
+import { formatCache, formatNumCache, simpleHash256 } from "./lru";
 
 const NUMBER_FORMATTERS = Object.freeze([
   Object.freeze({ limit: 1_000_000_000_000, suffix: "T" }),
@@ -43,17 +44,34 @@ const dateFormatters = new Map<string, Intl.DateTimeFormat>();
 const sanitize = DOMPurify.sanitize.bind(DOMPurify);
 
 export function formatNumber(num: number): string {
-  if (num < 1_000) return num.toString();
+  const cached = formatNumCache.get(num);
+  if (cached) return cached as string;
+
+  if (num < 1_000) {
+    const result = num.toString();
+    formatNumCache.put(num, result);
+    return result;
+  }
   for (const { limit, suffix } of NUMBER_FORMATTERS) {
     if (num >= limit) {
       const formatted = Math.floor((num / limit) * 10) / 10;
       return formatted + suffix;
     }
   }
-  return num.toString();
+
+  const result = num.toString();
+  formatNumCache.put(num, result);
+
+  return result;
 }
 
-export function formatStringForHtml(str: string): string {
+export function formatStringForHtml(str: string) {
+  const hash = simpleHash256(str);
+  const cached = formatCache.get(hash);
+  if (cached) {
+    return cached as string;
+  }
+
   const sanitized = sanitize(str, { ALLOWED_TAGS: ALLOWED_TAGS as string[] });
 
   // First, replace URLs with links
@@ -74,6 +92,8 @@ export function formatStringForHtml(str: string): string {
     }
     return match;
   });
+
+  formatCache.put(hash, result);
 
   return result;
 }
