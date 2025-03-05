@@ -10,52 +10,26 @@
       </div>
     </q-card-section>
     <q-card-actions class="actions" :class="{ 'can-animate': canAnimate }">
-      <div class="action-container">
-        <q-btn
-          unelevated
-          icon="sym_r_thumb_up"
-          :label="formatNumber(commentRef.likes_count)"
-          :class="['like round-left button', { active: commentRef.is_like === true }]"
-          size="sm"
-          @click="like"
-        />
-        <q-separator vertical class="separator" />
-        <q-btn
-          unelevated
-          icon="sym_r_thumb_down"
-          :label="formatNumber(commentRef.dislikes_count)"
-          :class="['dislike round-right button', { active: commentRef.is_like === false }]"
-          size="sm"
-          @click="dislike"
-        />
-      </div>
-      <div class="action-container circle">
-        <q-btn
-          unelevated
-          icon="sym_r_favorite"
-          :class="['comments button circle', { active: commentRef.is_fav }]"
-          size="sm"
-          @click="favoriteButton"
-        />
+      <div class="reaction-buttons">
+        <reaction-buttons :object="commentRef" :before-action="allowAnimate" />
       </div>
     </q-card-actions>
   </q-card>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { defineAsyncComponent, ref, toRef } from "vue";
 import OpenUserDialog from "../dialogs/OpenUserDialog.vue";
-import { formatNumber, formatStringForHtml } from "src/utils/format";
-import { useReaction } from "src/composables/useReaction";
+import { formatStringForHtml } from "src/utils/format";
+
+const ReactionButtons = defineAsyncComponent(() => import("./ReactionButtons.vue"));
 
 const props = defineProps<{
   comment: CommentWithUser;
 }>();
 
 const canAnimate = ref(false);
-
-const commentRef = ref(props.comment);
-const { like, dislike, favoriteButton } = useReaction(commentRef, true, allowAnimate);
+const commentRef = toRef(props.comment);
 
 function allowAnimate() {
   canAnimate.value = true;
