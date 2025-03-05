@@ -45,8 +45,7 @@ const dateFormatters = new Map<string, Intl.DateTimeFormat>();
 const sanitize = DOMPurify.sanitize.bind(DOMPurify);
 
 export function formatNumber(num: number): string {
-  const cached = formatNumCache.get(num);
-  if (cached) return cached as string;
+  if (formatNumCache.has(num)) return formatNumCache.get(num)!;
 
   if (num < 1_000) {
     const result = num.toString();
@@ -68,10 +67,7 @@ export function formatNumber(num: number): string {
 
 export function formatStringForHtml(str: string) {
   const hash = simpleHash256(str);
-  const cached = formatCache.get(hash);
-  if (cached) {
-    return cached as string;
-  }
+  if (formatCache.has(hash)) return formatCache.get(hash)!;
 
   const sanitized = sanitize(str, { ALLOWED_TAGS: ALLOWED_TAGS as string[] });
 

@@ -42,8 +42,7 @@ const TAG_REGEX = /<[^>]*>/g;
 
 function splitHtml(html: string, maxCount: number, maxLines: number): string[] {
   const hash = simpleHash256(html + maxCount + maxLines);
-  const cached = splitHtmlCache.get(hash);
-  if (cached) return cached as string[];
+  if (splitHtmlCache.has(hash)) return splitHtmlCache.get(hash)!;
 
   const tokens = html.match(TOKEN_REGEX) || [];
   const parts: string[] = [];
@@ -183,9 +182,8 @@ const parts = computed(() => {
     props.text + props.html + props.defaultSize + props.defaultLines + props.lineCharacters
   );
   let effectiveLines: number;
-  const cachedEffective = effectiveLinesCache.get(effectiveLinesKey);
-  if (cachedEffective !== undefined) {
-    effectiveLines = cachedEffective as number;
+  if (effectiveLinesCache.has(effectiveLinesKey)) {
+    effectiveLines = effectiveLinesCache.get(effectiveLinesKey)!;
   } else if (props.html) {
     const explicitLines = (props.text.match(BR_HR_REGEX) || []).length;
     const stripped = props.text.replace(TAG_REGEX, "");
