@@ -1,8 +1,8 @@
 <template>
   <q-card class="post card" unelevated :key="postRef.post_id">
     <q-card-section class="q-pb-none">
-      <div class="avatar-container">
-        <open-user-dialog :user="postRef.user" v-if="!postRef.is_system" />
+      <div class="avatar-container" v-if="!postRef.is_system">
+        <open-user-dialog :user="postRef.user" />
       </div>
       <div class="text-container">
         <div class="username">
