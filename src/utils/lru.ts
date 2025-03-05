@@ -1,3 +1,6 @@
+import XXH from "xxhashjs";
+const seed = 0xabcd;
+
 export type EvictionCallback<K, V> = (key: K, value: V) => void;
 
 interface Node<K, V> {
@@ -114,15 +117,9 @@ export class LRUCache<K, V> {
 }
 
 export function simpleHash256(str: string): string {
-  const hashes = new Uint32Array(8).fill(0xdeadbeef);
-  for (let i = 0; i < str.length; i++) {
-    const charCode = str.charCodeAt(i);
-    hashes[i % 8] = (hashes[i % 8]! << 5) - hashes[i % 8]! + charCode;
-    hashes[i % 8]! |= 0;
-  }
-  return Array.from(hashes, (h) => h.toString(16).padStart(8, "0")).join("");
+  const hash = XXH.h32(str, seed);
+  return hash.toString(16);
 }
-
 export const formatCache = new LRUCache<string, string>(128);
 export const formatNumCache = new LRUCache<number, string>(256);
 export const effectiveLinesCache = new LRUCache<string, number>(256);
