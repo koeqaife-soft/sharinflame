@@ -30,38 +30,18 @@
       </q-carousel>
     </q-card-section>
     <q-card-section class="q-pb-none tags" v-if="!postRef.is_system && postRef.tags?.length > 0">
-      <q-chip v-for="(tag, index) in postRef.tags" :key="index" class="tag" :icon="tagsInfo[tag]?.icon || 'sym_r_tag'">
-        {{ tagsInfo[tag]?.name || tag }}
+      <q-chip
+        v-for="(tag, index) in postRef.tags"
+        :key="index"
+        class="tag"
+        :icon="$tagsInfo.value[tag]?.icon || 'sym_r_tag'"
+      >
+        {{ $tagsInfo.value[tag]?.name || tag }}
       </q-chip>
     </q-card-section>
     <q-card-actions class="actions" :class="{ 'can-animate': canAnimate }" v-if="!postRef.is_system">
-      <div class="action-container">
-        <q-btn
-          unelevated
-          icon="sym_r_thumb_up"
-          :label="formatNumber(postRef.likes_count)"
-          :class="['like round-left button', { active: postRef.is_like === true }]"
-          size="sm"
-          @click="like"
-        />
-        <q-separator vertical class="separator" />
-        <q-btn
-          unelevated
-          icon="sym_r_thumb_down"
-          :label="formatNumber(postRef.dislikes_count)"
-          :class="['dislike round-right button', { active: postRef.is_like === false }]"
-          size="sm"
-          @click="dislike"
-        />
-      </div>
-      <div class="action-container circle">
-        <q-btn
-          unelevated
-          icon="sym_r_favorite"
-          :class="['comments button circle', { active: postRef.is_fav }]"
-          size="sm"
-          @click="favoriteButton"
-        />
+      <div class="reaction-buttons">
+        <reaction-buttons :object="postRef" :before-action="allowAnimate" />
       </div>
       <div class="action-container">
         <q-btn
@@ -99,20 +79,19 @@
 </template>
 
 <script setup lang="ts">
-import { computed, defineAsyncComponent, type Ref, ref } from "vue";
+import { defineAsyncComponent, type Ref, ref, toRef } from "vue";
 import { deletePost } from "src/api/posts";
 import { formatNumber, formatStringForHtml } from "src/utils/format";
 import { useQuasar } from "quasar";
-import { useI18n } from "vue-i18n";
-import { useReaction } from "src/composables/useReaction";
+import { i18n } from "src/boot/i18n";
 import TextParts from "../misc/TextParts.vue";
 
+const ReactionButtons = defineAsyncComponent(() => import("./ReactionButtons.vue"));
 const OpenUserDialog = defineAsyncComponent(() => import("../dialogs/OpenUserDialog.vue"));
 const PostDialog = defineAsyncComponent(() => import("../dialogs/PostDialog.vue"));
 const MoreMenu = defineAsyncComponent(() => import("./PostMoreMenu.vue"));
 const PostEditor = defineAsyncComponent(() => import("../dialogs/PostEditor.vue"));
 const quasar = useQuasar();
-const { t } = useI18n();
 
 const emit = defineEmits<{
   (event: "deletePost", postId: string): void;
@@ -123,35 +102,16 @@ const props = defineProps<{
   inDialog?: boolean;
 }>();
 
-const postRef = ref<PostWithSystem>(props.post);
+const postRef = toRef(props.post);
 
 const currentSlide: Ref<string | number> = ref(0);
 const isFullscreen = ref(false);
 
 const canAnimate = ref(false);
 
-let like = () => {};
-let dislike = () => {};
-let favoriteButton = () => {};
-
-if (!postRef.value.is_system) {
-  ({ like, dislike, favoriteButton } = useReaction(postRef as unknown as Ref<Post>, true, allowAnimate));
-}
-
 function allowAnimate() {
   canAnimate.value = true;
 }
-
-const tagsInfo = computed<Record<string, { name: string; icon: string }>>(() => ({
-  "ai-generated": {
-    name: t("tag.ai_name"),
-    icon: "sym_r_robot_2"
-  },
-  "is-nsfw": {
-    name: t("tag.nsfw_name"),
-    icon: "sym_r_explicit"
-  }
-}));
 
 function postDialog() {
   if (props.inDialog) return;
@@ -164,6 +124,8 @@ function postDialog() {
 }
 
 async function action(type: string, data: unknown) {
+  const { t } = i18n.global;
+
   switch (type) {
     case "delete":
       try {
