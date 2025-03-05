@@ -51,23 +51,18 @@ const virtualScroll = ref<DefineComponent | null>(null);
 
 const { t } = useI18n();
 
-watch(() => props.type, onTypeChange);
+watch(() => props.type, reloadPosts);
 
 function onScroll(info: QScrollObserverDetails) {
   headerVisible.value = info.position.top < 60 || info.direction == "up";
 }
 
-function onTypeChange() {
+function reset() {
   items.value = [];
   toView.length = 0;
-  reset();
-  scrollKey.value = `${props.type}-${Date.now()}`;
-  headerVisible.value = true;
-}
-
-function reset() {
   notLoaded.length = 0;
   loaded.length = 0;
+  headerVisible.value = true;
 }
 
 async function viewInChunks(posts: string[], chunkSize: number = 10) {
@@ -83,7 +78,6 @@ async function viewInChunks(posts: string[], chunkSize: number = 10) {
 }
 
 function reloadPosts() {
-  items.value = [];
   reset();
   scrollKey.value = `${props.type}-${Date.now()}`;
 }
