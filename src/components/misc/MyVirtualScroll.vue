@@ -50,7 +50,7 @@ const props = withDefaults(defineProps<Props>(), {
   margins: 0,
   offset: 250,
   bottomOffset: 250,
-  debounce: 50,
+  debounce: 25,
   minItemHeight: 125,
   infiniteLoadType: "none"
 });
@@ -88,7 +88,7 @@ const stopInfiniteLoad = ref(false);
 const showLoading = ref(false);
 const showLoadingSlot = computed(() => isLoading.value && showLoading.value);
 
-const fastScrollDelta = computed(() => 1800 * (Math.log2(props.debounce + 1) / Math.log2(150 + 1)));
+const fastScrollDelta = computed(() => 2000 * (Math.log2(props.debounce + 1) / Math.log2(150 + 1)));
 
 // -------------------------
 // HELPERS & UTILS
@@ -169,7 +169,7 @@ function onScroll(info: QScrollObserverDetails) {
       updateVisibleItems();
       updateVisibleTimeout = null;
     }, 100);
-  } else {
+  } else if (!updateVisibleTimeout) {
     throttledUpdateVisibleItems();
   }
   checkLoading();
