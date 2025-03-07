@@ -13,6 +13,7 @@ interface PaletteEntry {
   hex?: string;
   link?: string;
   luminance?: string;
+  flags?: string[];
 }
 
 type Palette = Record<string, PaletteEntry>;
@@ -77,6 +78,7 @@ function hslToRgb(h: number, s: number, l: number): [number, number, number] {
 
 function adjustLightness(h: number, s: number, l: number, targetLuminance = 50): number {
   const [r, g, b] = hslToRgb(h, s, l);
+  console.log(r, g, b);
 
   const Y = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
 
@@ -91,13 +93,14 @@ function adjustLightness(h: number, s: number, l: number, targetLuminance = 50):
 function adjustSaturation(h: number, s: number): number {
   let factor = 1;
 
-  if (h >= 50 && h <= 150) {
-    const t = (h - 70) / 80;
-    factor = 1 - 0.2 * Math.sin(Math.PI * t);
-  } else if (h > 150 && h <= 240) {
-    const t = (h - 150) / 90;
-    factor = 1 + 0.2 * Math.sin((Math.PI / 2) * t);
+  if (h >= 90 && h <= 150) {
+    if (h <= 120) factor = 1 - ((h - 90) / 30) * 0.2;
+    else factor = 0.8 + ((h - 120) / 30) * 0.2;
+  } else if (h >= 180 && h <= 300) {
+    const k = 0.140625;
+    factor = 1 + k * Math.sin(((h - 180) * Math.PI) / 120);
   }
+
   const newS = s * factor;
   return newS > 100 ? 100 : newS;
 }
@@ -116,18 +119,15 @@ function generateColor(hsl: Hsl, entry: PaletteEntry): Hsl {
   if (entry.h) hue = applyValue(hue, entry.h, adjustHue);
   if (entry.s) saturation = applyValue(saturation, entry.s, adjustValue);
   if (entry.l) lightness = applyValue(lightness, entry.l, adjustValue);
+  if (!entry.flags?.includes("no-adjust")) saturation = adjustSaturation(hue, saturation);
 
-  if (entry.luminance !== undefined) {
-    saturation = adjustSaturation(hue, saturation);
-    lightness = adjustLightness(hue, saturation, lightness, Number(entry.luminance));
-  }
+  if (entry.luminance !== undefined) lightness = adjustLightness(hue, saturation, lightness, Number(entry.luminance));
 
-  if (entry.min_l && lightness < Number(entry.min_l)) {
-    lightness = Number(entry.min_l);
-  }
-  if (entry.max_l && lightness > Number(entry.max_l)) {
-    lightness = Number(entry.max_l);
-  }
+  const minL = entry.min_l ? Number(entry.min_l) : 0;
+  const maxL = entry.max_l ? Number(entry.max_l) : 100;
+
+  if (entry.min_l && lightness < minL) lightness = minL;
+  if (entry.max_l && lightness > maxL) lightness = maxL;
 
   return [hue, saturation, lightness];
 }
@@ -143,11 +143,8 @@ export function generateColors(palette: Palette, baseHsl: Hsl, suffix: string = 
     } else if (entry.link && generated[entry.link]) {
       generated[key] = generated[entry.link]!;
     } else {
-      if (entry.link && generatedHsl[entry.link]) {
-        generatedHsl[key] = generateColor(generatedHsl[entry.link]!, entry);
-      } else {
-        generatedHsl[key] = generateColor(baseHsl, entry);
-      }
+      if (entry.link && generatedHsl[entry.link]) generatedHsl[key] = generateColor(generatedHsl[entry.link]!, entry);
+      else generatedHsl[key] = generateColor(baseHsl, entry);
     }
   }
 
