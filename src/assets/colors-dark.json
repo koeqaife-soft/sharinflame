@@ -37,8 +37,8 @@
   },
   "background-variant": {
     "s": ["=", "8"],
-    "l": ["=", "7"],
-    "luminance": "7"
+    "l": ["=", "17"],
+    "luminance": "17"
   },
   "on-background-variant": {
     "s": ["=", "7"],
