@@ -78,7 +78,6 @@ function hslToRgb(h: number, s: number, l: number): [number, number, number] {
 
 function adjustLightness(h: number, s: number, l: number, targetLuminance = 50): number {
   const [r, g, b] = hslToRgb(h, s, l);
-  console.log(r, g, b);
 
   const Y = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
 
