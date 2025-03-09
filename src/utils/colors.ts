@@ -167,6 +167,7 @@ export function generateAll(Hsl: Hsl) {
 
 export function setCss(colors: ReturnType<typeof generateAll>) {
   for (const key in colors) {
+    if (key.startsWith("$")) continue;
     document.documentElement.style.setProperty(`--${key}`, colors[key]!);
   }
 }
