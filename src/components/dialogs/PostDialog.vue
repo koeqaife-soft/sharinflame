@@ -35,7 +35,7 @@
           ref="virtualScroll"
         >
           <template v-slot:default="{ item }">
-            <comment-component :comment="item" class="q-mb-sm" />
+            <comment-component :comment="item" class="q-mb-sm" @delete-comment="handleDeleteComment" />
           </template>
           <template v-slot:loading>
             <div class="row justify-center q-my-md">
@@ -220,6 +220,12 @@ async function sendComment() {
 
 function handleDeletePost() {
   dialogRef.value?.hide();
+}
+
+function handleDeleteComment(comment_id: string) {
+  items.value = items.value.filter((comment) => comment.comment_id !== comment_id);
+  postRef.value.comments_count -= 1;
+  virtualScroll.value?.updateShowedItems();
 }
 
 onMounted(() => {
