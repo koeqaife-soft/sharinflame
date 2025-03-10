@@ -12,6 +12,7 @@ export const postsEndpoints = {
   view: "/posts/view",
   get_posts_batch: "/posts/batch",
   comments: (post_id: string) => `/posts/${post_id}/comments`,
+  comment_actions: (post_id: string, comment_id: string) => `/posts/${post_id}/comments/${comment_id}`,
   comment_reactions: (post_id: string, comment_id: string) => `/posts/${post_id}/comments/${comment_id}/reactions`,
   get_user_posts: (user_id: string) => `/users/${user_id}/posts`
 };
@@ -100,6 +101,10 @@ async function createComment(post_id: string, content: string) {
   return await api.post<ApiResponse<Comment>>(postsEndpoints.comments(post_id), data);
 }
 
+async function deleteComment(post_id: string, comment_id: string) {
+  return await api.delete(postsEndpoints.comment_actions(post_id, comment_id));
+}
+
 async function getComments(post_id: string, cursor?: string) {
   return await api.get<GetCommentsResponse>(postsEndpoints.comments(post_id), {
     params: cursor ? { cursor } : undefined
@@ -136,5 +141,6 @@ export {
   getComments,
   getUserPosts,
   createPost,
-  deletePost
+  deletePost,
+  deleteComment
 };
