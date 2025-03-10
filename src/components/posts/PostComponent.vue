@@ -35,13 +35,14 @@
         :key="index"
         class="tag"
         :icon="$tagsInfo.value[tag]?.icon || 'sym_r_tag'"
+        :disable="disable"
       >
         {{ $tagsInfo.value[tag]?.name || tag }}
       </q-chip>
     </q-card-section>
     <q-card-actions class="actions" :class="{ 'can-animate': canAnimate }" v-if="!postRef.is_system">
       <div class="reaction-buttons">
-        <reaction-buttons :object="postRef" :before-action="allowAnimate" :is-comment="false" />
+        <reaction-buttons :object="postRef" :before-action="allowAnimate" :is-comment="false" :disable="disable" />
       </div>
       <div class="action-container">
         <q-btn
@@ -51,11 +52,12 @@
           class="comments round button"
           size="sm"
           @click="postDialog"
+          :disable="disable"
         />
       </div>
       <q-space />
       <div class="action-container circle">
-        <q-btn unelevated icon="sym_r_more_horiz" class="more button circle" size="sm">
+        <q-btn unelevated icon="sym_r_more_horiz" class="more button circle" size="sm" :disable="disable">
           <q-menu class="post-more-menu" self="top right">
             <more-menu :post="postRef" @action="action" />
           </q-menu>
@@ -72,6 +74,7 @@
           class="round button"
           size="sm"
           @click="action.func()"
+          :disable="disable"
         />
       </div>
     </q-card-actions>
@@ -106,6 +109,7 @@ const postRef = toRef(props.post);
 
 const currentSlide: Ref<string | number> = ref(0);
 const isFullscreen = ref(false);
+const disable = ref(false);
 
 const canAnimate = ref(false);
 
@@ -138,6 +142,7 @@ async function action(type: string, data: unknown) {
           caption: t("post_deleted.caption")
         });
         emit("deletePost", postRef.value.post_id);
+        disable.value = true;
       } catch (e) {
         quasar.notify({
           type: "error-notification",
