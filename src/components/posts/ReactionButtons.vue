@@ -7,6 +7,7 @@
       :class="['like round-left button', { active: itemRef.is_like === true }]"
       size="sm"
       @click="like"
+      :disable="disable"
     />
     <q-separator vertical class="separator" />
     <q-btn
@@ -16,6 +17,7 @@
       :class="['dislike round-right button', { active: itemRef.is_like === false }]"
       size="sm"
       @click="dislike"
+      :disable="disable"
     />
   </div>
   <div class="action-container circle">
@@ -25,6 +27,7 @@
       :class="['comments button circle', { active: itemRef.is_fav }]"
       size="sm"
       @click="favoriteButton"
+      :disable="disable"
     />
   </div>
 </template>
@@ -56,6 +59,7 @@ const props = defineProps<{
   object: ReactionItem;
   beforeAction?: () => void;
   isComment: boolean;
+  disable?: boolean;
 }>();
 
 const itemRef = toRef(props.object);
