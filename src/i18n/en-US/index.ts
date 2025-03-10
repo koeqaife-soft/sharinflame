@@ -51,6 +51,13 @@ export default {
     report: "Report"
   },
 
+  comment_options: {
+    copy_id: "Copy Id",
+    delete: "Delete Comment",
+    report: "Report",
+    created_at: "Created At"
+  },
+
   an_error_occurred: "An error occurred",
 
   connecting: "Connecting",
@@ -119,6 +126,11 @@ export default {
     caption: "Your post has been edited",
     failed: "Failed to edit post",
     not_changed: "Edit the post!"
+  },
+  comment_deleted: {
+    msg: "Comment deleted",
+    caption: "Your comment has been deleted.",
+    failed: "Could not delete the comment."
   },
 
   reaction_failed: "Failed to put a reaction",
