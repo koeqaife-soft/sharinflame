@@ -246,11 +246,13 @@
   }
 }
 
-.post-more-menu {
+.post-more-menu,
+.comment-more-menu {
   padding-top: 8px;
   padding-bottom: 8px;
   .icon {
     @include iconSize(22);
+    align-self: center;
   }
   .text {
     font-size: 14px;
@@ -263,6 +265,19 @@
   .separator {
     margin-top: 8px;
     margin-bottom: 8px;
+  }
+  .label-container {
+    display: flex;
+    align-items: start;
+    gap: 0px;
+    .text {
+      align-self: flex-start;
+    }
+    .description {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--on-background-variant);
+    }
   }
 }
 
