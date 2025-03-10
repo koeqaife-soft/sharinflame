@@ -82,6 +82,7 @@ interface Comment {
   dislikes_count: number;
   is_like?: boolean;
   is_fav?: boolean;
+  created_at: number;
 }
 
 type CommentWithUser = Comment & {
