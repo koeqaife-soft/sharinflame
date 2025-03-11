@@ -122,8 +122,8 @@ let generatedCumulativeHeights: number[] = [];
 function updateVisibleItems() {
   const startIdx = binarySearch(generatedCumulativeHeights, top.value);
   const endIdx = binarySearch(generatedCumulativeHeights, bottom.value);
-  visibleIndexes.value[0] = Math.max(startIdx - 5, 0);
-  visibleIndexes.value[1] = Math.min(endIdx + 2, heights.value.length - 1);
+  visibleIndexes.value[0] = Math.max(startIdx - 12, 0);
+  visibleIndexes.value[1] = Math.min(endIdx + 8, heights.value.length - 1);
   fillersHeight.value[0] = generatedCumulativeHeights[visibleIndexes.value[0] - 1] ?? 0;
   fillersHeight.value[1] =
     (generatedCumulativeHeights[heights.value.length - 1] ?? 0) -
