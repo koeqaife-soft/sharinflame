@@ -9,6 +9,7 @@
         @load-more="loadMore"
         ref="virtualScroll"
         :min-item-height="58"
+        :no-resize-observer="true"
       >
         <template v-slot:default="{ item }">
           <user-card :user="item" class="q-mb-sm" />
@@ -25,9 +26,8 @@
 <script setup lang="ts">
 import { getFollowing } from "src/api/users";
 import MyVirtualScroll from "src/components/misc/MyVirtualScroll.vue";
-import { defineAsyncComponent, type DefineComponent, ref } from "vue";
-
-const UserCard = defineAsyncComponent(() => import("../../profile/UserCard.vue"));
+import UserCard from "../../profile/UserCard.vue";
+import { type DefineComponent, ref } from "vue";
 
 const items = ref<User[]>([]);
 const virtualScroll = ref<DefineComponent | null>(null);
