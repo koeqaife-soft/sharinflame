@@ -1,5 +1,6 @@
+import type { UINT } from "xxhashjs";
 import XXH from "xxhashjs";
-const seed = 0xabcd;
+const seed = Math.floor(Math.random() * 0xffffffff);
 
 export type EvictionCallback<K, V> = (key: K, value: V) => void;
 
@@ -212,11 +213,9 @@ export class ARCCache<K, V> {
   }
 }
 
-export function simpleHash256(str: string): string {
-  const hash = XXH.h32(str, seed);
-  return hash.toString(16);
-}
-export const formatCache = new ARCCache<string, string>(256);
+export const simpleHash256 = (str: string) => XXH.h32(str, seed);
+
+export const formatCache = new ARCCache<UINT, string>(256);
 export const formatNumCache = new ARCCache<number, string>(512);
-export const effectiveLinesCache = new ARCCache<string, number>(256);
-export const splitHtmlCache = new ARCCache<string, string[]>(256);
+export const effectiveLinesCache = new ARCCache<UINT, number>(256);
+export const splitHtmlCache = new ARCCache<UINT, string[]>(256);
