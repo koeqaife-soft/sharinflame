@@ -13,7 +13,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { splitHtmlCache, effectiveLinesCache, simpleHash256 } from "src/utils/lru";
+import { splitHtmlCache, effectiveLinesCache, simpleHash256 } from "src/utils/cache";
 
 interface Props {
   text: string;

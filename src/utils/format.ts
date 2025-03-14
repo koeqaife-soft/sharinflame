@@ -1,5 +1,5 @@
 import DOMPurify from "dompurify";
-import { formatCache, formatNumCache, simpleHash256 } from "./lru";
+import { formatCache, formatNumCache, simpleHash256 } from "./cache";
 
 const NUMBER_FORMATTERS = Object.freeze([
   Object.freeze({ limit: 1_000_000_000_000, suffix: "T" }),
