@@ -753,6 +753,10 @@
     cursor: pointer;
     flex-grow: 1;
   }
+  .avatar-container {
+    min-width: 42px;
+    min-height: 42px;
+  }
   @media (max-width: 500px) {
     .follow-button .q-icon {
       display: none;

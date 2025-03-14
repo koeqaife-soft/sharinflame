@@ -1,6 +1,8 @@
 <template>
   <div class="card user-card horizontal-container">
-    <open-user-dialog :user="userRef" />
+    <div class="avatar-container">
+      <open-user-dialog :user="userRef" />
+    </div>
     <div class="container name-container" @click="userDialog">
       <div class="display-name">{{ userRef.display_name || userRef.username }}</div>
       <div class="username">@{{ userRef.username }}</div>
