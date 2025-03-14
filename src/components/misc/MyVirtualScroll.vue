@@ -10,7 +10,7 @@
           :data-index="visibleIndexes[0] + i"
           :ref="
             (el) => {
-              if (el) divs[visibleIndexes[0] + i] = el as Element;
+              if (el && resizeObserver) divs[visibleIndexes[0] + i] = el as Element;
             }
           "
         >
@@ -44,6 +44,7 @@ interface Props {
   itemKey: keyof T;
   infiniteLoadType?: "bottom" | "none";
   minItemHeight?: number;
+  noResizeObserver?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -87,9 +88,6 @@ const isLoading = ref(false);
 const stopInfiniteLoad = ref(false);
 const showLoading = ref(false);
 const showLoadingSlot = computed(() => isLoading.value && showLoading.value);
-
-const fastScrollDelta = computed(() => 2000 * (Math.log2(props.debounce + 1) / Math.log2(150 + 1)));
-
 // -------------------------
 // HELPERS & UTILS
 // -------------------------
@@ -108,12 +106,10 @@ function binarySearch(arr: number[], value: number) {
   return low;
 }
 
-const itemHeightMargins = computed(() => props.minItemHeight + props.margins);
-
 function generateCumulativeHeights() {
   let total = 0;
   return heights.value.map((h) => {
-    total += (h ?? itemHeightMargins.value) + props.margins;
+    total += (h ?? props.minItemHeight) + props.margins;
     return total;
   });
 }
@@ -156,23 +152,14 @@ function throttledUpdateVisibleItems() {
   });
 }
 
-let updateVisibleTimeout: NodeJS.Timeout | null = null;
 function onScroll(info: QScrollObserverDetails) {
   emit("scroll", info);
-  const delta = Math.abs(info.delta.top);
   scrollPosition.value = info.position.top;
   recalculatePositionVariables();
 
-  if (delta > fastScrollDelta.value) {
-    if (updateVisibleTimeout) clearTimeout(updateVisibleTimeout);
-    updateVisibleTimeout = setTimeout(() => {
-      updateVisibleItems();
-      updateVisibleTimeout = null;
-    }, 100);
-  } else if (!updateVisibleTimeout) {
-    throttledUpdateVisibleItems();
-  }
-  checkLoading();
+  throttledUpdateVisibleItems();
+
+  if (props.infiniteLoadType === "bottom" && info.direction === "down") checkLoading();
 }
 
 function onResize() {
@@ -299,17 +286,18 @@ onMounted(() => {
   });
   if (scrollContent.value) intersectionObserver.observe(scrollContent.value);
 
-  resizeObserver = new ResizeObserver((entries) => {
-    for (const entry of entries) {
-      const indexAttr = entry.target.getAttribute("data-index");
-      if (indexAttr !== null) {
-        onItemHeightChange(Number(indexAttr), entry.contentRect.height);
-      } else {
-        checkLoading();
+  if (!props.noResizeObserver)
+    resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const indexAttr = entry.target.getAttribute("data-index");
+        if (indexAttr !== null) {
+          onItemHeightChange(Number(indexAttr), entry.contentRect.height);
+        } else {
+          checkLoading();
+        }
       }
-    }
-  });
-  if (scrollContainer.value) {
+    });
+  if (scrollContainer.value && resizeObserver) {
     resizeObserver.observe(scrollContainer.value);
   }
   updateObservedElements(divs.value);
@@ -337,7 +325,5 @@ onBeforeUnmount(() => {
 
     observedElements.clear();
   }
-
-  if (updateVisibleTimeout) clearTimeout(updateVisibleTimeout);
 });
 </script>
