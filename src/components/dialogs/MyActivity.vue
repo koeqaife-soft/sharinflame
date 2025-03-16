@@ -101,7 +101,7 @@ function setSelected(value: views[number]) {
 
 onMounted(() => {
   updateScreenSize();
-  window.addEventListener("resize", updateScreenSize);
+  window.addEventListener("resize", updateScreenSize, { passive: true });
 });
 
 onBeforeUnmount(() => {
