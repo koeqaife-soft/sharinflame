@@ -17,7 +17,6 @@ interface UpdateProfileValues {
   avatar_url?: string;
   banner_url?: string;
   bio?: string;
-  gender?: string;
   languages?: string[];
 }
 
