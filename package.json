@@ -17,18 +17,18 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.16.17",
-    "axios": "^1.7.9",
+    "axios": "^1.8.3",
     "dompurify": "^3.2.4",
     "pinia": "^2.3.1",
     "quasar": "^2.18.1",
     "vue": "^3.5.13",
-    "vue-i18n": "^11.1.1",
+    "vue-i18n": "^11.1.2",
     "vue-router": "^4.5.0",
     "xxhashjs": "^0.2.2"
   },
   "devDependencies": {
     "@electron/packager": "^18.3.6",
-    "@eslint/js": "^9.14.0",
+    "@eslint/js": "^9.22.0",
     "@intlify/unplugin-vue-i18n": "^6.0.3",
     "@quasar/app-vite": "^2.1.4",
     "@types/node": "^20.17.19",
