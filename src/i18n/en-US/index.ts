@@ -89,6 +89,7 @@ export default {
   },
   follow: "Follow",
   unfollow: "Unfollow",
+  edit: "Edit",
 
   sort: {
     new: "New",
@@ -154,5 +155,6 @@ export default {
   change_avatar: "Change Avatar",
   change_banner: "Change Banner",
   remove_avatar: "Remove Avatar",
-  remove_banner: "Remove Banner"
+  remove_banner: "Remove Banner",
+  cancel: "Cancel"
 };
