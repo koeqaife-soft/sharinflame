@@ -1,5 +1,11 @@
 @import "mixins";
 
+.body--light,
+.body--dark {
+  --disabled-button-bg: color-mix(in srgb, var(--text) 12%, transparent 88%);
+  --disabled-button-fg: color-mix(in srgb, var(--text) 62%, transparent 38%);
+}
+
 .default-button {
   border-radius: 8px;
   background-color: var(--primary);
@@ -7,6 +13,14 @@
   span,
   .loading {
     color: var(--on-primary);
+  }
+  &.disabled {
+    opacity: 1 !important;
+    background-color: var(--disabled-button-bg);
+    span,
+    .loading {
+      color: var(--disabled-button-fg);
+    }
   }
 }
 
@@ -18,6 +32,14 @@
   .loading {
     color: var(--on-secondary);
   }
+  &.disabled {
+    opacity: 1 !important;
+    background-color: var(--disabled-button-bg);
+    span,
+    .loading {
+      color: var(--disabled-button-fg);
+    }
+  }
 }
 
 .outlined-button {
@@ -28,6 +50,14 @@
   span,
   .loading {
     color: var(--secondary);
+  }
+  &.disabled {
+    opacity: 1 !important;
+    border-color: var(--disabled-button-fg);
+    span,
+    .loading {
+      color: var(--disabled-button-fg);
+    }
   }
 }
 
