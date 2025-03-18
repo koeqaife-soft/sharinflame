@@ -24,7 +24,7 @@
   }
   &.animate {
     transition: background-color 0.2s ease;
-    span,
+    span:not(.q-focus-helper),
     .loading {
       transition: color 0.2s ease;
     }
@@ -49,7 +49,7 @@
   }
   &.animate {
     transition: background-color 0.2s ease;
-    span,
+    span:not(.q-focus-helper),
     .loading {
       transition: color 0.2s ease;
     }
@@ -75,7 +75,7 @@
   }
   &.animate {
     transition: border-color 0.2s ease;
-    span,
+    span:not(.q-focus-helper),
     .loading {
       transition: color 0.2s ease;
     }
