@@ -98,6 +98,7 @@ const isMe = ref(false);
 
 const props = defineProps<{
   user: User;
+  notSync?: boolean;
 }>();
 
 const userRef = ref(props.user);
@@ -141,7 +142,10 @@ const changeType = (type: string) => {
 onMounted(async () => {
   mainStore.openedDialogs.user();
   mainStore.openedDialogs.user = dialogRef.value!.hide;
-  if (userRef.value?.user_id != profileStore.profile?.user_id) {
+  if (props.notSync) {
+    userRef.value = props.user;
+    isMe.value = userRef.value.user_id == profileStore.profile?.user_id;
+  } else if (userRef.value?.user_id != profileStore.profile?.user_id) {
     const profile = await profileStore.getProfile(userRef.value?.user_id);
     if (profile) {
       userRef.value = profile;
