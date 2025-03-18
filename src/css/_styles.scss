@@ -396,7 +396,7 @@ mark {
     height: 3px;
     opacity: 1;
   }
-  div:not(.q-notification__caption) {
+  div:not(.q-notification__caption):not(.q-notification__badge) {
     font-weight: 500;
     font-size: 15px;
     color: var(--text);
@@ -419,7 +419,7 @@ mark {
     height: 3px;
     opacity: 1;
   }
-  div:not(.q-notification__caption) {
+  div:not(.q-notification__caption):not(.q-notification__badge) {
     font-weight: 500;
     font-size: 15px;
     color: var(--on-error);
@@ -430,6 +430,11 @@ mark {
     opacity: 0.8;
     color: var(--on-error);
   }
+}
+
+.q-notification__badge {
+  background-color: var(--error);
+  color: var(--on-error);
 }
 
 .q-notifications__list {
