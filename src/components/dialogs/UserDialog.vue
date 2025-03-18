@@ -29,6 +29,15 @@
               @click="followButton"
               v-if="!isMe"
             />
+            <q-btn
+              :label="$t('edit')"
+              no-caps
+              unelevated
+              icon="sym_r_edit"
+              class="edit-profile-button default-button"
+              @click="editProfile"
+              v-else
+            />
           </div>
         </div>
         <category-buttons-container
@@ -70,7 +79,7 @@
   </q-dialog>
 </template>
 <script setup lang="ts">
-import { useDialogPluginComponent } from "quasar";
+import { useDialogPluginComponent, useQuasar } from "quasar";
 import UserAvatar from "../profile/UserAvatar.vue";
 import CloseableContent from "../misc/CloseableContent.vue";
 import CategoryButtonsContainer from "../categories/CategoryButtonsContainer.vue";
@@ -82,12 +91,14 @@ import { useProfileStore } from "src/stores/profile-store";
 import { randomSize } from "src/utils/random";
 import { follow, unfollow } from "src/api/users";
 
+const SettingsDialog = defineAsyncComponent(() => import("../dialogs/SettingsDialog.vue"));
 const UserDialogInfo = defineAsyncComponent(() => import("./user-dialog/UserInfo.vue"));
 const UserDialogPosts = defineAsyncComponent(() => import("./user-dialog/UserPosts.vue"));
 
 defineEmits([...useDialogPluginComponent.emits]);
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
 const { t } = useI18n();
+const quasar = useQuasar();
 const mainStore = useMainStore();
 const profileStore = useProfileStore();
 const meta = ref({});
@@ -138,6 +149,15 @@ async function followButton() {
 const changeType = (type: string) => {
   currentType.value = type;
 };
+
+function editProfile() {
+  quasar.dialog({
+    component: SettingsDialog,
+    componentProps: {
+      open: "my_account"
+    }
+  });
+}
 
 onMounted(async () => {
   mainStore.openedDialogs.user();

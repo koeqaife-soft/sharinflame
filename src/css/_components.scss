@@ -341,7 +341,8 @@
     }
   }
   @media (max-width: 600px) {
-    .follow-button .q-icon {
+    .follow-button .q-icon,
+    .edit-profile-button .q-icon {
       display: none;
     }
     .name-container {
@@ -417,7 +418,8 @@
     height: 60px;
     display: flex;
     margin-bottom: 10px;
-    .follow-button {
+    .follow-button,
+    .edit-profile-button {
       @include elevation(1);
       height: fit-content;
       align-self: center;
