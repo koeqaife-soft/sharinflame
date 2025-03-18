@@ -63,7 +63,7 @@ const user = ref<User>();
 const darkMode = ref(quasar.dark.isActive);
 
 watch(darkMode, (v) => {
-  quasar.dark.set(v);
+  if (quasar.dark.isActive != v) quasar.dark.set(v);
 });
 
 watch(
