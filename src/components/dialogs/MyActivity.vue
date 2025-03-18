@@ -15,7 +15,7 @@
         </div>
         <div v-show="isSmallScreen && current == 1" class="inner-page-label horizontal-container label-container">
           <q-btn flat round icon="sym_r_arrow_back" @click="() => (current = 0)" />
-          <div class="label">{{ $t(getItemByKey(selected).key) }}</div>
+          <div class="label">{{ $t(getItemByKey(selected).labelKey) }}</div>
         </div>
         <q-space />
         <q-btn flat round icon="sym_r_close" @click="dialogRef?.hide()" />
