@@ -127,6 +127,15 @@
         <q-btn
           unelevated
           no-caps
+          class="cancel-button outlined-button animate"
+          :label="$t('cancel')"
+          @click="onLoad"
+          :disable="Object.keys(updateValues).length === 0"
+          icon-right="sym_r_cancel"
+        />
+        <q-btn
+          unelevated
+          no-caps
           class="save-button default-button animate"
           :label="$t('apply')"
           @click="updateProfile"
@@ -204,11 +213,13 @@ function previewProfile() {
   });
 }
 
-onMounted(async () => {
+async function onLoad() {
   await profileStore.getProfile();
-  displayName.value = (displayName.value || profile.value?.display_name) ?? "";
-  aboutMe.value = (aboutMe.value || profile.value?.bio) ?? "";
-  if (languages.value.length === 0) languages.value = [...(profile.value?.languages ?? [])];
+  displayName.value = profile.value?.display_name ?? "";
+  aboutMe.value = profile.value?.bio ?? "";
+  languages.value = [...(profile.value?.languages ?? [])];
   loaded.value = true;
-});
+}
+
+onMounted(onLoad);
 </script>
