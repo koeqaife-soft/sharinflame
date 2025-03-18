@@ -22,6 +22,13 @@
       color: var(--disabled-button-fg);
     }
   }
+  &.animate {
+    transition: background-color 0.2s ease;
+    span,
+    .loading {
+      transition: color 0.2s ease;
+    }
+  }
 }
 
 .secondary-button {
@@ -38,6 +45,13 @@
     span,
     .loading {
       color: var(--disabled-button-fg);
+    }
+  }
+  &.animate {
+    transition: background-color 0.2s ease;
+    span,
+    .loading {
+      transition: color 0.2s ease;
     }
   }
 }
@@ -59,6 +73,13 @@
       color: var(--disabled-button-fg);
     }
   }
+  &.animate {
+    transition: border-color 0.2s ease;
+    span,
+    .loading {
+      transition: color 0.2s ease;
+    }
+  }
 }
 
 .card-button {
@@ -70,6 +91,16 @@
     color: var(--on-card);
     display: flex;
     justify-content: flex-start;
+  }
+}
+
+.q-btn .q-icon {
+  @include iconSize(24);
+  &.on-right {
+    margin-left: 6px;
+  }
+  &.on-left {
+    margin-right: 6px;
   }
 }
 
