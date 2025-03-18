@@ -51,6 +51,10 @@
 import { useDialogPluginComponent } from "quasar";
 import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from "vue";
 
+const props = defineProps<{
+  open?: views[number];
+}>();
+
 defineEmits([...useDialogPluginComponent.emits]);
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
@@ -61,7 +65,7 @@ const screenSize = ref(window.innerWidth);
 const isSmallScreen = computed(() => screenSize.value < 750);
 const current = ref(0);
 
-const selected = ref<views[number]>("my_account");
+const selected = ref<views[number]>(props.open ?? "my_account");
 
 const items = [
   {
