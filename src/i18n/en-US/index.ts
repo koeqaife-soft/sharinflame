@@ -141,5 +141,18 @@ export default {
   disliked: "Disliked",
   following: "Following",
 
-  more: "More"
+  more: "More",
+
+  my_account: "My Account",
+  profile: "Profile",
+  display_name: "Display Name",
+  add_language: "Add Language",
+  enter_language: "Enter Language",
+  preview: "Preview",
+  avatar: "Avatar",
+  banner: "Banner",
+  change_avatar: "Change Avatar",
+  change_banner: "Change Banner",
+  remove_avatar: "Remove Avatar",
+  remove_banner: "Remove Banner"
 };
