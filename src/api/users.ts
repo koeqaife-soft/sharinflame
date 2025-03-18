@@ -20,7 +20,7 @@ async function getProfile(user_id?: string) {
 }
 
 async function updateProfile(values: UpdateProfileValues) {
-  return await api.post(usersEndpoints.profile_me, values);
+  return await api.patch(usersEndpoints.profile_me, values);
 }
 
 async function addPostToFavorites(id: string) {
