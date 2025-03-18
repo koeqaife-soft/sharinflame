@@ -76,7 +76,7 @@
         <q-separator class="separator q-my-sm" />
         <div class="send-container">
           <q-btn
-            class="default-button"
+            class="default-button animate"
             :icon-right="editMode ? 'sym_r_edit' : 'sym_r_add'"
             :label="editMode ? $t('apply') : $t('create')"
             no-caps
