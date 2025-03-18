@@ -14,16 +14,28 @@ export let tagsInfo: ComputedRef<TagsInfo>;
 
 export default defineBoot(({ app }) => {
   const { t } = i18n.global;
-  tagsInfo = computed<TagsInfo>(() => ({
-    "ai-generated": {
-      name: t("tag.ai_name"),
-      icon: "sym_r_robot_2"
-    },
-    "is-nsfw": {
-      name: t("tag.nsfw_name"),
-      icon: "sym_r_explicit"
+  tagsInfo = computed<TagsInfo>((oldValue) => {
+    const newValue = {
+      "ai-generated": {
+        name: t("tag.ai_name"),
+        icon: "sym_r_robot_2"
+      },
+      "is-nsfw": {
+        name: t("tag.nsfw_name"),
+        icon: "sym_r_explicit"
+      }
+    };
+
+    const isEqual = (obj1: TagsInfo, obj2: TagsInfo): boolean => {
+      return JSON.stringify(obj1) === JSON.stringify(obj2);
+    };
+
+    if (oldValue && isEqual(oldValue, newValue)) {
+      return oldValue;
     }
-  }));
+
+    return newValue;
+  });
 
   app.config.globalProperties.$tagsInfo = tagsInfo;
 });
