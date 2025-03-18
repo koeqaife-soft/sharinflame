@@ -50,6 +50,7 @@
                 @keyup.enter="addLanguage"
                 borderless
                 class="language-input full-width"
+                maxlength="16"
               >
                 <template v-slot:append>
                   <q-btn

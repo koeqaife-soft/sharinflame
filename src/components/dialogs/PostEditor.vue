@@ -52,6 +52,7 @@
                     @keyup.enter="addTag"
                     borderless
                     class="tag-input full-width"
+                    maxlength="22"
                   >
                     <template v-slot:append>
                       <q-btn
