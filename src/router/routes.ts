@@ -1,5 +1,4 @@
 import type { RouteRecordRaw } from "vue-router";
-import { refreshToken } from "src/api/auth";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -20,7 +19,9 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/",
-    redirect: () => (refreshToken() ? "/app" : "/login")
+    component: () => import("layouts/MainLayout.vue"),
+    props: { showDarkModeToggle: true },
+    children: [{ path: "", component: () => import("pages/StartupPage.vue") }]
   },
 
   {

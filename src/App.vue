@@ -7,9 +7,10 @@
     transition-show="fade"
     transition-hide="fade"
     class="offline-dialog index-10000"
+    v-if="$router.currentRoute.value.path != '/'"
   >
     <main-layout :in-router="false" :show-dark-mode-toggle="true" class="layout">
-      <div class="_container">
+      <div class="logo-container">
         <logo-component icon-class="logo" />
         <div class="label">{{ $t("connecting") }}...</div>
       </div>

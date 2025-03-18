@@ -125,7 +125,7 @@ const _register = async () => {
   loading.value = true;
   try {
     const r = await register(username.value, email.value, password.value);
-    if (r.data.success) void router.push({ path: "/app" });
+    if (r.data.success) void router.push({ path: "/" });
   } catch (error) {
     if (isAxiosError(error)) {
       if (error.response?.data["error"] == "USERNAME_EXISTS") {

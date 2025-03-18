@@ -20,6 +20,10 @@ const setSettingsKey = (key: string, value: unknown) => {
 
 export const useMainStore = defineStore("main", {
   state: () => ({
+    // 0 -> App just started
+    // 1 -> Needs auth
+    // 2 -> Auth completed
+    initialized: 0 as 0 | 1 | 2,
     isOffline: true,
     connectTries: 4,
     openedDialogs: {

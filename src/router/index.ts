@@ -1,7 +1,9 @@
 import { createMemoryHistory, createRouter, createWebHashHistory, createWebHistory } from "vue-router";
-import { refreshToken } from "src/api/auth";
 
 import routes from "./routes";
+import { useMainStore } from "src/stores/main-store";
+
+let mainStore: ReturnType<typeof useMainStore>;
 
 const createHistory = process.env.SERVER
   ? createMemoryHistory
@@ -19,11 +21,13 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = refreshToken();
+  if (!mainStore) mainStore = useMainStore();
 
-  if (to.path !== "/login" && to.path !== "/register" && !isAuthenticated) {
+  if (mainStore.initialized === 0 && to.path !== "/") {
+    next({ path: "/" });
+  } else if (to.path !== "/login" && to.path !== "/register" && to.path !== "/" && mainStore.initialized === 1) {
     next({ path: "/login" });
-  } else if ((to.path === "/login" || to.path === "/register") && isAuthenticated) {
+  } else if ((to.path === "/login" || to.path === "/register") && mainStore.initialized === 2) {
     next({ path: "/app" });
   } else {
     next();
