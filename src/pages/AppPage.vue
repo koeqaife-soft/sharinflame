@@ -55,7 +55,7 @@ const currentCategory = computed(() => categoriesList.value.find((category) => c
 const categoriesMenuOpened = ref(false);
 
 const screenSize = ref(window.innerWidth);
-const isSmallScreen = computed(() => screenSize.value <= 814);
+const isSmallScreen = computed(() => screenSize.value <= 850);
 const isBigScreen = computed(() => screenSize.value >= 1200);
 
 const hideLeftColumn = computed(() => !isBigScreen.value);
