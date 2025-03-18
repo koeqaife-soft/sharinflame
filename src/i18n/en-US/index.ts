@@ -156,5 +156,10 @@ export default {
   change_banner: "Change Banner",
   remove_avatar: "Remove Avatar",
   remove_banner: "Remove Banner",
-  cancel: "Cancel"
+  cancel: "Cancel",
+  profile_updated: {
+    msg: "Profile updated",
+    caption: "Your profile has been updated.",
+    failed: "Failed to edit profile"
+  }
 };

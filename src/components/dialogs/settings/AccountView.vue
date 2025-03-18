@@ -154,9 +154,11 @@
 import { ref, computed, defineAsyncComponent, onMounted } from "vue";
 import { useProfileStore } from "src/stores/profile-store";
 import { type QInput, useQuasar } from "quasar";
+import { useI18n } from "vue-i18n";
 
 const UserDialog = defineAsyncComponent(() => import("../UserDialog.vue"));
 
+const { t } = useI18n();
 const quasar = useQuasar();
 const profileStore = useProfileStore();
 const profile = ref(profileStore.profile);
@@ -203,8 +205,24 @@ function removeLanguage(index: number) {
 }
 
 async function updateProfile() {
-  await profileStore.updateProfile(updateValues.value);
-  profile.value = profileStore.profile;
+  try {
+    await profileStore.updateProfile(updateValues.value);
+    profile.value = profileStore.profile;
+    quasar.notify({
+      type: "default-notification",
+      message: t("profile_updated.msg"),
+      caption: t("profile_updated.caption"),
+      progress: true,
+      icon: "sym_r_done_outline"
+    });
+  } catch (e) {
+    quasar.notify({
+      type: "error-notification",
+      message: t("profile_updated.failed"),
+      progress: true
+    });
+    throw e;
+  }
 }
 
 function previewProfile() {
