@@ -478,6 +478,8 @@
   .bio .text {
     font-size: 14px;
     font-weight: 400;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
   }
   .posts-infinite-scroll {
     z-index: 2;
@@ -620,7 +622,8 @@
     justify-content: flex-end;
   }
 }
-.enter-tag-menu {
+.enter-tag-menu,
+.enter-language-menu {
   padding-top: 2px;
   padding-bottom: 2px;
   padding-left: 12px;
@@ -647,7 +650,8 @@
   }
 }
 
-.my-activity-dialog {
+.my-activity-dialog,
+.settings-dialog {
   @media (min-width: 750px) {
     .dialog-content {
       max-width: 916px;
@@ -699,6 +703,68 @@
   }
   .card-button {
     @include elevation(1);
+  }
+}
+
+.settings-dialog {
+  .account-view {
+    .label {
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .label-icon {
+      @include iconSize(21);
+      margin-left: 4px;
+    }
+    .languages {
+      border-radius: 6px;
+      .label-icon {
+        margin-left: 8px;
+      }
+    }
+    .language {
+      background-color: var(--card);
+    }
+    .button-container {
+      justify-content: flex-end;
+    }
+    .profile-container {
+      padding-top: 10px;
+      .card {
+        box-shadow: none;
+        background-color: var(--card-high);
+      }
+    }
+    .change-banner,
+    .change-avatar {
+      padding-left: 16px;
+      padding-right: 16px;
+      .label-icon {
+        margin: 0;
+      }
+    }
+  }
+
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    width: 100%;
+  }
+
+  .input {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 16px;
+    padding-right: 16px;
+    background-color: var(--card-high);
+    border: 1px solid transparent;
+    border-radius: 6px;
+    transition: border-color 0.2s ease-out;
+    &.q-field--focused {
+      border-color: var(--primary);
+    }
   }
 }
 
