@@ -67,18 +67,17 @@ export const useProfileStore = defineStore("profile", {
       return profile.data;
     },
     async updateProfile(values: UpdateProfileValues) {
+      await this.getProfile("me");
       const r = await updateProfile(values);
-
-      this.profiles["me"] ??= {
-        data: undefined,
-        lastUpdate: 0,
-        isLoading: false
-      };
-      const profile = this.profiles["me"];
-
       if (r.status === 204) {
-        profile.data = undefined;
-        profile.lastUpdate = 0;
+        const profileData = this.profiles["me"]!.data!;
+        const keys: (keyof UpdateProfileValues)[] = ["display_name", "languages", "bio", "avatar_url", "banner_url"];
+        keys.forEach((key) => {
+          const value = values[key];
+          if (value !== undefined) {
+            profileData[key] = (key === "languages" ? [...(value as string[])] : value) as string & string[];
+          }
+        });
       }
     },
     startCleanup(interval: number = 10 * 60) {
