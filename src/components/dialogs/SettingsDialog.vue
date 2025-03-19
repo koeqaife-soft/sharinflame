@@ -40,6 +40,7 @@
           <div class="view full-width full-height" v-show="!isSmallScreen || current == 1" key="view">
             <keep-alive>
               <account-view v-if="showIf('my_account')" />
+              <appearance-view v-else-if="showIf('appearance')" />
             </keep-alive>
           </div>
         </transition>
@@ -59,7 +60,8 @@ defineEmits([...useDialogPluginComponent.emits]);
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
 const AccountView = defineAsyncComponent(() => import("./settings/AccountView.vue"));
-type views = ["my_account"];
+const AppearanceView = defineAsyncComponent(() => import("./settings/AppearanceView.vue"));
+type views = ["my_account", "appearance"];
 
 const screenSize = ref(window.innerWidth);
 const isSmallScreen = computed(() => screenSize.value < 750);
@@ -72,13 +74,18 @@ const items = [
     labelKey: "my_account",
     key: "my_account",
     icon: "sym_r_person"
+  },
+  {
+    labelKey: "appearance",
+    key: "appearance",
+    icon: "sym_r_palette"
   }
 ] as const;
 
 type ItemKey = (typeof items)[number]["key"];
 
 // Do not show first view immediately (bug with autogrow fields)
-const showIf = (key: string) => selected.value == key && (!isSmallScreen.value || current.value == 1);
+const showIf = (key: views[number]) => selected.value == key && (!isSmallScreen.value || current.value == 1);
 
 const updateScreenSize = () => (screenSize.value = window.innerWidth);
 const getItemByKey = (key: ItemKey) => items.find((item) => item.key === key)!;
