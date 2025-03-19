@@ -776,6 +776,16 @@
       border-radius: 20px;
       background-color: var(--primary);
       box-shadow: 0 0 0 6px var(--card);
+      border: 0;
+    }
+
+    .hue-slider::-moz-range-thumb {
+      width: 13px;
+      height: 30px;
+      border-radius: 20px;
+      background-color: var(--primary);
+      box-shadow: 0 0 0 6px var(--card);
+      border: 0;
     }
 
     .theme-container {
