@@ -749,6 +749,8 @@
       margin-top: 2px;
     }
     .slider-container {
+      margin-left: 6px;
+      margin-right: 6px;
       position: relative;
       width: 100%;
       height: 31px;
@@ -756,7 +758,7 @@
     }
 
     .hue-slider {
-      width: 100%;
+      width: calc(100% - 12px);
       height: 10px;
       appearance: none;
       outline: none;
