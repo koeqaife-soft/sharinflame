@@ -85,7 +85,7 @@ function updateRangeStyle() {
   const key = quasar.dark.isActive ? "dark" : "light";
 
   if (generatedRanges[key].length === 0) {
-    const colors = generateHueSteps([0, 0, 0], "primary", 1, quasar.dark.isActive);
+    const colors = generateHueSteps([0, 0, 0], "primary", 5, quasar.dark.isActive);
     const gradient = `linear-gradient(to right, ${colors.join(", ")})`;
     generatedRanges[key] = gradient;
   }
