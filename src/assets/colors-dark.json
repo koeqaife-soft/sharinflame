@@ -5,9 +5,9 @@
     "luminance": "100"
   },
   "secondary": {
-    "s": ["=", "70"],
-    "l": ["=", "68"],
-    "luminance": "85"
+    "s": ["=", "45"],
+    "l": ["=", "80"],
+    "luminance": "60"
   },
   "tertiary": {
     "h": ["-", "40"],
@@ -36,12 +36,12 @@
     "luminance": "7"
   },
   "background-variant": {
-    "s": ["=", "8"],
+    "s": ["=", "10"],
     "l": ["=", "17"],
     "luminance": "17"
   },
   "on-background-variant": {
-    "s": ["=", "7"],
+    "s": ["=", "20"],
     "l": ["=", "85"],
     "luminance": "50"
   },
@@ -67,7 +67,7 @@
     "hex": "#ffffff"
   },
   "outline": {
-    "s": ["=", "5"],
+    "s": ["=", "15"],
     "l": ["=", "60"],
     "luminance": "60"
   }
