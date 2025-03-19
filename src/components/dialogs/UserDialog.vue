@@ -33,7 +33,7 @@
               :label="$t('edit')"
               no-caps
               unelevated
-              icon="sym_r_edit"
+              icon-right="sym_r_person_edit"
               class="edit-profile-button default-button"
               @click="editProfile"
               v-else
