@@ -2,7 +2,9 @@ import { defineStore } from "pinia";
 import * as colors from "../utils/colors";
 
 const defaultSettings = {
-  themeHue: 8
+  themeHue: 8,
+  darkMode: "auto" as boolean | "auto",
+  currentTheme: "default" as "default" | "monochrome"
 };
 
 type KeyOfSettings = keyof typeof defaultSettings;
@@ -45,13 +47,35 @@ export const useMainStore = defineStore("main", {
     getSetting(key: KeyOfSettings) {
       return this.settings[key];
     },
-    updateColor(newHue?: number) {
-      if (newHue) {
-        this.setSettings("themeHue", newHue);
+    updateColor(isStart: boolean = false, newHue?: number, save: boolean = true, newTheme?: string) {
+      if (save) {
+        if (newHue) this.setSettings("themeHue", newHue);
+        if (newTheme) this.setSettings("currentTheme", newTheme);
       }
       const hue = newHue || this.getSetting("themeHue");
-      const generated = colors.generateAll([hue, 0, 0]);
-      colors.setCss(generated);
+      const theme = newTheme || this.getSetting("currentTheme");
+      let generated: Record<string, string>;
+
+      const generate = () => {
+        generated = colors.generateAll([hue, 0, 0], theme);
+        const cache = {
+          generated,
+          hue,
+          theme
+        };
+        localStorage.setItem("cached_palette", JSON.stringify(cache));
+      };
+
+      if (isStart) {
+        const cached = localStorage.getItem("cached_palette");
+        if (cached) {
+          const generatedOld = JSON.parse(cached);
+          if (generatedOld.hue == hue && generatedOld.theme == theme) generated = generatedOld.generated;
+          else generate();
+        } else generate();
+      } else generate();
+
+      colors.setCss(generated!);
     }
   }
 });
