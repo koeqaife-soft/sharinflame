@@ -77,7 +77,7 @@ const items = [
 
 type ItemKey = (typeof items)[number]["key"];
 
-// Do not first view immediately (bug with autogrow fields)
+// Do not show first view immediately (bug with autogrow fields)
 const showIf = (key: string) => selected.value == key && (!isSmallScreen.value || current.value == 1);
 
 const updateScreenSize = () => (screenSize.value = window.innerWidth);
