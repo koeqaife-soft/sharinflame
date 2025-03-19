@@ -23,10 +23,12 @@
 import { onMounted, ref, watch, defineAsyncComponent, onBeforeMount } from "vue";
 import { useMainStore } from "./stores/main-store";
 import { api, apiEndpoints } from "./boot/axios";
+import { useQuasar } from "quasar";
 
 const LogoComponent = defineAsyncComponent(() => import("./components/misc/LogoComponent.vue"));
 const MainLayout = defineAsyncComponent(() => import("./layouts/MainLayout.vue"));
 
+const quasar = useQuasar();
 const mainStore = useMainStore();
 const offlineDialog = ref(true);
 
@@ -77,6 +79,16 @@ watch(
   () => onChange()
 );
 
+watch(
+  () => quasar.dark.isActive,
+  () => {
+    document.body.classList.add("no-animate");
+    setTimeout(() => {
+      document.body.classList.remove("no-animate");
+    }, 1);
+  }
+);
+
 defineOptions({
   name: "App"
 });
@@ -87,6 +99,7 @@ onMounted(() => {
 });
 
 onBeforeMount(() => {
-  mainStore.updateColor();
+  quasar.dark.set(mainStore.getSetting("darkMode"));
+  mainStore.updateColor(true);
 });
 </script>
