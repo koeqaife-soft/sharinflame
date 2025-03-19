@@ -11,7 +11,7 @@
       :class="['dark-mode', buttonsClass]"
       icon="sym_r_dark_mode"
       :label="$t('dark_mode')"
-      @click="$q.dark.toggle"
+      @click="darkMode = !darkMode"
       unelevated
       no-caps
     >
@@ -50,6 +50,7 @@ import { useProfileStore } from "src/stores/profile-store";
 import { useQuasar } from "quasar";
 import MySwitch from "../misc/MySwitch.vue";
 import UserAvatar from "./UserAvatar.vue";
+import { useMainStore } from "src/stores/main-store";
 
 const UserDialog = defineAsyncComponent(() => import("../dialogs/UserDialog.vue"));
 const PostEditor = defineAsyncComponent(() => import("../dialogs/PostEditor.vue"));
@@ -58,12 +59,16 @@ const SettingsDialog = defineAsyncComponent(() => import("../dialogs/SettingsDia
 
 const quasar = useQuasar();
 
+const mainStore = useMainStore();
 const profileStore = useProfileStore();
 const user = ref<User>();
 const darkMode = ref(quasar.dark.isActive);
 
 watch(darkMode, (v) => {
-  if (quasar.dark.isActive != v) quasar.dark.set(v);
+  if (quasar.dark.isActive != v) {
+    quasar.dark.set(v);
+    mainStore.setSettings("darkMode", quasar.dark.mode);
+  }
 });
 
 watch(
