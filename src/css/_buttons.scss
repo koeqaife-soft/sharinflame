@@ -94,6 +94,33 @@
   }
 }
 
+.segmented-button {
+  .button {
+    border: 1px solid var(--outline);
+    padding-left: 16px;
+    padding-right: 16px;
+    border-radius: 0px;
+
+    transition:
+      background-color 0.2s ease-in,
+      border-color 0.2s ease;
+
+    > span {
+      color: var(--text);
+    }
+
+    &:first-child {
+      border-radius: 36px 0px 0px 36px;
+    }
+    &:last-child {
+      border-radius: 0px 36px 36px 0px;
+    }
+    &.selected {
+      border-color: var(--primary);
+    }
+  }
+}
+
 .q-btn .q-icon {
   @include iconSize(24);
   &.on-right {
