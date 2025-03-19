@@ -1,8 +1,16 @@
-import LightPaletteJson from "src/assets/colors-light.json";
-import DarkPaletteJson from "src/assets/colors-dark.json";
+import DefaultLightPalette from "src/assets/default-light.json";
+import DefaultDarkPalette from "src/assets/default-dark.json";
+import MonochromeLightPalette from "src/assets/monochrome-light.json";
+import MonochromeDarkPalette from "src/assets/monochrome-dark.json";
+import { LRUCache } from "./cache";
+
+const convertCacheHex = new LRUCache<string, string>(512);
+const convertCacheRgb = new LRUCache<string, Rgb>(512);
+const hueStepsCache = new Map<string, string[]>();
 
 type HslAction = [action: string, value: string];
 type Hsl = [h: number, s: number, l: number];
+type Rgb = [r: number, g: number, b: number];
 
 interface PaletteEntry {
   h?: HslAction;
@@ -18,24 +26,26 @@ interface PaletteEntry {
 
 type Palette = Record<string, PaletteEntry>;
 
-export const LightPalette = LightPaletteJson as unknown as Palette;
-export const DarkPalette = DarkPaletteJson as unknown as Palette;
+export const palettes = {
+  default: {
+    light: DefaultLightPalette as unknown as Palette,
+    dark: DefaultDarkPalette as unknown as Palette
+  },
+  monochrome: {
+    light: MonochromeLightPalette as unknown as Palette,
+    dark: MonochromeDarkPalette as unknown as Palette
+  }
+} as const;
 
 function hslToHex(h: number, s: number, l: number): string {
-  h /= 360;
-  s /= 100;
-  l /= 100;
+  const key = `${h.toFixed(2)},${s.toFixed(2)},${l.toFixed(2)}`;
+  if (convertCacheHex.has(key)) return convertCacheHex.get(key)!;
 
-  const a = s * Math.min(l, 1 - l);
-  const f = (n: number) => {
-    const k = (n + h * 12) % 12;
-    const color = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
-    return Math.round(255 * color);
-  };
+  const rgb = hslToRgb(h, s, l);
+  const result = `#${rgb.map((c) => Math.round(c).toString(16).padStart(2, "0")).join("")}`;
+  convertCacheHex.put(key, result);
 
-  return `#${f(0).toString(16).padStart(2, "0")}${f(8).toString(16).padStart(2, "0")}${f(4)
-    .toString(16)
-    .padStart(2, "0")}`;
+  return result;
 }
 
 function adjustValue(value: number, delta: number): number {
@@ -44,10 +54,12 @@ function adjustValue(value: number, delta: number): number {
 }
 
 function adjustHue(hue: number, delta: number): number {
-  return (hue + delta) % 360;
+  return (hue + delta + 360) % 360;
 }
 
-function hslToRgb(h: number, s: number, l: number): [number, number, number] {
+function hslToRgb(h: number, s: number, l: number): Rgb {
+  const key = `${h.toFixed(2)},${s.toFixed(2)},${l.toFixed(2)}`;
+  if (convertCacheRgb.has(key)) return convertCacheRgb.get(key)!;
   h /= 360;
   s /= 100;
   l /= 100;
@@ -73,7 +85,10 @@ function hslToRgb(h: number, s: number, l: number): [number, number, number] {
     b = hue2rgb(p, q, h - 1 / 3);
   }
 
-  return [r * 255, g * 255, b * 255];
+  const result = [r * 255, g * 255, b * 255] as Rgb;
+  convertCacheRgb.put(key, result);
+
+  return result;
 }
 
 function adjustLightness(h: number, s: number, l: number, targetLuminance = 50): number {
@@ -89,9 +104,8 @@ function adjustLightness(h: number, s: number, l: number, targetLuminance = 50):
   return Math.max(0, Math.min(100, newL));
 }
 
-function adjustSaturation(h: number, s: number): number {
+const saturationFactors = new Array(360).fill(1).map((_, h) => {
   let factor = 1;
-
   if (h >= 90 && h <= 150) {
     if (h <= 120) factor = 1 - ((h - 90) / 30) * 0.2;
     else factor = 0.8 + ((h - 120) / 30) * 0.2;
@@ -99,7 +113,12 @@ function adjustSaturation(h: number, s: number): number {
     const k = 0.140625;
     factor = 1 + k * Math.sin(((h - 180) * Math.PI) / 120);
   }
+  return factor;
+});
 
+function adjustSaturation(h: number, s: number): number {
+  const hueIndex = Math.round(h) % 360;
+  const factor = saturationFactors[hueIndex]!;
   const newS = s * factor;
   return newS > 100 ? 100 : newS;
 }
@@ -157,9 +176,37 @@ export function generateColors(palette: Palette, baseHsl: Hsl, suffix: string = 
   return output;
 }
 
-export function generateAll(Hsl: Hsl) {
-  const dark = generateColors(DarkPalette, Hsl, "-dark");
-  const light = generateColors(LightPalette, Hsl, "-light");
+export function generateHueSteps(
+  hsl: Hsl,
+  colorKey: string,
+  precision: number = 1,
+  darkPalette: boolean = true,
+  paletteKey: keyof typeof palettes = "default"
+) {
+  const cacheKey = `${colorKey}-${hsl[1]}-${hsl[2]}-${precision}-${darkPalette}`;
+  if (hueStepsCache.has(cacheKey)) return hueStepsCache.get(cacheKey)!;
+
+  const palette: Palette = darkPalette ? palettes[paletteKey].dark : palettes[paletteKey].light;
+  const result: string[] = [];
+  const entry = palette[colorKey];
+
+  if (!entry) return [];
+  if (entry.hex) return [entry.hex];
+  // Adding link support is just can take a lot of time and I'm not going to use it
+  if (entry.link) throw new Error("Can be used only colors without links (for optimization)");
+
+  for (let i = 0; i <= 360; i += precision) {
+    const color = generateColor([i, hsl[1], hsl[2]], entry);
+    result.push(hslToHex(color[0], color[1], color[2]));
+  }
+
+  hueStepsCache.set(cacheKey, result);
+  return result;
+}
+
+export function generateAll(Hsl: Hsl, paletteKey: keyof typeof palettes = "default") {
+  const dark = generateColors(palettes[paletteKey].dark, Hsl, "-dark");
+  const light = generateColors(palettes[paletteKey].light, Hsl, "-light");
 
   return { ...dark, ...light };
 }
