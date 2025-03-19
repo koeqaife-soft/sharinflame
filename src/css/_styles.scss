@@ -3,7 +3,6 @@
 }
 
 body {
-  @include bgColorTransition();
   --toolbar: var(--primary);
   --on-toolbar: var(--on-primary);
 
@@ -58,6 +57,10 @@ body {
   --grad: 0;
 }
 
+body.no-animate * {
+  transition: none !important;
+}
+
 body {
   height: 100vh;
   width: 100vw;
@@ -72,8 +75,6 @@ body {
 }
 
 .q-header {
-  @include bgColorTransition();
-
   background-color: var(--toolbar);
 
   div {
