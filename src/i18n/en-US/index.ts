@@ -168,5 +168,7 @@ export default {
   light: "Light",
   auto: "Auto",
   theme: "Theme",
-  color: "Color"
+  color: "Color",
+  default: "Default",
+  contrast: "Contrast"
 };
