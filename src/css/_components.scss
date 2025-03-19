@@ -715,14 +715,6 @@
 
 .settings-dialog {
   .account-view {
-    .label {
-      font-size: 14px;
-      font-weight: 500;
-    }
-    .label-icon {
-      @include iconSize(21);
-      margin-left: 4px;
-    }
     .languages {
       border-radius: 6px;
       .label-icon {
@@ -750,6 +742,55 @@
         margin: 0;
       }
     }
+  }
+
+  .appearance-view {
+    .label {
+      margin-top: 2px;
+    }
+    .slider-container {
+      position: relative;
+      width: 100%;
+      height: 31px;
+      overflow: hidden;
+    }
+
+    .hue-slider {
+      width: 100%;
+      height: 10px;
+      appearance: none;
+      outline: none;
+      cursor: pointer;
+      background-color: var(--background-variant);
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      border-radius: 8px;
+    }
+
+    .hue-slider::-webkit-slider-thumb {
+      appearance: none;
+      width: 13px;
+      height: 30px;
+      border-radius: 20px;
+      background-color: var(--primary);
+      box-shadow: 0 0 0 6px var(--card);
+    }
+
+    .theme-container {
+      flex-wrap: wrap;
+    }
+  }
+
+  .label {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .label-icon {
+    @include iconSize(21);
+    margin-left: 4px;
+    font-weight: 500;
   }
 
   .loading-container {

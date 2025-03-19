@@ -161,5 +161,12 @@ export default {
     msg: "Profile updated",
     caption: "Your profile has been updated.",
     failed: "Failed to edit profile"
-  }
+  },
+
+  appearance: "Appearance",
+  dark: "Dark",
+  light: "Light",
+  auto: "Auto",
+  theme: "Theme",
+  color: "Color"
 };
