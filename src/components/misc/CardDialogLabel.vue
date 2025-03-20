@@ -1,12 +1,12 @@
 <template>
-  <q-card class="card label-container" style="z-index: 2">
+  <div class="card label-container" style="z-index: 2">
     <div class="horizontal-container">
       <q-icon v-if="icon" :name="icon" class="icon" />
       <div>{{ label }}</div>
       <q-space />
       <slot />
     </div>
-  </q-card>
+  </div>
 </template>
 <script setup lang="ts">
 defineProps<{

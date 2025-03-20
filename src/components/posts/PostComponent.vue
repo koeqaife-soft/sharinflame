@@ -1,6 +1,6 @@
 <template>
-  <q-card class="post card" unelevated :key="postRef.post_id">
-    <q-card-section class="q-pb-none">
+  <div class="post card" :key="postRef.post_id">
+    <div class="content-section card-section">
       <div class="avatar-container" v-if="!postRef.is_system">
         <open-user-dialog :user="postRef.user" />
       </div>
@@ -10,8 +10,8 @@
         </div>
         <text-parts class="content wrap-text" :text="formatStringForHtml(postRef.content)" :html="true" />
       </div>
-    </q-card-section>
-    <q-card-section class="q-pb-none post-image-section" v-if="!postRef.is_system && postRef.media?.length > 0">
+    </div>
+    <div class="post-image-section card-section" v-if="!postRef.is_system && postRef.media?.length > 0">
       <q-carousel
         class="post-image"
         animated
@@ -28,8 +28,8 @@
           <q-img :src="src" fit="contain" class="full-width full-height" />
         </q-carousel-slide>
       </q-carousel>
-    </q-card-section>
-    <q-card-section class="q-pb-none tags" v-if="!postRef.is_system && postRef.tags?.length > 0">
+    </div>
+    <div class="tags tags-section card-section" v-if="!postRef.is_system && postRef.tags?.length > 0">
       <q-chip
         v-for="(tag, index) in postRef.tags"
         :key="index"
@@ -39,8 +39,8 @@
       >
         {{ $tagsInfo.value[tag]?.name || tag }}
       </q-chip>
-    </q-card-section>
-    <q-card-actions class="actions" :class="{ 'can-animate': canAnimate }" v-if="!postRef.is_system">
+    </div>
+    <div class="actions card-section" :class="{ 'can-animate': canAnimate }" v-if="!postRef.is_system">
       <div class="reaction-buttons">
         <reaction-buttons :object="postRef" :before-action="allowAnimate" :is-comment="false" :disable="disable" />
       </div>
@@ -63,8 +63,8 @@
           </q-menu>
         </q-btn>
       </div>
-    </q-card-actions>
-    <q-card-actions class="actions" v-else-if="postRef.actions">
+    </div>
+    <div class="actions card-section" v-else-if="postRef.actions">
       <div class="action-container" v-for="action in postRef.actions" :key="action.name">
         <q-btn
           unelevated
@@ -77,8 +77,8 @@
           :disable="disable"
         />
       </div>
-    </q-card-actions>
-  </q-card>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">

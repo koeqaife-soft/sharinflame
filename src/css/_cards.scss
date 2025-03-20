@@ -1,25 +1,5 @@
 @import "mixins";
 
-.login-card,
-.register-card {
-  @include elevation(2);
-  border-radius: 18px;
-  padding: 10px;
-  background-color: var(--card);
-
-  width: 100%;
-  margin-right: 10px;
-  margin-left: 10px;
-  max-width: 500px;
-
-  .label-section {
-    padding-bottom: 0px;
-  }
-  > div {
-    color: var(--on-card);
-  }
-}
-
 .card {
   @include elevation(2);
   border-radius: 18px;
@@ -28,6 +8,39 @@
 
   > div {
     color: var(--on-card);
+  }
+
+  &:has(.card-section) {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .card-section {
+    display: flex;
+    padding-left: 8px;
+    padding-right: 8px;
+    align-items: flex-start;
+    &:first-child:not(:last-child) {
+      margin-top: 8px;
+    }
+    &:last-child:not(:first-child) {
+      margin-bottom: 8px;
+    }
+  }
+}
+
+.login-card,
+.register-card {
+  @include elevation(2);
+
+  width: 100%;
+  margin-right: 10px;
+  margin-left: 10px;
+  max-width: 500px;
+
+  .label-section {
+    margin-left: 2px;
   }
 }
 

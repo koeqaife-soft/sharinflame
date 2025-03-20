@@ -6,9 +6,9 @@
     </template>
     <q-page class="app-page">
       <div class="left-column" v-if="!hideLeftColumn">
-        <q-card class="card categories">
+        <div class="card categories">
           <category-buttons-container :categories-list="categoriesList" :current-type="currentType" />
-        </q-card>
+        </div>
       </div>
       <div class="center-column">
         <post-scroll :type="currentType" :key="reloadKey" class="full-height full-width">
@@ -25,9 +25,9 @@
         </post-scroll>
       </div>
       <div class="right-column" v-if="!hideRightColumn">
-        <q-card class="card profile-menu">
+        <div class="card profile-menu">
           <profile-menu buttons-class="card-button" />
-        </q-card>
+        </div>
       </div>
     </q-page>
   </main-layout>

@@ -1,5 +1,5 @@
 <template>
-  <q-card class="card q-mb-sm label-container" style="z-index: 2">
+  <div class="card q-mb-sm label-container" style="z-index: 2">
     <div class="horizontal-container">
       <q-icon name="sym_r_sort" class="icon" />
       <q-select
@@ -18,7 +18,7 @@
         <q-btn flat round icon="sym_r_refresh" @click="reloadPosts" />
       </div>
     </div>
-  </q-card>
+  </div>
   <q-scroll-area class="scroll-area full-height fix-scroll-area" :visible="false">
     <my-virtual-scroll
       :items="items"

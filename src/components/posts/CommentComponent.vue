@@ -1,6 +1,6 @@
 <template>
-  <q-card class="comment card" unelevated :key="commentRef.comment_id">
-    <q-card-section class="q-pb-none">
+  <div class="card comment" :key="commentRef.comment_id">
+    <div class="card-section content-section">
       <div class="avatar-container">
         <open-user-dialog :user="commentRef.user" />
       </div>
@@ -10,8 +10,8 @@
         </div>
         <text-parts :text="formatStringForHtml(commentRef.content)" :html="true" />
       </div>
-    </q-card-section>
-    <q-card-actions class="actions" :class="{ 'can-animate': canAnimate }">
+    </div>
+    <div class="actions card-section actions-section" :class="{ 'can-animate': canAnimate }">
       <div class="reaction-buttons">
         <reaction-buttons :object="commentRef" :before-action="allowAnimate" :is-comment="true" :disable="disable" />
       </div>
@@ -23,8 +23,8 @@
           </q-menu>
         </q-btn>
       </div>
-    </q-card-actions>
-  </q-card>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">

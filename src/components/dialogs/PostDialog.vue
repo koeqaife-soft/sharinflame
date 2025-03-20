@@ -45,9 +45,9 @@
         </my-virtual-scroll>
       </q-scroll-area>
       <q-separator class="q-mb-sm q-mt-sm" />
-      <q-card class="card send-comment">
-        <q-card-section>
-          <div class="horizontal-container align-end">
+      <div class="card send-comment">
+        <div class="card-section">
+          <div class="horizontal-container align-end full-width">
             <user-avatar :me="true" />
             <q-input
               dense
@@ -74,8 +74,8 @@
               </template>
             </q-btn>
           </div>
-        </q-card-section>
-      </q-card>
+        </div>
+      </div>
     </closeable-content>
   </q-dialog>
 </template>

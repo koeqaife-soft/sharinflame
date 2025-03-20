@@ -1,5 +1,5 @@
 <template>
-  <q-card class="card toggle-value">
+  <div class="card toggle-value">
     <div class="horizontal-container">
       <q-icon v-if="icon" :name="icon" class="icon" />
       <template v-if="!description">
@@ -12,7 +12,7 @@
       <q-space />
       <my-switch v-model="model!" />
     </div>
-  </q-card>
+  </div>
 </template>
 <script setup lang="ts">
 import MySwitch from "src/components/misc/MySwitch.vue";

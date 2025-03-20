@@ -1,11 +1,11 @@
 <template>
   <q-page class="flex flex-center">
-    <q-card class="login-card" unelevated>
-      <q-card-section class="q-pa-md label-section">
+    <div class="login-card card">
+      <div class="q-pa-xs label-section card-section">
         <div class="text-h6">{{ $t("login") }}</div>
-      </q-card-section>
-      <q-card-section>
-        <q-form @submit="_login">
+      </div>
+      <div class="card-section">
+        <q-form @submit="_login" class="full-width">
           <q-input
             outlined
             v-model="email"
@@ -49,8 +49,8 @@
             unelevated
           />
         </q-form>
-      </q-card-section>
-    </q-card>
+      </div>
+    </div>
   </q-page>
 </template>
 

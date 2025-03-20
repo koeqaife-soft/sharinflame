@@ -1,11 +1,11 @@
 <template>
   <q-page class="flex flex-center">
-    <q-card class="register-card" unelevated>
-      <q-card-section class="q-pa-md label-section">
+    <div class="register-card card">
+      <div class="q-pa-xs label-section card-section">
         <div class="text-h6">{{ $t("register") }}</div>
-      </q-card-section>
-      <q-card-section>
-        <q-form @submit="_register">
+      </div>
+      <div class="card-section">
+        <q-form @submit="_register" class="full-width">
           <q-input
             outlined
             v-model="username"
@@ -69,8 +69,8 @@
             unelevated
           />
         </q-form>
-      </q-card-section>
-    </q-card>
+      </div>
+    </div>
   </q-page>
 </template>
 
