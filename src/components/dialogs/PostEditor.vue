@@ -82,7 +82,7 @@
             :label="editMode ? $t('apply') : $t('create')"
             no-caps
             @click="buttonClick"
-            :disable="text.length == 0"
+            :disable="text.trim().length == 0"
             :loading="loading"
           />
         </div>
