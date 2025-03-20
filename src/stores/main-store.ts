@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import * as colors from "../utils/colors";
 
+const cacheVersion = 1;
+
 const defaultSettings = {
   themeHue: 8,
   darkMode: "auto" as boolean | "auto",
@@ -63,7 +65,8 @@ export const useMainStore = defineStore("main", {
         const cache = {
           generated,
           hue,
-          theme
+          theme,
+          cacheVersion
         };
         localStorage.setItem("cached_palette", JSON.stringify(cache));
       };
@@ -72,7 +75,8 @@ export const useMainStore = defineStore("main", {
         const cached = localStorage.getItem("cached_palette");
         if (cached) {
           const generatedOld = JSON.parse(cached);
-          if (generatedOld.hue == hue && generatedOld.theme == theme) generated = generatedOld.generated;
+          if (generatedOld.hue == hue && generatedOld.theme == theme && generatedOld.cacheVersion == cacheVersion)
+            generated = generatedOld.generated;
           else generate();
         } else generate();
       } else generate();
