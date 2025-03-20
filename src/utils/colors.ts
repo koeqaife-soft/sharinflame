@@ -176,6 +176,23 @@ export function generateColors(palette: Palette, baseHsl: Hsl, suffix: string = 
   return output;
 }
 
+export function generateOneColor(
+  hsl: Hsl,
+  colorKey: string,
+  darkPalette: boolean = true,
+  paletteKey: keyof typeof palettes = "default"
+) {
+  const palette: Palette = darkPalette ? palettes[paletteKey].dark : palettes[paletteKey].light;
+  const entry = palette[colorKey];
+
+  if (!entry) return "";
+  if (entry.hex) return entry.hex;
+  if (entry.link) throw new Error("Can be used only colors without links (for optimization)");
+
+  const color = generateColor([hsl[0], hsl[1], hsl[2]], entry);
+  return hslToHex(color[0], color[1], color[2]);
+}
+
 export function generateHueSteps(
   hsl: Hsl,
   colorKey: string,
