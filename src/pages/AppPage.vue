@@ -1,5 +1,5 @@
 <template>
-  <main-layout :in-router="false" :menu-opened="categoriesMenuOpened" headers-class="index-10" class="full-height">
+  <main-layout :in-router="false" headers-class="index-10" class="full-height">
     <template #toolbar-actions v-if="hideRightColumn">
       <open-profile-menu />
     </template>
