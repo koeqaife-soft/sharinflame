@@ -27,6 +27,16 @@
             ref="sliderRef"
           />
         </div>
+        <div class="horizontal-container colors-container">
+          <q-btn
+            v-for="(color, index) in predefinedColorsHex"
+            :key="index"
+            unelevated
+            :style="{ background: color }"
+            class="color-button"
+            @click="onButtonColor(index)"
+          />
+        </div>
       </div>
     </div>
   </q-scroll-area>
@@ -35,7 +45,7 @@
 import { useQuasar } from "quasar";
 import MySegmentBtn from "src/components/misc/MySegmentBtn.vue";
 import { useMainStore } from "src/stores/main-store";
-import { generateHueSteps } from "src/utils/colors";
+import { generateHueSteps, generateOneColor } from "src/utils/colors";
 import { onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
 
 const quasar = useQuasar();
@@ -70,6 +80,8 @@ const themes = ref([
     key: "monochrome"
   }
 ]);
+const predefinedColors = [8, 45, 120, 150, 180, 230, 320];
+const predefinedColorsHex = ref<string[]>([]);
 const selectedMode = ref("");
 const selectedTheme = ref(mainStore.getSetting("currentTheme"));
 
@@ -80,6 +92,13 @@ const generatedRanges = reactive({
 
 const backgroundStyle = ref("");
 const sliderRef = ref<HTMLInputElement | null>(null);
+
+function updatePredefinedColors() {
+  predefinedColorsHex.value.length = 0;
+  predefinedColors.forEach((v) => {
+    predefinedColorsHex.value.push(generateOneColor([v, 0, 0], "primary", quasar.dark.isActive));
+  });
+}
 
 function updateRangeStyle() {
   const key = quasar.dark.isActive ? "dark" : "light";
@@ -115,9 +134,18 @@ watch(
     else if (v === true) selectedMode.value = "dark";
     else selectedMode.value = "light";
     updateRangeStyle();
+    updatePredefinedColors();
   },
   { immediate: true }
 );
+
+function onButtonColor(index: number) {
+  document.body.classList.add("no-animate");
+  mainStore.updateColor(false, predefinedColors[index], true);
+  setTimeout(() => {
+    document.body.classList.remove("no-animate");
+  }, 1);
+}
 
 function onSliderChange() {
   document.body.classList.add("no-animate");

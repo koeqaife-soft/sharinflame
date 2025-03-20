@@ -790,6 +790,15 @@
       border: 0;
     }
 
+    .colors-container {
+      justify-content: space-evenly;
+      flex-wrap: wrap;
+    }
+
+    .color-button {
+      border-radius: 4px;
+    }
+
     .theme-container {
       flex-wrap: wrap;
     }
