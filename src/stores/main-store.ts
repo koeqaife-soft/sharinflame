@@ -25,7 +25,8 @@ export const useMainStore = defineStore("main", {
     // 0 -> App just started
     // 1 -> Needs auth
     // 2 -> Auth completed
-    initialized: 0 as 0 | 1 | 2,
+    // 3 -> First opened
+    initialized: 0 as 0 | 1 | 2 | 3,
     isOffline: true,
     connectTries: 4,
     openedDialogs: {

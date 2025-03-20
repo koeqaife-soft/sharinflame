@@ -28,8 +28,14 @@ const toApp = () => {
   void router.push({ path: "/app" });
 };
 
+const toInfo = () => {
+  mainStore.initialized = 3;
+  void router.push({ path: "/info" });
+};
+
 onMounted(async () => {
-  if (refreshToken()) {
+  if (!localStorage.getItem("first_start")) toInfo();
+  else if (refreshToken()) {
     try {
       await profileStore.getProfile();
       toApp();
