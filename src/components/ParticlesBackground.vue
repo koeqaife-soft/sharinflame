@@ -79,7 +79,7 @@ const generateInitialParticles = () => {
         y,
         z,
         radius,
-        color: particleColor, // Используем цвет из CSS
+        color: particleColor,
         speedX: 0,
         speedY: 0,
         originalX: x,
