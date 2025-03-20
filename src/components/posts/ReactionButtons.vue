@@ -24,7 +24,7 @@
     <q-btn
       unelevated
       icon="sym_r_favorite"
-      :class="['comments button circle', { active: itemRef.is_fav }]"
+      :class="['favorite button circle', { active: itemRef.is_fav }]"
       size="sm"
       @click="favoriteButton"
       :disable="disable"
