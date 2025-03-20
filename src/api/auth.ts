@@ -63,16 +63,16 @@ function init(_api: AxiosInstance) {
 
 function setTokens({ refresh, access }: { refresh?: string; access?: string }) {
   if (refresh) localStorage.setItem("refresh_token", refresh);
-  if (access) sessionStorage.setItem("access_token", access);
+  if (access) localStorage.setItem("access_token", access);
 }
 
 function clearTokens() {
   localStorage.removeItem("refresh_token");
-  sessionStorage.removeItem("access_token");
+  localStorage.removeItem("access_token");
 }
 
 function getAccessToken() {
-  return sessionStorage.getItem("access_token");
+  return localStorage.getItem("access_token");
 }
 
 function refreshToken() {
