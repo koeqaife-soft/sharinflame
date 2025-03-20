@@ -39,7 +39,7 @@
     "l": ["=", "30"],
     "luminance": "20"
   },
-  "text": {
+  "on-background": {
     "hex": "#000000"
   },
   "card": {

@@ -14,7 +14,7 @@ body {
 
   --error: hsl(0, 96%, 80%);
   --on-error: hsl(0, 96%, 10%);
-  background: var(--background-color) !important;
+  background: var(--background) !important;
 }
 
 .body--dark {
@@ -24,10 +24,10 @@ body {
   --on-primary: var(--on-primary-dark);
   --on-secondary: var(--on-secondary-dark);
   --on-tertiary: var(--on-tertiary-dark);
-  --background-color: var(--background-dark);
+  --background: var(--background-dark);
   --background-variant: var(--background-variant-dark);
   --on-background-variant: var(--on-background-variant-dark);
-  --text: var(--text-dark);
+  --on-background: var(--on-background-dark);
   --card: var(--card-dark);
   --card-hover: var(--card-hover-dark);
   --card-high: var(--card-high-dark);
@@ -44,10 +44,10 @@ body {
   --on-primary: var(--on-primary-light);
   --on-secondary: var(--on-secondary-light);
   --on-tertiary: var(--on-tertiary-light);
-  --background-color: var(--background-light);
+  --background: var(--background-light);
   --background-variant: var(--background-variant-light);
   --on-background-variant: var(--on-background-variant-light);
-  --text: var(--text-light);
+  --on-background: var(--on-background-light);
   --card: var(--card-light);
   --card-hover: var(--card-hover-light);
   --card-high: var(--card-high-light);
@@ -239,7 +239,7 @@ body {
 
   .layout {
     @include bgColorTransition();
-    background-color: var(--background-color);
+    background-color: var(--background);
   }
 
   .q-page-container {
@@ -272,7 +272,7 @@ body {
     text-align: center;
     position: absolute;
     user-select: none;
-    color: var(--text);
+    color: var(--on-background);
   }
 
   .logo-container {
@@ -312,7 +312,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 1;
-  background-color: var(--background-color);
+  background-color: var(--background);
   margin-left: -1px;
   margin-right: -1px;
 }
@@ -367,7 +367,7 @@ mark {
     @include iconSize(22);
     width: 22px;
     height: 22px;
-    color: var(--text);
+    color: var(--on-background);
   }
 }
 
@@ -400,7 +400,7 @@ mark {
   div:not(.q-notification__caption):not(.q-notification__badge) {
     font-weight: 500;
     font-size: 15px;
-    color: var(--text);
+    color: var(--on-background);
   }
   .q-notification__caption {
     font-weight: 400;

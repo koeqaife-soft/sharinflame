@@ -2,8 +2,8 @@
 
 .body--light,
 .body--dark {
-  --disabled-button-bg: color-mix(in srgb, var(--text) 12%, transparent 88%);
-  --disabled-button-fg: color-mix(in srgb, var(--text) 62%, transparent 38%);
+  --disabled-button-bg: color-mix(in srgb, var(--on-background) 12%, transparent 88%);
+  --disabled-button-fg: color-mix(in srgb, var(--on-background) 62%, transparent 38%);
 }
 
 .default-button {
@@ -58,7 +58,7 @@
 
 .outlined-button {
   border-radius: 8px;
-  background-color: var(--background-color);
+  background-color: var(--background);
   border: 2px solid var(--primary);
 
   span,
@@ -106,7 +106,7 @@
       border-color 0.2s ease;
 
     > span {
-      color: var(--text);
+      color: var(--on-background);
     }
 
     &:first-child {

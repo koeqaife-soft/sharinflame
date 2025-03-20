@@ -43,7 +43,7 @@ const generateInitialParticles = () => {
   const canvasHeight = canvas.value?.height || 0;
 
   const computedStyle = getComputedStyle(document.body);
-  const particleColor = computedStyle.getPropertyValue("--text").trim();
+  const particleColor = computedStyle.getPropertyValue("--on-background").trim();
 
   const generateWaveLayer = (numParticles: number, layerIndex: number) => {
     const layerHeight = canvasHeight / numLayers;
@@ -99,7 +99,7 @@ const generateInitialParticles = () => {
 
 const updateParticleColors = () => {
   const computedStyle = getComputedStyle(document.body);
-  const newColor = computedStyle.getPropertyValue("--text").trim();
+  const newColor = computedStyle.getPropertyValue("--on-background").trim();
   if (particles[0]?.color == newColor) return;
   particles.forEach((particle) => {
     particle.color = newColor;
@@ -278,7 +278,7 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 100vh;
   overflow: hidden;
-  background-color: var(--background-color);
+  background-color: var(--background);
   z-index: -1;
   pointer-events: none;
 }

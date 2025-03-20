@@ -45,7 +45,7 @@
     "l": ["=", "85"],
     "luminance": "50"
   },
-  "text": {
+  "on-background": {
     "hex": "#ffffff"
   },
   "card": {
