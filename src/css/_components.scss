@@ -799,6 +799,11 @@
     .theme-container {
       flex-wrap: wrap;
     }
+
+    .card.container {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
   }
 
   .label {
