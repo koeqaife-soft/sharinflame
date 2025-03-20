@@ -170,5 +170,10 @@ export default {
   theme: "Theme",
   color: "Color",
   default: "Default",
-  contrast: "Contrast"
+  contrast: "Contrast",
+
+  star_background_setting: {
+    label: "Star Background",
+    desc: "Enables star background in home page (can lag!)"
+  }
 };

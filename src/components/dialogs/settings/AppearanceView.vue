@@ -38,12 +38,19 @@
           />
         </div>
       </div>
+      <toggle-card
+        label-key="star_background_setting"
+        icon="sym_r_stars"
+        v-if="$q.platform.is.desktop"
+        v-model="starBackground"
+      />
     </div>
   </q-scroll-area>
 </template>
 <script setup lang="ts">
 import { useQuasar } from "quasar";
 import MySegmentBtn from "src/components/misc/MySegmentBtn.vue";
+import ToggleCard from "src/components/misc/ToggleCard.vue";
 import { useMainStore } from "src/stores/main-store";
 import { generateHueSteps, generateOneColor } from "src/utils/colors";
 import { onBeforeUnmount, onMounted, reactive, ref, watch } from "vue";
@@ -80,10 +87,13 @@ const themes = ref([
     key: "monochrome"
   }
 ]);
-const predefinedColors = [8, 45, 120, 150, 180, 230, 320];
-const predefinedColorsHex = ref<string[]>([]);
+
 const selectedMode = ref("");
 const selectedTheme = ref(mainStore.getSetting("currentTheme"));
+const starBackground = ref(mainStore.getSetting("starBackground"));
+
+const predefinedColors = [8, 45, 120, 150, 180, 230, 320];
+const predefinedColorsHex = ref<string[]>([]);
 
 const generatedRanges = reactive({
   dark: "",
@@ -110,6 +120,10 @@ function updateRangeStyle() {
   }
   backgroundStyle.value = generatedRanges[key];
 }
+
+watch(starBackground, (v) => {
+  mainStore.setSettings("starBackground", v);
+});
 
 watch(selectedMode, (v) => {
   if (v !== quasar.dark.mode) {
