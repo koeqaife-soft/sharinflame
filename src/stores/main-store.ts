@@ -4,7 +4,8 @@ import * as colors from "../utils/colors";
 const defaultSettings = {
   themeHue: 8,
   darkMode: "auto" as boolean | "auto",
-  currentTheme: "default" as "default" | "monochrome"
+  currentTheme: "default" as "default" | "monochrome",
+  starBackground: false
 };
 
 type KeyOfSettings = keyof typeof defaultSettings;
