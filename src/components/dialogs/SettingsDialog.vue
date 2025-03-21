@@ -65,7 +65,7 @@ type views = ["my_account", "appearance"];
 
 const screenSize = ref(window.innerWidth);
 const isSmallScreen = computed(() => screenSize.value < 750);
-const current = ref(0);
+const current = ref(props.open ? 1 : 0);
 
 const selected = ref<views[number]>(props.open ?? "my_account");
 
