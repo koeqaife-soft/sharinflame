@@ -61,9 +61,11 @@ import { validateEmail, validatePassword } from "src/utils/validations";
 import { isAxiosError } from "axios";
 import { login } from "src/api/auth";
 import { useRouter } from "vue-router";
+import { useMainStore } from "src/stores/main-store";
 
 const { t } = useI18n();
 const router = useRouter();
+const mainStore = useMainStore();
 
 const email = ref("");
 const password = ref("");
@@ -85,7 +87,10 @@ const _login = async () => {
   loading.value = true;
   try {
     const r = await login(email.value, password.value);
-    if (r.data.success) void router.push({ path: "/" });
+    if (r.data.success) {
+      mainStore.initialized = 0;
+      void router.push({ path: "/" });
+    }
   } catch (error) {
     if (isAxiosError(error)) {
       const errorData = error.response?.data?.error;

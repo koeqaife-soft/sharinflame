@@ -81,8 +81,10 @@ import { validateEmail, validatePassword, validateName } from "src/utils/validat
 import { isAxiosError } from "axios";
 import { register } from "src/api/auth";
 import { useRouter } from "vue-router";
+import { useMainStore } from "src/stores/main-store";
 
 const { t } = useI18n();
+const mainStore = useMainStore();
 
 const username = ref("");
 const email = ref("");
@@ -125,7 +127,10 @@ const _register = async () => {
   loading.value = true;
   try {
     const r = await register(username.value, email.value, password.value);
-    if (r.data.success) void router.push({ path: "/" });
+    if (r.data.success) {
+      mainStore.initialized = 0;
+      void router.push({ path: "/" });
+    }
   } catch (error) {
     if (isAxiosError(error)) {
       if (error.response?.data["error"] == "USERNAME_EXISTS") {
