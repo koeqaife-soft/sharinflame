@@ -19,7 +19,9 @@ declare module "vue" {
 }
 
 let mainStore: ReturnType<typeof useMainStore>;
-const url = "https://koeqaife.ddns.net:6169/v1";
+const baseUrl = "koeqaife.ddns.net:6169";
+const url = `https://${baseUrl}/v1`;
+const websocketUrl = `wss://${baseUrl}/ws`;
 const api = axios.create({ baseURL: url, timeout: 15000 });
 
 async function initialize() {
@@ -44,4 +46,4 @@ export default defineBoot(({ app }) => {
   void initialize();
 });
 
-export { api, apiEndpoints };
+export { api, apiEndpoints, url as apiUrl, websocketUrl };
