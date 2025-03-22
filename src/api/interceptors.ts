@@ -68,39 +68,52 @@ const connectionInterceptor = () => {
     }
   );
 };
+const refreshChannel = new BroadcastChannel("refresh_token_channel");
+
+let isRefreshing = false;
+let subscribers: Array<(success: boolean) => void> = [];
+let lastRefresh: number = 0;
+
+const invalidAuth = () => {
+  clearRefreshSubscribers();
+  if (mainStore.initialized == 2) window.location.reload();
+  mainStore.initialized = 1;
+  void router.push({ path: "/login" });
+};
+
+const onRefreshed = (success: boolean) => {
+  lastRefresh = Date.now();
+  subscribers.forEach((callback) => callback(true));
+  subscribers = [];
+  isRefreshing = false;
+  refreshChannel.postMessage({ type: "refresh_complete", success });
+};
+
+const clearRefreshSubscribers = () => {
+  subscribers.forEach((callback) => callback(false));
+  subscribers = [];
+};
+
+const addRefreshSubscriber = (callback: (success: boolean) => void) => {
+  if (Date.now() - lastRefresh <= 15000) {
+    setTimeout(() => callback(true), 100);
+    return;
+  }
+  subscribers.push(callback);
+};
+
+refreshChannel.onmessage = (event) => {
+  if (event.data.type === "refresh_start") {
+    isRefreshing = true;
+  } else if (event.data.type === "refresh_complete") {
+    isRefreshing = false;
+    lastRefresh = Date.now();
+    subscribers.forEach((callback) => callback(event.data.success));
+    subscribers = [];
+  }
+};
 
 const authInterceptor = () => {
-  let isRefreshing = false;
-  let subscribers: Array<(success: boolean) => void> = [];
-  let lastRefresh: number = 0;
-
-  const invalidAuth = () => {
-    clearSubscribers();
-    if (mainStore.initialized == 2) window.location.reload();
-    mainStore.initialized = 1;
-    void router.push({ path: "/login" });
-  };
-
-  const onRefreshed = () => {
-    lastRefresh = Date.now();
-    subscribers.forEach((callback) => callback(true));
-    subscribers = [];
-    isRefreshing = false;
-  };
-
-  const clearSubscribers = () => {
-    subscribers.forEach((callback) => callback(false));
-    subscribers = [];
-  };
-
-  const addSubscriber = (callback: (success: boolean) => void) => {
-    if (Date.now() - lastRefresh <= 15000) {
-      setTimeout(() => callback(true), 100);
-      return;
-    }
-    subscribers.push(callback);
-  };
-
   api.interceptors.request.use(
     async (config) => {
       if (!config.url || noAuthEndpoints.includes(config.url)) return config;
@@ -111,6 +124,7 @@ const authInterceptor = () => {
       if (!token && _refreshToken) {
         if (!isRefreshing) {
           isRefreshing = true;
+          refreshChannel.postMessage({ type: "refresh_start" });
           let success = false;
 
           try {
@@ -118,16 +132,17 @@ const authInterceptor = () => {
             success = refreshResponse.data.success;
 
             if (success) {
-              onRefreshed();
+              onRefreshed(true);
             } else throw new Error("Unable to refresh token");
           } catch (refreshError) {
+            onRefreshed(false);
             invalidAuth();
             return Promise.reject(refreshError as Error);
           }
         }
 
         return new Promise((resolve, reject) => {
-          addSubscriber((success: boolean) => {
+          addRefreshSubscriber((success: boolean) => {
             if (success) {
               token = getAccessToken();
               config.headers["Authorization"] = token;
@@ -168,6 +183,7 @@ const authInterceptor = () => {
 
         if (!isRefreshing) {
           isRefreshing = true;
+          refreshChannel.postMessage({ type: "refresh_start" });
           let success = false;
 
           try {
@@ -175,16 +191,17 @@ const authInterceptor = () => {
             success = refreshResponse.data.success;
 
             if (success) {
-              onRefreshed();
+              onRefreshed(true);
             } else throw new Error("Unable to refresh token");
           } catch (refreshError) {
+            onRefreshed(false);
             invalidAuth();
             return Promise.reject(refreshError as Error);
           }
         }
 
         return new Promise((resolve, reject) => {
-          addSubscriber((success: boolean) => {
+          addRefreshSubscriber((success: boolean) => {
             if (success) resolve(api(originalRequest));
             else reject(new Error("Unable to refresh token"));
           });
@@ -197,6 +214,22 @@ const authInterceptor = () => {
     }
   );
 };
+
+export function waitForRefresh() {
+  return new Promise<void>((resolve, reject) => {
+    if (isRefreshing) {
+      addRefreshSubscriber((success) => {
+        if (success) {
+          resolve();
+        } else {
+          reject(new Error("Ошибка обновления токена"));
+        }
+      });
+    } else {
+      resolve();
+    }
+  });
+}
 
 function init(_api: AxiosInstance, _mainStore: mainStoreType) {
   api = _api;
