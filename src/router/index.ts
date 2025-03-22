@@ -24,7 +24,7 @@ router.beforeEach((to, from, next) => {
   if (!mainStore) mainStore = useMainStore();
 
   if (mainStore.initialized === 3 && to.path !== "/info") {
-    next({ path: "/" });
+    next({ path: "/info" });
   } else if (mainStore.initialized === 0 && to.path !== "/") {
     next({ path: "/" });
   } else if (to.path !== "/login" && to.path !== "/register" && to.path !== "/" && mainStore.initialized === 1) {
