@@ -14,6 +14,8 @@ import router from "src/router";
 import { useMainStore } from "src/stores/main-store";
 import { useProfileStore } from "src/stores/profile-store";
 import { onMounted } from "vue";
+import websockets from "src/utils/websockets";
+import { websocketUrl } from "src/boot/axios";
 
 const profileStore = useProfileStore();
 const mainStore = useMainStore();
@@ -38,6 +40,7 @@ onMounted(async () => {
   else if (refreshToken()) {
     try {
       await profileStore.getProfile();
+      websockets.connect(websocketUrl);
       toApp();
     } catch (e) {
       if (isAxiosError(e) && e.status == 401) {
