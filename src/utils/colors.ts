@@ -2,6 +2,8 @@ import DefaultLightPalette from "src/assets/default-light.json";
 import DefaultDarkPalette from "src/assets/default-dark.json";
 import MonochromeLightPalette from "src/assets/monochrome-light.json";
 import MonochromeDarkPalette from "src/assets/monochrome-dark.json";
+import ContrastDarkPalette from "src/assets/contrast-dark.json";
+import ContrastLightPalette from "src/assets/contrast-light.json";
 import { LRUCache } from "./cache";
 
 const convertCacheHex = new LRUCache<string, string>(512);
@@ -34,6 +36,10 @@ export const palettes = {
   monochrome: {
     light: MonochromeLightPalette as unknown as Palette,
     dark: MonochromeDarkPalette as unknown as Palette
+  },
+  contrast: {
+    light: ContrastLightPalette as unknown as Palette,
+    dark: ContrastDarkPalette as unknown as Palette
   }
 } as const;
 

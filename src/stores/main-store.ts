@@ -6,7 +6,7 @@ const cacheVersion = 1;
 const defaultSettings = {
   themeHue: 8,
   darkMode: "auto" as boolean | "auto",
-  currentTheme: "default" as "default" | "monochrome",
+  currentTheme: "default" as "default" | "monochrome" | "contrast",
   starBackground: false
 };
 

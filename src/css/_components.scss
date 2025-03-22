@@ -28,6 +28,8 @@
     left: 0px;
     margin: 6px;
     background-color: var(--outline);
+    outline: 2px solid var(--contrast-outline);
+    outline-offset: -1px;
     border-radius: 28px;
     transition:
       left 175ms cubic-bezier(0, 0.5, 0.5, 1.5),
@@ -85,6 +87,7 @@
 }
 
 .avatar {
+  outline: 2px solid var(--contrast-outline);
   background-color: var(--secondary);
   color: var(--on-secondary);
   align-items: center;
@@ -126,7 +129,7 @@
 .post,
 .comment {
   .reaction-buttons {
-    min-width: 164px;
+    min-width: 180px;
     min-height: 35px;
     display: flex;
     gap: 8px;
@@ -495,6 +498,7 @@
   }
   .badges {
     .badge {
+      outline: 1px solid var(--contrast-outline);
       background-color: var(--card-high);
       padding: 8px;
       border-radius: 6px;

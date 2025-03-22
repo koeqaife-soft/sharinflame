@@ -82,9 +82,14 @@ const themes = ref([
     key: "default"
   },
   {
+    labelKey: "mono",
+    iconLeft: "sym_r_filter_b_and_w",
+    key: "monochrome"
+  },
+  {
     labelKey: "contrast",
     iconLeft: "sym_r_contrast",
-    key: "monochrome"
+    key: "contrast"
   }
 ]);
 

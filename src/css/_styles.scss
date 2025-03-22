@@ -33,6 +33,7 @@ body {
   --card-high: var(--card-high-dark);
   --on-card: var(--on-card-dark);
   --outline: var(--outline-dark);
+  --contrast-outline: var(--contrast-outline-dark);
 
   --grad: -25;
 }
@@ -53,6 +54,7 @@ body {
   --card-high: var(--card-high-light);
   --on-card: var(--on-card-light);
   --outline: var(--outline-light);
+  --contrast-outline: var(--contrast-outline-light);
 
   --grad: 0;
 }
@@ -325,6 +327,7 @@ blockquote {
 }
 
 mark {
+  outline: 1px solid var(--contrast-outline);
   background-color: var(--tertiary);
   color: var(--on-tertiary);
   padding: 1px;
@@ -353,6 +356,8 @@ mark {
 }
 
 .q-chip {
+  outline: 2px solid var(--contrast-outline);
+  outline-offset: -1px;
   background-color: var(--card-high);
   color: var(--on-card);
   padding-left: 8px;
@@ -447,4 +452,12 @@ mark {
 
 .q-dialog__backdrop {
   background-color: rgba(0, 0, 0, 0.6);
+}
+
+.q-field:not(.q-select):not(.q-field--outlined) {
+  outline: 1px solid var(--contrast-outline) !important;
+}
+
+.q-menu .q-field {
+  outline: 0 !important;
 }

@@ -171,6 +171,7 @@ export default {
   color: "Color",
   default: "Default",
   contrast: "Contrast",
+  mono: "Mono",
 
   star_background_setting: {
     label: "Star Background",

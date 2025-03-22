@@ -70,5 +70,8 @@
     "s": ["=", "15"],
     "l": ["=", "60"],
     "luminance": "60"
+  },
+  "contrast-outline": {
+    "hex": "#ffffff00"
   }
 }

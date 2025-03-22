@@ -5,6 +5,7 @@
   border-radius: 18px;
   padding: 8px;
   background-color: var(--card);
+  outline: 1px solid var(--contrast-outline);
 
   > div {
     color: var(--on-card);
@@ -64,6 +65,7 @@
 .card-dialog {
   z-index: 1;
   .dialog-content {
+    outline: 1px solid var(--contrast-outline);
     will-change: transform;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
     transition: transform 0.25s ease-out;

@@ -131,6 +131,16 @@
   }
 }
 
+.q-btn:not(.outlined-button):not(.q-btn--flat):not(.default-button):not(.secondary-button) {
+  &:not(.no-outline) {
+    outline: 2px solid var(--contrast-outline);
+  }
+  &.no-outline {
+    outline: 2px solid var(--contrast-outline) !important;
+  }
+  outline-offset: -1px;
+}
+
 .card .card-button,
 .menu-card .card-button {
   background-color: var(--card-high);
@@ -138,11 +148,9 @@
 
 .category-button {
   @include bgColorTransition();
-  will-change: background;
 
   > span {
     @include onlyColorTransition();
-    will-change: color;
   }
 
   .q-icon {
@@ -153,7 +161,6 @@
     background-color: var(--primary);
     > span {
       color: var(--on-primary);
-      will-change: color;
     }
     .q-icon {
       animation: fillActivate var(--animate-duration) ease-out forwards;
