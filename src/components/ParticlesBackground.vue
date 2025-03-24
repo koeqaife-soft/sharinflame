@@ -14,17 +14,24 @@ const particles: Particle[] = [];
 let ctx: CanvasRenderingContext2D | null = null;
 let animationFrameId: number | null = null;
 const grid: { [key: string]: Particle[] } = {};
-const gridSize = 125;
+const gridSize = 150;
+
+const visibleParticles: Particle[] = [];
 
 let mouseX = -1000;
 let mouseY = -1000;
 let mouseMoved = false;
+let lastTime = performance.now();
+
+let centerX: number;
+let centerY: number;
+const speedK = 5;
 
 interface Particle {
   x: number;
   y: number;
   z: number;
-  radius: number;
+  size: number;
   color: string;
   speedX: number;
   speedY: number;
@@ -32,68 +39,74 @@ interface Particle {
   originalY: number;
   alpha: number;
   alphaTarget: number;
+  theta: number;
+  centerRadius: number;
+  omega: number;
   threshold: number;
   speedOffset: number;
 }
 
 const generateInitialParticles = () => {
-  const numLayers = 5;
-  const particlesPerLayer = [50, 100, 150, 300, 350];
-  const canvasWidth = canvas.value?.width || 0;
-  const canvasHeight = canvas.value?.height || 0;
+  const canvasWidth = canvas.value?.width ?? 0;
+  const canvasHeight = canvas.value?.height ?? 0;
+
+  const particlesCount = canvasWidth * 10;
+
+  centerX = canvasWidth * 1.5;
+  centerY = canvasHeight;
 
   const computedStyle = getComputedStyle(document.body);
   const particleColor = computedStyle.getPropertyValue("--on-background").trim();
 
-  const generateWaveLayer = (numParticles: number, layerIndex: number) => {
-    const layerHeight = canvasHeight / numLayers;
-    const yOffset = layerHeight * layerIndex;
+  particles.length = 0;
 
-    for (let i = 0; i < numParticles; i++) {
-      let x: number;
-      let y: number;
-      let radius: number;
-      let isOverlapping;
+  for (let i = 0; i < particlesCount; i++) {
+    const maxRadius = Math.max(canvasWidth * 2, canvasHeight);
+    const minRadius = canvasWidth / 3;
 
-      do {
-        x = Math.random() * canvasWidth;
-        y = Math.random() * layerHeight + yOffset;
-        radius = Math.random() * (2 + layerIndex / 2) + 1;
+    const angle = Math.random() * 6.2832;
+    const radius = minRadius + Math.sqrt(Math.random()) * (maxRadius - minRadius);
 
-        isOverlapping = particles.some((particle) => {
-          const dx = particle.x - x;
-          const dy = particle.y - y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          return distance < particle.radius + radius;
-        });
-      } while (isOverlapping);
+    const x = centerX + radius * Math.cos(angle);
+    const y = centerY + radius * Math.sin(angle);
 
-      const alpha = Math.random();
-      const alphaTarget = Math.random();
-      const z = Math.random() * 10;
-      const threshold = 120 + (10 - z);
-      const speedOffset = (20 - z * 2) / 40;
+    const r = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
 
-      particles.push({
-        x,
-        y,
-        z,
-        radius,
-        color: particleColor,
-        speedX: 0,
-        speedY: 0,
-        originalX: x,
-        originalY: y,
-        alpha,
-        alphaTarget,
-        threshold,
-        speedOffset
-      });
-    }
-  };
+    const isTooClose = r < minRadius;
+    const isTooFar = r > maxRadius * 1.5;
 
-  for (let layerIndex = 0; layerIndex < numLayers; layerIndex++) {
-    generateWaveLayer(particlesPerLayer[layerIndex]!, layerIndex);
+    if (isTooClose || isTooFar) continue;
+
+    const z = Math.random() * 10;
+    const size = Math.random() * 2 + 1;
+    const threshold = 130 - z;
+    const speedOffset = (20 - z * 2) / 40;
+
+    const alpha = Math.random();
+    const alphaTarget = Math.random();
+
+    const theta = Math.atan2(y - centerY, x - centerX);
+
+    const omega = speedK / r;
+
+    particles.push({
+      x,
+      y,
+      z,
+      size,
+      color: particleColor,
+      speedX: 0,
+      speedY: 0,
+      originalX: x,
+      originalY: y,
+      alpha,
+      alphaTarget,
+      theta,
+      centerRadius: r,
+      omega,
+      threshold,
+      speedOffset
+    });
   }
 };
 
@@ -107,20 +120,36 @@ const updateParticleColors = () => {
 };
 
 const updateGrid = () => {
-  Object.keys(grid).forEach((key) => (grid[key]!.length = 0));
-  particles.forEach((particle) => {
-    const col = Math.floor(particle.x / gridSize);
-    const row = Math.floor(particle.y / gridSize);
-    const key = `${col},${row}`;
-    if (!grid[key]) grid[key] = [];
-    grid[key].push(particle);
+  for (const key in grid) grid[key]!.length = 0;
+  visibleParticles.length = 0;
+
+  const canvasWidth = canvas.value?.width ?? 0;
+  const canvasHeight = canvas.value?.height ?? 0;
+  const minX = -5;
+  const maxX = canvasWidth + 5;
+  const minY = -5;
+  const maxY = canvasHeight + 5;
+
+  particles.forEach((p) => {
+    if ((p.x >= minX && p.x <= maxX && p.y >= minY && p.y <= maxY) || p.originalX - p.x || p.originalY - p.y) {
+      const key = `${Math.floor(p.x / gridSize)},${Math.floor(p.y / gridSize)}`;
+      grid[key] = grid[key] || [];
+      grid[key].push(p);
+      visibleParticles.push(p);
+    }
   });
 };
 
-const moveParticles = () => {
+const moveParticles = (currentTime: number) => {
   if (!ctx || !canvas.value) return;
 
-  ctx.clearRect(0, 0, canvas.value.width, canvas.value.height);
+  const canvasWidth = canvas.value?.width ?? 0;
+  const canvasHeight = canvas.value?.height ?? 0;
+
+  const deltaTime = (currentTime - lastTime) / 1000;
+  lastTime = currentTime;
+
+  ctx.clearRect(-5, -5, canvas.value.width + 5, canvas.value.height + 5);
 
   updateParticleColors();
 
@@ -142,70 +171,57 @@ const moveParticles = () => {
       if (distSquared < particle.threshold * particle.threshold) {
         const distance = Math.sqrt(distSquared);
         const angle = Math.atan2(dy, dx);
-        const speed = (particle.threshold - distance) / 100 + particle.speedOffset;
+        const speed = ((particle.threshold - distance) / 100 + particle.speedOffset) * 60;
         particle.speedX += Math.cos(angle + Math.PI) * speed;
         particle.speedY += Math.sin(angle + Math.PI) * speed;
       }
     });
     mouseMoved = false;
   }
+  const decayFactor = Math.pow(0.94, 60 * deltaTime);
 
   ctx.lineCap = "round";
-  particles.forEach((particle) => {
-    ctx!.globalAlpha = particle.alpha;
-    ctx!.strokeStyle = particle.color;
-    ctx!.lineWidth = particle.radius * 2;
+  visibleParticles.forEach((p) => {
+    ctx!.globalAlpha = p.alpha;
+    ctx!.strokeStyle = p.color;
+    ctx!.lineWidth = p.size * 2;
     ctx!.beginPath();
-    ctx!.moveTo(particle.x, particle.y);
-    ctx!.lineTo(particle.x, particle.y);
+    ctx!.moveTo(p.x, p.y);
+    ctx!.lineTo(p.x, p.y);
     ctx!.stroke();
 
-    particle.x += particle.z / 100;
-    particle.originalX += particle.z / 100;
-    particle.x += particle.speedX;
-    particle.y += particle.speedY;
+    p.x += p.speedX * deltaTime;
+    p.y += p.speedY * deltaTime;
 
-    const speed = Math.sqrt(particle.speedX * particle.speedX + particle.speedY * particle.speedY);
-    const decayFactor = 0.94;
-
-    if (speed > 0) {
-      const decay = speed * decayFactor;
-      particle.speedX *= decay / speed;
-      particle.speedY *= decay / speed;
+    if (p.speedX || p.speedY) {
+      p.speedX *= decayFactor;
+      p.speedY *= decayFactor;
     }
 
-    if (particle.alpha < particle.alphaTarget) {
-      particle.alpha += 0.005;
-    } else if (particle.alpha > particle.alphaTarget) {
-      particle.alpha -= 0.005;
+    const alphaSpeed = 0.3;
+    if (p.alpha < p.alphaTarget) {
+      p.alpha = Math.min(p.alpha + alphaSpeed * deltaTime, p.alphaTarget);
+    } else if (p.alpha > p.alphaTarget) {
+      p.alpha = Math.max(p.alpha - alphaSpeed * deltaTime, p.alphaTarget);
     }
 
-    if (Math.abs(particle.alpha - particle.alphaTarget) < 0.01) {
-      if (particle.alphaTarget > 0) {
-        particle.alphaTarget = 0;
+    if (Math.abs(p.alpha - p.alphaTarget) < 0.01) {
+      if (p.alphaTarget > 0) {
+        p.alphaTarget = 0;
       } else {
-        particle.x = particle.originalX;
-        particle.y = particle.originalY;
-        particle.speedX = 0;
-        particle.speedY = 0;
-        particle.alphaTarget = Math.random() * 0.4 + 0.6;
+        p.x = p.originalX;
+        p.y = p.originalY;
+        p.speedX = 0;
+        p.speedY = 0;
+        p.alphaTarget = Math.random() * 0.4 + 0.6;
       }
     }
-
-    if (particle.x < 0 || particle.x > canvas.value!.width || particle.y < 0 || particle.y > canvas.value!.height) {
-      particle.alphaTarget = 0;
-      particle.alpha = 0;
-      particle.speedX = 0;
-      particle.speedY = 0;
-      particle.x = particle.originalX;
-      particle.y = particle.originalY;
-    }
-
-    if (particle.originalX > canvas.value!.width) {
-      particle.originalX = 0;
-    }
-    if (particle.originalX < 0) {
-      particle.x = canvas.value!.width;
+  });
+  particles.forEach((p) => {
+    if (Math.abs(p.x - p.originalX) < 0.1 && Math.abs(p.y - p.originalY) < 0.1) {
+      p.theta += p.omega * deltaTime;
+      p.x = p.originalX = canvasWidth * 1.5 + p.centerRadius * Math.cos(p.theta);
+      p.y = p.originalY = canvasHeight + p.centerRadius * Math.sin(p.theta);
     }
   });
 
@@ -228,8 +244,8 @@ const resizeCanvas = () => {
   }
 };
 
-const animate = () => {
-  moveParticles();
+const animate = (time: number) => {
+  moveParticles(time);
   animationFrameId = requestAnimationFrame(animate);
 };
 
@@ -243,7 +259,7 @@ const onFocus = () => {
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId);
   }
-  animate();
+  animationFrameId = requestAnimationFrame(animate);
 };
 
 onMounted(() => {
@@ -252,7 +268,7 @@ onMounted(() => {
     resizeCanvas();
     generateInitialParticles();
     updateGrid();
-    animate();
+    animationFrameId = requestAnimationFrame(animate);
   }
 
   window.addEventListener("mousemove", onMouseMove, { passive: true });
