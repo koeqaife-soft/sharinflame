@@ -146,7 +146,7 @@ const moveParticles = (currentTime: number) => {
   const canvasWidth = canvas.value?.width ?? 0;
   const canvasHeight = canvas.value?.height ?? 0;
 
-  const deltaTime = (currentTime - lastTime) / 1000;
+  const deltaTime = Math.min((currentTime - lastTime) / 1000, 0.1);
   lastTime = currentTime;
 
   ctx.clearRect(-5, -5, canvas.value.width + 5, canvas.value.height + 5);
