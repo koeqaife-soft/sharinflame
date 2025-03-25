@@ -66,7 +66,12 @@ const generateInitialParticles = () => {
 
   particles.length = 0;
 
-  const weights = [2, 1, 3, 1, 2];
+  // Index 0 -> White
+  // Index 1 -> Red
+  // Index 2 -> Light Blue
+  // Index 3 -> Orange
+  // Index 4 -> Yellow
+  const weights = [2, 4, 1, 2, 2];
   const cumulative = weights.map(
     (
       (sum) => (value) =>
