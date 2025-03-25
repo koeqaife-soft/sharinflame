@@ -14,7 +14,7 @@ type HslAction = [action: string, value: string];
 type Hsl = [h: number, s: number, l: number];
 type Rgb = [r: number, g: number, b: number];
 
-interface PaletteEntry {
+export interface PaletteEntry {
   h?: HslAction;
   s?: HslAction;
   l?: HslAction;
@@ -26,7 +26,7 @@ interface PaletteEntry {
   flags?: string[];
 }
 
-type Palette = Record<string, PaletteEntry>;
+export type Palette = Record<string, PaletteEntry>;
 
 export const palettes = {
   default: {
