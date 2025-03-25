@@ -32,7 +32,7 @@ let lastTime = performance.now();
 
 let centerX: number;
 let centerY: number;
-const omega = 1 / 150;
+const omega = 1 / 175;
 
 interface Particle {
   x: number;
@@ -62,7 +62,7 @@ const generateInitialParticles = () => {
   const particlesCount = canvasWidth * 2.5;
 
   centerX = canvasWidth / 2;
-  centerY = canvasHeight / 1.5;
+  centerY = canvasHeight / 1.3;
 
   particles.length = 0;
 
