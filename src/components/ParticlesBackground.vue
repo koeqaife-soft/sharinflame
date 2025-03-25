@@ -5,8 +5,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, watch } from "vue";
+import { type Palette, generateColors } from "src/utils/colors";
+import StarsDark from "src/assets/stars/stars-dark.json";
+import StarsLight from "src/assets/stars/stars-light.json";
+import { useQuasar } from "quasar";
 
+const quasar = useQuasar();
 const canvas = ref<HTMLCanvasElement | null>(null);
 const container = ref<HTMLDivElement | null>(null);
 
@@ -18,6 +23,8 @@ const gridSize = 150;
 
 const visibleParticles: Particle[] = [];
 
+let variationColors: Record<string, string> = {};
+
 let mouseX = -1000;
 let mouseY = -1000;
 let mouseMoved = false;
@@ -25,7 +32,7 @@ let lastTime = performance.now();
 
 let centerX: number;
 let centerY: number;
-const speedK = 5;
+const omega = 1 / 150;
 
 interface Particle {
   x: number;
@@ -33,6 +40,7 @@ interface Particle {
   z: number;
   size: number;
   color: string;
+  variation: number;
   speedX: number;
   speedY: number;
   originalX: number;
@@ -44,25 +52,35 @@ interface Particle {
   omega: number;
   threshold: number;
   speedOffset: number;
+  alphaSpeed: number;
 }
 
 const generateInitialParticles = () => {
   const canvasWidth = canvas.value?.width ?? 0;
   const canvasHeight = canvas.value?.height ?? 0;
 
-  const particlesCount = canvasWidth * 10;
+  const particlesCount = canvasWidth * 2.5;
 
-  centerX = canvasWidth * 1.5;
-  centerY = canvasHeight;
-
-  const computedStyle = getComputedStyle(document.body);
-  const particleColor = computedStyle.getPropertyValue("--on-background").trim();
+  centerX = canvasWidth / 2;
+  centerY = canvasHeight / 1.5;
 
   particles.length = 0;
 
+  const weights = [2, 1, 3, 1, 2];
+  const cumulative = weights.map(
+    (
+      (sum) => (value) =>
+        (sum += value)
+    )(0)
+  );
+
+  const maxRadius = Math.sqrt(centerX ** 2 + centerY ** 2);
+  const minRadius = 0;
+
   for (let i = 0; i < particlesCount; i++) {
-    const maxRadius = Math.max(canvasWidth * 2, canvasHeight);
-    const minRadius = canvasWidth / 3;
+    const rand = Math.random() * cumulative[cumulative.length - 1]!;
+    const variation = cumulative.findIndex((value) => rand < value);
+    const alphaSpeed = Math.max(Math.random() / 3, 0.1);
 
     const angle = Math.random() * 6.2832;
     const radius = minRadius + Math.sqrt(Math.random()) * (maxRadius - minRadius);
@@ -87,14 +105,14 @@ const generateInitialParticles = () => {
 
     const theta = Math.atan2(y - centerY, x - centerX);
 
-    const omega = speedK / r;
+    const color = variationColors[`variation${variation}`] ?? "#fff";
 
     particles.push({
       x,
       y,
       z,
       size,
-      color: particleColor,
+      color,
       speedX: 0,
       speedY: 0,
       originalX: x,
@@ -105,19 +123,34 @@ const generateInitialParticles = () => {
       centerRadius: r,
       omega,
       threshold,
-      speedOffset
+      speedOffset,
+      variation,
+      alphaSpeed
     });
   }
 };
 
+const generatePalette = () => {
+  let palette: Palette;
+  if (quasar.dark.isActive) palette = StarsDark as unknown as Palette;
+  else palette = StarsLight as unknown as Palette;
+  const colors = generateColors(palette, [0, 0, 0]);
+  variationColors = colors;
+};
+
 const updateParticleColors = () => {
-  const computedStyle = getComputedStyle(document.body);
-  const newColor = computedStyle.getPropertyValue("--on-background").trim();
-  if (particles[0]?.color == newColor) return;
   particles.forEach((particle) => {
-    particle.color = newColor;
+    particle.color = variationColors[`variation${particle.variation}`] ?? "#fff";
   });
 };
+
+watch(
+  () => quasar.dark.isActive,
+  () => {
+    generatePalette();
+    updateParticleColors();
+  }
+);
 
 const updateGrid = () => {
   for (const key in grid) grid[key]!.length = 0;
@@ -143,15 +176,10 @@ const updateGrid = () => {
 const moveParticles = (currentTime: number) => {
   if (!ctx || !canvas.value) return;
 
-  const canvasWidth = canvas.value?.width ?? 0;
-  const canvasHeight = canvas.value?.height ?? 0;
-
   const deltaTime = Math.min((currentTime - lastTime) / 1000, 0.1);
   lastTime = currentTime;
 
   ctx.clearRect(-5, -5, canvas.value.width + 5, canvas.value.height + 5);
-
-  updateParticleColors();
 
   if (mouseMoved) {
     const mouseCol = Math.floor(mouseX / gridSize);
@@ -198,7 +226,7 @@ const moveParticles = (currentTime: number) => {
       p.speedY *= decayFactor;
     }
 
-    const alphaSpeed = 0.3;
+    const alphaSpeed = p.alphaSpeed;
     if (p.alpha < p.alphaTarget) {
       p.alpha = Math.min(p.alpha + alphaSpeed * deltaTime, p.alphaTarget);
     } else if (p.alpha > p.alphaTarget) {
@@ -218,10 +246,16 @@ const moveParticles = (currentTime: number) => {
     }
   });
   particles.forEach((p) => {
+    p.theta += p.omega * deltaTime;
+    const newX = centerX + p.centerRadius * Math.cos(p.theta);
+    const newY = centerY + p.centerRadius * Math.sin(p.theta);
+
     if (Math.abs(p.x - p.originalX) < 0.1 && Math.abs(p.y - p.originalY) < 0.1) {
-      p.theta += p.omega * deltaTime;
-      p.x = p.originalX = canvasWidth * 1.5 + p.centerRadius * Math.cos(p.theta);
-      p.y = p.originalY = canvasHeight + p.centerRadius * Math.sin(p.theta);
+      p.x = p.originalX = newX;
+      p.y = p.originalY = newY;
+    } else {
+      p.originalX = newX;
+      p.originalY = newY;
     }
   });
 
@@ -262,16 +296,24 @@ const onFocus = () => {
   animationFrameId = requestAnimationFrame(animate);
 };
 
+const onResize = () => {
+  resizeCanvas();
+  generateInitialParticles();
+  updateGrid();
+};
+
 onMounted(() => {
   if (canvas.value) {
     ctx = canvas.value.getContext("2d");
     resizeCanvas();
+    generatePalette();
     generateInitialParticles();
     updateGrid();
     animationFrameId = requestAnimationFrame(animate);
   }
 
   window.addEventListener("mousemove", onMouseMove, { passive: true });
+  window.addEventListener("resize", onResize, { passive: true });
   window.addEventListener("focus", onFocus, { passive: true });
   window.addEventListener("blur", onBlur, { passive: true });
 });

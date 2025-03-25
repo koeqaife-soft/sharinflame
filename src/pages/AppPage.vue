@@ -1,6 +1,6 @@
 <template>
   <main-layout :in-router="false" headers-class="index-10" class="full-height">
-    <particles-background v-if="mainStore.getSetting('starBackground')" :key="screenSize" />
+    <particles-background v-if="mainStore.getSetting('starBackground')" />
     <template #toolbar-actions v-if="hideRightColumn">
       <open-profile-menu />
     </template>
@@ -40,7 +40,6 @@ import { useI18n } from "vue-i18n";
 import type { ButtonProps } from "src/components/categories/CategoryButton.vue";
 import PostScroll from "src/components/posts/PostScroll.vue";
 import MainLayout from "src/layouts/MainLayout.vue";
-import ParticlesBackground from "src/components/ParticlesBackground.vue";
 import { useMainStore } from "src/stores/main-store";
 
 const CategoryButtonsContainer = defineAsyncComponent(
@@ -48,6 +47,7 @@ const CategoryButtonsContainer = defineAsyncComponent(
 );
 const ProfileMenu = defineAsyncComponent(() => import("src/components/profile/ProfileMenu.vue"));
 const OpenProfileMenu = defineAsyncComponent(() => import("src/components/profile/OpenProfileMenu.vue"));
+const ParticlesBackground = defineAsyncComponent(() => import("src/components/ParticlesBackground.vue"));
 
 const mainStore = useMainStore();
 const { t } = useI18n();
