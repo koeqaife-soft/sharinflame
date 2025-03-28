@@ -1,35 +1,34 @@
 {
+  "$settings": {
+    "s": ["=", "90"],
+    "l": ["=", "35"]
+  },
   "variation0": {
     "hex": "#000000"
   },
   "variation1": {
     "h": ["=", "0"],
-    "s": ["=", "55"],
-    "l": ["=", "35"],
+    "link": "$settings",
     "luminance": "30"
   },
   "variation2": {
     "h": ["=", "180"],
-    "s": ["=", "55"],
-    "l": ["=", "35"],
+    "link": "$settings",
     "luminance": "30"
   },
   "variation3": {
     "h": ["=", "230"],
-    "s": ["=", "55"],
-    "l": ["=", "35"],
+    "link": "$settings",
     "luminance": "30"
   },
   "variation4": {
     "h": ["=", "30"],
-    "s": ["=", "55"],
-    "l": ["=", "35"],
+    "link": "$settings",
     "luminance": "30"
   },
   "variation5": {
     "h": ["=", "55"],
-    "s": ["=", "55"],
-    "l": ["=", "35"],
+    "link": "$settings",
     "luminance": "30"
   }
 }
