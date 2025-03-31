@@ -34,7 +34,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, defineAsyncComponent } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, defineAsyncComponent, onBeforeMount } from "vue";
 import type { KeyOfGetPostsTypes } from "src/api/posts";
 import { useI18n } from "vue-i18n";
 import type { ButtonProps } from "src/components/categories/CategoryButton.vue";
@@ -66,6 +66,7 @@ const hideLeftColumn = computed(() => !isBigScreen.value);
 const hideRightColumn = computed(() => isSmallScreen.value);
 
 const changeType = (type: KeyOfGetPostsTypes) => {
+  localStorage.removeItem("notLoadedCache");
   if (currentType.value == type) reloadKey.value = Date.now();
   else currentType.value = type;
 };
@@ -102,5 +103,17 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   window.removeEventListener("resize", updateScreenSize);
+});
+
+onBeforeMount(() => {
+  const cachedNotLoaded = localStorage.getItem("notLoadedCache");
+  if (cachedNotLoaded) {
+    const parsed = JSON.parse(cachedNotLoaded) as {
+      type: KeyOfGetPostsTypes;
+      posts: string[];
+      timestamp: number;
+    };
+    currentType.value = parsed.type;
+  }
 });
 </script>

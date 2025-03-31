@@ -26,7 +26,7 @@
   </q-scroll-area>
 </template>
 <script setup lang="ts">
-import { ref, watch, defineAsyncComponent, type DefineComponent } from "vue";
+import { ref, watch, defineAsyncComponent, type DefineComponent, onBeforeMount } from "vue";
 import { getPosts, getPostsBatch, type KeyOfGetPostsTypes, viewPosts } from "src/api/posts";
 import { type AxiosError, isAxiosError } from "axios";
 import { useI18n } from "vue-i18n";
@@ -65,7 +65,7 @@ function reset() {
   headerVisible.value = true;
 }
 
-async function viewInChunks(posts: string[], chunkSize: number = 10) {
+async function viewInChunks(posts: string[], chunkSize: number = 50) {
   const promises = [];
 
   while (posts.length > 0) {
@@ -88,6 +88,18 @@ async function getPostsIds(type: KeyOfGetPostsTypes) {
     notLoaded.push(...r.data.data.posts);
   }
   return r.data;
+}
+
+function updateCache() {
+  if (items.value.length == 0) return;
+  localStorage.setItem(
+    "notLoadedCache",
+    JSON.stringify({
+      type: props.type,
+      posts: items.value.map((post) => post.post_id).slice(-15),
+      timestamp: Date.now()
+    })
+  );
 }
 
 async function loadPosts(count: number) {
@@ -137,7 +149,7 @@ function getLoaded(count: number) {
 }
 
 async function onLoad(index: number, done: (stop?: boolean) => void) {
-  const toLoad = items.value.length == 0 ? 10 : 5;
+  const toLoad = items.value.length == 0 ? Math.min(window.innerHeight / 125 + 1, 15) : 5;
   try {
     if (loaded.length == 0 && notLoaded.length == 0) {
       if (toView.length > 0) {
@@ -179,6 +191,8 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
       });
       done(true);
     } else throw e;
+  } finally {
+    updateCache();
   }
 }
 
@@ -186,4 +200,18 @@ function handleDeletePost(postId: string) {
   items.value = items.value.filter((post) => post.post_id !== postId);
   virtualScroll.value?.updateShowedItems();
 }
+
+onBeforeMount(() => {
+  const cachedNotLoaded = localStorage.getItem("notLoadedCache");
+  if (cachedNotLoaded) {
+    const parsed = JSON.parse(cachedNotLoaded) as {
+      type: KeyOfGetPostsTypes;
+      posts: string[];
+      timestamp: number;
+    };
+    if (parsed.type === props.type && Date.now() - parsed.timestamp < 60 * 60 * 1000) {
+      notLoaded.push(...parsed.posts);
+    }
+  }
+});
 </script>
