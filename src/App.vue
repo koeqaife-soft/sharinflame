@@ -22,11 +22,14 @@
 <script setup lang="ts">
 import { onMounted, ref, watch, defineAsyncComponent, onBeforeMount } from "vue";
 import { useMainStore } from "./stores/main-store";
-import { api, apiEndpoints } from "./boot/axios";
+import { type api as apiType } from "./boot/axios";
+import { apiEndpoints } from "./api/config";
 import { useQuasar } from "quasar";
 
 const LogoComponent = defineAsyncComponent(() => import("./components/misc/LogoComponent.vue"));
 const MainLayout = defineAsyncComponent(() => import("./layouts/MainLayout.vue"));
+
+let api: typeof apiType;
 
 const quasar = useQuasar();
 const mainStore = useMainStore();
@@ -35,6 +38,10 @@ const offlineDialog = ref(true);
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function ping() {
+  if (!api) {
+    api = (await import("./boot/axios")).api;
+  }
+
   await delay(Math.random());
   try {
     await api.post(apiEndpoints.ping);

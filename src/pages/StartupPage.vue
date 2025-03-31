@@ -15,7 +15,7 @@ import { useMainStore } from "src/stores/main-store";
 import { useProfileStore } from "src/stores/profile-store";
 import { onMounted } from "vue";
 import websockets from "src/utils/websockets";
-import { websocketUrl } from "src/boot/axios";
+import { websocketUrl } from "src/api/config";
 
 const profileStore = useProfileStore();
 const mainStore = useMainStore();
