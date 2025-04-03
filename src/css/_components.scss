@@ -163,7 +163,7 @@
     gap: 8px;
     &.can-animate {
       .button.active .q-icon {
-        animation: fillActivate 0.1s ease-out forwards;
+        animation: fillActivate 0.25s ease-out forwards;
       }
     }
   }
