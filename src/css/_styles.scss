@@ -132,8 +132,16 @@ body {
   align-items: flex-start;
   padding-top: 8px;
 
-  .categories,
+  .notifications-list {
+    min-height: 348px;
+  }
+
   .profile-menu {
+    min-height: 281px;
+  }
+
+  .categories,
+  .right-column-content {
     width: 100%;
     max-width: 350px;
     height: fit-content;
@@ -152,11 +160,13 @@ body {
   .left-column {
     padding-left: 8px;
     justify-content: flex-end;
+    min-width: 0;
   }
 
   .right-column {
     justify-content: flex-start;
     padding-right: 8px;
+    min-width: 0;
   }
 
   .sticky-label {

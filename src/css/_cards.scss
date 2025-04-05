@@ -29,6 +29,12 @@
       margin-bottom: 8px;
     }
   }
+
+  .card {
+    box-shadow: none;
+    border-radius: 8px;
+    background-color: var(--card-high);
+  }
 }
 
 .login-card,

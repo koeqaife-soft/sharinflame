@@ -312,6 +312,10 @@
       }
     }
   }
+  .load-more-container {
+    display: flex;
+    justify-content: center;
+  }
 }
 
 .posts-infinite-scroll {
@@ -919,4 +923,70 @@
 
 .more-btn:hover {
   opacity: 0.8;
+}
+
+.notification {
+  min-height: 60px;
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in;
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--card-high) 95%, var(--on-background) 5%);
+  }
+
+  .image-container {
+    @include avatarContainerSkeleton();
+    height: 42px;
+    width: 42px;
+    margin-right: 8px;
+    position: relative;
+    .icon {
+      @include iconSize(14);
+      color: var(--on-tertiary);
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background-color: var(--tertiary);
+      border-radius: 50%;
+      padding: 4px;
+      border: 1px solid var(--outline);
+    }
+  }
+  .title {
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .message {
+    font-size: 14px;
+    font-weight: 400;
+  }
+  .text-container {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .title,
+  .message {
+    color: var(--on-card);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}
+
+.notifications {
+  .no-notifications {
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    color: var(--on-background-variant);
+  }
+  .notifications-container {
+    height: 332px;
+    overflow: hidden;
+  }
 }
