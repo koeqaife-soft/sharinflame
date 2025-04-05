@@ -1,14 +1,7 @@
 interface EventMap {
   please_token: undefined;
   auth_success: undefined;
-  notification: {
-    from_id: string;
-    message: string;
-    type: string;
-    linked_type: string;
-    linked_id: string;
-    second_linked_id: string;
-  };
+  notification: ApiNotification;
 }
 
 type ServerEvent = {
