@@ -21,7 +21,7 @@ function createWindow() {
     icon: path.resolve(currentDir, "icons/icon.png"),
     width: 1000,
     height: 600,
-    minHeight: 850,
+    minHeight: 450,
     minWidth: 450,
     useContentSize: true,
     frame: false,
