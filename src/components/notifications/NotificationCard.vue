@@ -5,7 +5,7 @@
         v-if="notif.linked_type == 'post' || notif.linked_type == 'comment'"
         :user="notif.loaded.user"
       />
-      <q-icon v-if="notif.type == 'new_comment'" name="sym_r_comment" class="icon" />
+      <q-icon :name="typeIcons[notif.type] ?? ''" class="icon" />
     </div>
     <div class="text-container">
       <div class="title">{{ $t(`notifications.${notif.type}`, { username }) }}</div>
@@ -21,6 +21,11 @@ import { computed, defineAsyncComponent } from "vue";
 const quasar = useQuasar();
 const PostDialog = defineAsyncComponent(() => import("src/components/dialogs/PostDialog.vue"));
 const OpenUserDialog = defineAsyncComponent(() => import("../dialogs/OpenUserDialog.vue"));
+
+const typeIcons = {
+  new_comment: "sym_r_chat_bubble",
+  followed: "sym_r_person_add"
+};
 
 const username = computed(() => {
   if (!props.notif.loaded) return undefined;
