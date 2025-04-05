@@ -61,7 +61,7 @@ const emit = defineEmits<{
   (e: "scroll", info: QScrollObserverDetails): void;
 }>();
 
-defineExpose({ updateShowedItems });
+defineExpose({ updateShowedItems, checkLoading });
 
 // -------------------------
 // REACTIVE STATE VARIABLES
