@@ -8,7 +8,7 @@
         <div class="username">
           {{ commentRef.user.display_name || commentRef.user.username }}
         </div>
-        <text-parts :text="formatStringForHtml(commentRef.content)" :html="true" />
+        <text-parts class="content" :text="formatStringForHtml(commentRef.content)" :html="true" />
       </div>
     </div>
     <div class="actions card-section actions-section" :class="{ 'can-animate': canAnimate }">
