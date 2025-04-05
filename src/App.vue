@@ -20,17 +20,20 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch, defineAsyncComponent, onBeforeMount } from "vue";
+import { onMounted, ref, watch, defineAsyncComponent, onBeforeMount, onBeforeUnmount } from "vue";
 import { useMainStore } from "./stores/main-store";
 import { type api as apiType } from "./boot/axios";
 import { apiEndpoints } from "./api/config";
 import { useQuasar } from "quasar";
+import websockets from "src/utils/websockets";
+import { useI18n } from "vue-i18n";
 
 const LogoComponent = defineAsyncComponent(() => import("./components/misc/LogoComponent.vue"));
 const MainLayout = defineAsyncComponent(() => import("./layouts/MainLayout.vue"));
 
 let api: typeof apiType;
 
+const { t } = useI18n();
 const quasar = useQuasar();
 const mainStore = useMainStore();
 const offlineDialog = ref(true);
@@ -100,13 +103,31 @@ defineOptions({
   name: "App"
 });
 
+function newNotification(notification: ApiNotification) {
+  mainStore.addNotification(notification);
+  quasar.notify({
+    avatar: notification.loaded?.user?.avatar_url ?? "",
+    message: t(`notifications.${notification.type}`, { username: notification.loaded?.user?.username }),
+    caption: notification.message ?? notification.loaded?.content ?? "",
+    position: "top-right",
+    type: "default-notification",
+    timeout: 2000
+  });
+}
+
 onMounted(() => {
   onChange();
   void pingInterval();
+
+  websockets.on("notification", newNotification);
 });
 
 onBeforeMount(() => {
   quasar.dark.set(mainStore.getSetting("darkMode"));
   mainStore.updateColor(true);
+});
+
+onBeforeUnmount(() => {
+  websockets.off("notification", newNotification);
 });
 </script>
