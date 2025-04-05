@@ -36,7 +36,8 @@ export const useMainStore = defineStore("main", {
       user: () => {},
       post: () => {}
     },
-    settings: getSettings()
+    settings: getSettings(),
+    lastNotifications: [] as ApiNotification[]
   }),
   getters: {},
   actions: {
@@ -82,6 +83,22 @@ export const useMainStore = defineStore("main", {
       } else generate();
 
       colors.setCss(generated!);
+    },
+    addNotification(notification: ApiNotification) {
+      const index = this.lastNotifications.findIndex((n) => n.id === notification.id);
+
+      if (index !== -1) {
+        console.log("Notification already exists, updating it");
+        this.lastNotifications[index] = notification;
+      } else {
+        console.log("Adding new notification");
+        this.lastNotifications.unshift(notification);
+      }
+      console.log("Last notifications", this.lastNotifications);
+
+      if (this.lastNotifications.length > 5) {
+        this.lastNotifications.splice(5);
+      }
     }
   }
 });
