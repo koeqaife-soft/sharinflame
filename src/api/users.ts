@@ -8,7 +8,8 @@ export const usersEndpoints = {
   favorites: "/users/me/favorites",
   reactions: "/users/me/reactions",
   follow: (id: string) => `/users/me/following/${id}`,
-  following: "/users/me/following"
+  following: "/users/me/following",
+  notifications: "/users/me/notifications"
 };
 
 async function getProfile(user_id?: string) {
@@ -69,6 +70,16 @@ async function getFollowing(cursor?: string) {
   });
 }
 
+async function getNotifications(cursor?: string, limit?: number) {
+  return await api.get<NotificationsResponse>(usersEndpoints.notifications, {
+    params: {
+      ...(cursor && { cursor }),
+      ...(limit && { limit }),
+      preload: "true"
+    }
+  });
+}
+
 async function follow(userId: string) {
   return await api.post(usersEndpoints.follow(userId));
 }
@@ -93,5 +104,6 @@ export {
   getReactions,
   getFollowing,
   follow,
-  unfollow
+  unfollow,
+  getNotifications
 };
