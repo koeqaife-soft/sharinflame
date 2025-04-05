@@ -176,5 +176,12 @@ export default {
   star_background_setting: {
     label: "Star Background",
     desc: "Enables star background in home page (can lag!)"
-  }
+  },
+
+  notifications: {
+    no_notifications: "No notifications",
+    new_comment: "Comment from {username}"
+  },
+
+  load_more: "Load More"
 };
