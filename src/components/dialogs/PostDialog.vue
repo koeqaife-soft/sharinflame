@@ -29,7 +29,7 @@
           item-key="comment_id"
           @load-more="loadComments"
           @scroll="onScroll"
-          infinite-load-type="bottom"
+          :infinite-load-type="allowLoading ? 'bottom' : 'none'"
           :key="scrollKey"
           class="posts-infinite-scroll"
           ref="virtualScroll"
@@ -43,6 +43,9 @@
             </div>
           </template>
         </my-virtual-scroll>
+        <div class="load-more-container" v-if="!allowLoading">
+          <q-btn unelevated no-caps class="default-button load-more" @click="allowLoad" :label="$t('load_more')" />
+        </div>
       </q-scroll-area>
       <q-separator class="q-mb-sm q-mt-sm" />
       <div class="card send-comment">
@@ -81,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, type DefineComponent, onMounted, onUnmounted, ref, toRef, watch } from "vue";
+import { defineAsyncComponent, type DefineComponent, nextTick, onMounted, onUnmounted, ref, toRef, watch } from "vue";
 import PostComponent from "../posts/PostComponent.vue";
 import CloseableContent from "../misc/CloseableContent.vue";
 import CardDialogLabel from "../misc/CardDialogLabel.vue";
@@ -94,9 +97,16 @@ import { useMainStore } from "src/stores/main-store";
 const CommentComponent = defineAsyncComponent(() => import("../posts/CommentComponent.vue"));
 const UserAvatar = defineAsyncComponent(() => import("../profile/UserAvatar.vue"));
 
-const props = defineProps<{
-  post: Post;
-}>();
+const props = withDefaults(
+  defineProps<{
+    post: Post;
+    firstComment?: CommentWithUser;
+    autoLoad?: boolean;
+  }>(),
+  {
+    autoLoad: true
+  }
+);
 
 const showNoComments = ref(false);
 
@@ -113,6 +123,7 @@ const headerVisible = ref(true);
 const postComponentRef = ref<HTMLElement | null>(null);
 
 const virtualScroll = ref<DefineComponent | null>(null);
+const allowLoading = ref(props.autoLoad);
 
 let hasMore = true;
 let cursor: string | undefined;
@@ -124,6 +135,13 @@ watch(text, () => updateMeta("text", text.value));
 defineEmits([...useDialogPluginComponent.emits]);
 
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
+
+function allowLoad() {
+  allowLoading.value = true;
+  void nextTick(() => {
+    virtualScroll.value?.checkLoading();
+  });
+}
 
 function onScroll(info: QScrollObserverDetails) {
   headerVisible.value = info.position.top < postComponentRef.value!.scrollHeight + 66 || info.direction == "up";
@@ -231,6 +249,9 @@ function handleDeleteComment(comment_id: string) {
 onMounted(() => {
   mainStore.openedDialogs.post();
   mainStore.openedDialogs.post = dialogRef.value!.hide;
+  if (props.firstComment) {
+    items.value.push(props.firstComment);
+  }
 });
 
 onUnmounted(() => {
