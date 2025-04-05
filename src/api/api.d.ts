@@ -129,3 +129,23 @@ type FollowingResponse = ApiResponse<{
   has_more: boolean;
   following: User[];
 }>;
+
+interface BaseNotification {
+  id: string;
+  from_id: string;
+  message: string;
+  type: "new_comment" | "followed";
+  linked_id: string;
+  second_linked_id: string;
+}
+
+type ApiNotification =
+  | (BaseNotification & { linked_type: "post"; loaded: Post })
+  | (BaseNotification & { linked_type: "comment"; loaded: CommentWithUser })
+  | (BaseNotification & { linked_type: undefined; loaded: undefined });
+
+type NotificationsResponse = ApiResponse<{
+  notifications: ApiNotification[];
+  next_cursor: string;
+  has_more: boolean;
+}>;
