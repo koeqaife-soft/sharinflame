@@ -88,13 +88,10 @@ export const useMainStore = defineStore("main", {
       const index = this.lastNotifications.findIndex((n) => n.id === notification.id);
 
       if (index !== -1) {
-        console.log("Notification already exists, updating it");
         this.lastNotifications[index] = notification;
       } else {
-        console.log("Adding new notification");
         this.lastNotifications.unshift(notification);
       }
-      console.log("Last notifications", this.lastNotifications);
 
       if (this.lastNotifications.length > 5) {
         this.lastNotifications.splice(5);
