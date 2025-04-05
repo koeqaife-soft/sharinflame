@@ -25,8 +25,13 @@
         </post-scroll>
       </div>
       <div class="right-column" v-if="!hideRightColumn">
-        <div class="card profile-menu">
-          <profile-menu buttons-class="card-button" />
+        <div class="container right-column-content">
+          <div class="card profile-menu">
+            <profile-menu buttons-class="card-button" />
+          </div>
+          <div class="card notifications-list" v-if="!hideNotifications">
+            <notifications-list />
+          </div>
         </div>
       </div>
     </q-page>
@@ -45,6 +50,7 @@ import { useMainStore } from "src/stores/main-store";
 const CategoryButtonsContainer = defineAsyncComponent(
   () => import("src/components/categories/CategoryButtonsContainer.vue")
 );
+const NotificationsList = defineAsyncComponent(() => import("src/components/notifications/NotificationsList.vue"));
 const ProfileMenu = defineAsyncComponent(() => import("src/components/profile/ProfileMenu.vue"));
 const OpenProfileMenu = defineAsyncComponent(() => import("src/components/profile/OpenProfileMenu.vue"));
 const ParticlesBackground = defineAsyncComponent(() => import("src/components/ParticlesBackground.vue"));
@@ -58,12 +64,14 @@ const currentCategory = computed(() => categoriesList.value.find((category) => c
 
 const categoriesMenuOpened = ref(false);
 
-const screenSize = ref(window.innerWidth);
-const isSmallScreen = computed(() => screenSize.value <= 850);
-const isBigScreen = computed(() => screenSize.value >= 1200);
+const screenSize = ref<[number, number]>([window.innerWidth, window.innerHeight]);
+const isSmallScreen = computed(() => screenSize.value[0] <= 850);
+const isBigScreen = computed(() => screenSize.value[0] >= 1200);
+const isShortScreen = computed(() => screenSize.value[1] <= 750);
 
 const hideLeftColumn = computed(() => !isBigScreen.value);
 const hideRightColumn = computed(() => isSmallScreen.value);
+const hideNotifications = computed(() => hideRightColumn.value || isShortScreen.value);
 
 const changeType = (type: KeyOfGetPostsTypes) => {
   localStorage.removeItem("notLoadedCache");
@@ -93,7 +101,8 @@ const categoriesList = computed<ButtonProps[]>(() => [
 ]);
 
 const updateScreenSize = () => {
-  screenSize.value = window.innerWidth;
+  screenSize.value[0] = window.innerWidth;
+  screenSize.value[1] = window.innerHeight;
 };
 
 onMounted(() => {
