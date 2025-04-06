@@ -55,12 +55,19 @@
   },
   "card-hover": {
     "link": "background",
-    "l": ["=", "9"],
-    "luminance": "12"
+    "s": ["-", "5"],
+    "l": ["=", "13"],
+    "luminance": "15"
   },
   "card-high": {
     "link": "background",
     "l": ["=", "13"],
+    "luminance": "15"
+  },
+  "card-high-hover": {
+    "link": "background",
+    "s": ["-", "5"],
+    "l": ["=", "23"],
     "luminance": "15"
   },
   "on-card": {

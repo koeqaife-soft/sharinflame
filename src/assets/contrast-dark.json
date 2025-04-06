@@ -46,11 +46,14 @@
   },
   "card-hover": {
     "s": ["=", "0"],
-    "l": ["=", "10"]
+    "l": ["=", "14"]
   },
   "card-high": {
     "s": ["=", "0"],
     "l": ["=", "0"]
+  },
+  "card-high-hover": {
+    "link": "card-hover"
   },
   "on-card": {
     "hex": "#ffffff"

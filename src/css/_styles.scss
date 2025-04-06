@@ -14,6 +14,7 @@ body {
 
   --error: hsl(0, 96%, 80%);
   --on-error: hsl(0, 96%, 10%);
+
   background: var(--background) !important;
 }
 
@@ -31,6 +32,7 @@ body {
   --card: var(--card-dark);
   --card-hover: var(--card-hover-dark);
   --card-high: var(--card-high-dark);
+  --card-high-hover: var(--card-high-hover-dark);
   --on-card: var(--on-card-dark);
   --outline: var(--outline-dark);
   --contrast-outline: var(--contrast-outline-dark);
@@ -52,6 +54,7 @@ body {
   --card: var(--card-light);
   --card-hover: var(--card-hover-light);
   --card-high: var(--card-high-light);
+  --card-high-hover: var(--card-high-hover-light);
   --on-card: var(--on-card-light);
   --outline: var(--outline-light);
   --contrast-outline: var(--contrast-outline-light);
@@ -133,6 +136,7 @@ body {
   padding-top: 8px;
 
   .notifications-list {
+    overflow: hidden;
     min-height: 348px;
   }
 
