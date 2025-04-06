@@ -92,10 +92,6 @@
     display: flex;
     justify-content: flex-start;
   }
-
-  &:hover .q-focus-helper {
-    background: var(--card-hover);
-  }
 }
 
 .segmented-button {
