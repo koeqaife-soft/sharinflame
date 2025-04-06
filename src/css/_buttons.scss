@@ -92,6 +92,10 @@
     display: flex;
     justify-content: flex-start;
   }
+
+  &:hover .q-focus-helper {
+    background: var(--card-hover);
+  }
 }
 
 .segmented-button {
@@ -144,6 +148,10 @@
 .card .card-button,
 .menu-card .card-button {
   background-color: var(--card-high);
+
+  &:hover .q-focus-helper {
+    background: var(--card-high-hover);
+  }
 }
 
 .category-button {

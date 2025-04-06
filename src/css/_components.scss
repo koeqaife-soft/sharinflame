@@ -168,6 +168,9 @@
         animation: fillActivate 0.25s ease-out forwards;
       }
     }
+    .button:hover .q-focus-helper {
+      background: var(--card-high-hover);
+    }
   }
 
   .action-container {
@@ -933,9 +936,12 @@
   flex-direction: row;
   cursor: pointer;
   transition: background-color 0.2s ease-in;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
 
   &:hover {
-    background-color: color-mix(in srgb, var(--card-high) 95%, var(--on-background) 5%);
+    background-color: var(--card-high-hover);
   }
 
   .image-container {
@@ -978,6 +984,42 @@
     text-overflow: ellipsis;
     overflow: hidden;
   }
+
+  &.loading {
+    --color-from: var(--card-high-hover);
+    --color-to: var(--card-high);
+    animation: bgColorPulse 1.3s ease infinite;
+    animation-delay: 200ms;
+    cursor: progress;
+    &::before {
+      content: "";
+      position: absolute;
+      opacity: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 8px;
+      padding: 2px;
+      background: conic-gradient(from var(--angle, 0deg), var(--primary) 0deg 90deg, transparent 90deg 180deg);
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation:
+        rotate 4s linear infinite,
+        fadeIn 0.5s ease-in forwards 200ms;
+    }
+  }
+  &.disabled {
+    cursor: not-allowed;
+    background-color: transparent;
+    outline: 1px solid var(--outline) !important;
+  }
 }
 
 .notifications {
@@ -989,6 +1031,5 @@
   }
   .notifications-container {
     height: 332px;
-    overflow: hidden;
   }
 }
