@@ -183,5 +183,7 @@ export default {
     new_comment: "Comment from {username}"
   },
 
-  load_more: "Load More"
+  load_more: "Load More",
+
+  resource_not_found: "Resource not found"
 };
