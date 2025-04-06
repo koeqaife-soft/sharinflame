@@ -14,7 +14,8 @@ export const postsEndpoints = {
   comments: (post_id: string) => `/posts/${post_id}/comments`,
   comment_actions: (post_id: string, comment_id: string) => `/posts/${post_id}/comments/${comment_id}`,
   comment_reactions: (post_id: string, comment_id: string) => `/posts/${post_id}/comments/${comment_id}/reactions`,
-  get_user_posts: (user_id: string) => `/users/${user_id}/posts`
+  get_user_posts: (user_id: string) => `/users/${user_id}/posts`,
+  get_comment: (post_id: string, comment_id: string) => `/posts/${post_id}/comments/${comment_id}`
 };
 
 export const getPostsTypes = {
@@ -111,6 +112,10 @@ async function getComments(post_id: string, cursor?: string) {
   });
 }
 
+async function getComment(post_id: string, comment_id: string) {
+  return await api.get<ApiResponse<CommentWithUser>>(postsEndpoints.get_comment(post_id, comment_id));
+}
+
 async function getUserPosts(user_id: string, cursor?: string, sort?: "new" | "old" | "popular") {
   return await api.get<GetUserPostsResponse>(postsEndpoints.get_user_posts(user_id), {
     params: {
@@ -142,5 +147,6 @@ export {
   getUserPosts,
   createPost,
   deletePost,
-  deleteComment
+  deleteComment,
+  getComment
 };
