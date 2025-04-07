@@ -40,7 +40,7 @@
             />
           </div>
         </div>
-        <category-buttons-container
+        <category-buttons
           :categories-list="categoriesList"
           :current-type="currentType"
           container-class="horizontal-container card profile-categories q-mb-sm"
@@ -63,7 +63,7 @@
             </div>
           </div>
         </div>
-        <category-buttons-container
+        <category-buttons
           :categories-list="categoriesList"
           current-type=""
           :disabled="true"
@@ -82,9 +82,9 @@
 import { useDialogPluginComponent, useQuasar } from "quasar";
 import UserAvatar from "../profile/UserAvatar.vue";
 import CloseableContent from "../misc/CloseableContent.vue";
-import CategoryButtonsContainer from "../categories/CategoryButtonsContainer.vue";
+import CategoryButtons from "src/components/misc/CategoryButtons.vue";
 import { onMounted, ref, computed, defineAsyncComponent } from "vue";
-import type { ButtonProps } from "../categories/CategoryButton.vue";
+import type { ButtonProps } from "src/components/misc/CategoryButtons.vue";
 import { useI18n } from "vue-i18n";
 import { useMainStore } from "src/stores/main-store";
 import { useProfileStore } from "src/stores/profile-store";

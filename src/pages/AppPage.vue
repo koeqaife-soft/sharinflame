@@ -7,7 +7,7 @@
     <q-page class="app-page">
       <div class="left-column" v-if="!hideLeftColumn">
         <div class="card categories">
-          <category-buttons-container :categories-list="categoriesList" :current-type="currentType" />
+          <category-buttons :categories-list="categoriesList" :current-type="currentType" />
         </div>
       </div>
       <div class="center-column">
@@ -16,7 +16,7 @@
             <div class="container categories-label card">
               <q-btn :label="currentCategory?.label" :icon="currentCategory?.icon" no-caps unelevated>
                 <q-menu class="categories-menu menu-card" v-model="categoriesMenuOpened">
-                  <category-buttons-container :categories-list="categoriesList" :current-type="currentType" />
+                  <category-buttons :categories-list="categoriesList" :current-type="currentType" />
                 </q-menu>
                 <q-icon name="sym_r_arrow_drop_up" :class="['open-menu', { active: categoriesMenuOpened }]" />
               </q-btn>
@@ -42,14 +42,12 @@
 import { computed, onBeforeUnmount, onMounted, ref, defineAsyncComponent, onBeforeMount } from "vue";
 import type { KeyOfGetPostsTypes } from "src/api/posts";
 import { useI18n } from "vue-i18n";
-import type { ButtonProps } from "src/components/categories/CategoryButton.vue";
+import type { ButtonProps } from "src/components/misc/CategoryButtons.vue";
+import { useMainStore } from "src/stores/main-store";
 import PostScroll from "src/components/posts/PostScroll.vue";
 import MainLayout from "src/layouts/MainLayout.vue";
-import { useMainStore } from "src/stores/main-store";
 
-const CategoryButtonsContainer = defineAsyncComponent(
-  () => import("src/components/categories/CategoryButtonsContainer.vue")
-);
+const CategoryButtons = defineAsyncComponent(() => import("src/components/misc/CategoryButtons.vue"));
 const NotificationsList = defineAsyncComponent(() => import("src/components/notifications/NotificationsList.vue"));
 const ProfileMenu = defineAsyncComponent(() => import("src/components/profile/ProfileMenu.vue"));
 const OpenProfileMenu = defineAsyncComponent(() => import("src/components/profile/OpenProfileMenu.vue"));

@@ -2,6 +2,7 @@
   <div
     class="dialog-content"
     ref="dialogContent"
+    style="touch-action: none"
     @touchstart.passive="onTouchStart"
     @touchmove.passive="onTouchMove"
     @touchend.passive="onTouchEnd"
@@ -75,9 +76,3 @@ const onTouchEnd = () => {
   }
 };
 </script>
-
-<style scoped>
-.dialog-content {
-  touch-action: none;
-}
-</style>

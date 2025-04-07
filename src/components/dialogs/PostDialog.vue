@@ -9,19 +9,31 @@
     :key="post.post_id"
   >
     <closeable-content v-on:hide="dialogRef!.hide()">
-      <card-dialog-label class="q-mb-sm" :label="$t('post')" icon="sym_r_article">
-        <q-btn flat round icon="sym_r_close" @click="dialogRef!.hide()" />
-      </card-dialog-label>
+      <div class="card label-container q-mb-sm" style="z-index: 2">
+        <div class="horizontal-container">
+          <q-icon name="sym_r_article" class="icon" />
+          <div>{{ $t("post") }}</div>
+          <q-space />
+          <q-btn flat round icon="sym_r_close" @click="dialogRef!.hide()" />
+        </div>
+      </div>
+
       <q-scroll-area class="scroll-area fix-scroll-area" :visible="false">
         <div ref="postComponentRef">
           <post-component :post="postRef" :in-dialog="true" @delete-post="handleDeletePost" style="z-index: 2" />
         </div>
 
         <div class="sticky-label scroll-header q-pt-sm" :class="{ 'is-visible': headerVisible }">
-          <card-dialog-label class="q-mb-sm" :label="$t('comments')" icon="sym_r_chat_bubble">
-            <q-btn flat round icon="sym_r_refresh" @click="reloadComments" />
-          </card-dialog-label>
+          <div class="card label-container q-mb-sm" style="z-index: 2">
+            <div class="horizontal-container">
+              <q-icon name="sym_r_chat_bubble" class="icon" />
+              <div>{{ $t("comments") }}</div>
+              <q-space />
+              <q-btn flat round icon="sym_r_refresh" @click="reloadComments" />
+            </div>
+          </div>
         </div>
+
         <div class="no-comments" v-if="showNoComments">{{ $t("no_comments") }}</div>
         <my-virtual-scroll
           :items="items"
@@ -87,7 +99,6 @@
 import { defineAsyncComponent, type DefineComponent, nextTick, onMounted, onUnmounted, ref, toRef, watch } from "vue";
 import PostComponent from "../posts/PostComponent.vue";
 import CloseableContent from "../misc/CloseableContent.vue";
-import CardDialogLabel from "../misc/CardDialogLabel.vue";
 import MyVirtualScroll from "../misc/MyVirtualScroll.vue";
 import { useDialogPluginComponent } from "quasar";
 import { createComment, getComments } from "src/api/posts";

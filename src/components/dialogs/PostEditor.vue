@@ -2,7 +2,7 @@
   <q-dialog
     transition-show="scale"
     transition-hide="scale"
-    class="create-post-dialog card-dialog"
+    class="post-editor-dialog card-dialog"
     ref="dialogRef"
     @hide="onDialogHide"
     maximized
@@ -71,8 +71,8 @@
           </div>
 
           <q-separator class="separator" />
-          <toggle-value t_key="nsfw" icon="sym_r_explicit" v-model="is_nsfw" />
-          <toggle-value t_key="ai" icon="sym_r_robot_2" v-model="ai_generated" />
+          <toggle-card label-key="tag.nsfw" icon="sym_r_explicit" v-model="is_nsfw" />
+          <toggle-card label-key="tag.ai" icon="sym_r_robot_2" v-model="ai_generated" />
         </q-scroll-area>
         <q-separator class="separator q-my-sm" />
         <div class="send-container">
@@ -93,10 +93,10 @@
 <script setup lang="ts">
 import { useDialogPluginComponent, useQuasar } from "quasar";
 import { defineAsyncComponent, onMounted, type Ref, ref } from "vue";
-import ToggleValue from "./create-post/ToggleValue.vue";
 import { createPost, editPost } from "src/api/posts";
 import { useProfileStore } from "src/stores/profile-store";
 import { useI18n } from "vue-i18n";
+import ToggleCard from "../misc/ToggleCard.vue";
 
 const props = defineProps<{
   originalPost?: Post;

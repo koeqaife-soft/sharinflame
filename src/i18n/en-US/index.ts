@@ -99,12 +99,16 @@ export default {
 
   add_your_text_here: "Add your text here",
   tag: {
-    nsfw_label: "Not Safe For Work (NSFW)",
-    nsfw_desc: "Contains explicit, adult, or mature content.",
-    nsfw_name: "NSFW",
-    ai_label: "AI-Generated Content",
-    ai_desc: "Content was created or modified by AI.",
-    ai_name: "AI-Generated"
+    nsfw: {
+      label: "Not Safe For Work (NSFW)",
+      desc: "Contains explicit, adult, or mature content.",
+      name: "NSFW"
+    },
+    ai: {
+      label: "AI-Generated Content",
+      desc: "Content was created or modified by AI.",
+      name: "AI-Generated"
+    }
   },
   create: "Create",
   tags: "Tags",

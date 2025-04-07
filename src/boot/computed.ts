@@ -17,11 +17,11 @@ export default defineBoot(({ app }) => {
   tagsInfo = computed<TagsInfo>((oldValue) => {
     const newValue = {
       "ai-generated": {
-        name: t("tag.ai_name"),
+        name: t("tag.ai.name"),
         icon: "sym_r_robot_2"
       },
       "is-nsfw": {
-        name: t("tag.nsfw_name"),
+        name: t("tag.nsfw.name"),
         icon: "sym_r_explicit"
       }
     };
