@@ -1,5 +1,5 @@
 <template>
-  <div class="card notification" :class="{ loading, disabled }" @click="onClicked">
+  <div class="card notification" :class="{ loading, disabled }">
     <div class="image-container">
       <open-user-dialog
         v-if="notif.linked_type == 'post' || notif.linked_type == 'comment'"
@@ -7,7 +7,7 @@
       />
       <q-icon :name="typeIcons[notif.type] ?? ''" class="icon" />
     </div>
-    <div class="text-container">
+    <div class="text-container" @click="onClicked">
       <div class="title">{{ $t(`notifications.${notif.type}`, { username }) }}</div>
       <div class="message">{{ message }}</div>
     </div>
