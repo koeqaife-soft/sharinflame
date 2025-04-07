@@ -69,6 +69,7 @@ function init(_api: AxiosInstance) {
       token: getAccessToken()!
     });
   });
+  websockets.on("refresh_recommended", () => void refresh());
 }
 
 function setTokens({ refresh, access }: { refresh?: string; access?: string }) {

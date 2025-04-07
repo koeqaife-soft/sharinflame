@@ -1,6 +1,7 @@
 interface EventMap {
   please_token: undefined;
   auth_success: undefined;
+  refresh_recommended: undefined;
   notification: ApiNotification;
 }
 
