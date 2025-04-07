@@ -36,7 +36,8 @@ let api: typeof apiType;
 const { t } = useI18n();
 const quasar = useQuasar();
 const mainStore = useMainStore();
-const offlineDialog = ref(true);
+const offlineDialog = ref(false);
+let pingIntervalWorking = false;
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -59,18 +60,17 @@ function waitTime() {
 }
 
 async function pingInterval() {
-  await ping();
-  while (true) {
-    if (mainStore.isOffline) {
-      await delay(waitTime() * 1000);
-      await ping();
-    }
-    await delay(500);
+  pingIntervalWorking = true;
+  while (mainStore.isOffline) {
+    await delay(waitTime() * 1000);
+    await ping();
   }
+  pingIntervalWorking = false;
 }
 
 function onChange() {
   if (mainStore.isOffline) {
+    if (!pingIntervalWorking) void pingInterval();
     if (mainStore.connectTries >= 5) offlineDialog.value = true;
     else offlineDialog.value = false;
   } else {

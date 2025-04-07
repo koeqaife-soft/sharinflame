@@ -30,8 +30,8 @@ export const useMainStore = defineStore("main", {
     // 2 -> Auth completed
     // 3 -> First opened
     initialized: 0 as 0 | 1 | 2 | 3,
-    isOffline: true,
-    connectTries: 4,
+    isOffline: false,
+    connectTries: 0,
     openedDialogs: {
       user: () => {},
       post: () => {}
