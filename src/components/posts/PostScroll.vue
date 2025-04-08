@@ -1,31 +1,32 @@
 <template>
-  <q-scroll-area class="scroll-area" :visible="false">
-    <div class="sticky-label scroll-header" :class="{ 'is-visible': headerVisible }" v-if="$slots['default']">
-      <slot />
-    </div>
+  <div>
     <transition name="post-scroll" appear>
-      <my-virtual-scroll
-        :items="items"
-        :margins="8"
-        item-key="post_id"
-        infinite-load-type="bottom"
-        class="posts-infinite-scroll"
-        @load-more="onLoad"
-        @scroll="onScroll"
-        :key="scrollKey"
-        ref="virtualScroll"
-      >
-        <template v-slot:default="{ item }">
-          <post-component class="q-mb-sm" :post="item" @delete-post="handleDeletePost" />
-        </template>
-        <template v-slot:loading>
-          <div class="row justify-center q-my-md">
-            <q-spinner class="loading" size="40px" />
-          </div>
-        </template>
-      </my-virtual-scroll>
+      <q-scroll-area class="scroll-area full-height" :visible="false" :key="scrollKey">
+        <div class="sticky-label scroll-header" :class="{ 'is-visible': headerVisible }" v-if="$slots['default']">
+          <slot />
+        </div>
+        <my-virtual-scroll
+          :items="items"
+          :margins="8"
+          item-key="post_id"
+          infinite-load-type="bottom"
+          class="posts-infinite-scroll"
+          @load-more="onLoad"
+          @scroll="onScroll"
+          ref="virtualScroll"
+        >
+          <template v-slot:default="{ item }">
+            <post-component class="q-mb-sm" :post="item" @delete-post="handleDeletePost" />
+          </template>
+          <template v-slot:loading>
+            <div class="row justify-center q-my-md">
+              <q-spinner class="loading" size="40px" />
+            </div>
+          </template>
+        </my-virtual-scroll>
+      </q-scroll-area>
     </transition>
-  </q-scroll-area>
+  </div>
 </template>
 <script setup lang="ts">
 import { ref, watch, defineAsyncComponent, type DefineComponent } from "vue";
