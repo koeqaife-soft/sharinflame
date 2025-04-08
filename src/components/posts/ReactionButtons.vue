@@ -121,6 +121,7 @@ function backReactionCounters() {
 }
 
 async function performReaction(isLike: boolean) {
+  blockLastReaction = false;
   try {
     if (itemRef.value.is_like === lastReaction) return;
     if (itemRef.value.is_like === undefined) {
@@ -136,8 +137,6 @@ async function performReaction(isLike: boolean) {
       progress: true
     });
     console.error(error);
-  } finally {
-    blockLastReaction = false;
   }
 }
 
