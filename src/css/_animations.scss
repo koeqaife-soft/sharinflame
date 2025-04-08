@@ -122,6 +122,60 @@
   opacity: 0;
 }
 
+// Post Scroll animation
+.post-scroll-enter-active {
+  transition:
+    opacity 0.2s ease-in 200ms,
+    transform 0.2s ease-out 200ms;
+}
+.post-scroll-leave-active {
+  transition:
+    opacity 0.2s ease-in,
+    transform 0.2s ease-out;
+}
+.post-scroll-enter-from {
+  transform: translateY(75px);
+  opacity: 0;
+}
+.post-scroll-enter-to {
+  transform: translateY(0px);
+  opacity: 1;
+}
+.post-scroll-leave-from {
+  transform: translateY(0px);
+  opacity: 1;
+}
+.post-scroll-leave-to {
+  transform: translateY(-75px);
+  opacity: 0;
+}
+
+// Notifications realtime list animations
+.notification-enter-from {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+.notification-enter-active {
+  transition: all 0.3s ease;
+}
+.notification-enter-to {
+  opacity: 1;
+  transform: translateY(0);
+}
+.notification-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+.notification-leave-active {
+  transition: all 0.3s ease !important;
+}
+.notification-leave-to {
+  opacity: 0;
+}
+.notification-move {
+  transition: all 0.3s ease !important;
+}
+
 @keyframes bgColorPulse {
   0% {
     background-color: var(--color-from);

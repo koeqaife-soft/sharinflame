@@ -28,10 +28,16 @@ const RectSkeleton = defineAsyncComponent(() => import("src/components/skeletons
 const notifications = ref<ApiNotification[]>([]);
 const loading = ref(true);
 
+const truncate = (text: string, length: number) => (text?.length > length ? `${text.slice(0, length - 3)}...` : text);
+
 watch(
   mainStore.lastNotifications,
   (newVal) => {
-    notifications.value = newVal.slice();
+    notifications.value = newVal.map((value) => {
+      if (value.message) value.message = truncate(value.message, 32);
+      if (value.loaded?.content) value.loaded.content = truncate(value.loaded.content, 32);
+      return value;
+    });
     if (newVal.length > 0) {
       loading.value = false;
     }
@@ -52,36 +58,3 @@ onMounted(() => {
   }
 });
 </script>
-
-<style scoped lang="scss">
-.notification-enter-from {
-  opacity: 0;
-  transform: translateY(-10px);
-}
-
-.notification-enter-active {
-  transition: all 0.3s ease;
-}
-
-.notification-enter-to {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.notification-leave-from {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.notification-leave-active {
-  transition: all 0.3s ease;
-}
-
-.notification-leave-to {
-  opacity: 0;
-}
-
-.notification-move {
-  transition: all 0.3s ease;
-}
-</style>
