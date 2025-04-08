@@ -280,6 +280,26 @@
   }
 }
 
+.user-dialog,
+.post-dialog {
+  .label-container {
+    div {
+      align-items: center;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .icon {
+      padding-left: 8px;
+      height: 22px;
+      width: 22px;
+    }
+    .q-icon,
+    .icon {
+      @include iconSize(20);
+    }
+  }
+}
+
 .post-dialog {
   .q-dialog__inner {
     margin-top: 58px;
@@ -317,22 +337,6 @@
   .load-more-container {
     display: flex;
     justify-content: center;
-  }
-  .label-container {
-    div {
-      align-items: center;
-      font-size: 15px;
-      font-weight: 500;
-    }
-    .icon {
-      padding-left: 8px;
-      height: 22px;
-      width: 22px;
-    }
-    .q-icon,
-    .icon {
-      @include iconSize(20);
-    }
   }
 }
 
