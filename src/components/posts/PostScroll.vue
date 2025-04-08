@@ -3,30 +3,32 @@
     <div class="sticky-label scroll-header" :class="{ 'is-visible': headerVisible }" v-if="$slots['default']">
       <slot />
     </div>
-    <my-virtual-scroll
-      :items="items"
-      :margins="8"
-      item-key="post_id"
-      infinite-load-type="bottom"
-      class="posts-infinite-scroll"
-      @load-more="onLoad"
-      @scroll="onScroll"
-      :key="scrollKey"
-      ref="virtualScroll"
-    >
-      <template v-slot:default="{ item }">
-        <post-component class="q-mb-sm" :post="item" @delete-post="handleDeletePost" />
-      </template>
-      <template v-slot:loading>
-        <div class="row justify-center q-my-md">
-          <q-spinner class="loading" size="40px" />
-        </div>
-      </template>
-    </my-virtual-scroll>
+    <transition name="post-scroll" appear>
+      <my-virtual-scroll
+        :items="items"
+        :margins="8"
+        item-key="post_id"
+        infinite-load-type="bottom"
+        class="posts-infinite-scroll"
+        @load-more="onLoad"
+        @scroll="onScroll"
+        :key="scrollKey"
+        ref="virtualScroll"
+      >
+        <template v-slot:default="{ item }">
+          <post-component class="q-mb-sm" :post="item" @delete-post="handleDeletePost" />
+        </template>
+        <template v-slot:loading>
+          <div class="row justify-center q-my-md">
+            <q-spinner class="loading" size="40px" />
+          </div>
+        </template>
+      </my-virtual-scroll>
+    </transition>
   </q-scroll-area>
 </template>
 <script setup lang="ts">
-import { ref, watch, defineAsyncComponent, type DefineComponent, onBeforeMount } from "vue";
+import { ref, watch, defineAsyncComponent, type DefineComponent } from "vue";
 import { getPosts, getPostsBatch, type KeyOfGetPostsTypes, viewPosts } from "src/api/posts";
 import { type AxiosError, isAxiosError } from "axios";
 import { useI18n } from "vue-i18n";
@@ -88,18 +90,6 @@ async function getPostsIds(type: KeyOfGetPostsTypes) {
     notLoaded.push(...r.data.data.posts);
   }
   return r.data;
-}
-
-function updateCache() {
-  if (items.value.length == 0) return;
-  localStorage.setItem(
-    "notLoadedCache",
-    JSON.stringify({
-      type: props.type,
-      posts: items.value.map((post) => post.post_id).slice(-15),
-      timestamp: Date.now()
-    })
-  );
 }
 
 async function loadPosts(count: number) {
@@ -191,8 +181,6 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
       });
       done(true);
     } else throw e;
-  } finally {
-    updateCache();
   }
 }
 
@@ -200,18 +188,4 @@ function handleDeletePost(postId: string) {
   items.value = items.value.filter((post) => post.post_id !== postId);
   virtualScroll.value?.updateShowedItems();
 }
-
-onBeforeMount(() => {
-  const cachedNotLoaded = localStorage.getItem("notLoadedCache");
-  if (cachedNotLoaded) {
-    const parsed = JSON.parse(cachedNotLoaded) as {
-      type: KeyOfGetPostsTypes;
-      posts: string[];
-      timestamp: number;
-    };
-    if (parsed.type === props.type && Date.now() - parsed.timestamp < 60 * 60 * 1000) {
-      notLoaded.push(...parsed.posts);
-    }
-  }
-});
 </script>
