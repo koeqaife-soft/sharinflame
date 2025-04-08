@@ -1,9 +1,9 @@
-import DefaultLightPalette from "src/assets/default-light.json";
-import DefaultDarkPalette from "src/assets/default-dark.json";
-import MonochromeLightPalette from "src/assets/monochrome-light.json";
-import MonochromeDarkPalette from "src/assets/monochrome-dark.json";
-import ContrastDarkPalette from "src/assets/contrast-dark.json";
-import ContrastLightPalette from "src/assets/contrast-light.json";
+import DefaultLightPalette from "src/assets/themes/default-light.json";
+import DefaultDarkPalette from "src/assets/themes/default-dark.json";
+import MonochromeLightPalette from "src/assets/themes/monochrome-light.json";
+import MonochromeDarkPalette from "src/assets/themes/monochrome-dark.json";
+import ContrastDarkPalette from "src/assets/themes/contrast-dark.json";
+import ContrastLightPalette from "src/assets/themes/contrast-light.json";
 import { LRUCache } from "./cache";
 
 const convertCacheHex = new LRUCache<string, string>(512);
