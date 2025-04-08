@@ -72,7 +72,7 @@ const hideRightColumn = computed(() => isSmallScreen.value);
 const hideNotifications = computed(() => hideRightColumn.value || isShortScreen.value);
 
 const changeType = (type: KeyOfGetPostsTypes) => {
-  localStorage.removeItem("notLoadedCache");
+  localStorage.setItem("lastSelectedType", type);
   if (currentType.value == type) reloadKey.value = Date.now();
   else currentType.value = type;
 };
@@ -113,14 +113,9 @@ onBeforeUnmount(() => {
 });
 
 onBeforeMount(() => {
-  const cachedNotLoaded = localStorage.getItem("notLoadedCache");
-  if (cachedNotLoaded) {
-    const parsed = JSON.parse(cachedNotLoaded) as {
-      type: KeyOfGetPostsTypes;
-      posts: string[];
-      timestamp: number;
-    };
-    currentType.value = parsed.type;
+  const lastSelectedType = localStorage.getItem("lastSelectedType");
+  if (lastSelectedType && categoriesList.value.find((v) => v.type === lastSelectedType)) {
+    currentType.value = lastSelectedType as KeyOfGetPostsTypes;
   }
 });
 </script>
