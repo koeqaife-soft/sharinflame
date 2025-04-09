@@ -183,6 +183,7 @@ export default {
   },
 
   notifications: {
+    label: "Notifications",
     no_notifications: "No notifications",
     new_comment: "Comment from {username}"
   },

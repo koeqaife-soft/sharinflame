@@ -29,7 +29,13 @@
           <div class="card profile-menu">
             <profile-menu buttons-class="card-button" />
           </div>
-          <div class="card notifications-list" v-if="!hideNotifications">
+          <div class="card notifications-list container" v-if="!hideNotifications">
+            <div class="label-container horizontal-container card">
+              <q-icon name="sym_r_notifications" class="icon" />
+              <div class="label">{{ $t("notifications.label") }}</div>
+              <q-space />
+              <q-btn flat round icon="sym_r_expand_content" size="sm" />
+            </div>
             <notifications-list />
           </div>
         </div>

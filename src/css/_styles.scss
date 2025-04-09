@@ -137,7 +137,25 @@ body {
 
   .notifications-list {
     overflow: hidden;
-    min-height: 348px;
+    min-height: 397px;
+    .label-container {
+      align-items: center;
+      padding-left: 12px;
+      padding-right: 12px;
+      padding-top: 6px;
+      padding-bottom: 6px;
+      .icon {
+        @include iconSize(20);
+        font-weight: 500;
+      }
+      .q-btn .q-icon {
+        @include iconSize(20);
+      }
+      .label {
+        font-size: 15px;
+        font-weight: 400;
+      }
+    }
   }
 
   .profile-menu {
