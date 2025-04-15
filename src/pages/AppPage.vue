@@ -8,6 +8,7 @@
           <q-btn
             unelevated
             no-caps
+            icon="sym_r_expand_content"
             :label="$t('show_all')"
             class="default-button full-width q-mt-sm"
             @click="openNotifications"
