@@ -138,6 +138,7 @@ body {
   .notifications-list {
     overflow: hidden;
     min-height: 397px;
+    cursor: pointer;
     .label-container {
       align-items: center;
       padding-left: 12px;
@@ -154,6 +155,7 @@ body {
       .label {
         font-size: 15px;
         font-weight: 400;
+        user-select: none;
       }
     }
   }
@@ -252,6 +254,11 @@ body {
       width: auto;
     }
   }
+}
+
+.notifications-menu {
+  width: 100%;
+  max-width: 342px !important;
 }
 
 .pull-to-refresh .q-pull-to-refresh__puller {

@@ -1,8 +1,21 @@
 <template>
   <main-layout :in-router="false" headers-class="index-10" class="full-height">
     <particles-background v-if="mainStore.getSetting('starBackground')" />
-    <template #toolbar-actions v-if="hideRightColumn">
-      <open-profile-menu />
+    <template #toolbar-actions v-if="hideRightColumn || hideNotifications">
+      <q-btn dense flat round icon="sym_r_notifications" class="webkit-no-drag">
+        <q-menu class="menu-card notifications-menu">
+          <notifications-list />
+          <q-btn
+            unelevated
+            no-caps
+            :label="$t('show_all')"
+            class="default-button full-width q-mt-sm"
+            @click="openNotifications"
+            v-close-popup
+          />
+        </q-menu>
+      </q-btn>
+      <open-profile-menu v-if="hideRightColumn" />
     </template>
     <q-page class="app-page">
       <div class="left-column" v-if="!hideLeftColumn">
@@ -10,19 +23,18 @@
           <category-buttons :categories-list="categoriesList" :current-type="currentType" />
         </div>
       </div>
-      <div class="center-column">
-        <post-scroll :type="currentType" :key="reloadKey" class="full-height full-width">
-          <template #default v-if="hideLeftColumn">
-            <div class="container categories-label card">
-              <q-btn :label="currentCategory?.label" :icon="currentCategory?.icon" no-caps unelevated>
-                <q-menu class="categories-menu menu-card" v-model="categoriesMenuOpened">
-                  <category-buttons :categories-list="categoriesList" :current-type="currentType" />
-                </q-menu>
-                <q-icon name="sym_r_arrow_drop_up" :class="['open-menu', { active: categoriesMenuOpened }]" />
-              </q-btn>
-            </div>
-          </template>
-        </post-scroll>
+      <div class="center-column container" style="gap: 0px">
+        <div class="post-scroll-header" v-if="hideLeftColumn">
+          <div class="container categories-label card">
+            <q-btn :label="currentCategory?.label" :icon="currentCategory?.icon" no-caps unelevated>
+              <q-menu class="categories-menu menu-card" v-model="categoriesMenuOpened">
+                <category-buttons :categories-list="categoriesList" :current-type="currentType" />
+              </q-menu>
+              <q-icon name="sym_r_arrow_drop_up" :class="['open-menu', { active: categoriesMenuOpened }]" />
+            </q-btn>
+          </div>
+        </div>
+        <post-scroll :type="currentType" :key="reloadKey" class="full-height full-width" />
       </div>
       <div class="right-column" v-if="!hideRightColumn">
         <div class="container right-column-content">
@@ -30,7 +42,7 @@
             <profile-menu buttons-class="card-button" />
           </div>
           <div class="card notifications-list container" v-if="!hideNotifications">
-            <div class="label-container horizontal-container card">
+            <div class="label-container horizontal-container card" @click="openNotifications">
               <q-icon name="sym_r_notifications" class="icon" />
               <div class="label">{{ $t("notifications.label") }}</div>
               <q-space />
@@ -52,13 +64,16 @@ import type { ButtonProps } from "src/components/misc/CategoryButtons.vue";
 import { useMainStore } from "src/stores/main-store";
 import PostScroll from "src/components/posts/PostScroll.vue";
 import MainLayout from "src/layouts/MainLayout.vue";
+import { useQuasar } from "quasar";
 
 const CategoryButtons = defineAsyncComponent(() => import("src/components/misc/CategoryButtons.vue"));
 const NotificationsList = defineAsyncComponent(() => import("src/components/notifications/NotificationsList.vue"));
 const ProfileMenu = defineAsyncComponent(() => import("src/components/profile/ProfileMenu.vue"));
 const OpenProfileMenu = defineAsyncComponent(() => import("src/components/profile/OpenProfileMenu.vue"));
 const ParticlesBackground = defineAsyncComponent(() => import("src/components/ParticlesBackground.vue"));
+const NotificationsDialog = defineAsyncComponent(() => import("src/components/dialogs/NotificationsDialog.vue"));
 
+const quasar = useQuasar();
 const mainStore = useMainStore();
 const { t } = useI18n();
 
@@ -108,6 +123,12 @@ const updateScreenSize = () => {
   screenSize.value[0] = window.innerWidth;
   screenSize.value[1] = window.innerHeight;
 };
+
+function openNotifications() {
+  quasar.dialog({
+    component: NotificationsDialog
+  });
+}
 
 onMounted(() => {
   updateScreenSize();

@@ -187,6 +187,7 @@ export default {
     no_notifications: "No notifications",
     new_comment: "Comment from {username}"
   },
+  show_all: "Show All",
 
   load_more: "Load More",
 
