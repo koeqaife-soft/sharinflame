@@ -1100,6 +1100,7 @@
   }
   .notification {
     @include elevation(0);
+    background-color: var(--card);
     .title,
     .message {
       word-wrap: break-word;
