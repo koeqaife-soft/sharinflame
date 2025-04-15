@@ -52,10 +52,13 @@
 </template>
 <script setup lang="ts">
 import { useDialogPluginComponent } from "quasar";
+import { useMainStore } from "src/stores/main-store";
 import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from "vue";
 
 defineEmits([...useDialogPluginComponent.emits]);
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
+
+const mainStore = useMainStore();
 
 const MainView = defineAsyncComponent(() => import("./my-activity/MainView.vue"));
 const FollowingView = defineAsyncComponent(() => import("./my-activity/FollowingView.vue"));
@@ -100,6 +103,8 @@ function setSelected(value: views[number]) {
 }
 
 onMounted(() => {
+  mainStore.openedDialogs.settings?.();
+  mainStore.openedDialogs.settings = dialogRef.value!.hide;
   updateScreenSize();
   window.addEventListener("resize", updateScreenSize, { passive: true });
 });

@@ -97,6 +97,7 @@ import { createPost, editPost } from "src/api/posts";
 import { useProfileStore } from "src/stores/profile-store";
 import { useI18n } from "vue-i18n";
 import ToggleCard from "../misc/ToggleCard.vue";
+import { useMainStore } from "src/stores/main-store";
 
 const props = defineProps<{
   originalPost?: Post;
@@ -109,6 +110,7 @@ const PostDialog = defineAsyncComponent(() => import("./PostDialog.vue"));
 
 const quasar = useQuasar();
 const profileStore = useProfileStore();
+const mainStore = useMainStore();
 const { t } = useI18n();
 
 const text = ref<string>("");
@@ -234,6 +236,9 @@ const removeTag = (index: number) => {
 };
 
 onMounted(() => {
+  mainStore.openedDialogs.createPost?.();
+  mainStore.openedDialogs.createPost = dialogRef.value!.hide;
+
   if (props.originalPost) {
     editMode.value = true;
 
