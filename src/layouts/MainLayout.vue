@@ -10,23 +10,33 @@
           <slot name="logo-menu" />
           <q-icon name="sym_r_arrow_drop_up" :class="['open-menu', { active: menuOpened }]" />
         </q-btn>
-        <div v-else class="webkit-drag title ellipsis">SharinFlame</div>
+        <div v-else class="webkit-drag title">SharinFlame</div>
 
         <q-space class="webkit-drag" />
 
-        <slot name="toolbar-actions" />
+        <div
+          class="horizontal-container full-height align-center"
+          v-if="$slots['toolbar-actions'] || showDarkModeToggle || $q.platform.is.electron"
+        >
+          <div class="toolbar-actions" v-if="$slots['toolbar-actions']">
+            <slot name="toolbar-actions" />
+          </div>
 
-        <q-btn
-          flat
-          dense
-          round
-          icon="sym_r_dark_mode"
-          aria-label="DarkMode"
-          @click="$q.dark.toggle()"
-          class="webkit-no-drag"
-          v-if="showDarkModeToggle"
-        />
-        <window-actions />
+          <div class="toolbar-default-actions" v-if="showDarkModeToggle || $q.platform.is.electron">
+            <q-btn
+              flat
+              dense
+              round
+              icon="sym_r_dark_mode"
+              aria-label="DarkMode"
+              @click="$q.dark.toggle()"
+              class="webkit-no-drag"
+              v-if="showDarkModeToggle"
+            />
+
+            <window-actions v-if="$q.platform.is.electron" />
+          </div>
+        </div>
       </q-toolbar>
     </q-header>
 
