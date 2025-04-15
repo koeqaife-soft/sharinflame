@@ -2,9 +2,6 @@
   <div>
     <transition name="post-scroll" appear>
       <q-scroll-area class="scroll-area full-height" :visible="false" :key="scrollKey">
-        <div class="sticky-label scroll-header" :class="{ 'is-visible': headerVisible }" v-if="$slots['default']">
-          <slot />
-        </div>
         <my-virtual-scroll
           :items="items"
           :margins="8"
@@ -12,7 +9,7 @@
           infinite-load-type="bottom"
           class="posts-infinite-scroll"
           @load-more="onLoad"
-          @scroll="onScroll"
+          @scroll="(info) => emit('scroll', info)"
           ref="virtualScroll"
         >
           <template v-slot:default="{ item }">
@@ -41,6 +38,10 @@ const props = defineProps<{
   type: KeyOfGetPostsTypes;
 }>();
 
+const emit = defineEmits<{
+  (e: "scroll", info: QScrollObserverDetails): void;
+}>();
+
 const items = ref<PostWithSystem[]>([]);
 const scrollKey = ref<string>(props.type);
 const toView: string[] = [];
@@ -48,24 +49,17 @@ const toView: string[] = [];
 const notLoaded: string[] = [];
 const loaded: Post[] = [];
 
-const headerVisible = ref(true);
-
 const virtualScroll = ref<DefineComponent | null>(null);
 
 const { t } = useI18n();
 
 watch(() => props.type, reloadPosts);
 
-function onScroll(info: QScrollObserverDetails) {
-  headerVisible.value = info.position.top < 60 || info.direction == "up";
-}
-
 function reset() {
   items.value = [];
   toView.length = 0;
   notLoaded.length = 0;
   loaded.length = 0;
-  headerVisible.value = true;
 }
 
 async function viewInChunks(posts: string[], chunkSize: number = 50) {
