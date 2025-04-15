@@ -956,15 +956,27 @@
   position: relative;
   border-radius: 8px;
   overflow: hidden;
+  background-color: var(--card-high);
 
-  &:hover {
-    background-color: var(--card-high-hover);
+  @media (hover: hover) {
+    &:hover,
+    &:focus-visible {
+      background-color: var(--card-high-hover);
+    }
+  }
+  @media (hover: none) {
+    &:active,
+    &:focus-visible {
+      background-color: var(--card-high-hover);
+    }
   }
 
   .image-container {
     @include avatarContainerSkeleton();
-    height: 42px;
-    width: 42px;
+    min-height: 42px;
+    min-width: 42px;
+    max-height: 42px;
+    max-width: 42px;
     margin-right: 8px;
     position: relative;
     .icon {
@@ -1049,5 +1061,69 @@
   }
   .notifications-container {
     height: 332px;
+  }
+}
+
+.notifications-dialog {
+  @media (min-width: 716px) {
+    .dialog-content {
+      max-width: 700px;
+      margin-left: 8px;
+      margin-right: 8px;
+      border-radius: 18px !important;
+    }
+    .q-dialog__inner {
+      margin-top: 74px;
+      margin-bottom: 16px;
+    }
+  }
+  @media (max-width: 715px) {
+    .dialog-content {
+      max-height: 100%;
+      border-radius: 0px;
+    }
+    .q-dialog__inner {
+      margin-top: 50px;
+    }
+  }
+  .dialog-content {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    transition:
+      max-height 0.2s ease,
+      margin 0.2s ease;
+  }
+  .dialog-content-inner {
+    padding: 8px;
+    height: 100%;
+  }
+  .notification {
+    @include elevation(0);
+    .title,
+    .message {
+      word-wrap: break-word;
+      overflow-wrap: anywhere;
+
+      white-space: unset;
+      text-overflow: unset;
+      overflow: unset;
+    }
+    @media (hover: hover) {
+      &:hover,
+      &:focus-visible {
+        background-color: var(--card-high-hover);
+      }
+    }
+    @media (hover: none) {
+      &:active,
+      &:focus-visible {
+        background-color: var(--card-high-hover);
+      }
+    }
+    &.loading {
+      --color-from: var(--card-hover);
+      --color-to: var(--card);
+    }
   }
 }
