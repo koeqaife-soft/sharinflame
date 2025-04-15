@@ -19,9 +19,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: "/",
-    component: () => import("layouts/MainLayout.vue"),
-    props: { showDarkModeToggle: true },
-    children: [{ path: "", component: () => import("pages/StartupPage.vue") }]
+    component: () => import("pages/StartupPage.vue")
   },
   {
     path: "/info",
