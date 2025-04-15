@@ -66,6 +66,11 @@
   > div {
     color: var(--on-card);
   }
+  .card {
+    box-shadow: none;
+    border-radius: 8px;
+    background-color: var(--card-high);
+  }
 }
 
 .card-dialog {
