@@ -25,13 +25,21 @@
       </div>
       <div class="center-column container" style="gap: 0px">
         <div class="post-scroll-header" v-if="hideLeftColumn">
-          <div class="container categories-label card">
-            <q-btn :label="currentCategory?.label" :icon="currentCategory?.icon" no-caps unelevated>
+          <div class="horizontal-container categories-label card">
+            <q-btn
+              :label="currentCategory?.label"
+              :icon="currentCategory?.icon"
+              no-caps
+              unelevated
+              class="categories-button"
+            >
               <q-menu class="categories-menu menu-card" v-model="categoriesMenuOpened">
                 <category-buttons :categories-list="categoriesList" :current-type="currentType" />
               </q-menu>
               <q-icon name="sym_r_arrow_drop_up" :class="['open-menu', { active: categoriesMenuOpened }]" />
             </q-btn>
+            <q-space />
+            <q-btn unelevated round icon="sym_r_refresh" class="reload-button" @click="reloadKey = Date.now()" />
           </div>
         </div>
         <post-scroll :type="currentType" :key="reloadKey" class="full-height full-width" />

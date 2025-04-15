@@ -200,10 +200,19 @@ body {
 
   .categories-label {
     margin: 8px 8px 0px 8px;
-    .q-btn {
+    .categories-button {
       width: fit-content;
       border-radius: 10px;
       color: var(--on-card);
+    }
+    .reload-button {
+      min-width: 36px;
+      min-height: 36px;
+      max-height: 36px;
+      max-width: 36px;
+      .q-icon {
+        @include iconSize(22);
+      }
     }
   }
 
