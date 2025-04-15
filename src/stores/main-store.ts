@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import * as colors from "../utils/colors";
 
-const cacheVersion = 1;
+const cacheVersion = 2;
 
 const defaultSettings = {
   themeHue: 8,
@@ -11,6 +11,8 @@ const defaultSettings = {
 };
 
 type KeyOfSettings = keyof typeof defaultSettings;
+
+type OpenedDialogs = Record<string, () => void>;
 
 const getSettings = () => {
   const stored = JSON.parse(localStorage.getItem("settings") || "{}");
@@ -32,10 +34,7 @@ export const useMainStore = defineStore("main", {
     initialized: 0 as 0 | 1 | 2 | 3,
     isOffline: false,
     connectTries: 0,
-    openedDialogs: {
-      user: () => {},
-      post: () => {}
-    },
+    openedDialogs: {} as OpenedDialogs,
     settings: getSettings(),
     lastNotifications: [] as ApiNotification[]
   }),

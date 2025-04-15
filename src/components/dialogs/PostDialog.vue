@@ -258,7 +258,7 @@ function handleDeleteComment(comment_id: string) {
 }
 
 onMounted(() => {
-  mainStore.openedDialogs.post();
+  mainStore.openedDialogs.post?.();
   mainStore.openedDialogs.post = dialogRef.value!.hide;
   if (props.firstComment) {
     items.value.push(props.firstComment);

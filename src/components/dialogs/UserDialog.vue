@@ -160,7 +160,7 @@ function editProfile() {
 }
 
 onMounted(async () => {
-  mainStore.openedDialogs.user();
+  mainStore.openedDialogs.user?.();
   mainStore.openedDialogs.user = dialogRef.value!.hide;
   if (props.notSync) {
     userRef.value = props.user;
