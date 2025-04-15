@@ -167,13 +167,14 @@
 }
 .notification-leave-from {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(-60px);
 }
 .notification-leave-active {
   transition: all 0.3s ease !important;
   will-change: transform, opacity;
 }
 .notification-leave-to {
+  transform: translateY(0px);
   opacity: 0;
 }
 .notification-move {
