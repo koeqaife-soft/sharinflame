@@ -3,8 +3,8 @@
     <particles-background v-if="mainStore.getSetting('starBackground')" />
     <template #toolbar-actions v-if="hideRightColumn || hideNotifications">
       <q-btn dense flat round icon="sym_r_notifications" class="webkit-no-drag">
-        <q-menu class="menu-card notifications-menu">
-          <notifications-list />
+        <q-menu class="menu-card notifications-menu" v-model="notificationsMenuOpened">
+          <notifications-list @on-loaded="notificationsMenuOpened = false" />
           <q-btn
             unelevated
             no-caps
@@ -92,6 +92,7 @@ const reloadKey = ref(Date.now());
 const currentCategory = computed(() => categoriesList.value.find((category) => category.type === currentType.value));
 
 const categoriesMenuOpened = ref(false);
+const notificationsMenuOpened = ref(false);
 
 const screenSize = ref<[number, number]>([window.innerWidth, window.innerHeight]);
 const isSmallScreen = computed(() => screenSize.value[0] <= 850);
