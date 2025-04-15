@@ -1,5 +1,5 @@
 <template>
-  <div class="card notification" :class="{ loading, disabled }">
+  <div class="card notification" :class="{ loading, disabled }" tabindex="0">
     <div class="image-container">
       <open-user-dialog
         v-if="notif.linked_type == 'post' || notif.linked_type == 'comment'"
@@ -17,7 +17,7 @@
 import { isAxiosError } from "axios";
 import { useQuasar } from "quasar";
 import { getComment, getPost } from "src/api/posts";
-import { computed, defineAsyncComponent, ref } from "vue";
+import { computed, defineAsyncComponent, onMounted, ref, toRef } from "vue";
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
@@ -25,16 +25,23 @@ const quasar = useQuasar();
 const PostDialog = defineAsyncComponent(() => import("src/components/dialogs/PostDialog.vue"));
 const OpenUserDialog = defineAsyncComponent(() => import("../dialogs/OpenUserDialog.vue"));
 
+interface Entry {
+  lastSync: number;
+  data: unknown;
+}
+
+export interface CacheType {
+  disabled?: boolean;
+  [key: string]: Entry | boolean;
+}
+
 const props = defineProps<{
   notif: ApiNotification;
+  cache?: Record<string, CacheType>;
 }>();
 
-const cache: {
-  [key: string]: {
-    lastSync: number;
-    data: unknown;
-  };
-} = {};
+const globalCache = toRef(props.cache);
+const localCache: CacheType = {};
 
 const loading = ref(false);
 const disabled = ref(false);
@@ -43,6 +50,16 @@ const typeIcons = {
   new_comment: "sym_r_chat_bubble",
   followed: "sym_r_person_add"
 };
+
+function setCache(key: string, value: CacheType[string]) {
+  if (globalCache.value) globalCache.value[props.notif.id]![key] = value;
+  else localCache[key] = value;
+}
+
+function getCache(key: string) {
+  if (globalCache.value) return globalCache.value[props.notif.id]![key];
+  else return localCache[key];
+}
 
 const linkedContent = computed(() => {
   if (!props.notif.loaded) {
@@ -60,16 +77,17 @@ const linkedContent = computed(() => {
 async function sync<T>(callback: () => Promise<T>, key: string): Promise<T> {
   try {
     loading.value = true;
+    const cached = getCache(key) as Entry;
 
-    if (cache[key] === undefined || cache[key].lastSync + 120 > Date.now() * 1000) {
+    if (cached === undefined || cached.lastSync + 120 > Date.now() * 1000) {
       const result = await callback();
-      cache[key] = {
+      setCache(key, {
         lastSync: Date.now() * 1000,
         data: result
-      };
+      });
       return result;
     } else {
-      return cache[key].data as T;
+      return cached.data as T;
     }
   } finally {
     loading.value = false;
@@ -122,6 +140,14 @@ async function onClicked() {
       });
     }
     disabled.value = true;
+    setCache("disabled", true);
   }
 }
+
+onMounted(() => {
+  if (globalCache.value) {
+    globalCache.value[props.notif.id] ??= {};
+    disabled.value = (getCache("disabled") as boolean) ?? false;
+  }
+});
 </script>
