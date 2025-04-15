@@ -9,7 +9,12 @@
           {{ $t("notifications.no_notifications") }}
         </div>
         <transition-group name="notification" tag="div" class="container">
-          <notification-card v-for="notif in notifications" :key="notif.id" :notif="notif" />
+          <notification-card
+            v-for="notif in notifications"
+            :key="notif.id"
+            :notif="notif"
+            @on-loaded="emit('onLoaded')"
+          />
         </transition-group>
       </template>
     </div>
@@ -25,6 +30,10 @@ const mainStore = useMainStore();
 
 const NotificationCard = defineAsyncComponent(() => import("./NotificationCard.vue"));
 const RectSkeleton = defineAsyncComponent(() => import("src/components/skeletons/RectSkeleton.vue"));
+
+const emit = defineEmits<{
+  (e: "onLoaded"): void;
+}>();
 
 const notifications = ref<ApiNotification[]>([]);
 const loading = ref(true);

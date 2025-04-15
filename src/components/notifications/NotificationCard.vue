@@ -1,5 +1,5 @@
 <template>
-  <div class="card notification" :class="{ loading, disabled }" tabindex="0">
+  <div class="card notification" :class="{ loading, disabled }" tabindex="0" ref="elementRef">
     <div class="image-container">
       <open-user-dialog
         v-if="notif.linked_type == 'post' || notif.linked_type == 'comment'"
@@ -39,10 +39,14 @@ const props = defineProps<{
   notif: ApiNotification;
   cache?: Record<string, CacheType>;
 }>();
+const emit = defineEmits<{
+  (e: "onLoaded"): void;
+}>();
 
 const globalCache = toRef(props.cache);
 const localCache: CacheType = {};
 
+const elementRef = ref<HTMLDivElement | null>(null);
 const loading = ref(false);
 const disabled = ref(false);
 
@@ -125,6 +129,7 @@ async function onClicked() {
             autoLoad: false
           }
         });
+        emit("onLoaded");
       }
     }
   } catch (e) {
