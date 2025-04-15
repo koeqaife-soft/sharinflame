@@ -1,6 +1,6 @@
 <template>
   <div>
-    <transition name="post-scroll" appear>
+    <transition name="post-scroll">
       <q-scroll-area class="scroll-area full-height" :visible="false" :key="scrollKey">
         <my-virtual-scroll
           :items="items"

@@ -40,7 +40,11 @@
           <q-space />
           <q-btn unelevated round icon="sym_r_refresh" class="reload-button" @click="reloadKey = Date.now()" />
         </div>
-        <post-scroll :type="currentType" :key="reloadKey" class="full-height full-width" @scroll="onScroll" />
+        <div class="full-height">
+          <transition name="post-scroll">
+            <post-scroll :type="currentType" :key="reloadKey" class="full-height full-width" @scroll="onScroll" />
+          </transition>
+        </div>
       </div>
       <div class="right-column" v-if="!hideRightColumn">
         <div class="container right-column-content">
