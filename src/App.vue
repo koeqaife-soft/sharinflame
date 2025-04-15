@@ -9,12 +9,12 @@
     class="offline-dialog index-10000"
     v-if="$router.currentRoute.value.path != '/'"
   >
-    <main-layout :in-router="false" :show-dark-mode-toggle="true" class="layout">
+    <misc-layout :in-router="false" :show-dark-mode-toggle="true" class="layout">
       <div class="logo-container">
         <logo-component icon-class="logo" />
         <div class="label">{{ $t("connecting") }}...</div>
       </div>
-    </main-layout>
+    </misc-layout>
   </q-dialog>
   <router-view />
 </template>
@@ -29,7 +29,7 @@ import websockets from "src/utils/websockets";
 import { useI18n } from "vue-i18n";
 
 const LogoComponent = defineAsyncComponent(() => import("./components/misc/LogoComponent.vue"));
-const MainLayout = defineAsyncComponent(() => import("./layouts/MainLayout.vue"));
+const MiscLayout = defineAsyncComponent(() => import("./layouts/MiscLayout.vue"));
 
 let api: typeof apiType;
 
