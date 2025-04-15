@@ -198,20 +198,27 @@ body {
     background-color: transparent;
   }
 
-  .post-scroll-header {
-    z-index: 1;
-    @include elevation(1);
-  }
-
   .categories-label {
-    box-shadow: none;
-    margin: 8px 8px 0px 8px;
+    @include elevation(1);
+    z-index: 1;
+    margin-left: 8px;
+    margin-right: 8px;
+    margin-top: 8px;
+    border-radius: 18px;
+    transition: border-radius 0.1s ease;
+    @media (min-width: 601px) {
+      &.scrolled {
+        border-radius: 18px 18px 4px 4px;
+      }
+    }
+
     .categories-button {
       width: fit-content;
       border-radius: 10px;
       color: var(--on-card);
     }
     .reload-button {
+      margin-right: 8px;
       min-width: 36px;
       min-height: 36px;
       max-height: 36px;

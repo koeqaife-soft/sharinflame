@@ -24,25 +24,23 @@
         </div>
       </div>
       <div class="center-column container" style="gap: 0px">
-        <div class="post-scroll-header" v-if="hideLeftColumn">
-          <div class="horizontal-container categories-label card">
-            <q-btn
-              :label="currentCategory?.label"
-              :icon="currentCategory?.icon"
-              no-caps
-              unelevated
-              class="categories-button"
-            >
-              <q-menu class="categories-menu menu-card" v-model="categoriesMenuOpened">
-                <category-buttons :categories-list="categoriesList" :current-type="currentType" />
-              </q-menu>
-              <q-icon name="sym_r_arrow_drop_up" :class="['open-menu', { active: categoriesMenuOpened }]" />
-            </q-btn>
-            <q-space />
-            <q-btn unelevated round icon="sym_r_refresh" class="reload-button" @click="reloadKey = Date.now()" />
-          </div>
+        <div class="horizontal-container categories-label card" :class="{ scrolled }" v-if="hideLeftColumn">
+          <q-btn
+            :label="currentCategory?.label"
+            :icon="currentCategory?.icon"
+            no-caps
+            unelevated
+            class="categories-button"
+          >
+            <q-menu class="categories-menu menu-card" v-model="categoriesMenuOpened">
+              <category-buttons :categories-list="categoriesList" :current-type="currentType" />
+            </q-menu>
+            <q-icon name="sym_r_arrow_drop_up" :class="['open-menu', { active: categoriesMenuOpened }]" />
+          </q-btn>
+          <q-space />
+          <q-btn unelevated round icon="sym_r_refresh" class="reload-button" @click="reloadKey = Date.now()" />
         </div>
-        <post-scroll :type="currentType" :key="reloadKey" class="full-height full-width" />
+        <post-scroll :type="currentType" :key="reloadKey" class="full-height full-width" @scroll="onScroll" />
       </div>
       <div class="right-column" v-if="!hideRightColumn">
         <div class="container right-column-content">
@@ -100,11 +98,17 @@ const hideLeftColumn = computed(() => !isBigScreen.value);
 const hideRightColumn = computed(() => isSmallScreen.value);
 const hideNotifications = computed(() => hideRightColumn.value || isShortScreen.value);
 
+const scrolled = ref(false);
+
 const changeType = (type: KeyOfGetPostsTypes) => {
   localStorage.setItem("lastSelectedType", type);
   if (currentType.value == type) reloadKey.value = Date.now();
   else currentType.value = type;
 };
+
+function onScroll(info: QScrollObserverDetails) {
+  scrolled.value = info.position.top > 8;
+}
 
 const categoriesList = computed<ButtonProps[]>(() => [
   {
