@@ -105,3 +105,6 @@ export function formatUnixTime(unixTime: number, locale: string = "en"): string 
   }
   return formatter.format(date);
 }
+
+export const truncate = (text: string, length: number) =>
+  text?.length > length ? `${text.slice(0, length - 3)}...` : text;
