@@ -62,6 +62,21 @@
     "l": ["=", "83"],
     "luminance": "95"
   },
+  "card-secondary": {
+    "s": ["=", "70"],
+    "l": ["=", "90"],
+    "luminance": "80"
+  },
+  "card-secondary-hover": {
+    "s": ["=", "70"],
+    "l": ["=", "87"],
+    "luminance": "80"
+  },
+  "on-card-secondary": {
+    "s": ["=", "40"],
+    "l": ["=", "30"],
+    "luminance": "55"
+  },
   "on-card": {
     "hex": "#000000"
   },

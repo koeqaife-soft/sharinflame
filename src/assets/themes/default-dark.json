@@ -70,6 +70,22 @@
     "l": ["=", "23"],
     "luminance": "15"
   },
+  "card-secondary": {
+    "s": ["=", "20"],
+    "l": ["=", "25"],
+    "luminance": "55"
+  },
+  "card-secondary-hover": {
+    "link": "background",
+    "s": ["=", "20"],
+    "l": ["=", "27"],
+    "luminance": "55"
+  },
+  "on-card-secondary": {
+    "s": ["=", "35"],
+    "l": ["=", "93"],
+    "luminance": "80"
+  },
   "on-card": {
     "hex": "#ffffff"
   },

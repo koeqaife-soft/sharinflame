@@ -95,8 +95,9 @@
 }
 
 .segmented-button {
+  border: 2px solid var(--outline);
+  border-radius: 36px;
   .button {
-    border: 1px solid var(--outline);
     padding-left: 16px;
     padding-right: 16px;
     border-radius: 0px;
@@ -114,9 +115,6 @@
     }
     &:last-child {
       border-radius: 0px 36px 36px 0px;
-    }
-    &.selected {
-      border-color: var(--primary);
     }
   }
 }
@@ -162,9 +160,9 @@
   }
 
   &.selected {
-    background-color: var(--primary);
+    background-color: var(--card-secondary);
     > span {
-      color: var(--on-primary);
+      color: var(--on-card-secondary);
     }
     .q-icon {
       animation: fillActivate var(--animate-duration) ease-out forwards;

@@ -54,6 +54,19 @@
     "s": ["=", "0"],
     "l": ["=", "20"]
   },
+  "card-secondary": {
+    "s": ["=", "0"],
+    "l": ["=", "29"]
+  },
+  "card-secondary-hover": {
+    "link": "background",
+    "s": ["=", "0"],
+    "l": ["=", "35"]
+  },
+  "on-card-secondary": {
+    "s": ["=", "0"],
+    "l": ["=", "93"]
+  },
   "on-card": {
     "hex": "#ffffff"
   },

@@ -55,6 +55,19 @@
   "card-high-hover": {
     "link": "card-hover"
   },
+  "card-secondary": {
+    "s": ["=", "10"],
+    "l": ["=", "90"],
+    "luminance": "95"
+  },
+  "card-secondary-hover": {
+    "s": ["=", "10"],
+    "l": ["=", "95"],
+    "luminance": "95"
+  },
+  "on-card-secondary": {
+    "hex": "#000000"
+  },
   "on-card": {
     "hex": "#ffffff"
   },

@@ -51,6 +51,17 @@
   "card-high-hover": {
     "link": "card-hover"
   },
+  "card-secondary": {
+    "s": ["=", "50"],
+    "l": ["=", "5"]
+  },
+  "card-secondary-hover": {
+    "s": ["=", "50"],
+    "l": ["=", "10"]
+  },
+  "on-card-secondary": {
+    "hex": "#ffffff"
+  },
   "on-card": {
     "hex": "#000000"
   },
