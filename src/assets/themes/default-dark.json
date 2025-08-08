@@ -5,9 +5,9 @@
     "luminance": "100"
   },
   "secondary": {
-    "s": ["=", "45"],
+    "s": ["=", "20"],
     "l": ["=", "80"],
-    "luminance": "60"
+    "luminance": "65"
   },
   "tertiary": {
     "h": ["-", "80"],
