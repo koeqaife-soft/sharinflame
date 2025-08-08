@@ -74,8 +74,8 @@
   },
   "on-card-secondary": {
     "s": ["=", "40"],
-    "l": ["=", "30"],
-    "luminance": "55"
+    "l": ["=", "25"],
+    "luminance": "40"
   },
   "on-card": {
     "hex": "#000000"
