@@ -380,10 +380,6 @@ body {
   }
 }
 
-.q-separator {
-  background-color: var(--outline);
-}
-
 .sticky-label {
   position: sticky;
   top: 0;
@@ -408,52 +404,6 @@ mark {
   border-radius: 2px;
 }
 
-.q-menu,
-.q-select__dialog {
-  @include elevation(3);
-  outline: 1px solid var(--outline);
-  border-radius: 8px;
-  background-color: var(--card);
-  color: var(--on-card);
-  user-select: none;
-  .q-item--active {
-    color: var(--on-card-secondary);
-    background-color: var(--card-secondary);
-  }
-}
-
-.q-select__dialog .q-field {
-  background-color: var(--card);
-  .q-field__control {
-    background-color: transparent;
-  }
-}
-
-.q-chip {
-  outline: 2px solid var(--contrast-outline);
-  outline-offset: -1px;
-  background-color: var(--card-high);
-  color: var(--on-card);
-  padding-left: 8px;
-  padding-right: 8px;
-  width: fit-content;
-  user-select: none;
-  &:focus {
-    box-shadow: none !important;
-  }
-  .q-icon {
-    @include iconSize(22);
-    width: 22px;
-    height: 22px;
-    color: var(--on-background);
-  }
-}
-
-.q-chip__icon--remove {
-  margin: 0;
-  margin-left: 0.2em;
-}
-
 .link {
   color: var(--primary);
   text-decoration: none;
@@ -465,77 +415,6 @@ mark {
   text-decoration: underline;
 }
 
-.default-notification {
-  @include elevation(1);
-  background-color: var(--card);
-  color: var(--on-card);
-  .q-notification__progress {
-    background-color: var(--secondary);
-    border-radius: 3px;
-    height: 3px;
-    opacity: 1;
-  }
-  div:not(.q-notification__caption):not(.q-notification__badge) {
-    font-weight: 500;
-    font-size: 15px;
-    color: var(--on-background);
-  }
-  .q-notification__caption {
-    font-weight: 400;
-    font-size: 14px;
-    color: var(--on-background-variant);
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    max-width: 400px;
-  }
-}
-
-.error-notification {
-  @include elevation(1);
-  background-color: var(--error);
-  color: var(--on-error);
-  border: 2px solid var(--error);
-  .q-notification__progress {
-    background-color: var(--on-error);
-    border-radius: 3px;
-    height: 3px;
-    opacity: 1;
-  }
-  div:not(.q-notification__caption):not(.q-notification__badge) {
-    font-weight: 500;
-    font-size: 15px;
-    color: var(--on-error);
-  }
-  .q-notification__caption {
-    font-weight: 400;
-    font-size: 14px;
-    opacity: 0.8;
-    color: var(--on-error);
-  }
-}
-
-.q-notification__badge {
-  background-color: var(--error);
-  color: var(--on-error);
-}
-
-.q-notifications__list {
-  margin-top: 50px;
-}
-
 .emoji {
   font-family: "NotoColorEmoji", sans-serif;
-}
-
-.q-dialog__backdrop {
-  background-color: rgba(0, 0, 0, 0.6);
-}
-
-.q-field:not(.q-select):not(.q-field--outlined) {
-  outline: 1px solid var(--contrast-outline) !important;
-}
-
-.q-menu .q-field {
-  outline: 0 !important;
 }

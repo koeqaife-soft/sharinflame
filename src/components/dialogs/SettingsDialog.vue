@@ -2,13 +2,13 @@
   <q-dialog
     transition-show="scale"
     transition-hide="scale"
-    class="settings-dialog card-dialog"
+    class="settings-dialog card-dialog with-sidebar"
     ref="dialogRef"
     @hide="onDialogHide"
     maximized
   >
     <div class="dialog-content">
-      <div class="card-dialog-header horizontal-container">
+      <div class="dialog-header horizontal-container">
         <div v-show="!isSmallScreen || current == 0" class="main-page-label horizontal-container label-container">
           <q-icon name="sym_r_settings" class="header-icon" />
           <div class="label">{{ $t("settings") }}</div>

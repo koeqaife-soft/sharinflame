@@ -1,0 +1,130 @@
+// Profile menu
+.profile-menu {
+  .q-icon {
+    @include iconSize(24);
+  }
+}
+
+.profile-menu-component {
+  .label {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .username {
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .dark-mode {
+    display: flex;
+    align-items: flex-start;
+    .toggle-container {
+      position: absolute;
+      right: 0;
+      margin-right: 16px;
+    }
+  }
+
+  .open-profile {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    .avatar {
+      margin-right: 12px;
+      font-weight: 400;
+    }
+    .label {
+      font-weight: 500;
+    }
+    .text-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+}
+
+// It's obious that this is a menu arrow
+.menu-arrow {
+  &.active {
+    animation: rotateFrom180To0 0.2s ease-out forwards;
+  }
+  &:not(.active) {
+    animation: rotate180 0.2s ease-out forwards;
+  }
+}
+
+// Something
+.posts-infinite-scroll {
+  display: flex;
+  flex-direction: column;
+}
+
+// "More" button in long texts
+.more-btn {
+  font-weight: 500;
+  margin-left: 8px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  opacity: 0.95;
+  font-size: 15px;
+  color: var(--primary);
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+// Header like "Comments" in posts
+.scroll-header {
+  transform: translate3d(0, -150%, 0);
+  transition:
+    transform 0.3s ease,
+    visibility 0s 0.3s linear;
+
+  &.is-visible {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+// Menu like "Languages" in settings
+.field-menu {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 12px;
+  padding-right: 12px;
+  &:has(.q-field--focused) {
+    outline-color: var(--primary);
+  }
+}
+
+// Row with switch
+.toggle-value-row {
+  > div {
+    align-items: center;
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  .container {
+    gap: 0px;
+  }
+  .label {
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .description {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--on-background-variant);
+  }
+  .icon {
+    height: 24px;
+    width: 24px;
+  }
+  .q-icon,
+  .icon {
+    @include iconSize(24);
+  }
+}

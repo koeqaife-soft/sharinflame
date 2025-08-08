@@ -8,7 +8,7 @@
     maximized
   >
     <div class="dialog-content">
-      <div class="card-dialog-header horizontal-container">
+      <div class="dialog-header horizontal-container">
         <div class="horizontal-container label-container">
           <q-icon :name="editMode ? 'sym_r_edit' : 'sym_r_article'" class="header-icon" />
           <div class="label">{{ editMode ? $t("edit_post") : $t("create_post") }}</div>
@@ -45,7 +45,7 @@
               </q-chip>
               <q-chip clickable icon="sym_r_add" class="tag" :disable="tags.length >= MAX_TAGS">
                 {{ $t("add_tag") }}
-                <q-menu class="menu-card enter-tag-menu" v-if="tags.length < MAX_TAGS">
+                <q-menu class="menu-card enter-tag-menu field-menu" v-if="tags.length < MAX_TAGS">
                   <q-input
                     v-model="addTagValue"
                     :label="$t('enter_tag')"

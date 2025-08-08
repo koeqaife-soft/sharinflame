@@ -85,8 +85,104 @@
     display: flex;
     flex-direction: column;
   }
+
   .card {
     border-radius: 10px;
     @include elevation(1);
+  }
+
+  &.with-sidebar {
+    @media (min-width: 750px) {
+      .dialog-content {
+        max-width: 916px;
+        margin-left: 8px;
+        margin-right: 8px;
+        border-radius: 18px !important;
+      }
+      .q-dialog__inner {
+        margin-top: 74px;
+        margin-bottom: 16px;
+      }
+      .sidebar {
+        max-width: 300px;
+      }
+    }
+    @media (max-width: 749px) {
+      .dialog-content {
+        max-height: 100%;
+        border-radius: 0px;
+      }
+      .q-dialog__inner {
+        margin-top: 50px;
+      }
+      .sidebar,
+      .view {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 8px;
+      }
+    }
+    .sidebar {
+      width: 100%;
+    }
+    .dialog-content {
+      height: 100%;
+      width: 100%;
+      padding: 0;
+      transition:
+        max-height 0.2s ease,
+        margin 0.2s ease;
+    }
+    .dialog-content-inner {
+      padding: 8px;
+      height: 100%;
+      position: relative;
+    }
+    .card-button {
+      @include elevation(1);
+    }
+  }
+
+  .dialog-header {
+    @include elevation(1);
+    background-color: var(--card);
+    color: var(--on-card);
+    align-items: center;
+    padding: 4px;
+    height: 50px;
+
+    .label {
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .q-icon {
+      @include iconSize(20);
+    }
+    .label-container {
+      align-items: center;
+    }
+    .header-icon {
+      margin-left: 12px;
+    }
+  }
+
+  .dialog-section {
+    div {
+      align-items: center;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .icon {
+      padding-left: 8px;
+      height: 22px;
+      width: 22px;
+    }
+    .q-icon,
+    .icon {
+      @include iconSize(20);
+    }
   }
 }

@@ -1,0 +1,240 @@
+.default-notification {
+  @include elevation(1);
+  background-color: var(--card);
+  color: var(--on-card);
+  .q-notification__progress {
+    background-color: var(--secondary);
+    border-radius: 3px;
+    height: 3px;
+    opacity: 1;
+  }
+  div:not(.q-notification__caption):not(.q-notification__badge) {
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--on-background);
+  }
+  .q-notification__caption {
+    font-weight: 400;
+    font-size: 14px;
+    color: var(--on-background-variant);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 400px;
+  }
+}
+
+.error-notification {
+  @include elevation(1);
+  background-color: var(--error);
+  color: var(--on-error);
+  border: 2px solid var(--error);
+  .q-notification__progress {
+    background-color: var(--on-error);
+    border-radius: 3px;
+    height: 3px;
+    opacity: 1;
+  }
+  div:not(.q-notification__caption):not(.q-notification__badge) {
+    font-weight: 500;
+    font-size: 15px;
+    color: var(--on-error);
+  }
+  .q-notification__caption {
+    font-weight: 400;
+    font-size: 14px;
+    opacity: 0.8;
+    color: var(--on-error);
+  }
+}
+
+.q-notification__badge {
+  background-color: var(--error);
+  color: var(--on-error);
+}
+
+.q-notifications__list {
+  margin-top: 50px;
+}
+
+.notification {
+  min-height: 60px;
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--card-high);
+
+  @media (hover: hover) {
+    &:hover,
+    &:focus-visible {
+      background-color: var(--card-high-hover);
+    }
+  }
+  @media (hover: none) {
+    &:active,
+    &:focus-visible {
+      background-color: var(--card-high-hover);
+    }
+  }
+
+  .image-container {
+    @include avatarContainerSkeleton();
+    min-height: 42px;
+    min-width: 42px;
+    max-height: 42px;
+    max-width: 42px;
+    margin-right: 8px;
+    position: relative;
+    .icon {
+      @include iconSize(14);
+      color: var(--on-tertiary);
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background-color: var(--tertiary);
+      border-radius: 50%;
+      padding: 4px;
+      border: 1px solid var(--outline);
+      pointer-events: none;
+    }
+  }
+  .title {
+    font-size: 15px;
+    font-weight: 500;
+  }
+  .message {
+    font-size: 14px;
+    font-weight: 400;
+  }
+  .text-container {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .title,
+  .message {
+    color: var(--on-card);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  &.loading {
+    --color-from: var(--card-high-hover);
+    --color-to: var(--card-high);
+    animation: bgColorPulse 1.3s ease infinite;
+    animation-delay: 200ms;
+    cursor: progress;
+    &::before {
+      content: "";
+      position: absolute;
+      opacity: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 8px;
+      padding: 2px;
+      background: conic-gradient(from var(--angle, 0deg), var(--primary) 0deg 90deg, transparent 90deg 180deg);
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation:
+        rotate 4s linear infinite,
+        fadeIn 0.5s ease-in forwards 200ms;
+    }
+  }
+  &.disabled {
+    cursor: not-allowed;
+    background-color: transparent;
+    outline: 1px solid var(--outline) !important;
+  }
+}
+
+.notifications {
+  .no-notifications {
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    color: var(--on-background-variant);
+  }
+  .notifications-container {
+    height: 332px;
+  }
+}
+
+.notifications-dialog {
+  @media (min-width: 641px) {
+    .dialog-content {
+      max-width: 625px;
+      margin-left: 8px;
+      margin-right: 8px;
+      border-radius: 18px !important;
+    }
+    .q-dialog__inner {
+      margin-top: 74px;
+      margin-bottom: 16px;
+    }
+  }
+  @media (max-width: 640px) {
+    .dialog-content {
+      max-height: 100%;
+      border-radius: 0px;
+    }
+    .q-dialog__inner {
+      margin-top: 50px;
+    }
+  }
+  .dialog-content {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    transition:
+      max-height 0.2s ease,
+      margin 0.2s ease;
+  }
+  .dialog-content-inner {
+    padding: 8px;
+    height: 100%;
+  }
+  .notification {
+    @include elevation(0);
+    background-color: var(--card);
+    .title,
+    .message {
+      word-wrap: break-word;
+      overflow-wrap: anywhere;
+
+      white-space: unset;
+      text-overflow: unset;
+      overflow: unset;
+    }
+    @media (hover: hover) {
+      &:hover,
+      &:focus-visible {
+        background-color: var(--card-high-hover);
+      }
+    }
+    @media (hover: none) {
+      &:active,
+      &:focus-visible {
+        background-color: var(--card-high-hover);
+      }
+    }
+    &.loading {
+      --color-from: var(--card-hover);
+      --color-to: var(--card);
+    }
+  }
+}

@@ -8,7 +8,7 @@
         <q-btn unelevated no-caps class="webkit-no-drag title-button" v-if="$slots['logo-menu']">
           <div class="title in-button">SharinFlame</div>
           <slot name="logo-menu" />
-          <q-icon name="sym_r_arrow_drop_up" :class="['open-menu', { active: menuOpened }]" />
+          <q-icon name="sym_r_arrow_drop_up" :class="['menu-arrow', { active: menuOpened }]" />
         </q-btn>
         <div v-else class="webkit-drag title">SharinFlame</div>
 

@@ -1,0 +1,77 @@
+.switch {
+  user-select: none;
+  position: relative;
+  height: 28px;
+  margin-right: 50px;
+  -webkit-tap-highlight-color: transparent;
+
+  span.slider {
+    position: absolute;
+    cursor: pointer;
+    background-color: var(--background-variant);
+    width: 48px;
+    height: 28px;
+    border-radius: 28px;
+    border: 2px solid var(--outline);
+    transition:
+      background-color 0.1s ease-in-out,
+      border-color 0.1s ease-in-out;
+
+    will-change: background-color, border-color;
+  }
+
+  span.slider::before {
+    position: absolute;
+    content: "";
+    height: 12px;
+    width: 12px;
+    left: 0px;
+    margin: 6px;
+    background-color: var(--outline);
+    outline: 2px solid var(--contrast-outline);
+    outline-offset: -1px;
+    border-radius: 28px;
+    transition:
+      left 175ms cubic-bezier(0, 0.5, 0.5, 1.5),
+      background-color 0.1s ease-in-out,
+      height 100ms ease-in-out,
+      width 100ms ease-in-out,
+      margin 100ms ease-in-out;
+
+    will-change: left, width, height, margin, background-color;
+  }
+
+  &:hover span.slider::before {
+    background-color: var(--on-background-variant);
+  }
+
+  &.active span.slider {
+    background-color: var(--primary);
+    border-color: transparent;
+  }
+
+  &.active span.slider::before {
+    background-color: var(--on-primary);
+    height: 20px;
+    width: 20px;
+    left: 20px;
+    margin: 2px;
+  }
+
+  &.active:hover span.slider::before {
+    background-color: color-mix(in srgb, var(--on-primary) 80%, var(--primary) 20%);
+  }
+
+  &:active span.slider::before {
+    height: 24px;
+    width: 24px;
+    margin: 0px;
+  }
+
+  &.active:active span.slider::before {
+    height: 24px;
+    width: 24px;
+    left: 20px;
+    margin: 0px;
+  }
+}

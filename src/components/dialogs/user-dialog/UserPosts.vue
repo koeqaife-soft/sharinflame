@@ -1,5 +1,5 @@
 <template>
-  <div class="card q-mb-sm label-container" style="z-index: 2">
+  <div class="card q-mb-sm dialog-section" style="z-index: 2">
     <div class="horizontal-container">
       <q-icon name="sym_r_sort" class="icon" />
       <q-select

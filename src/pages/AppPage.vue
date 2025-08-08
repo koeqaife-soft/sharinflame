@@ -36,7 +36,7 @@
             <q-menu class="categories-menu menu-card" v-model="categoriesMenuOpened">
               <category-buttons :categories-list="categoriesList" :current-type="currentType" />
             </q-menu>
-            <q-icon name="sym_r_arrow_drop_up" :class="['open-menu', { active: categoriesMenuOpened }]" />
+            <q-icon name="sym_r_arrow_drop_up" :class="['menu-arrow', { active: categoriesMenuOpened }]" />
           </q-btn>
           <q-space />
           <q-btn unelevated round icon="sym_r_refresh" class="reload-button" @click="reloadKey = Date.now()" />

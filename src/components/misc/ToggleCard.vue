@@ -1,5 +1,5 @@
 <template>
-  <div class="card toggle-value">
+  <div class="card toggle-value-row">
     <div class="horizontal-container">
       <q-icon v-if="icon" :name="icon" class="icon" />
       <template v-if="!showDescription">

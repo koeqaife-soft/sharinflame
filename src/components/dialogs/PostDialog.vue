@@ -9,85 +9,87 @@
     :key="post.post_id"
   >
     <closeable-content v-on:hide="dialogRef!.hide()">
-      <div class="card label-container q-mb-sm" style="z-index: 2">
-        <div class="horizontal-container">
-          <q-icon name="sym_r_article" class="icon" />
+      <div class="dialog-header" style="z-index: 2">
+        <div class="horizontal-container label-container">
+          <q-icon name="sym_r_article" class="header-icon" />
           <div>{{ $t("post") }}</div>
           <q-space />
           <q-btn flat round icon="sym_r_close" @click="dialogRef!.hide()" />
         </div>
       </div>
 
-      <q-scroll-area class="scroll-area fix-scroll-area" :visible="false">
-        <div ref="postComponentRef">
-          <post-component :post="postRef" :in-dialog="true" @delete-post="handleDeletePost" style="z-index: 2" />
-        </div>
+      <div class="dialog-content-inner">
+        <q-scroll-area class="scroll-area fix-scroll-area" :visible="false">
+          <div ref="postComponentRef">
+            <post-component :post="postRef" :in-dialog="true" @delete-post="handleDeletePost" style="z-index: 2" />
+          </div>
 
-        <div class="sticky-label scroll-header q-pt-sm" :class="{ 'is-visible': headerVisible }">
-          <div class="card label-container q-mb-sm" style="z-index: 2">
-            <div class="horizontal-container">
-              <q-icon name="sym_r_chat_bubble" class="icon" />
-              <div>{{ $t("comments") }}</div>
-              <q-space />
-              <q-btn flat round icon="sym_r_refresh" @click="reloadComments" />
+          <div class="sticky-label scroll-header q-pt-sm" :class="{ 'is-visible': headerVisible }">
+            <div class="card dialog-section q-mb-sm" style="z-index: 2">
+              <div class="horizontal-container">
+                <q-icon name="sym_r_chat_bubble" class="icon" />
+                <div>{{ $t("comments") }}</div>
+                <q-space />
+                <q-btn flat round icon="sym_r_refresh" @click="reloadComments" />
+              </div>
             </div>
           </div>
-        </div>
 
-        <div class="no-comments" v-if="showNoComments">{{ $t("no_comments") }}</div>
-        <my-virtual-scroll
-          :items="items"
-          :margins="8"
-          item-key="comment_id"
-          @load-more="loadComments"
-          @scroll="onScroll"
-          :infinite-load-type="allowLoading ? 'bottom' : 'none'"
-          :key="scrollKey"
-          class="posts-infinite-scroll"
-          ref="virtualScroll"
-        >
-          <template v-slot:default="{ item }">
-            <comment-component :comment="item" class="q-mb-sm" @delete-comment="handleDeleteComment" />
-          </template>
-          <template v-slot:loading>
-            <div class="row justify-center q-my-md">
-              <q-spinner class="loading full-height q-my-md" size="40px" />
+          <div class="no-comments" v-if="showNoComments">{{ $t("no_comments") }}</div>
+          <my-virtual-scroll
+            :items="items"
+            :margins="8"
+            item-key="comment_id"
+            @load-more="loadComments"
+            @scroll="onScroll"
+            :infinite-load-type="allowLoading ? 'bottom' : 'none'"
+            :key="scrollKey"
+            class="posts-infinite-scroll"
+            ref="virtualScroll"
+          >
+            <template v-slot:default="{ item }">
+              <comment-component :comment="item" class="q-mb-sm" @delete-comment="handleDeleteComment" />
+            </template>
+            <template v-slot:loading>
+              <div class="row justify-center q-my-md">
+                <q-spinner class="loading full-height q-my-md" size="40px" />
+              </div>
+            </template>
+          </my-virtual-scroll>
+          <div class="load-more-container" v-if="!allowLoading">
+            <q-btn unelevated no-caps class="default-button load-more" @click="allowLoad" :label="$t('load_more')" />
+          </div>
+        </q-scroll-area>
+        <q-separator class="q-mb-sm q-mt-sm" />
+        <div class="card send-comment">
+          <div class="card-section">
+            <div class="horizontal-container align-end full-width">
+              <user-avatar :me="true" />
+              <q-input
+                dense
+                borderless
+                rounded
+                v-model="text"
+                autogrow
+                maxlength="1024"
+                :label="$t('enter_comment')"
+                class="full-width enter-comment"
+                :disable="sending"
+              />
+              <q-btn
+                round
+                flat
+                icon="sym_r_send"
+                class="send-button"
+                @click="sendComment"
+                :loading="sending"
+                :disable="text.length == 0"
+              >
+                <template v-slot:loading>
+                  <q-spinner class="loading" />
+                </template>
+              </q-btn>
             </div>
-          </template>
-        </my-virtual-scroll>
-        <div class="load-more-container" v-if="!allowLoading">
-          <q-btn unelevated no-caps class="default-button load-more" @click="allowLoad" :label="$t('load_more')" />
-        </div>
-      </q-scroll-area>
-      <q-separator class="q-mb-sm q-mt-sm" />
-      <div class="card send-comment">
-        <div class="card-section">
-          <div class="horizontal-container align-end full-width">
-            <user-avatar :me="true" />
-            <q-input
-              dense
-              borderless
-              rounded
-              v-model="text"
-              autogrow
-              maxlength="1024"
-              :label="$t('enter_comment')"
-              class="full-width enter-comment"
-              :disable="sending"
-            />
-            <q-btn
-              round
-              flat
-              icon="sym_r_send"
-              class="send-button"
-              @click="sendComment"
-              :loading="sending"
-              :disable="text.length == 0"
-            >
-              <template v-slot:loading>
-                <q-spinner class="loading" />
-              </template>
-            </q-btn>
           </div>
         </div>
       </div>

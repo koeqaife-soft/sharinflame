@@ -5,7 +5,13 @@
 @import "buttons";
 @import "cards";
 @import "animations";
-@import "components";
+@import "components/quasar";
+@import "components/misc";
+@import "components/settings";
+@import "components/notifications";
+@import "components/switch";
+@import "components/users";
+@import "components/posts";
 
 @font-face {
   font-family: "NotoColorEmoji";

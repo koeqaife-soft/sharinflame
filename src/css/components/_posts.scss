@@ -1,0 +1,284 @@
+// Common styles for posts and comments
+.post,
+.comment {
+  .reaction-buttons {
+    min-width: 180px;
+    min-height: 35px;
+    display: flex;
+    gap: 8px;
+  }
+  .avatar-container {
+    min-height: 42px;
+    min-width: 42px;
+  }
+
+  .text-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 10px;
+  }
+
+  .username {
+    font-size: 1.3em;
+    text-align: center;
+  }
+
+  .content {
+    margin-top: 3px;
+    font-size: 1em;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  .actions {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 8px;
+    &.can-animate {
+      .button.active .q-icon {
+        animation: fillActivate 0.25s ease-out forwards;
+      }
+    }
+  }
+
+  .action-container {
+    @include colorTransition();
+    display: flex;
+    align-items: center;
+    color: var(--on-card);
+    border-radius: 25px;
+    background-color: var(--card-high);
+    height: 35px;
+    width: fit-content;
+  }
+
+  .button .q-icon {
+    @include iconSize(20);
+  }
+
+  .button {
+    will-change: color;
+    height: 100%;
+    &:not(.circle) {
+      min-width: 60px;
+    }
+
+    > span {
+      font-size: 12px;
+
+      > span {
+        font-size: 13px;
+      }
+    }
+
+    &.active {
+      color: var(--primary);
+      .q-icon {
+        animation: fillActivate 0ms forwards;
+      }
+    }
+  }
+
+  .round-right {
+    border-radius: 0px 25px 25px 0px;
+  }
+  .round-left {
+    border-radius: 25px 0px 0px 25px;
+  }
+  .round {
+    border-radius: 25px;
+  }
+  .circle {
+    width: 35px;
+    border-radius: 100%;
+  }
+}
+
+// Styles specific to posts
+.post {
+  .tags {
+    flex-wrap: wrap;
+    margin-left: -4px;
+    margin-right: -4px;
+  }
+  .tag {
+    .q-icon {
+      @include iconSize(20);
+    }
+  }
+  .text-container {
+    width: 100%;
+  }
+  .post-image {
+    border-radius: 8px;
+    background-color: var(--card-high);
+    height: 400px;
+    width: 100%;
+  }
+}
+
+// More menu for posts and comments
+.post-more-menu,
+.comment-more-menu {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  .icon {
+    @include iconSize(22);
+    align-self: center;
+  }
+  .text {
+    font-size: 14px;
+    font-weight: 400;
+    align-self: flex-end;
+  }
+  .horizontal-container {
+    display: flex;
+  }
+  .separator {
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+  .label-container {
+    display: flex;
+    align-items: start;
+    gap: 0px;
+    .text {
+      align-self: flex-start;
+    }
+    .description {
+      font-size: 12px;
+      font-weight: 400;
+      color: var(--on-background-variant);
+    }
+  }
+}
+
+// Post dialog styles
+.post-dialog {
+  .q-dialog__inner {
+    margin-top: 58px;
+  }
+  .no-comments {
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    color: var(--on-background-variant);
+  }
+  .dialog-content {
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    transition:
+      max-height 0.2s ease,
+      margin 0.2s ease;
+    max-width: 600px;
+    border-radius: 18px 18px 0px 0px !important;
+  }
+  .dialog-content-inner {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    height: 100%;
+    position: relative;
+  }
+  .send-comment {
+    .card-section {
+      padding: 2px;
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+    .enter-comment {
+      border-radius: 30px;
+      min-height: 42px;
+      background-color: var(--card-high);
+      padding-left: 14px;
+    }
+    .send-button {
+      .q-icon {
+        @include iconSize(30);
+      }
+    }
+  }
+  .load-more-container {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+// Create or edit post dialog styles
+.post-editor-dialog {
+  @media (min-width: 590px) {
+    .dialog-content {
+      max-width: 600px;
+      max-height: 600px;
+      margin-left: 8px;
+      margin-right: 8px;
+      border-radius: 18px !important;
+    }
+  }
+  @media (max-width: 589px) {
+    .dialog-content {
+      max-height: 100%;
+      border-radius: 18px 18px 0px 0px !important;
+    }
+  }
+  .q-dialog__inner {
+    margin-top: 58px;
+  }
+  .q-scrollarea__content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .dialog-content {
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    transition:
+      max-height 0.2s ease,
+      margin 0.2s ease;
+  }
+  .dialog-content-inner {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+    height: 100%;
+    position: relative;
+  }
+  .post-text {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 16px;
+    padding-right: 16px;
+    border: 1px solid transparent;
+    transition: border-color 0.2s ease-out;
+    will-change: border-color;
+    &.q-field--focused {
+      border-color: var(--primary);
+    }
+  }
+  .tags-container {
+    padding-left: 16px;
+    padding-right: 16px;
+    .label {
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .icon {
+      @include iconSize(20);
+      font-weight: 400;
+      height: 22px;
+      width: 22px;
+    }
+    .chips {
+      margin-left: -8px;
+      margin-right: -8px;
+    }
+  }
+  .send-container {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

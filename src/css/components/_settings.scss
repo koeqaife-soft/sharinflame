@@ -1,0 +1,130 @@
+.settings-dialog {
+  .account-view {
+    .languages {
+      border-radius: 6px;
+      .label-icon {
+        margin-left: 8px;
+      }
+    }
+    .language {
+      background-color: var(--card);
+    }
+    .button-container {
+      justify-content: flex-end;
+    }
+    .profile-container {
+      padding-top: 10px;
+      .card {
+        box-shadow: none;
+        border-radius: 6px;
+        background-color: var(--card-high);
+      }
+    }
+    .change-banner,
+    .change-avatar {
+      padding-left: 16px;
+      padding-right: 16px;
+      .label-icon {
+        margin: 0;
+      }
+    }
+  }
+
+  .appearance-view {
+    .label {
+      margin-top: 2px;
+    }
+    .slider-container {
+      margin-left: 6px;
+      margin-right: 6px;
+      position: relative;
+      width: 100%;
+      height: 31px;
+      overflow: hidden;
+    }
+
+    .hue-slider {
+      width: calc(100% - 12px);
+      height: 10px;
+      appearance: none;
+      outline: none;
+      cursor: pointer;
+      background-color: var(--background-variant);
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      border-radius: 8px;
+    }
+
+    .hue-slider::-webkit-slider-thumb {
+      appearance: none;
+      width: 13px;
+      height: 30px;
+      border-radius: 20px;
+      background-color: var(--primary);
+      box-shadow: 0 0 0 6px var(--card);
+      border: 0;
+    }
+
+    .hue-slider::-moz-range-thumb {
+      width: 13px;
+      height: 30px;
+      border-radius: 20px;
+      background-color: var(--primary);
+      box-shadow: 0 0 0 6px var(--card);
+      border: 0;
+    }
+
+    .colors-container {
+      justify-content: space-evenly;
+      flex-wrap: wrap;
+    }
+
+    .color-button {
+      border-radius: 4px;
+      aspect-ratio: 1/1;
+    }
+
+    .theme-container {
+      flex-wrap: wrap;
+    }
+
+    .card.container {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+  }
+
+  .label {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .label-icon {
+    @include iconSize(21);
+    margin-left: 4px;
+    font-weight: 500;
+  }
+
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 300px;
+    width: 100%;
+  }
+
+  .input {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 16px;
+    padding-right: 16px;
+    background-color: var(--card-high);
+    border: 1px solid transparent;
+    border-radius: 6px;
+    transition: border-color 0.2s ease-out;
+    &.q-field--focused {
+      border-color: var(--primary);
+    }
+  }
+}

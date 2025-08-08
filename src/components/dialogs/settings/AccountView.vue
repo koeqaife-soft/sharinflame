@@ -43,7 +43,7 @@
           </q-chip>
           <q-chip clickable icon="sym_r_add" class="language" :disable="languages.length >= MAX_LANGUAGES">
             {{ $t("add_language") }}
-            <q-menu class="menu-card enter-language-menu" v-if="languages.length < MAX_LANGUAGES">
+            <q-menu class="menu-card enter-language-menu field-menu" v-if="languages.length < MAX_LANGUAGES">
               <q-input
                 v-model="addLangValue"
                 :label="$t('enter_language')"
