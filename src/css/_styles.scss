@@ -417,8 +417,8 @@ mark {
   color: var(--on-card);
   user-select: none;
   .q-item--active {
-    color: var(--on-primary);
-    background-color: var(--primary);
+    color: var(--on-card-secondary);
+    background-color: var(--card-secondary);
   }
 }
 
