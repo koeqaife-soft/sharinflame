@@ -8,7 +8,7 @@
     maximized
   >
     <div class="dialog-content">
-      <div class="card-dialog-header horizontal-container">
+      <div class="dialog-header horizontal-container">
         <div class="horizontal-container label-container">
           <q-icon name="sym_r_notifications" class="header-icon" />
           <div class="label">{{ $t("notifications.label") }}</div>
