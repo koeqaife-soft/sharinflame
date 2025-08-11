@@ -156,7 +156,7 @@ import { useProfileStore } from "src/stores/profile-store";
 import { type QInput, useQuasar } from "quasar";
 import { useI18n } from "vue-i18n";
 
-const UserDialog = defineAsyncComponent(() => import("../UserDialog.vue"));
+const UserDialog = defineAsyncComponent(() => import("src/components/profile/UserDialog.vue"));
 
 const { t } = useI18n();
 const quasar = useQuasar();

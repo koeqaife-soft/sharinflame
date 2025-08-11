@@ -64,8 +64,8 @@ import { defineAsyncComponent, type DefineComponent, ref } from "vue";
 import MyVirtualScroll from "src/components/misc/MyVirtualScroll.vue";
 import { getFavorites, getReactions } from "src/api/users";
 
-const PostComponent = defineAsyncComponent(() => import("../../posts/PostComponent.vue"));
-const CommentComponent = defineAsyncComponent(() => import("../../posts/CommentComponent.vue"));
+const PostComponent = defineAsyncComponent(() => import("../posts/PostComponent.vue"));
+const CommentComponent = defineAsyncComponent(() => import("../posts/CommentComponent.vue"));
 
 type DoneType = (stop?: boolean) => void;
 

@@ -62,8 +62,8 @@ const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
 const mainStore = useMainStore();
 
-const AccountView = defineAsyncComponent(() => import("./settings/AccountView.vue"));
-const AppearanceView = defineAsyncComponent(() => import("./settings/AppearanceView.vue"));
+const AccountView = defineAsyncComponent(() => import("./AccountView.vue"));
+const AppearanceView = defineAsyncComponent(() => import("./AppearanceView.vue"));
 type views = ["my_account", "appearance"];
 
 const screenSize = ref(window.innerWidth);

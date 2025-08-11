@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { getFollowing } from "src/api/users";
 import MyVirtualScroll from "src/components/misc/MyVirtualScroll.vue";
-import UserCard from "../../profile/UserCard.vue";
+import UserCard from "../profile/UserCard.vue";
 import { type DefineComponent, ref } from "vue";
 
 const items = ref<User[]>([]);

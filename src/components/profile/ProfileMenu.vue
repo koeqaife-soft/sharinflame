@@ -52,10 +52,10 @@ import MySwitch from "../misc/MySwitch.vue";
 import UserAvatar from "./UserAvatar.vue";
 import { useMainStore } from "src/stores/main-store";
 
-const UserDialog = defineAsyncComponent(() => import("../dialogs/UserDialog.vue"));
-const PostEditor = defineAsyncComponent(() => import("../dialogs/PostEditor.vue"));
-const MyActivity = defineAsyncComponent(() => import("../dialogs/MyActivity.vue"));
-const SettingsDialog = defineAsyncComponent(() => import("../dialogs/SettingsDialog.vue"));
+const UserDialog = defineAsyncComponent(() => import("./UserDialog.vue"));
+const PostEditor = defineAsyncComponent(() => import("../posts/PostEditor.vue"));
+const MyActivity = defineAsyncComponent(() => import("../my-activity/MyActivityDialog.vue"));
+const SettingsDialog = defineAsyncComponent(() => import("../settings/SettingsDialog.vue"));
 
 const quasar = useQuasar();
 

@@ -82,7 +82,7 @@ const NotificationsList = defineAsyncComponent(() => import("src/components/noti
 const ProfileMenu = defineAsyncComponent(() => import("src/components/profile/ProfileMenu.vue"));
 const OpenProfileMenu = defineAsyncComponent(() => import("src/components/profile/OpenProfileMenu.vue"));
 const ParticlesBackground = defineAsyncComponent(() => import("src/components/ParticlesBackground.vue"));
-const NotificationsDialog = defineAsyncComponent(() => import("src/components/dialogs/NotificationsDialog.vue"));
+const NotificationsDialog = defineAsyncComponent(() => import("src/components/notifications/NotificationsDialog.vue"));
 
 const quasar = useQuasar();
 const mainStore = useMainStore();

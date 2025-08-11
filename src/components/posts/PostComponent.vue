@@ -90,10 +90,10 @@ import { i18n } from "src/boot/i18n";
 import TextParts from "../misc/TextParts.vue";
 
 const ReactionButtons = defineAsyncComponent(() => import("./ReactionButtons.vue"));
-const OpenUserDialog = defineAsyncComponent(() => import("../dialogs/OpenUserDialog.vue"));
-const PostDialog = defineAsyncComponent(() => import("../dialogs/PostDialog.vue"));
+const OpenUserDialog = defineAsyncComponent(() => import("../profile/OpenUserDialog.vue"));
+const PostDialog = defineAsyncComponent(() => import("../posts/PostDialog.vue"));
 const MoreMenu = defineAsyncComponent(() => import("./PostMoreMenu.vue"));
-const PostEditor = defineAsyncComponent(() => import("../dialogs/PostEditor.vue"));
+const PostEditor = defineAsyncComponent(() => import("./PostEditor.vue"));
 const quasar = useQuasar();
 
 const emit = defineEmits<{

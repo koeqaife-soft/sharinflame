@@ -22,8 +22,8 @@ import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
 const quasar = useQuasar();
-const PostDialog = defineAsyncComponent(() => import("src/components/dialogs/PostDialog.vue"));
-const OpenUserDialog = defineAsyncComponent(() => import("../dialogs/OpenUserDialog.vue"));
+const PostDialog = defineAsyncComponent(() => import("src/components/posts/PostDialog.vue"));
+const OpenUserDialog = defineAsyncComponent(() => import("../profile/OpenUserDialog.vue"));
 
 interface Entry {
   lastSync: number;

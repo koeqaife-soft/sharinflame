@@ -23,8 +23,8 @@ import { defineAsyncComponent, ref } from "vue";
 import { follow, unfollow } from "src/api/users";
 import { useQuasar } from "quasar";
 
-const UserDialog = defineAsyncComponent(() => import("../dialogs/UserDialog.vue"));
-const OpenUserDialog = defineAsyncComponent(() => import("../dialogs/OpenUserDialog.vue"));
+const UserDialog = defineAsyncComponent(() => import("./UserDialog.vue"));
+const OpenUserDialog = defineAsyncComponent(() => import("./OpenUserDialog.vue"));
 
 const quasar = useQuasar();
 

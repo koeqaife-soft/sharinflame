@@ -60,8 +60,8 @@ const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
 const mainStore = useMainStore();
 
-const MainView = defineAsyncComponent(() => import("./my-activity/MainView.vue"));
-const FollowingView = defineAsyncComponent(() => import("./my-activity/FollowingView.vue"));
+const MainView = defineAsyncComponent(() => import("./MainView.vue"));
+const FollowingView = defineAsyncComponent(() => import("./FollowingView.vue"));
 type views = ["favorites", "liked", "disliked", "following"];
 
 const screenSize = ref(window.innerWidth);

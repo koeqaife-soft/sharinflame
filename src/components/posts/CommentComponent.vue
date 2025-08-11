@@ -35,7 +35,7 @@ import { i18n } from "src/boot/i18n";
 import { useQuasar } from "quasar";
 import { deleteComment } from "src/api/posts";
 
-const OpenUserDialog = defineAsyncComponent(() => import("../dialogs/OpenUserDialog.vue"));
+const OpenUserDialog = defineAsyncComponent(() => import("../profile/OpenUserDialog.vue"));
 const ReactionButtons = defineAsyncComponent(() => import("./ReactionButtons.vue"));
 const MoreMenu = defineAsyncComponent(() => import("./CommentMoreMenu.vue"));
 

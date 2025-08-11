@@ -91,7 +91,7 @@ import { useProfileStore } from "src/stores/profile-store";
 import { randomSize } from "src/utils/random";
 import { follow, unfollow } from "src/api/users";
 
-const SettingsDialog = defineAsyncComponent(() => import("../dialogs/SettingsDialog.vue"));
+const SettingsDialog = defineAsyncComponent(() => import("../settings/SettingsDialog.vue"));
 const UserDialogInfo = defineAsyncComponent(() => import("./user-dialog/UserInfo.vue"));
 const UserDialogPosts = defineAsyncComponent(() => import("./user-dialog/UserPosts.vue"));
 
