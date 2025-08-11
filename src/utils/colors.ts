@@ -228,13 +228,13 @@ export function generateHueSteps(
 }
 
 export function generateAll(Hsl: Hsl, paletteKey: keyof typeof palettes = "default") {
-  const dark = generateColors(palettes[paletteKey].dark, Hsl, "-dark");
-  const light = generateColors(palettes[paletteKey].light, Hsl, "-light");
+  const dark = generateColors(palettes[paletteKey].dark, Hsl);
+  const light = generateColors(palettes[paletteKey].light, Hsl);
 
-  return { ...dark, ...light };
+  return { dark: dark, light: light };
 }
 
-export function setCss(colors: ReturnType<typeof generateAll>) {
+export function setCss(colors: Record<string, string>) {
   for (const key in colors) {
     if (key.startsWith("$")) continue;
     document.documentElement.style.setProperty(`--${key}`, colors[key]!);

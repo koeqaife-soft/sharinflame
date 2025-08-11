@@ -19,52 +19,10 @@ body {
 }
 
 .body--dark {
-  --primary: var(--primary-dark);
-  --secondary: var(--secondary-dark);
-  --tertiary: var(--tertiary-dark);
-  --on-primary: var(--on-primary-dark);
-  --on-secondary: var(--on-secondary-dark);
-  --on-tertiary: var(--on-tertiary-dark);
-  --background: var(--background-dark);
-  --background-variant: var(--background-variant-dark);
-  --on-background-variant: var(--on-background-variant-dark);
-  --on-background: var(--on-background-dark);
-  --card: var(--card-dark);
-  --card-hover: var(--card-hover-dark);
-  --card-high: var(--card-high-dark);
-  --card-high-hover: var(--card-high-hover-dark);
-  --card-secondary: var(--card-secondary-dark);
-  --card-secondary-hover: var(--card-secondary-hover-dark);
-  --on-card-secondary: var(--on-card-secondary-dark);
-  --on-card: var(--on-card-dark);
-  --outline: var(--outline-dark);
-  --contrast-outline: var(--contrast-outline-dark);
-
   --grad: -25;
 }
 
 .body--light {
-  --primary: var(--primary-light);
-  --secondary: var(--secondary-light);
-  --tertiary: var(--tertiary-light);
-  --on-primary: var(--on-primary-light);
-  --on-secondary: var(--on-secondary-light);
-  --on-tertiary: var(--on-tertiary-light);
-  --background: var(--background-light);
-  --background-variant: var(--background-variant-light);
-  --on-background-variant: var(--on-background-variant-light);
-  --on-background: var(--on-background-light);
-  --card: var(--card-light);
-  --card-hover: var(--card-hover-light);
-  --card-high: var(--card-high-light);
-  --card-high-hover: var(--card-high-hover-light);
-  --card-secondary: var(--card-secondary-light);
-  --card-secondary-hover: var(--card-secondary-hover-light);
-  --on-card-secondary: var(--on-card-secondary-light);
-  --on-card: var(--on-card-light);
-  --outline: var(--outline-light);
-  --contrast-outline: var(--contrast-outline-light);
-
   --grad: 0;
 }
 

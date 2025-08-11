@@ -1,7 +1,8 @@
 import { defineStore } from "pinia";
 import * as colors from "../utils/colors";
+import { useQuasar } from "quasar";
 
-const cacheVersion = 2;
+const cacheVersion = 3;
 
 const defaultSettings = {
   themeHue: 8,
@@ -13,6 +14,11 @@ const defaultSettings = {
 type KeyOfSettings = keyof typeof defaultSettings;
 
 type OpenedDialogs = Record<string, () => void>;
+
+const getLastReadNotification = () => {
+  const stored = localStorage.getItem("lastReadNotification");
+  return stored ? Number(stored) : 0;
+};
 
 const getSettings = () => {
   const stored = JSON.parse(localStorage.getItem("settings") || "{}");
@@ -36,7 +42,9 @@ export const useMainStore = defineStore("main", {
     connectTries: 0,
     openedDialogs: {} as OpenedDialogs,
     settings: getSettings(),
-    lastNotifications: [] as ApiNotification[]
+    lastNotifications: [] as ApiNotification[],
+    lastReadNotification: getLastReadNotification(),
+    quasar: useQuasar()
   }),
   getters: {},
   actions: {
@@ -58,7 +66,7 @@ export const useMainStore = defineStore("main", {
       }
       const hue = newHue || this.getSetting("themeHue");
       const theme = newTheme || this.getSetting("currentTheme");
-      let generated: Record<string, string>;
+      let generated: { dark: Record<string, string>; light: Record<string, string> } | undefined;
 
       const generate = () => {
         generated = colors.generateAll([hue, 0, 0], theme);
@@ -81,7 +89,13 @@ export const useMainStore = defineStore("main", {
         } else generate();
       } else generate();
 
-      colors.setCss(generated!);
+      let palette: Record<string, string> = {};
+      if (this.quasar.dark.isActive) {
+        palette = generated!.dark;
+      } else {
+        palette = generated!.light;
+      }
+      colors.setCss(palette);
     },
     addNotification(notification: ApiNotification) {
       const index = this.lastNotifications.findIndex((n) => n.id === notification.id);
@@ -95,6 +109,10 @@ export const useMainStore = defineStore("main", {
       if (this.lastNotifications.length > 5) {
         this.lastNotifications.splice(5);
       }
+    },
+    setLastReadNotification(timestamp: number) {
+      this.lastReadNotification = timestamp;
+      localStorage.setItem("lastReadNotification", String(timestamp));
     }
   }
 });

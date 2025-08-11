@@ -99,6 +99,13 @@ watch(
   }
 );
 
+watch(
+  () => quasar.dark.isActive,
+  () => {
+    mainStore.updateColor(true);
+  }
+);
+
 defineOptions({
   name: "App"
 });
