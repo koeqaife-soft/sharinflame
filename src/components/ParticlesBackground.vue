@@ -32,7 +32,7 @@ let lastTime = performance.now();
 
 let centerX: number;
 let centerY: number;
-const omega = 1 / 175;
+const omega = 1 / 350;
 
 interface Particle {
   x: number;
