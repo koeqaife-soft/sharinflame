@@ -301,10 +301,16 @@ const onFocus = () => {
   animationFrameId = requestAnimationFrame(animate);
 };
 
+let resizeTimeout: NodeJS.Timeout | null = null;
 const onResize = () => {
-  resizeCanvas();
-  generateInitialParticles();
-  updateGrid();
+  if (resizeTimeout) {
+    clearTimeout(resizeTimeout);
+  }
+  resizeTimeout = setTimeout(() => {
+    resizeCanvas();
+    generateInitialParticles();
+    updateGrid();
+  }, 500);
 };
 
 onMounted(() => {
