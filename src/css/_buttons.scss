@@ -47,7 +47,7 @@
   @media (hover: hover) {
     &:hover {
       &::after {
-        opacity: 0.08;
+        opacity: 0.1;
         background-color: var(--_after-bg-color);
       }
     }
@@ -56,7 +56,7 @@
   &:active,
   &:focus-visible {
     &::after {
-      opacity: 0.12;
+      opacity: 0.16;
       background-color: var(--_after-bg-color);
     }
   }
