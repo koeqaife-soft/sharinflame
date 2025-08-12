@@ -14,7 +14,7 @@
       />
       <q-space />
       <div class="horizontal-container" style="gap: 0">
-        <my-btn :icon="expand ? 'collapse_content' : 'expand_content'" @click="toggleExpand" />
+        <my-button :icon="expand ? 'collapse_content' : 'expand_content'" @click="toggleExpand" />
         <my-button icon="refresh" @click="reloadPosts" />
       </div>
     </div>
