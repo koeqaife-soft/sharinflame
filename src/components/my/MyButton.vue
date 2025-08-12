@@ -1,6 +1,7 @@
 <template>
   <button
     class="my-button"
+    :type="btnType ?? 'button'"
     :class="[
       { disabled: disable, loading, 'is-category': isCategory, 'is-icon': !label && (icon || iconRight) },
       `is-${type}`
@@ -33,12 +34,14 @@ withDefaults(
     disable?: boolean | undefined;
     type?: "primary" | "secondary" | "outlined" | "card" | "none" | "item";
     isCategory?: boolean;
+    btnType?: "button" | "submit" | "reset";
   }>(),
   {
     type: "none",
     loading: false,
     disable: false,
-    isCategory: false
+    isCategory: false,
+    btnType: "button"
   }
 );
 

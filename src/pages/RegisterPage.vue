@@ -57,16 +57,18 @@
             :hint="t('reg_hints.confirm_password')"
           />
 
-          <q-btn :label="$t('register')" type="submit" class="full-width default-button" unelevated :loading="loading">
-            <template v-slot:loading>
-              <q-spinner class="loading" />
-            </template>
-          </q-btn>
-          <q-btn
+          <my-button
+            :label="$t('register')"
+            type="primary"
+            btn-type="submit"
+            class="full-width centered"
+            :loading="loading"
+          />
+          <my-button
+            type="outlined"
             :label="$t('login')"
             @click="$router.push({ path: '/login' })"
-            class="full-width outlined-button q-mt-sm"
-            unelevated
+            class="full-width q-mt-sm centered"
           />
         </q-form>
       </div>
@@ -82,6 +84,7 @@ import { isAxiosError } from "axios";
 import { register } from "src/api/auth";
 import { useRouter } from "vue-router";
 import { useMainStore } from "src/stores/main-store";
+import MyButton from "src/components/my/MyButton.vue";
 
 const { t } = useI18n();
 const mainStore = useMainStore();

@@ -1,5 +1,13 @@
 <template>
-  <my-button type="card" class="notification" :loading="loading" :disable="disabled" tabindex="0" ref="elementRef">
+  <my-button
+    type="card"
+    class="notification"
+    :loading="loading"
+    :disable="disabled"
+    tabindex="0"
+    ref="elementRef"
+    @click="onClicked"
+  >
     <div class="image-container">
       <open-user-dialog
         v-if="notif.linked_type == 'post' || notif.linked_type == 'comment'"

@@ -16,7 +16,7 @@
         <b>Have fun!</b> ♥
       </div>
       <div class="action-container">
-        <q-btn class="default-button" label="Proceed" icon="sym_r_check" unelevated no-caps @click="proceed" />
+        <my-button type="primary" label="Proceed" icon="check" @click="proceed" />
       </div>
     </div>
   </q-page>
@@ -24,6 +24,7 @@
 <script setup lang="ts">
 import { useMainStore } from "src/stores/main-store";
 import { useRouter } from "vue-router";
+import MyButton from "src/components/my/MyButton.vue";
 
 const mainStore = useMainStore();
 const router = useRouter();

@@ -37,16 +37,18 @@
             </template>
           </q-input>
 
-          <q-btn :label="$t('login')" type="submit" class="full-width default-button" unelevated :loading="loading">
-            <template v-slot:loading>
-              <q-spinner class="loading" />
-            </template>
-          </q-btn>
-          <q-btn
+          <my-button
+            :label="$t('login')"
+            type="primary"
+            btn-type="submit"
+            class="full-width centered"
+            :loading="loading"
+          />
+          <my-button
+            type="outlined"
             :label="$t('register')"
             @click="$router.push({ path: '/register' })"
-            class="full-width outlined-button q-mt-sm"
-            unelevated
+            class="full-width centered q-mt-sm"
           />
         </q-form>
       </div>
@@ -62,6 +64,7 @@ import { isAxiosError } from "axios";
 import { login } from "src/api/auth";
 import { useRouter } from "vue-router";
 import { useMainStore } from "src/stores/main-store";
+import MyButton from "src/components/my/MyButton.vue";
 
 const { t } = useI18n();
 const router = useRouter();

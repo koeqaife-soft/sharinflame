@@ -67,6 +67,7 @@
     animation: bgColorPulse 1.3s ease infinite;
     animation-delay: 200ms;
     cursor: progress;
+
     &::before {
       content: "";
       position: absolute;
@@ -104,6 +105,14 @@
     display: flex;
     align-items: center;
     align-self: center;
+  }
+
+  &.centered {
+    justify-content: center;
+    span {
+      justify-content: center;
+      width: 100%;
+    }
   }
 }
 
@@ -148,10 +157,14 @@
   &.disabled {
     opacity: 1 !important;
     background-color: var(--disabled-button-bg);
-    span,
-    .loading {
+    span {
       color: var(--disabled-button-fg);
     }
+  }
+
+  &.loading .my-button-label,
+  &.loading .my-icon {
+    color: var(--primary);
   }
 }
 
@@ -173,6 +186,10 @@
     .loading {
       color: var(--disabled-button-fg);
     }
+  }
+  &.loading .my-button-label,
+  &.loading .my-icon {
+    color: var(--secondary);
   }
 }
 
