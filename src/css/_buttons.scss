@@ -145,6 +145,7 @@
 }
 
 .my-button.is-primary {
+  @include elevation(1);
   --_after-bg-color: var(--background-variant);
   border-radius: 8px;
   background-color: var(--primary);
@@ -170,6 +171,7 @@
 }
 
 .my-button.is-secondary {
+  @include elevation(1);
   --_after-bg-color: var(--background-variant);
   border-radius: 8px;
   background-color: var(--secondary);
@@ -194,6 +196,7 @@
 }
 
 .my-button.is-outlined {
+  @include elevation(1);
   border-radius: 8px;
   background-color: var(--background);
   border: 2px solid var(--primary);
@@ -213,6 +216,7 @@
 }
 
 .my-button.is-card {
+  @include elevation(1);
   border-radius: 8px;
   background-color: var(--card);
   min-height: 40px;
@@ -251,6 +255,7 @@
 }
 .card .my-button.is-card,
 .menu-card .my-button.is-card {
+  box-shadow: none;
   background-color: var(--card-high);
 }
 
