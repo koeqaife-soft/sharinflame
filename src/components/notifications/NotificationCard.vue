@@ -1,17 +1,17 @@
 <template>
-  <div class="card notification" :class="{ loading, disabled }" tabindex="0" ref="elementRef">
+  <my-button type="card" class="notification" :loading="loading" :disable="disabled" tabindex="0" ref="elementRef">
     <div class="image-container">
       <open-user-dialog
         v-if="notif.linked_type == 'post' || notif.linked_type == 'comment'"
         :user="notif.loaded.user"
       />
-      <q-icon :name="typeIcons[notif.type] ?? ''" class="icon" />
+      <my-icon :icon="typeIcons[notif.type] ?? ''" class="icon" />
     </div>
     <div class="text-container" @click="onClicked">
       <div class="title">{{ $t(`notifications.${notif.type}`, { username: linkedContent.username }) }}</div>
       <div class="message">{{ linkedContent.message }}</div>
     </div>
-  </div>
+  </my-button>
 </template>
 <script setup lang="ts">
 import { isAxiosError } from "axios";
@@ -19,6 +19,8 @@ import { useQuasar } from "quasar";
 import { getComment, getPost } from "src/api/posts";
 import { computed, defineAsyncComponent, onMounted, ref, toRef } from "vue";
 import { useI18n } from "vue-i18n";
+import MyIcon from "src/components/my/MyIcon.vue";
+import MyButton from "src/components/my/MyButton.vue";
 
 const { t } = useI18n();
 const quasar = useQuasar();
@@ -51,8 +53,8 @@ const loading = ref(false);
 const disabled = ref(false);
 
 const typeIcons = {
-  new_comment: "sym_r_chat_bubble",
-  followed: "sym_r_person_add"
+  new_comment: "chat_bubble",
+  followed: "person_add"
 };
 
 function setCache(key: string, value: CacheType[string]) {

@@ -17,11 +17,11 @@
       </div>
       <q-space />
       <div class="action-container circle">
-        <q-btn unelevated icon="sym_r_more_horiz" class="more button circle" size="sm" :disable="disable">
+        <my-button icon="more_horiz" class="more button circle" size="sm" :disable="disable">
           <q-menu class="comment-more-menu" self="top right">
             <more-menu :comment="commentRef" @action="action" />
           </q-menu>
-        </q-btn>
+        </my-button>
       </div>
     </div>
   </div>
@@ -31,6 +31,7 @@
 import { defineAsyncComponent, ref, toRef } from "vue";
 import { formatStringForHtml } from "src/utils/format";
 import TextParts from "../misc/TextParts.vue";
+import MyButton from "../my/MyButton.vue";
 import { i18n } from "src/boot/i18n";
 import { useQuasar } from "quasar";
 import { deleteComment } from "src/api/posts";

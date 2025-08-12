@@ -18,11 +18,11 @@ export default defineBoot(({ app }) => {
     const newValue = {
       "ai-generated": {
         name: t("tag.ai.name"),
-        icon: "sym_r_robot_2"
+        icon: "robot_2"
       },
       "is-nsfw": {
         name: t("tag.nsfw.name"),
-        icon: "sym_r_explicit"
+        icon: "explicit"
       }
     };
 

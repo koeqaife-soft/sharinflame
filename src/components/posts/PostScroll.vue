@@ -30,7 +30,7 @@ import { ref, watch, defineAsyncComponent, type DefineComponent } from "vue";
 import { getPosts, getPostsBatch, type KeyOfGetPostsTypes, viewPosts } from "src/api/posts";
 import { type AxiosError, isAxiosError } from "axios";
 import { useI18n } from "vue-i18n";
-import MyVirtualScroll from "src/components/misc/MyVirtualScroll.vue";
+import MyVirtualScroll from "src/components/my/MyVirtualScroll.vue";
 
 const PostComponent = defineAsyncComponent(() => import("./PostComponent.vue"));
 
@@ -169,7 +169,7 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
         actions: [
           {
             name: "reload",
-            icon: "sym_r_refresh",
+            icon: "refresh",
             func: () => reloadPosts()
           }
         ]

@@ -30,24 +30,22 @@
       </q-carousel>
     </div>
     <div class="tags tags-section card-section" v-if="!postRef.is_system && postRef.tags?.length > 0">
-      <q-chip
+      <my-chip
         v-for="(tag, index) in postRef.tags"
         :key="index"
         class="tag"
-        :icon="$tagsInfo.value[tag]?.icon || 'sym_r_tag'"
+        :icon="$tagsInfo.value[tag]?.icon || 'tag'"
         :disable="disable"
-      >
-        {{ $tagsInfo.value[tag]?.name || tag }}
-      </q-chip>
+        :label="$tagsInfo.value[tag]?.name || tag"
+      />
     </div>
     <div class="actions card-section" :class="{ 'can-animate': canAnimate }" v-if="!postRef.is_system">
       <div class="reaction-buttons">
         <reaction-buttons :object="postRef" :before-action="allowAnimate" :is-comment="false" :disable="disable" />
       </div>
       <div class="action-container">
-        <q-btn
-          unelevated
-          icon="sym_r_chat_bubble"
+        <my-button
+          icon="chat_bubble"
           :label="formatNumber(postRef.comments_count)"
           class="comments round button"
           size="sm"
@@ -57,18 +55,16 @@
       </div>
       <q-space />
       <div class="action-container circle">
-        <q-btn unelevated icon="sym_r_more_horiz" class="more button circle" size="sm" :disable="disable">
+        <my-button icon="more_horiz" class="more button circle" size="sm" :disable="disable">
           <q-menu class="post-more-menu" self="top right">
             <more-menu :post="postRef" @action="action" />
           </q-menu>
-        </q-btn>
+        </my-button>
       </div>
     </div>
     <div class="actions card-section" v-else-if="postRef.actions">
       <div class="action-container" v-for="action in postRef.actions" :key="action.name">
-        <q-btn
-          unelevated
-          no-caps
+        <my-button
           :icon="action.icon"
           :label="$t(action.name)"
           class="round button"
@@ -88,6 +84,8 @@ import { formatNumber, formatStringForHtml } from "src/utils/format";
 import { useQuasar } from "quasar";
 import { i18n } from "src/boot/i18n";
 import TextParts from "../misc/TextParts.vue";
+import MyChip from "../my/MyChip.vue";
+import MyButton from "../my/MyButton.vue";
 
 const ReactionButtons = defineAsyncComponent(() => import("./ReactionButtons.vue"));
 const OpenUserDialog = defineAsyncComponent(() => import("../profile/OpenUserDialog.vue"));

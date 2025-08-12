@@ -1,31 +1,27 @@
 <template>
   <q-list style="min-width: 230px">
     <template v-for="(option, index) in options" :key="index">
-      <q-item
+      <my-item
         v-if="option.visible && option.type === 'item'"
-        clickable
         v-close-popup
+        :clickable="true"
         @click="emit('action', option.key!, option.data)"
       >
-        <q-item-section>
-          <div class="horizontal-container">
-            <q-icon :name="option.icon" class="icon" />
-            <div class="text">{{ $t(`comment_options.${option.key}`) }}</div>
-          </div>
-        </q-item-section>
-      </q-item>
+        <div class="horizontal-container">
+          <my-icon :icon="option.icon!" class="icon" />
+          <div class="text">{{ $t(`comment_options.${option.key}`) }}</div>
+        </div>
+      </my-item>
       <q-separator v-else-if="option.visible && option.type === 'separator'" class="separator" />
-      <q-item v-if="option.visible && option.type === 'label'">
-        <q-item-section>
-          <div class="horizontal-container">
-            <q-icon :name="option.icon" class="icon" />
-            <div class="container label-container">
-              <div class="text">{{ $t(`comment_options.${option.key}`) }}</div>
-              <div class="description">{{ option.description }}</div>
-            </div>
+      <my-item v-else-if="option.visible && option.type === 'label'">
+        <div class="horizontal-container">
+          <my-icon :icon="option.icon!" class="icon" />
+          <div class="container label-container">
+            <div class="text">{{ $t(`comment_options.${option.key}`) }}</div>
+            <div class="description">{{ option.description }}</div>
           </div>
-        </q-item-section>
-      </q-item>
+        </div>
+      </my-item>
     </template>
   </q-list>
 </template>
@@ -35,6 +31,8 @@ import { useProfileStore } from "src/stores/profile-store";
 import { computed } from "vue";
 import { formatUnixTime } from "src/utils/format";
 import { useI18n } from "vue-i18n";
+import MyIcon from "src/components/my/MyIcon.vue";
+import MyItem from "src/components/my/MyItem.vue";
 
 const i18n = useI18n();
 const profileStore = useProfileStore();
@@ -49,13 +47,13 @@ const props = defineProps<{
 const options = computed(() => [
   {
     key: "delete",
-    icon: "sym_r_delete_forever",
+    icon: "delete_forever",
     visible: props.comment.user_id == profileStore.profile?.user_id,
     type: "item"
   },
   {
     key: "report",
-    icon: "sym_r_report",
+    icon: "report",
     visible: true,
     type: "item"
   },
@@ -65,7 +63,7 @@ const options = computed(() => [
   },
   {
     key: "copy_id",
-    icon: "sym_r_content_copy",
+    icon: "content_copy",
     visible: true,
     type: "item",
     data: props.comment.comment_id
@@ -74,7 +72,7 @@ const options = computed(() => [
     type: "label",
     key: "created_at",
     visible: true,
-    icon: "sym_r_access_time",
+    icon: "access_time",
     description: formatUnixTime(props.comment.created_at, i18n.locale.value)
   }
 ]);

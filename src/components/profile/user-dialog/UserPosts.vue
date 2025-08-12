@@ -1,7 +1,7 @@
 <template>
   <div class="card q-mb-sm dialog-section" style="z-index: 2">
     <div class="horizontal-container">
-      <q-icon name="sym_r_sort" class="icon" />
+      <my-icon icon="sort" class="icon" />
       <q-select
         class="select"
         v-model="sort"
@@ -14,8 +14,8 @@
       />
       <q-space />
       <div class="horizontal-container" style="gap: 0">
-        <q-btn flat round :icon="`sym_r_${expand ? 'collapse_content' : 'expand_content'}`" @click="toggleExpand" />
-        <q-btn flat round icon="sym_r_refresh" @click="reloadPosts" />
+        <my-btn :icon="expand ? 'collapse_content' : 'expand_content'" @click="toggleExpand" />
+        <my-button icon="refresh" @click="reloadPosts" />
       </div>
     </div>
   </div>
@@ -43,7 +43,9 @@
 <script setup lang="ts">
 import { getUserPosts } from "src/api/posts";
 import { defineAsyncComponent, type DefineComponent, ref } from "vue";
-import MyVirtualScroll from "src/components/misc/MyVirtualScroll.vue";
+import MyVirtualScroll from "src/components/my/MyVirtualScroll.vue";
+import MyIcon from "src/components/my/MyIcon.vue";
+import MyButton from "src/components/my/MyButton.vue";
 
 const PostComponent = defineAsyncComponent(() => import("../../posts/PostComponent.vue"));
 

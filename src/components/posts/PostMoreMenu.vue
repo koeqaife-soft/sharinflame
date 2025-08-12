@@ -1,20 +1,18 @@
 <template>
   <q-list style="min-width: 230px">
     <template v-for="(option, index) in options" :key="index">
-      <q-item
+      <my-item
         v-if="option.visible && option.type === 'item'"
-        :disable="option.disable"
-        clickable
+        :disable="option.disable ?? false"
+        :clickable="true"
         v-close-popup
         @click="emit('action', option.key!, option.data)"
       >
-        <q-item-section>
-          <div class="horizontal-container">
-            <q-icon :name="option.icon" class="icon" />
-            <div class="text">{{ $t(`post_options.${option.key}`) }}</div>
-          </div>
-        </q-item-section>
-      </q-item>
+        <div class="horizontal-container">
+          <my-icon :icon="option.icon!" class="icon" />
+          <div class="text">{{ $t(`post_options.${option.key}`) }}</div>
+        </div>
+      </my-item>
       <q-separator v-else-if="option.visible && option.type === 'separator'" class="separator" />
     </template>
   </q-list>
@@ -23,6 +21,8 @@
 <script setup lang="ts">
 import { useProfileStore } from "src/stores/profile-store";
 import { computed } from "vue";
+import MyItem from "src/components/my/MyItem.vue";
+import MyIcon from "src/components/my/MyIcon.vue";
 
 const profileStore = useProfileStore();
 
@@ -36,20 +36,20 @@ const props = defineProps<{
 const options = computed(() => [
   {
     key: "edit",
-    icon: "sym_r_edit",
+    icon: "edit",
     visible: props.post.user_id == profileStore.profile?.user_id,
     disable: !(Date.now() / 1000 - props.post.created_at < 86400),
     type: "item"
   },
   {
     key: "delete",
-    icon: "sym_r_delete_forever",
+    icon: "delete_forever",
     visible: props.post.user_id == profileStore.profile?.user_id,
     type: "item"
   },
   {
     key: "report",
-    icon: "sym_r_report",
+    icon: "report",
     visible: true,
     type: "item"
   },
@@ -59,7 +59,7 @@ const options = computed(() => [
   },
   {
     key: "copy_id",
-    icon: "sym_r_content_copy",
+    icon: "content_copy",
     visible: true,
     type: "item",
     data: props.post.post_id

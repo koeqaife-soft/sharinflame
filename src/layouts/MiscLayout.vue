@@ -11,11 +11,8 @@
           class="toolbar-default-actions align-center full-height"
           v-if="showDarkModeToggle || $q.platform.is.electron"
         >
-          <q-btn
-            flat
-            dense
-            round
-            icon="sym_r_dark_mode"
+          <my-button
+            icon="dark_mode"
             aria-label="DarkMode"
             @click="$q.dark.toggle()"
             class="webkit-no-drag"
@@ -36,6 +33,7 @@
 
 <script setup lang="ts">
 import LogoComponent from "src/components/misc/LogoComponent.vue";
+import MyButton from "src/components/my/MyButton.vue";
 import { defineAsyncComponent } from "vue";
 
 const WindowActions = defineAsyncComponent(() => import("src/components/WindowActions.vue"));

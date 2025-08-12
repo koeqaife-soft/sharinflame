@@ -10,11 +10,11 @@
     <div class="dialog-content">
       <div class="dialog-header horizontal-container">
         <div class="horizontal-container label-container">
-          <q-icon name="sym_r_notifications" class="header-icon" />
+          <my-icon icon="notifications" class="header-icon" />
           <div class="label">{{ $t("notifications.label") }}</div>
         </div>
         <q-space />
-        <q-btn flat round icon="sym_r_close" @click="dialogRef?.hide()" />
+        <my-button icon="close" @click="dialogRef?.hide()" />
       </div>
       <div class="dialog-content-inner">
         <q-scroll-area class="scroll-area fix-scroll-area full-height" :visible="false">
@@ -49,7 +49,9 @@
 import { useDialogPluginComponent } from "quasar";
 import { defineAsyncComponent, type DefineComponent, onMounted, ref, watch } from "vue";
 import type { CacheType } from "src/components/notifications/NotificationCard.vue";
-import MyVirtualScroll from "../misc/MyVirtualScroll.vue";
+import MyVirtualScroll from "../my/MyVirtualScroll.vue";
+import MyIcon from "src/components/my/MyIcon.vue";
+import MyButton from "src/components/my/MyButton.vue";
 import { getNotifications } from "src/api/users";
 import { truncate } from "src/utils/format";
 import { useMainStore } from "src/stores/main-store";

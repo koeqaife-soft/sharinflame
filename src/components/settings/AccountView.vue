@@ -2,7 +2,7 @@
   <q-scroll-area class="scroll-area fix-scroll-area full-height account-view" :visible="false" v-if="loaded">
     <div class="card container profile-container">
       <div class="horizontal-container">
-        <q-icon name="sym_r_account_circle" class="label-icon" :style="{ transform: 'translateY(-2px)' }" />
+        <my-icon icon="account_circle" class="label-icon" :style="{ transform: 'translateY(-2px)' }" />
         <div class="label">{{ $t("profile") }}</div>
       </div>
 
@@ -31,17 +31,15 @@
           <div class="label">{{ $t("languages") }}</div>
         </div>
         <div class="chips">
-          <q-chip
+          <my-chip
             v-for="(language, index) in languages"
             :key="index"
-            removable
-            icon-remove="sym_r_close"
+            :removable="true"
             @remove="removeLanguage(index)"
             class="language"
-          >
-            {{ language }}
-          </q-chip>
-          <q-chip clickable icon="sym_r_add" class="language" :disable="languages.length >= MAX_LANGUAGES">
+            :label="language"
+          />
+          <my-chip clickable icon="add" class="language" :disable="languages.length >= MAX_LANGUAGES">
             {{ $t("add_language") }}
             <q-menu class="menu-card enter-language-menu field-menu" v-if="languages.length < MAX_LANGUAGES">
               <q-input
@@ -53,95 +51,61 @@
                 maxlength="16"
               >
                 <template v-slot:append>
-                  <q-btn
-                    round
-                    flat
-                    icon="sym_r_add"
-                    class="add-button"
-                    @click="addLanguage"
-                    :disable="addLangValue.length == 0"
-                  />
+                  <my-button icon="add" class="add-button" @click="addLanguage" :disable="addLangValue.length == 0" />
                 </template>
               </q-input>
             </q-menu>
-          </q-chip>
+          </my-chip>
         </div>
       </div>
 
       <div class="card change-avatar">
         <div class="horizontal-container">
-          <q-icon name="sym_r_account_box" class="label-icon" />
+          <my-icon icon="account_box" class="label-icon" />
           <div class="label">{{ $t("avatar") }}</div>
         </div>
         <div class="horizontal-container">
-          <q-btn
-            unelevated
-            no-caps
-            class="preview-button default-button"
-            :label="$t('change_avatar')"
-            :disable="true"
-          />
-          <q-btn
-            unelevated
-            no-caps
-            class="preview-button outlined-button"
-            :label="$t('remove_avatar')"
-            :disable="true"
-          />
+          <my-button type="primary" :label="$t('change_avatar')" :disable="true" />
+          <my-button type="outlined" :label="$t('remove_avatar')" :disable="true" />
         </div>
         <div style="color: var(--outline)">Not Implemented Yet</div>
       </div>
 
       <div class="card change-banner">
         <div class="horizontal-container">
-          <q-icon name="sym_r_image" class="label-icon" />
+          <my-icon icon="image" class="label-icon" />
           <div class="label">{{ $t("banner") }}</div>
         </div>
         <div class="horizontal-container">
-          <q-btn
-            unelevated
-            no-caps
-            class="preview-button default-button"
-            :label="$t('change_banner')"
-            :disable="true"
-          />
-          <q-btn
-            unelevated
-            no-caps
-            class="preview-button outlined-button"
-            :label="$t('remove_banner')"
-            :disable="true"
-          />
+          <my-button type="primary" :label="$t('change_banner')" :disable="true" />
+          <my-button type="outlined" :label="$t('remove_banner')" :disable="true" />
         </div>
         <div style="color: var(--outline)">Not Implemented Yet</div>
       </div>
 
       <div class="horizontal-container button-container">
-        <q-btn
-          unelevated
-          no-caps
-          class="preview-button outlined-button"
+        <my-button
+          type="outlined"
+          class="preview-button"
           :label="$t('preview')"
           @click="previewProfile"
-          icon-right="sym_r_visibility"
+          icon-right="visibility"
         />
-        <q-btn
-          unelevated
-          no-caps
-          class="cancel-button outlined-button animate"
+        <my-button
+          type="outlined"
+          class="cancel-button"
           :label="$t('cancel')"
           @click="onLoad"
           :disable="Object.keys(updateValues).length === 0"
-          icon-right="sym_r_cancel"
+          icon-right="cancel"
         />
-        <q-btn
-          unelevated
-          no-caps
-          class="save-button default-button animate"
+        <my-button
+          type="primary"
+          class="save-button"
           :label="$t('apply')"
           @click="updateProfile"
           :disable="Object.keys(updateValues).length === 0"
-          icon-right="sym_r_check"
+          icon-right="check"
         />
       </div>
     </div>
@@ -155,6 +119,9 @@ import { ref, computed, defineAsyncComponent, onMounted } from "vue";
 import { useProfileStore } from "src/stores/profile-store";
 import { type QInput, useQuasar } from "quasar";
 import { useI18n } from "vue-i18n";
+import MyButton from "src/components/my/MyButton.vue";
+import MyIcon from "src/components/my/MyIcon.vue";
+import MyChip from "src/components/my/MyChip.vue";
 
 const UserDialog = defineAsyncComponent(() => import("src/components/profile/UserDialog.vue"));
 

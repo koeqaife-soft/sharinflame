@@ -7,13 +7,13 @@
       <div class="display-name">{{ userRef.display_name || userRef.username }}</div>
       <div class="username">@{{ userRef.username }}</div>
     </div>
-    <q-btn
+    <my-button
       :label="userRef.followed ? $t('unfollow') : $t('follow')"
       no-caps
       unelevated
-      icon="sym_r_add"
+      icon="add"
       class="follow-button"
-      :class="userRef.followed ? 'outlined-button' : 'default-button'"
+      :type="userRef.followed ? 'outlined' : 'primary'"
       @click="followButton"
     />
   </div>
@@ -22,6 +22,7 @@
 import { defineAsyncComponent, ref } from "vue";
 import { follow, unfollow } from "src/api/users";
 import { useQuasar } from "quasar";
+import MyButton from "../my/MyButton.vue";
 
 const UserDialog = defineAsyncComponent(() => import("./UserDialog.vue"));
 const OpenUserDialog = defineAsyncComponent(() => import("./OpenUserDialog.vue"));

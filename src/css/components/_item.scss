@@ -1,0 +1,53 @@
+.my-item {
+  --_after-bg-color: var(--on-background-variant);
+  all: unset;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  padding: 0px 12px;
+  min-height: 45px;
+  width: 100%;
+
+  .my-icon {
+    @include iconSize(24);
+    &.icon-right {
+      margin-left: 8px;
+    }
+    &.icon-left {
+      margin-right: 8px;
+    }
+  }
+
+  &.clickable:not(.disabled) {
+    cursor: pointer;
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0;
+      transition:
+        background-color 0.2s ease-in,
+        opacity 0.2s ease-in;
+    }
+
+    &:hover,
+    &:focus-visible {
+      &::after {
+        opacity: 0.08;
+        background-color: var(--_after-bg-color);
+      }
+    }
+
+    &:active {
+      &::after {
+        opacity: 0.12;
+        background-color: var(--_after-bg-color);
+      }
+    }
+  }
+}

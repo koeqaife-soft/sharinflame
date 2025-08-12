@@ -4,7 +4,7 @@
       <template v-for="(section, index) in sections">
         <div v-if="section.visible" :key="index" :class="section.class" :style="animationDelay(section.key)">
           <div class="header">
-            <q-icon :name="section.icon" :style="section.iconStyle" />
+            <my-icon :icon="section.icon" :style="section.iconStyle" />
             <div>{{ $t(section.titleKey) }}</div>
           </div>
           <q-separator class="separator q-mb-xs q-mt-xs" />
@@ -16,9 +16,7 @@
           </template>
           <template v-else-if="section.key === 'languages'">
             <div class="languages-container">
-              <q-chip v-for="(language, langIndex) in props.user.languages" :key="langIndex">
-                {{ language }}
-              </q-chip>
+              <my-chip v-for="(language, langIndex) in props.user.languages" :key="langIndex" :label="language" />
             </div>
           </template>
           <template v-else-if="section.key === 'badges'">
@@ -29,7 +27,7 @@
                 :style="animationDelayComponent(badgeIndex)"
                 :key="badgeIndex"
               >
-                <q-icon :name="badgeIcons[badge as BadgesKeys]" class="icon" />
+                <my-icon :icon="badgeIcons[badge as BadgesKeys]" class="icon" />
                 <div class="text-container">
                   <div class="label">{{ $t(getLabelKey(badge)) }}</div>
                   <div class="description">{{ $t(getDescriptionKey(badge)) }}</div>
@@ -46,6 +44,8 @@
 <script setup lang="ts">
 import { formatUnixTime, formatStringForHtml } from "src/utils/format";
 import { computed } from "vue";
+import MyIcon from "src/components/my/MyIcon.vue";
+import MyChip from "src/components/my/MyChip.vue";
 
 const props = defineProps<{
   user: User;
@@ -56,7 +56,7 @@ const sections = computed(() => [
   {
     key: "bio",
     class: "card bio animation-fade-in-down",
-    icon: "sym_r_person",
+    icon: "person",
     titleKey: "about_me",
     visible: !!props.user.bio,
     iconStyle: undefined
@@ -64,7 +64,7 @@ const sections = computed(() => [
   {
     key: "badges",
     class: "card badges animation-fade-in-down",
-    icon: "sym_r_award_star",
+    icon: "award_star",
     titleKey: "badges_title",
     visible: !!props.user.badges?.length,
     iconStyle: undefined
@@ -72,7 +72,7 @@ const sections = computed(() => [
   {
     key: "created_at",
     class: "card created-at animation-fade-in-down",
-    icon: "sym_r_event",
+    icon: "event",
     titleKey: "created_at",
     visible: true,
     iconStyle: { transform: "translateY(-1.55px)" }
@@ -80,7 +80,7 @@ const sections = computed(() => [
   {
     key: "languages",
     class: "card languages animation-fade-in-down",
-    icon: "sym_r_language",
+    icon: "language",
     titleKey: "languages",
     visible: !!props.user.languages?.length,
     iconStyle: undefined
@@ -94,9 +94,9 @@ const badgesKeys = {
 } as const;
 
 const badgeIcons = {
-  0: "sym_r_crown",
-  1: "sym_r_experiment",
-  2: "sym_r_trophy"
+  0: "crown",
+  1: "experiment",
+  2: "trophy"
 } as const;
 
 type BadgesKeys = keyof typeof badgesKeys;

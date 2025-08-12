@@ -1,16 +1,16 @@
 <template>
   <div class="container full-height">
     <div class="horizontal-container">
-      <q-btn
-        class="card-button category-button full-width"
+      <my-button
+        type="card"
+        :is-category="true"
+        class="full-width"
         :class="{ selected: selected == category }"
         @click="select(category)"
         v-for="category in categories"
         :key="category"
         :label="$t(category)"
         :icon="icons[category]"
-        no-caps
-        unelevated
       />
     </div>
     <keep-alive>
@@ -61,7 +61,8 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent, type DefineComponent, ref } from "vue";
-import MyVirtualScroll from "src/components/misc/MyVirtualScroll.vue";
+import MyVirtualScroll from "src/components/my/MyVirtualScroll.vue";
+import MyButton from "src/components/my/MyButton.vue";
 import { getFavorites, getReactions } from "src/api/users";
 
 const PostComponent = defineAsyncComponent(() => import("../posts/PostComponent.vue"));
@@ -77,8 +78,8 @@ const categories = ["posts", "comments"] as const;
 type Category = (typeof categories)[number];
 
 const icons = {
-  posts: "sym_r_article",
-  comments: "sym_r_chat_bubble"
+  posts: "article",
+  comments: "chat_bubble"
 } as const;
 
 const selected = ref<Category>("posts");

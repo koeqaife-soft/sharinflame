@@ -3,7 +3,7 @@
     <div class="container">
       <div class="card container">
         <div class="horizontal-container">
-          <q-icon class="label-icon" name="sym_r_dark_mode" />
+          <my-icon class="label-icon" icon="dark_mode" />
           <div class="label">{{ $t("theme") }}</div>
         </div>
         <div class="theme-container horizontal-container">
@@ -13,7 +13,7 @@
       </div>
       <div class="card container">
         <div class="horizontal-container">
-          <q-icon class="label-icon" name="sym_r_palette" />
+          <my-icon class="label-icon" icon="palette" />
           <div class="label">{{ $t("color") }}</div>
         </div>
         <div class="slider-container" :style="{ '--current-color': currentColor }">
@@ -27,10 +27,10 @@
           />
         </div>
         <div class="horizontal-container colors-container">
-          <q-btn
+          <my-button
             v-for="(color, index) in predefinedColorsHex"
             :key="index"
-            unelevated
+            type="card"
             :style="{ background: color }"
             class="color-button"
             @click="onButtonColor(index)"
@@ -39,7 +39,7 @@
       </div>
       <toggle-card
         label-key="star_background_setting"
-        icon="sym_r_stars"
+        icon="stars"
         v-if="$q.platform.is.desktop"
         v-model="starBackground"
       />
@@ -48,7 +48,9 @@
 </template>
 <script setup lang="ts">
 import { useQuasar } from "quasar";
-import MySegmentBtn from "src/components/misc/MySegmentBtn.vue";
+import MySegmentBtn from "src/components/my/MySegmentBtn.vue";
+import MyIcon from "src/components/my/MyIcon.vue";
+import MyButton from "src/components/my/MyButton.vue";
 import ToggleCard from "src/components/misc/ToggleCard.vue";
 import { useMainStore } from "src/stores/main-store";
 import { generateHueSteps, generateOneColor } from "src/utils/colors";
@@ -60,34 +62,34 @@ const mainStore = useMainStore();
 const modes = ref([
   {
     labelKey: "dark",
-    iconLeft: "sym_r_dark_mode",
+    iconLeft: "dark_mode",
     key: "dark"
   },
   {
     labelKey: "light",
-    iconLeft: "sym_r_light_mode",
+    iconLeft: "light_mode",
     key: "light"
   },
   {
     labelKey: "auto",
-    iconLeft: "sym_r_sync",
+    iconLeft: "sync",
     key: "auto"
   }
 ]);
 const themes = ref([
   {
     labelKey: "default",
-    iconLeft: "sym_r_star",
+    iconLeft: "star",
     key: "default"
   },
   {
     labelKey: "mono",
-    iconLeft: "sym_r_filter_b_and_w",
+    iconLeft: "filter_b_and_w",
     key: "monochrome"
   },
   {
     labelKey: "contrast",
-    iconLeft: "sym_r_contrast",
+    iconLeft: "contrast",
     key: "contrast"
   }
 ]);

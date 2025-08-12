@@ -1,6 +1,6 @@
 // Profile menu
 .profile-menu {
-  .q-icon {
+  .my-icon {
     @include iconSize(24);
   }
 }
@@ -24,6 +24,9 @@
       right: 0;
       margin-right: 16px;
     }
+    .my-switch {
+      align-self: center;
+    }
   }
 
   .open-profile {
@@ -44,7 +47,7 @@
   }
 }
 
-// It's obious that this is a menu arrow
+// It's obvious that this is a menu arrow
 .menu-arrow {
   &.active {
     animation: rotateFrom180To0 0.2s ease-out forwards;
@@ -98,6 +101,9 @@
   &:has(.q-field--focused) {
     outline-color: var(--primary);
   }
+  .add-button .my-icon {
+    @include iconSize(24);
+  }
 }
 
 // Row with switch
@@ -123,7 +129,7 @@
     height: 24px;
     width: 24px;
   }
-  .q-icon,
+  .my-icon,
   .icon {
     @include iconSize(24);
   }

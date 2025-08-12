@@ -52,6 +52,7 @@ body {
 
   span,
   div,
+  .my-icon,
   .icon {
     color: var(--on-toolbar);
   }
@@ -64,7 +65,7 @@ body {
     }
   }
 
-  .q-icon {
+  .my-button .my-icon {
     @include iconSize(24);
   }
 
@@ -113,7 +114,7 @@ body {
         @include iconSize(20);
         font-weight: 500;
       }
-      .q-btn .q-icon {
+      .my-button .my-icon {
         @include iconSize(20);
       }
       .label {
@@ -125,7 +126,7 @@ body {
   }
 
   .profile-menu {
-    min-height: 281px;
+    min-height: 275px;
   }
 
   .categories,
@@ -187,7 +188,7 @@ body {
       min-height: 36px;
       max-height: 36px;
       max-width: 36px;
-      .q-icon {
+      .my-icon {
         @include iconSize(22);
         color: var(--on-card);
       }
@@ -316,7 +317,7 @@ body {
   }
 }
 
-.q-layout:has(.startup-page) .q-header .q-btn {
+.q-layout:has(.startup-page) .q-header .my-button {
   opacity: 0;
   animation: fadeIn 0.25s ease-out forwards;
   animation-delay: 0.5s;

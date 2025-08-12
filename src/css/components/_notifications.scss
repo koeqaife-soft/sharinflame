@@ -67,19 +67,12 @@
   border-radius: 8px;
   overflow: hidden;
   background-color: var(--card-high);
+  padding: 8px 12px;
 
-  @media (hover: hover) {
-    &:hover,
-    &:focus-visible {
-      background-color: var(--card-high-hover);
-    }
-  }
-  @media (hover: none) {
-    &:active,
-    &:focus-visible {
-      background-color: var(--card-high-hover);
-    }
-  }
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
 
   .image-container {
     @include avatarContainerSkeleton();
@@ -123,38 +116,9 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+    text-align: left;
   }
 
-  &.loading {
-    --color-from: var(--card-high-hover);
-    --color-to: var(--card-high);
-    animation: bgColorPulse 1.3s ease infinite;
-    animation-delay: 200ms;
-    cursor: progress;
-    &::before {
-      content: "";
-      position: absolute;
-      opacity: 0;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: 8px;
-      padding: 2px;
-      background: conic-gradient(from var(--angle, 0deg), var(--primary) 0deg 90deg, transparent 90deg 180deg);
-      -webkit-mask:
-        linear-gradient(#fff 0 0) content-box,
-        linear-gradient(#fff 0 0);
-      mask:
-        linear-gradient(#fff 0 0) content-box,
-        linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      animation:
-        rotate 4s linear infinite,
-        fadeIn 0.5s ease-in forwards 200ms;
-    }
-  }
   &.disabled {
     cursor: not-allowed;
     background-color: transparent;
@@ -170,7 +134,7 @@
     color: var(--on-background-variant);
   }
   .notifications-container {
-    height: 332px;
+    height: 330px;
   }
 }
 
@@ -211,6 +175,7 @@
   .notification {
     @include elevation(0);
     background-color: var(--card);
+
     .title,
     .message {
       word-wrap: break-word;
@@ -219,18 +184,6 @@
       white-space: unset;
       text-overflow: unset;
       overflow: unset;
-    }
-    @media (hover: hover) {
-      &:hover,
-      &:focus-visible {
-        background-color: var(--card-high-hover);
-      }
-    }
-    @media (hover: none) {
-      &:active,
-      &:focus-visible {
-        background-color: var(--card-high-hover);
-      }
     }
     &.loading {
       --color-from: var(--card-hover);

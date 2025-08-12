@@ -10,26 +10,25 @@
     <div class="dialog-content">
       <div class="dialog-header horizontal-container">
         <div v-show="!isSmallScreen || current == 0" class="main-page-label horizontal-container label-container">
-          <q-icon name="sym_r_settings" class="header-icon" />
+          <my-icon icon="settings" class="header-icon" />
           <div class="label">{{ $t("settings") }}</div>
         </div>
         <div v-show="isSmallScreen && current == 1" class="inner-page-label horizontal-container label-container">
-          <q-btn flat round icon="sym_r_arrow_back" @click="() => (current = 0)" />
+          <my-button icon="arrow_back" @click="() => (current = 0)" />
           <div class="label">{{ $t(getItemByKey(selected).labelKey) }}</div>
         </div>
         <q-space />
-        <q-btn flat round icon="sym_r_close" @click="dialogRef?.hide()" />
+        <my-button icon="close" @click="dialogRef?.hide()" />
       </div>
       <div class="dialog-content-inner horizontal-container">
         <transition name="scale" :css="isSmallScreen">
           <div class="sidebar container" v-show="!isSmallScreen || current == 0">
             <template v-for="(item, index) in items" :key="index">
-              <q-btn
+              <my-button
+                type="card"
+                :is-category="true"
                 :label="$t(item.labelKey)"
                 :icon="item.icon"
-                no-caps
-                unelevated
-                class="card-button category-button"
                 :class="{ selected: item.key == selected && !isSmallScreen }"
                 @click="setSelected(item.key)"
               />
@@ -52,6 +51,8 @@
 import { useDialogPluginComponent } from "quasar";
 import { useMainStore } from "src/stores/main-store";
 import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from "vue";
+import MyButton from "src/components/my/MyButton.vue";
+import MyIcon from "src/components/my/MyIcon.vue";
 
 const props = defineProps<{
   open?: views[number];
@@ -76,12 +77,12 @@ const items = [
   {
     labelKey: "my_account",
     key: "my_account",
-    icon: "sym_r_person"
+    icon: "person"
   },
   {
     labelKey: "appearance",
     key: "appearance",
-    icon: "sym_r_palette"
+    icon: "palette"
   }
 ] as const;
 

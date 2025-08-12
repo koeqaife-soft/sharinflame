@@ -1,12 +1,12 @@
 <template>
   <div class="segmented-button">
-    <q-btn
-      unelevated
-      no-caps
+    <my-button
       v-for="item in items"
       :key="item.key"
       :label="item.label ?? $t(item.labelKey)"
-      class="button category-button"
+      class="button"
+      type="card"
+      :is-category="true"
       :class="{ selected: item.key === model }"
       :icon="item.iconLeft"
       :icon-right="item.iconRight"
@@ -15,6 +15,8 @@
   </div>
 </template>
 <script setup lang="ts">
+import MyButton from "../my/MyButton.vue";
+
 interface ItemWithLabel {
   label: string;
   labelKey?: never;

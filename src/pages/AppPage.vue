@@ -2,20 +2,19 @@
   <main-layout :in-router="false" headers-class="index-10" class="full-height">
     <particles-background v-if="mainStore.getSetting('starBackground')" />
     <template #toolbar-actions v-if="hideRightColumn || hideNotifications">
-      <q-btn dense flat round icon="sym_r_notifications" class="webkit-no-drag">
+      <my-button icon="notifications" class="webkit-no-drag">
         <q-menu class="menu-card notifications-menu" v-model="notificationsMenuOpened">
           <notifications-list @on-loaded="notificationsMenuOpened = false" />
-          <q-btn
-            unelevated
-            no-caps
-            icon="sym_r_expand_content"
+          <my-button
+            icon="expand_content"
+            type="primary"
             :label="$t('show_all')"
-            class="default-button full-width q-mt-sm"
+            class="full-width q-mt-sm"
             @click="openNotifications"
             v-close-popup
           />
         </q-menu>
-      </q-btn>
+      </my-button>
       <open-profile-menu v-if="hideRightColumn" />
     </template>
     <q-page class="app-page">
@@ -26,20 +25,16 @@
       </div>
       <div class="center-column container" style="gap: 0px">
         <div class="horizontal-container categories-label card" :class="{ scrolled }" v-if="hideLeftColumn">
-          <q-btn
-            :label="currentCategory?.label"
-            :icon="currentCategory?.icon"
-            no-caps
-            unelevated
-            class="categories-button"
-          >
+          <my-button :label="currentCategory?.label" :icon="currentCategory?.icon" :is-category="true" type="card">
             <q-menu class="categories-menu menu-card" v-model="categoriesMenuOpened">
               <category-buttons :categories-list="categoriesList" :current-type="currentType" />
             </q-menu>
-            <q-icon name="sym_r_arrow_drop_up" :class="['menu-arrow', { active: categoriesMenuOpened }]" />
-          </q-btn>
+            <template #append>
+              <my-icon icon="arrow_drop_up" :class="['menu-arrow', { active: categoriesMenuOpened }]" />
+            </template>
+          </my-button>
           <q-space />
-          <q-btn unelevated round icon="sym_r_refresh" class="reload-button" @click="reloadKey = Date.now()" />
+          <my-button icon="refresh" class="reload-button" @click="reloadKey = Date.now()" />
         </div>
         <div class="full-height">
           <transition name="post-scroll">
@@ -54,10 +49,10 @@
           </div>
           <div class="card notifications-list container" v-if="!hideNotifications">
             <div class="label-container horizontal-container card" @click="openNotifications">
-              <q-icon name="sym_r_notifications" class="icon" />
+              <my-icon icon="notifications" class="icon" />
               <div class="label">{{ $t("notifications.label") }}</div>
               <q-space />
-              <q-btn flat round icon="sym_r_expand_content" size="sm" />
+              <my-button icon="expand_content" />
             </div>
             <notifications-list />
           </div>
@@ -75,6 +70,8 @@ import type { ButtonProps } from "src/components/misc/CategoryButtons.vue";
 import { useMainStore } from "src/stores/main-store";
 import PostScroll from "src/components/posts/PostScroll.vue";
 import MainLayout from "src/layouts/MainLayout.vue";
+import MyButton from "src/components/my/MyButton.vue";
+import MyIcon from "src/components/my/MyIcon.vue";
 import { useQuasar } from "quasar";
 
 const CategoryButtons = defineAsyncComponent(() => import("src/components/misc/CategoryButtons.vue"));
@@ -118,19 +115,19 @@ function onScroll(info: QScrollObserverDetails) {
 
 const categoriesList = computed<ButtonProps[]>(() => [
   {
-    icon: "sym_r_whatshot",
+    icon: "whatshot",
     label: t("categories.popular"),
     click: () => changeType("popular"),
     type: "popular"
   },
   {
-    icon: "sym_r_update",
+    icon: "update",
     label: t("categories.new"),
     click: () => changeType("new"),
     type: "new"
   },
   {
-    icon: "sym_r_group",
+    icon: "group",
     label: t("categories.following"),
     click: () => changeType("following"),
     type: "following"

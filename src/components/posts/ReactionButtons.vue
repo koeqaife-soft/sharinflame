@@ -1,31 +1,25 @@
 <template>
   <div class="action-container">
-    <q-btn
-      unelevated
-      icon="sym_r_thumb_up"
+    <my-button
+      icon="thumb_up"
       :label="formatNumber(itemRef.likes_count)"
       :class="['like round-left button', { active: itemRef.is_like === true }]"
-      size="sm"
       @click="like"
       :disable="disable"
     />
     <q-separator vertical class="separator" />
-    <q-btn
-      unelevated
-      icon="sym_r_thumb_down"
+    <my-button
+      icon="thumb_down"
       :label="formatNumber(itemRef.dislikes_count)"
       :class="['dislike round-right button', { active: itemRef.is_like === false }]"
-      size="sm"
       @click="dislike"
       :disable="disable"
     />
   </div>
   <div class="action-container circle">
-    <q-btn
-      unelevated
-      icon="sym_r_favorite"
+    <my-button
+      icon="favorite"
       :class="['favorite button circle', { active: itemRef.is_fav }]"
-      size="sm"
       @click="favoriteButton"
       :disable="disable"
     />
@@ -43,6 +37,7 @@ import {
   addPostToFavorites,
   remPostFromFavorites
 } from "src/api/users";
+import MyButton from "../my/MyButton.vue";
 
 export interface ReactionItem {
   post_id: string;

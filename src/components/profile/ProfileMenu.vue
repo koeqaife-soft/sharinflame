@@ -1,42 +1,46 @@
 <template>
   <div class="container profile-menu-component">
-    <q-btn :class="['open-profile', buttonsClass]" :key="user?.user_id || 0" unelevated no-caps @click="openUserDialog">
+    <my-button type="card" :class="['open-profile', buttonsClass]" :key="user?.user_id || 0" @click="openUserDialog">
       <user-avatar :user="user!" />
       <div class="text-container">
         <div class="label">{{ $t("view_profile") }}</div>
         <div class="username">{{ `@${user?.username || "unknown"}` }}</div>
       </div>
-    </q-btn>
-    <q-btn
+    </my-button>
+    <my-button
+      type="card"
       :class="['dark-mode', buttonsClass]"
-      icon="sym_r_dark_mode"
+      icon="dark_mode"
       :label="$t('dark_mode')"
       @click="darkMode = !darkMode"
-      unelevated
-      no-caps
     >
-      <my-switch v-model="darkMode" />
-    </q-btn>
-    <q-btn
+      <template v-slot:append>
+        <my-switch v-model="darkMode" />
+      </template>
+    </my-button>
+    <my-button
+      type="card"
       :class="['create-post', buttonsClass]"
-      icon="sym_r_add_circle"
+      icon="add_circle"
       :label="$t('create_post')"
       @click="createPost"
       unelevated
       no-caps
     />
-    <q-btn
+    <my-button
+      type="card"
       :class="['my-activity', buttonsClass]"
-      icon="sym_r_browse_activity"
+      icon="browse_activity"
       :label="$t('my_activity')"
       @click="openMyActivity"
       unelevated
       no-caps
     />
     <q-separator />
-    <q-btn
+    <my-button
+      type="card"
       :class="['settings', buttonsClass]"
-      icon="sym_r_settings"
+      icon="settings"
       :label="$t('settings')"
       unelevated
       no-caps
@@ -48,7 +52,8 @@
 import { ref, onMounted, watch, defineAsyncComponent, type Component } from "vue";
 import { useProfileStore } from "src/stores/profile-store";
 import { useQuasar } from "quasar";
-import MySwitch from "../misc/MySwitch.vue";
+import MySwitch from "../my/MySwitch.vue";
+import MyButton from "../my/MyButton.vue";
 import UserAvatar from "./UserAvatar.vue";
 import { useMainStore } from "src/stores/main-store";
 

@@ -10,11 +10,11 @@
     <div class="dialog-content">
       <div class="dialog-header horizontal-container">
         <div class="horizontal-container label-container">
-          <q-icon :name="editMode ? 'sym_r_edit' : 'sym_r_article'" class="header-icon" />
+          <my-icon :icon="editMode ? 'edit' : 'article'" class="header-icon" />
           <div class="label">{{ editMode ? $t("edit_post") : $t("create_post") }}</div>
         </div>
         <q-space />
-        <q-btn flat round icon="sym_r_close" @click="dialogRef?.hide()" />
+        <my-button icon="close" @click="dialogRef?.hide()" />
       </div>
       <div class="dialog-content-inner">
         <q-scroll-area class="scroll-area fix-scroll-area" :visible="false">
@@ -29,22 +29,25 @@
           />
           <div class="tags-container card">
             <div class="horizontal-container">
-              <q-icon name="sym_r_tag" class="icon" />
+              <my-icon icon="tag" class="icon" />
               <div class="label">{{ $t("tags") }}</div>
             </div>
             <div class="chips">
-              <q-chip
+              <my-chip
                 v-for="(tag, index) in tags"
                 :key="index"
-                removable
-                icon-remove="sym_r_close"
+                :removable="true"
                 @remove="removeTag(index)"
+                :label="tag"
                 class="tag"
+              />
+              <my-chip
+                :clickable="true"
+                icon="add"
+                class="tag"
+                :disable="tags.length >= MAX_TAGS"
+                :label="$t('add_tag')"
               >
-                {{ tag }}
-              </q-chip>
-              <q-chip clickable icon="sym_r_add" class="tag" :disable="tags.length >= MAX_TAGS">
-                {{ $t("add_tag") }}
                 <q-menu class="menu-card enter-tag-menu field-menu" v-if="tags.length < MAX_TAGS">
                   <q-input
                     v-model="addTagValue"
@@ -55,32 +58,24 @@
                     maxlength="22"
                   >
                     <template v-slot:append>
-                      <q-btn
-                        round
-                        flat
-                        icon="sym_r_add"
-                        class="send-button"
-                        @click="addTag"
-                        :disable="addTagValue.length == 0"
-                      />
+                      <my-button icon="add" class="add-button" @click="addTag" :disable="addTagValue.length == 0" />
                     </template>
                   </q-input>
                 </q-menu>
-              </q-chip>
+              </my-chip>
             </div>
           </div>
 
           <q-separator class="separator" />
-          <toggle-card label-key="tag.nsfw" icon="sym_r_explicit" v-model="is_nsfw" />
-          <toggle-card label-key="tag.ai" icon="sym_r_robot_2" v-model="ai_generated" />
+          <toggle-card label-key="tag.nsfw" icon="explicit" v-model="is_nsfw" />
+          <toggle-card label-key="tag.ai" icon="robot_2" v-model="ai_generated" />
         </q-scroll-area>
         <q-separator class="separator q-my-sm" />
         <div class="send-container">
-          <q-btn
-            class="default-button animate"
-            :icon-right="editMode ? 'sym_r_edit' : 'sym_r_add'"
+          <my-button
+            type="primary"
+            :icon-right="editMode ? 'edit' : 'add'"
             :label="editMode ? $t('apply') : $t('create')"
-            no-caps
             @click="buttonClick"
             :disable="text.trim().length == 0"
             :loading="loading"
@@ -97,6 +92,9 @@ import { createPost, editPost } from "src/api/posts";
 import { useProfileStore } from "src/stores/profile-store";
 import { useI18n } from "vue-i18n";
 import ToggleCard from "../misc/ToggleCard.vue";
+import MyIcon from "../my/MyIcon.vue";
+import MyButton from "../my/MyButton.vue";
+import MyChip from "../my/MyChip.vue";
 import { useMainStore } from "src/stores/main-store";
 
 const props = defineProps<{

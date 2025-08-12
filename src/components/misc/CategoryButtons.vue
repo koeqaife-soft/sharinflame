@@ -1,20 +1,21 @@
 <template>
   <div :class="containerClass || 'container'">
-    <q-btn
+    <my-button
       v-for="category in categoriesList"
       :key="category.label"
       :icon="category.icon"
       :label="category.label"
-      class="card-button category-button"
+      type="card"
+      :isCategory="true"
       :class="{ selected: currentType == category.type }"
       :disable="disabled"
       @click="category.click"
-      unelevated
-      no-caps
     />
   </div>
 </template>
 <script setup lang="ts">
+import MyButton from "../my/MyButton.vue";
+
 export interface ButtonProps {
   label: string;
   icon: string;

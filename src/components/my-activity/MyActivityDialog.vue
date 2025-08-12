@@ -10,26 +10,25 @@
     <div class="dialog-content">
       <div class="dialog-header horizontal-container">
         <div v-show="!isSmallScreen || current == 0" class="main-page-label horizontal-container label-container">
-          <q-icon name="sym_r_browse_activity" class="header-icon" />
+          <my-icon icon="browse_activity" class="header-icon" />
           <div class="label">{{ $t("my_activity") }}</div>
         </div>
         <div v-show="isSmallScreen && current == 1" class="inner-page-label horizontal-container label-container">
-          <q-btn flat round icon="sym_r_arrow_back" @click="() => (current = 0)" />
+          <my-button icon="arrow_back" @click="() => (current = 0)" />
           <div class="label">{{ $t(getItemByKey(selected).labelKey) }}</div>
         </div>
         <q-space />
-        <q-btn flat round icon="sym_r_close" @click="dialogRef?.hide()" />
+        <my-button icon="close" @click="dialogRef?.hide()" />
       </div>
       <div class="dialog-content-inner horizontal-container">
         <transition name="scale" :css="isSmallScreen">
           <div class="sidebar container" v-show="!isSmallScreen || current == 0">
             <template v-for="(item, index) in items" :key="index">
-              <q-btn
+              <my-button
                 :label="$t(item.labelKey)"
                 :icon="item.icon"
-                no-caps
-                unelevated
-                class="card-button category-button"
+                type="card"
+                :is-category="true"
                 :class="{ selected: item.key == selected && !isSmallScreen }"
                 @click="setSelected(item.key)"
               />
@@ -54,6 +53,8 @@
 import { useDialogPluginComponent } from "quasar";
 import { useMainStore } from "src/stores/main-store";
 import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from "vue";
+import MyIcon from "src/components/my/MyIcon.vue";
+import MyButton from "src/components/my/MyButton.vue";
 
 defineEmits([...useDialogPluginComponent.emits]);
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
@@ -74,22 +75,22 @@ const items = [
   {
     labelKey: "favorites",
     key: "favorites",
-    icon: "sym_r_favorite"
+    icon: "favorite"
   },
   {
     labelKey: "liked",
     key: "liked",
-    icon: "sym_r_thumb_up"
+    icon: "thumb_up"
   },
   {
     labelKey: "disliked",
     key: "disliked",
-    icon: "sym_r_thumb_down"
+    icon: "thumb_down"
   },
   {
     labelKey: "following",
     key: "following",
-    icon: "sym_r_group"
+    icon: "group"
   }
 ] as const;
 

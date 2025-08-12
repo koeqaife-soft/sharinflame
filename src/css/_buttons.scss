@@ -6,12 +6,143 @@
   --disabled-button-fg: color-mix(in srgb, var(--on-background) 62%, transparent 38%);
 }
 
-.default-button {
+.my-button {
+  --_after-bg-color: var(--on-background-variant);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  vertical-align: middle;
+  padding: 0px 12px;
+  color: var(--on-background);
+  outline: 1px solid var(--contrast-outline);
+
+  .my-icon {
+    @include iconSize(24);
+    &.icon-right {
+      margin-left: 8px;
+    }
+    &.icon-left {
+      margin-right: 8px;
+    }
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0;
+    transition:
+      background-color 0.2s ease-in,
+      opacity 0.2s ease-in;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      &::after {
+        opacity: 0.08;
+        background-color: var(--_after-bg-color);
+      }
+    }
+  }
+
+  &:active,
+  &:focus-visible {
+    &::after {
+      opacity: 0.12;
+      background-color: var(--_after-bg-color);
+    }
+  }
+
+  &.loading {
+    --color-from: var(--card-high-hover);
+    --color-to: var(--card-high);
+    animation: bgColorPulse 1.3s ease infinite;
+    animation-delay: 200ms;
+    cursor: progress;
+    &::before {
+      content: "";
+      position: absolute;
+      opacity: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 8px;
+      padding: 2px;
+      background: conic-gradient(from var(--angle, 0deg), var(--primary) 0deg 90deg, transparent 90deg 180deg);
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      animation:
+        rotate 4s linear infinite,
+        fadeIn 0.5s ease-in forwards 200ms;
+    }
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  span {
+    font-size: 14px;
+    font-weight: 500;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    align-self: center;
+  }
+}
+
+.my-button.is-icon {
+  border-radius: 50%;
+  padding: 0px;
+  min-width: 40px;
+  min-height: 40px;
+  aspect-ratio: 1/1;
+
+  &::before {
+    border-radius: 50%;
+  }
+
+  .my-icon {
+    @include iconSize(20);
+    margin: auto;
+  }
+}
+
+.my-button.is-item {
+  display: flex;
+  width: 100%;
+  min-height: 40px;
+  justify-content: start;
+}
+
+.my-button.is-none {
+  background-color: transparent;
+}
+
+.my-button.is-primary {
+  --_after-bg-color: var(--background-variant);
   border-radius: 8px;
   background-color: var(--primary);
+  justify-content: start;
+  min-height: 36px;
 
-  span,
-  .loading {
+  span {
     color: var(--on-primary);
   }
   &.disabled {
@@ -22,18 +153,14 @@
       color: var(--disabled-button-fg);
     }
   }
-  &.animate {
-    transition: background-color 0.2s ease;
-    span:not(.q-focus-helper),
-    .loading {
-      transition: color 0.2s ease;
-    }
-  }
 }
 
-.secondary-button {
+.my-button.is-secondary {
+  --_after-bg-color: var(--background-variant);
   border-radius: 8px;
   background-color: var(--secondary);
+  justify-content: start;
+  min-height: 36px;
 
   span,
   .loading {
@@ -47,19 +174,14 @@
       color: var(--disabled-button-fg);
     }
   }
-  &.animate {
-    transition: background-color 0.2s ease;
-    span:not(.q-focus-helper),
-    .loading {
-      transition: color 0.2s ease;
-    }
-  }
 }
 
-.outlined-button {
+.my-button.is-outlined {
   border-radius: 8px;
   background-color: var(--background);
   border: 2px solid var(--primary);
+  justify-content: start;
+  min-height: 36px;
 
   span,
   .loading {
@@ -73,19 +195,13 @@
       color: var(--disabled-button-fg);
     }
   }
-  &.animate {
-    transition: border-color 0.2s ease;
-    span:not(.q-focus-helper),
-    .loading {
-      transition: color 0.2s ease;
-    }
-  }
 }
 
-.card-button {
+.my-button.is-card {
   border-radius: 8px;
   background-color: var(--card);
   min-height: 40px;
+  justify-content: start;
   > span {
     font-size: 15px;
     color: var(--on-card);
@@ -118,44 +234,19 @@
     }
   }
 }
-
-.q-btn .q-icon {
-  @include iconSize(24);
-  &.on-right {
-    margin-left: 8px;
-  }
-  &.on-left {
-    margin-right: 8px;
-  }
-}
-
-.q-btn:not(.outlined-button):not(.q-btn--flat):not(.default-button):not(.secondary-button) {
-  &:not(.no-outline) {
-    outline: 2px solid var(--contrast-outline);
-  }
-  &.no-outline {
-    outline: 2px solid var(--contrast-outline) !important;
-  }
-  outline-offset: -1px;
-}
-
-.card .card-button,
-.menu-card .card-button {
+.card .my-button.is-card,
+.menu-card .my-button.is-card {
   background-color: var(--card-high);
-
-  &:hover .q-focus-helper {
-    background: var(--card-high-hover);
-  }
 }
 
-.category-button {
+.my-button.is-category {
   @include bgColorTransition();
 
   > span {
     @include onlyColorTransition();
   }
 
-  .q-icon {
+  .my-icon {
     @include iconSize(24);
   }
 
@@ -164,7 +255,7 @@
     > span {
       color: var(--on-card-secondary);
     }
-    .q-icon {
+    .my-icon {
       animation: fillActivate var(--animate-duration) ease-out forwards;
     }
   }

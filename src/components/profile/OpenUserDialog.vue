@@ -1,11 +1,12 @@
 <template>
-  <q-btn class="profile webkit-no-drag" round flat @click="openDialog">
+  <my-button class="profile webkit-no-drag is-icon" @click="openDialog">
     <user-avatar :user="user" />
-  </q-btn>
+  </my-button>
 </template>
 <script setup lang="ts">
 import { useQuasar } from "quasar";
 import { defineAsyncComponent } from "vue";
+import MyButton from "../my/MyButton.vue";
 
 const quasar = useQuasar();
 

@@ -11,7 +11,7 @@
       <template v-if="loaded">
         <div class="profile-info">
           <q-img :src="userRef.banner_url" class="card banner" />
-          <q-btn round flat class="close" icon="sym_r_close" @click="dialogRef?.hide" />
+          <my-button class="close" icon="close" @click="dialogRef?.hide" />
           <div class="profile-inner">
             <user-avatar :user="userRef" />
             <div class="container name-container">
@@ -19,22 +19,19 @@
               <div class="username">@{{ userRef.username }}</div>
             </div>
             <q-space />
-            <q-btn
+            <my-button
               :label="userRef.followed ? $t('unfollow') : $t('follow')"
-              no-caps
-              unelevated
-              icon="sym_r_add"
+              icon="add"
               class="follow-button"
-              :class="userRef.followed ? 'outlined-button' : 'default-button'"
+              :type="userRef.followed ? 'outlined' : 'primary'"
               @click="followButton"
               v-if="!isMe"
             />
-            <q-btn
+            <my-button
+              type="primary"
               :label="$t('edit')"
-              no-caps
-              unelevated
-              icon-right="sym_r_person_edit"
-              class="edit-profile-button default-button"
+              icon-right="person_edit"
+              class="edit-profile-button"
               @click="editProfile"
               v-else
             />
@@ -54,7 +51,7 @@
       <template v-else>
         <div class="profile-info">
           <q-skeleton type="rect" class="card banner" />
-          <q-btn round flat class="close" icon="sym_r_close" @click="dialogRef?.hide" />
+          <my-button class="close" icon="close" @click="dialogRef?.hide" />
           <div class="profile-inner">
             <q-skeleton type="QAvatar" class="avatar" />
             <div class="container name-container">
@@ -83,6 +80,7 @@ import { useDialogPluginComponent, useQuasar } from "quasar";
 import UserAvatar from "../profile/UserAvatar.vue";
 import CloseableContent from "../misc/CloseableContent.vue";
 import CategoryButtons from "src/components/misc/CategoryButtons.vue";
+import MyButton from "../my/MyButton.vue";
 import { onMounted, ref, computed, defineAsyncComponent } from "vue";
 import type { ButtonProps } from "src/components/misc/CategoryButtons.vue";
 import { useI18n } from "vue-i18n";
@@ -117,13 +115,13 @@ const userRef = ref(props.user);
 const currentType = ref("info");
 const categoriesList = computed<ButtonProps[]>(() => [
   {
-    icon: "sym_r_info",
+    icon: "info",
     label: t("info"),
     click: () => changeType("info"),
     type: "info"
   },
   {
-    icon: "sym_r_article",
+    icon: "article",
     label: t("posts"),
     click: () => changeType("posts"),
     type: "posts"

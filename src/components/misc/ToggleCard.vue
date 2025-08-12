@@ -1,7 +1,7 @@
 <template>
   <div class="card toggle-value-row">
     <div class="horizontal-container">
-      <q-icon v-if="icon" :name="icon" class="icon" />
+      <my-icon v-if="icon" :icon="icon" class="icon" />
       <template v-if="!showDescription">
         <div>{{ info.label }}</div>
       </template>
@@ -15,7 +15,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import MySwitch from "src/components/misc/MySwitch.vue";
+import MySwitch from "src/components/my/MySwitch.vue";
+import MyIcon from "src/components/my/MyIcon.vue";
 import { computed } from "vue";
 import { useI18n } from "vue-i18n";
 

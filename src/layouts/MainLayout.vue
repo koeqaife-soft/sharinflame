@@ -5,11 +5,11 @@
         <slot name="toolbar-before-logo" />
         <LogoComponent @icon-click="logoClick" :is-animated="isIconAnimated" icon-class="icon" class="webkit-no-drag" />
 
-        <q-btn unelevated no-caps class="webkit-no-drag title-button" v-if="$slots['logo-menu']">
+        <my-button class="webkit-no-drag title-button" v-if="$slots['logo-menu']">
           <div class="title in-button">SharinFlame</div>
           <slot name="logo-menu" />
-          <q-icon name="sym_r_arrow_drop_up" :class="['menu-arrow', { active: menuOpened }]" />
-        </q-btn>
+          <my-icon icon="arrow_drop_up" :class="['menu-arrow', { active: menuOpened }]" />
+        </my-button>
         <div v-else class="webkit-drag title">SharinFlame</div>
 
         <q-space class="webkit-drag" />
@@ -23,11 +23,8 @@
           </div>
 
           <div class="toolbar-default-actions" v-if="showDarkModeToggle || $q.platform.is.electron">
-            <q-btn
-              flat
-              dense
-              round
-              icon="sym_r_dark_mode"
+            <my-button
+              icon="dark_mode"
               aria-label="DarkMode"
               @click="$q.dark.toggle()"
               class="webkit-no-drag"
@@ -50,6 +47,8 @@
 <script setup lang="ts">
 import LogoComponent from "src/components/misc/LogoComponent.vue";
 import { onBeforeUnmount, ref, defineAsyncComponent } from "vue";
+import MyButton from "src/components/my/MyButton.vue";
+import MyIcon from "src/components/my/MyIcon.vue";
 
 const WindowActions = defineAsyncComponent(() => import("src/components/WindowActions.vue"));
 

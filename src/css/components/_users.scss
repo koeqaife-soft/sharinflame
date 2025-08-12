@@ -18,8 +18,8 @@
     }
   }
   @media (max-width: 600px) {
-    .follow-button .q-icon,
-    .edit-profile-button .q-icon {
+    .follow-button .my-icon,
+    .edit-profile-button .my-icon {
       display: none;
     }
     .name-container {
@@ -85,7 +85,7 @@
     right: 8px;
     z-index: 10;
     background-color: var(--background);
-    .q-icon {
+    .my-icon {
       @include iconSize(24);
       color: var(--on-background);
     }
@@ -148,7 +148,7 @@
       font-size: 15px;
       font-weight: 500;
     }
-    .q-icon {
+    .my-icon {
       @include iconSize(18);
       margin-right: 3px;
       font-weight: 500;
@@ -171,7 +171,7 @@
     gap: 8px;
     display: flex;
     flex-wrap: wrap;
-    .q-chip {
+    .my-chip {
       margin: 0px;
       border-radius: 4px;
     }
@@ -229,7 +229,7 @@
     min-height: 42px;
   }
   @media (max-width: 500px) {
-    .follow-button .q-icon {
+    .follow-button .my-icon {
       display: none;
     }
   }

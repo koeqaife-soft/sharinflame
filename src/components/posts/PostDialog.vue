@@ -11,10 +11,10 @@
     <closeable-content v-on:hide="dialogRef!.hide()">
       <div class="dialog-header" style="z-index: 2">
         <div class="horizontal-container label-container">
-          <q-icon name="sym_r_article" class="header-icon" />
+          <my-icon icon="article" class="header-icon" />
           <div>{{ $t("post") }}</div>
           <q-space />
-          <q-btn flat round icon="sym_r_close" @click="dialogRef!.hide()" />
+          <my-button icon="close" @click="dialogRef!.hide()" />
         </div>
       </div>
 
@@ -27,10 +27,10 @@
           <div class="sticky-label scroll-header q-pt-sm" :class="{ 'is-visible': headerVisible }">
             <div class="card dialog-section q-mb-sm" style="z-index: 2">
               <div class="horizontal-container">
-                <q-icon name="sym_r_chat_bubble" class="icon" />
+                <my-icon icon="chat_bubble" class="icon" />
                 <div>{{ $t("comments") }}</div>
                 <q-space />
-                <q-btn flat round icon="sym_r_refresh" @click="reloadComments" />
+                <my-button icon="refresh" @click="reloadComments" />
               </div>
             </div>
           </div>
@@ -57,7 +57,7 @@
             </template>
           </my-virtual-scroll>
           <div class="load-more-container" v-if="!allowLoading">
-            <q-btn unelevated no-caps class="default-button load-more" @click="allowLoad" :label="$t('load_more')" />
+            <my-button class="load-more" type="primary" @click="allowLoad" :label="$t('load_more')" />
           </div>
         </q-scroll-area>
         <q-separator class="q-mb-sm q-mt-sm" />
@@ -76,19 +76,13 @@
                 class="full-width enter-comment"
                 :disable="sending"
               />
-              <q-btn
-                round
-                flat
-                icon="sym_r_send"
+              <my-button
+                icon="send"
                 class="send-button"
                 @click="sendComment"
                 :loading="sending"
                 :disable="text.length == 0"
-              >
-                <template v-slot:loading>
-                  <q-spinner class="loading" />
-                </template>
-              </q-btn>
+              />
             </div>
           </div>
         </div>
@@ -101,11 +95,13 @@
 import { defineAsyncComponent, type DefineComponent, nextTick, onMounted, onUnmounted, ref, toRef, watch } from "vue";
 import PostComponent from "../posts/PostComponent.vue";
 import CloseableContent from "../misc/CloseableContent.vue";
-import MyVirtualScroll from "../misc/MyVirtualScroll.vue";
+import MyVirtualScroll from "../my/MyVirtualScroll.vue";
 import { useDialogPluginComponent } from "quasar";
 import { createComment, getComments } from "src/api/posts";
 import { useProfileStore } from "src/stores/profile-store";
 import { useMainStore } from "src/stores/main-store";
+import MyIcon from "../my/MyIcon.vue";
+import MyButton from "../my/MyButton.vue";
 
 const CommentComponent = defineAsyncComponent(() => import("../posts/CommentComponent.vue"));
 const UserAvatar = defineAsyncComponent(() => import("../profile/UserAvatar.vue"));

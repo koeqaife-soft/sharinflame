@@ -1,10 +1,10 @@
 @import "misc";
 @import "variables";
 @import "mixins";
-@import "styles";
 @import "buttons";
 @import "cards";
 @import "animations";
+@import "styles";
 @import "components/quasar";
 @import "components/misc";
 @import "components/settings";
@@ -12,6 +12,8 @@
 @import "components/switch";
 @import "components/users";
 @import "components/posts";
+@import "components/item";
+@import "components/chip";
 
 @font-face {
   font-family: "NotoColorEmoji";
