@@ -16,13 +16,12 @@
           <q-icon class="label-icon" name="sym_r_palette" />
           <div class="label">{{ $t("color") }}</div>
         </div>
-        <div class="slider-container">
+        <div class="slider-container" :style="{ '--current-color': currentColor }">
           <input
             type="range"
             class="hue-slider"
             min="1"
             max="360"
-            :value="mainStore.getSetting('themeHue')"
             :style="{ background: backgroundStyle }"
             ref="sliderRef"
           />
@@ -93,6 +92,7 @@ const themes = ref([
   }
 ]);
 
+const currentColor = ref("");
 const selectedMode = ref("");
 const selectedTheme = ref(mainStore.getSetting("currentTheme"));
 const starBackground = ref(mainStore.getSetting("starBackground"));
@@ -105,6 +105,11 @@ const generatedRanges = reactive({
   light: ""
 });
 
+const generatedColors: Record<"dark" | "light", Record<string, string>> = {
+  dark: {},
+  light: {}
+};
+
 const backgroundStyle = ref("");
 const sliderRef = ref<HTMLInputElement | null>(null);
 
@@ -116,11 +121,16 @@ function updatePredefinedColors() {
 }
 
 function updateRangeStyle() {
+  const hueStep = 5;
   const key = quasar.dark.isActive ? "dark" : "light";
 
   if (generatedRanges[key].length === 0) {
-    const colors = generateHueSteps([0, 0, 0], "primary", 5, quasar.dark.isActive);
+    const colors = generateHueSteps([0, 0, 0], "primary", hueStep, quasar.dark.isActive);
     const gradient = `linear-gradient(to right, ${colors.join(", ")})`;
+    for (let i = 0; i < 360; i += hueStep) {
+      generatedColors[key][i] = colors[Math.floor(i / hueStep)] ?? "#000";
+    }
+
     generatedRanges[key] = gradient;
   }
   backgroundStyle.value = generatedRanges[key];
@@ -161,6 +171,7 @@ watch(
 function onButtonColor(index: number) {
   document.body.classList.add("no-animate");
   mainStore.updateColor(false, predefinedColors[index], true);
+  sliderRef.value!.value = String(mainStore.getSetting("themeHue"));
   setTimeout(() => {
     document.body.classList.remove("no-animate");
   }, 1);
@@ -169,17 +180,32 @@ function onButtonColor(index: number) {
 function onSliderChange() {
   document.body.classList.add("no-animate");
   mainStore.updateColor(false, Number(sliderRef.value!.value), true);
+  currentColor.value = "";
+  sliderRef.value!.value = String(mainStore.getSetting("themeHue"));
   setTimeout(() => {
     document.body.classList.remove("no-animate");
   }, 1);
 }
 
+function findNearestStep(value: number, step: number): number {
+  return Math.ceil(value / step) * step;
+}
+
+function onSliderInput() {
+  const rawValue = Number(sliderRef.value!.value);
+  const nearestValue = findNearestStep(rawValue, 5);
+  currentColor.value = generatedColors[quasar.dark.isActive ? "dark" : "light"][nearestValue] || "";
+}
+
 onMounted(() => {
   sliderRef.value?.addEventListener("change", onSliderChange, { passive: true });
+  sliderRef.value?.addEventListener("input", onSliderInput, { passive: true });
+  sliderRef.value!.value = String(mainStore.getSetting("themeHue"));
 });
 
 onBeforeUnmount(() => {
   sliderRef.value?.removeEventListener("change", onSliderChange);
+  sliderRef.value?.removeEventListener("input", onSliderInput);
   document.body.classList.remove("no-animate");
 });
 </script>

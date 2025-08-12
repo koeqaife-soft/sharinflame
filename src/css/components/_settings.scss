@@ -62,7 +62,7 @@
       width: 13px;
       height: 30px;
       border-radius: 20px;
-      background-color: var(--primary);
+      background-color: var(--current-color, var(--primary));
       box-shadow: 0 0 0 6px var(--card);
       border: 0;
     }
@@ -71,7 +71,7 @@
       width: 13px;
       height: 30px;
       border-radius: 20px;
-      background-color: var(--primary);
+      background-color: var(--current-color, var(--primary));
       box-shadow: 0 0 0 6px var(--card);
       border: 0;
     }
