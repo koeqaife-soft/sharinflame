@@ -164,6 +164,7 @@
 
   &.loading .my-button-label,
   &.loading .my-icon {
+    transition: color 0.1s ease 0.2s;
     color: var(--primary);
   }
 }
@@ -175,20 +176,19 @@
   justify-content: start;
   min-height: 36px;
 
-  span,
-  .loading {
+  span {
     color: var(--on-secondary);
   }
   &.disabled {
     opacity: 1 !important;
     background-color: var(--disabled-button-bg);
-    span,
-    .loading {
+    span {
       color: var(--disabled-button-fg);
     }
   }
   &.loading .my-button-label,
   &.loading .my-icon {
+    transition: color 0.1s ease 0.2s;
     color: var(--secondary);
   }
 }
@@ -200,15 +200,13 @@
   justify-content: start;
   min-height: 36px;
 
-  span,
-  .loading {
+  span {
     color: var(--secondary);
   }
   &.disabled {
     opacity: 1 !important;
     border-color: var(--disabled-button-fg);
-    span,
-    .loading {
+    span {
       color: var(--disabled-button-fg);
     }
   }
