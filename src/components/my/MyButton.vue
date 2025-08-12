@@ -13,7 +13,7 @@
       <template v-if="icon">
         <my-icon :icon="icon" class="icon-left" />
       </template>
-      <span v-if="label" class="ny-button-label">{{ label }}</span>
+      <span v-if="label" class="my-button-label">{{ label }}</span>
       <slot name="append" />
       <template v-if="iconRight">
         <my-icon :icon="iconRight" class="icon-right" />
