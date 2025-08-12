@@ -39,8 +39,13 @@
             class="language"
             :label="language"
           />
-          <my-chip clickable icon="add" class="language" :disable="languages.length >= MAX_LANGUAGES">
-            {{ $t("add_language") }}
+          <my-chip
+            clickable
+            :label="$t('add_language')"
+            icon="add"
+            class="language"
+            :disable="languages.length >= MAX_LANGUAGES"
+          >
             <q-menu class="menu-card enter-language-menu field-menu" v-if="languages.length < MAX_LANGUAGES">
               <q-input
                 v-model="addLangValue"
