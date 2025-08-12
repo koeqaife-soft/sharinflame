@@ -53,32 +53,14 @@
     "l": ["=", "9"],
     "luminance": "10"
   },
-  "card-hover": {
-    "link": "background",
-    "s": ["-", "5"],
-    "l": ["=", "13"],
-    "luminance": "15"
-  },
   "card-high": {
     "link": "background",
     "l": ["=", "13"],
     "luminance": "15"
   },
-  "card-high-hover": {
-    "link": "background",
-    "s": ["-", "5"],
-    "l": ["=", "23"],
-    "luminance": "15"
-  },
   "card-secondary": {
     "s": ["=", "20"],
     "l": ["=", "25"],
-    "luminance": "55"
-  },
-  "card-secondary-hover": {
-    "link": "background",
-    "s": ["=", "20"],
-    "l": ["=", "27"],
     "luminance": "55"
   },
   "on-card-secondary": {

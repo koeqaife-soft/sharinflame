@@ -62,8 +62,8 @@
   }
 
   &.loading {
-    --color-from: var(--card-high-hover);
-    --color-to: var(--card-high);
+    --color-from: var(--card-high);
+    --color-to: var(--background-variant);
     animation: bgColorPulse 1.3s ease infinite;
     animation-delay: 200ms;
     cursor: progress;

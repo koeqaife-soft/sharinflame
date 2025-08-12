@@ -186,8 +186,8 @@
       overflow: unset;
     }
     &.loading {
-      --color-from: var(--card-hover);
-      --color-to: var(--card);
+      --color-from: var(--card);
+      --color-to: var(--card-high);
     }
   }
 }

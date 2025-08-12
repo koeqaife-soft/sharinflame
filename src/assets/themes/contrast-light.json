@@ -40,24 +40,13 @@
     "s": ["=", "0"],
     "l": ["=", "100"]
   },
-  "card-hover": {
-    "s": ["=", "0"],
-    "l": ["=", "93"]
-  },
   "card-high": {
     "s": ["=", "0"],
     "l": ["=", "100"]
   },
-  "card-high-hover": {
-    "link": "card-hover"
-  },
   "card-secondary": {
     "s": ["=", "50"],
     "l": ["=", "5"]
-  },
-  "card-secondary-hover": {
-    "s": ["=", "50"],
-    "l": ["=", "10"]
   },
   "on-card-secondary": {
     "hex": "#ffffff"
