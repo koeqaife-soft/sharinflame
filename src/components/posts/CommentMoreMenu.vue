@@ -1,5 +1,5 @@
 <template>
-  <q-list style="min-width: 230px">
+  <div role="list" style="min-width: 230px">
     <template v-for="(option, index) in options" :key="index">
       <my-item
         v-if="option.visible && option.type === 'item'"
@@ -23,7 +23,7 @@
         </div>
       </my-item>
     </template>
-  </q-list>
+  </div>
 </template>
 
 <script setup lang="ts">
