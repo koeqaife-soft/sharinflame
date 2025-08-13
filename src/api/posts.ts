@@ -1,4 +1,4 @@
-import type { AxiosInstance } from "axios";
+import type { AxiosInstance, AxiosRequestConfig } from "axios";
 
 let api: AxiosInstance;
 
@@ -26,29 +26,38 @@ export const getPostsTypes = {
 
 export type KeyOfGetPostsTypes = keyof typeof getPostsTypes;
 
-async function getPost(id: string) {
-  return await api.get<ResponseWithPost>(postsEndpoints.post(id));
+async function getPost(id: string, config: AxiosRequestConfig = {}) {
+  return await api.get<ResponseWithPost>(postsEndpoints.post(id), config);
 }
 
-async function deletePost(id: string) {
-  return await api.delete<ApiResponse>(postsEndpoints.post(id));
+async function deletePost(id: string, config: AxiosRequestConfig = {}) {
+  return await api.delete<ApiResponse>(postsEndpoints.post(id), config);
 }
 
-async function editPost(id: string, { content, tags }: { content?: string | undefined; tags?: string[] | undefined }) {
-  return await api.patch(postsEndpoints.post(id), {
-    ...(content && { content }),
-    ...(tags && { tags })
-  });
+async function editPost(
+  id: string,
+  { content, tags }: { content?: string | undefined; tags?: string[] | undefined },
+  config: AxiosRequestConfig = {}
+) {
+  return await api.patch(
+    postsEndpoints.post(id),
+    {
+      ...(content && { content }),
+      ...(tags && { tags })
+    },
+    config
+  );
 }
 
-async function getPostsBatch(posts: string[]) {
+async function getPostsBatch(posts: string[], config: AxiosRequestConfig = {}) {
   const originalOrderMap = new Map(posts.map((id, index) => [id, index]));
 
   const sortedPosts = [...posts].sort();
 
   const params = { posts: sortedPosts.join(",") };
   const r = await api.get<GetPostsBatchResponse>(postsEndpoints.get_posts_batch, {
-    params: params
+    params: params,
+    ...config
   });
 
   if (r.data.success) {
@@ -63,20 +72,30 @@ async function getPostsBatch(posts: string[]) {
   return r;
 }
 
-async function getPosts(type: KeyOfGetPostsTypes, cursor?: string, hide_viewed?: boolean) {
+async function getPosts(
+  type: KeyOfGetPostsTypes,
+  cursor?: string,
+  hide_viewed?: boolean,
+  config: AxiosRequestConfig = {}
+) {
   return await api.get<ApiResponse<{ posts: string[]; next_cursor: string }>>(getPostsTypes[type], {
     params: {
       ...(cursor && { cursor }),
       ...(hide_viewed !== undefined && { hide_viewed })
-    }
+    },
+    ...config
   });
 }
 
-async function viewPosts(postIds: string[]) {
-  return await api.post<ApiResponse>(postsEndpoints.view, { posts: postIds });
+async function viewPosts(postIds: string[], config: AxiosRequestConfig = {}) {
+  return await api.post<ApiResponse>(postsEndpoints.view, { posts: postIds }, config);
 }
 
-async function setReaction(postId: string, { commentId, isLike }: { commentId?: string | undefined; isLike: boolean }) {
+async function setReaction(
+  postId: string,
+  { commentId, isLike }: { commentId?: string | undefined; isLike: boolean },
+  config: AxiosRequestConfig = {}
+) {
   const data = { is_like: isLike };
   let endpoint: string;
   if (commentId) {
@@ -84,49 +103,56 @@ async function setReaction(postId: string, { commentId, isLike }: { commentId?: 
   } else {
     endpoint = postsEndpoints.post_reactions(postId);
   }
-  return await api.post(endpoint, data);
+  return await api.post(endpoint, data, config);
 }
 
-async function remReaction(postId: string, commentId?: string) {
+async function remReaction(postId: string, commentId?: string, config: AxiosRequestConfig = {}) {
   let endpoint: string;
   if (commentId) {
     endpoint = postsEndpoints.comment_reactions(postId, commentId);
   } else {
     endpoint = postsEndpoints.post_reactions(postId);
   }
-  return await api.delete(endpoint);
+  return await api.delete(endpoint, config);
 }
 
-async function createComment(post_id: string, content: string) {
+async function createComment(post_id: string, content: string, config: AxiosRequestConfig = {}) {
   const data = { content };
-  return await api.post<ApiResponse<Comment>>(postsEndpoints.comments(post_id), data);
+  return await api.post<ApiResponse<Comment>>(postsEndpoints.comments(post_id), data, config);
 }
 
-async function deleteComment(post_id: string, comment_id: string) {
-  return await api.delete(postsEndpoints.comment_actions(post_id, comment_id));
+async function deleteComment(post_id: string, comment_id: string, config: AxiosRequestConfig = {}) {
+  return await api.delete(postsEndpoints.comment_actions(post_id, comment_id), config);
 }
 
-async function getComments(post_id: string, cursor?: string) {
+async function getComments(post_id: string, cursor?: string, config: AxiosRequestConfig = {}) {
   return await api.get<GetCommentsResponse>(postsEndpoints.comments(post_id), {
-    params: cursor ? { cursor } : undefined
+    params: cursor ? { cursor } : undefined,
+    ...config
   });
 }
 
-async function getComment(post_id: string, comment_id: string) {
-  return await api.get<ApiResponse<CommentWithUser>>(postsEndpoints.get_comment(post_id, comment_id));
+async function getComment(post_id: string, comment_id: string, config: AxiosRequestConfig = {}) {
+  return await api.get<ApiResponse<CommentWithUser>>(postsEndpoints.get_comment(post_id, comment_id), config);
 }
 
-async function getUserPosts(user_id: string, cursor?: string, sort?: "new" | "old" | "popular") {
+async function getUserPosts(
+  user_id: string,
+  cursor?: string,
+  sort?: "new" | "old" | "popular",
+  config: AxiosRequestConfig = {}
+) {
   return await api.get<GetUserPostsResponse>(postsEndpoints.get_user_posts(user_id), {
     params: {
       ...(cursor && { cursor }),
       ...(sort && { sort })
-    }
+    },
+    ...config
   });
 }
 
-async function createPost(values: CreatePostValues) {
-  return await api.post<ApiResponse<Post>>(postsEndpoints.create_post, values);
+async function createPost(values: CreatePostValues, config: AxiosRequestConfig = {}) {
+  return await api.post<ApiResponse<Post>>(postsEndpoints.create_post, values, config);
 }
 
 function init(_api: AxiosInstance) {

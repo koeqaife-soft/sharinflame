@@ -16,6 +16,10 @@ function is5xxError(error: AxiosError) {
 
 const connectionInterceptor = () => {
   const isConnectionError = (e: AxiosError) => {
+    if (e.code === "ERR_CANCELED") {
+      return false;
+    }
+    console.error("Connection error", e);
     return !e.response || e.code === "ECONNABORTED";
   };
 

@@ -26,13 +26,15 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, watch, defineAsyncComponent, type DefineComponent } from "vue";
+import { ref, watch, defineAsyncComponent, type DefineComponent, onUnmounted } from "vue";
 import { getPosts, getPostsBatch, type KeyOfGetPostsTypes, viewPosts } from "src/api/posts";
 import { type AxiosError, isAxiosError } from "axios";
 import { useI18n } from "vue-i18n";
 import MyVirtualScroll from "src/components/my/MyVirtualScroll.vue";
 
 const PostComponent = defineAsyncComponent(() => import("./PostComponent.vue"));
+
+let controller = new AbortController();
 
 const props = defineProps<{
   type: KeyOfGetPostsTypes;
@@ -56,6 +58,8 @@ const { t } = useI18n();
 watch(() => props.type, reloadPosts);
 
 function reset() {
+  controller.abort();
+  controller = new AbortController();
   items.value = [];
   toView.length = 0;
   notLoaded.length = 0;
@@ -80,7 +84,7 @@ function reloadPosts() {
 }
 
 async function getPostsIds(type: KeyOfGetPostsTypes) {
-  const r = await getPosts(type);
+  const r = await getPosts(type, undefined, undefined, { signal: controller.signal });
   if (r.data.success) {
     notLoaded.push(...r.data.data.posts);
   }
@@ -93,7 +97,7 @@ async function loadPosts(count: number) {
   const loadBatch = async (ids: string[]) => {
     let response: Awaited<ReturnType<typeof getPostsBatch>>;
     try {
-      response = await getPostsBatch(ids);
+      response = await getPostsBatch(ids, { signal: controller.signal });
       if (response.data.success) {
         loaded.push(...response.data.data.posts);
       }
@@ -160,6 +164,14 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
     done();
   } catch (e) {
     if (isAxiosError(e)) {
+      if (e.code === "ERR_CANCELED") {
+        done(true);
+        return;
+      }
+      if (!e.response) {
+        done(true);
+        throw e;
+      }
       const error =
         e.response?.data?.error == "NO_MORE_POSTS" ? t("no_more_posts") : e.response?.data?.error.toLowerCase();
       items.value.push({
@@ -183,4 +195,8 @@ function handleDeletePost(postId: string) {
   items.value = items.value.filter((post) => post.post_id !== postId);
   virtualScroll.value?.updateShowedItems();
 }
+
+onUnmounted(() => {
+  controller.abort();
+});
 </script>

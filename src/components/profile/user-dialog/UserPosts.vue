@@ -42,7 +42,7 @@
 </template>
 <script setup lang="ts">
 import { getUserPosts } from "src/api/posts";
-import { defineAsyncComponent, type DefineComponent, ref } from "vue";
+import { defineAsyncComponent, type DefineComponent, onUnmounted, ref } from "vue";
 import MyVirtualScroll from "src/components/my/MyVirtualScroll.vue";
 import MyIcon from "src/components/my/MyIcon.vue";
 import MyButton from "src/components/my/MyButton.vue";
@@ -67,12 +67,16 @@ const scrollKey = ref(Date.now());
 const sortOptions = ["old", "new", "popular"] as const;
 const sort = ref<(typeof sortOptions)[number]>("new");
 
+let controller = new AbortController();
+
 function toggleExpand() {
   expand.value ||= false;
   expand.value = !expand.value;
 }
 
 function reloadPosts() {
+  controller.abort();
+  controller = new AbortController();
   items.value = [];
   nextItems.value = [];
   cursor = undefined;
@@ -85,7 +89,9 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
     const toAdd: PostWithSystem[] = [];
 
     if (nextItems.value.length === 0) {
-      const r = await getUserPosts(props.user.user_id, cursor, sort.value);
+      const r = await getUserPosts(props.user.user_id, cursor, sort.value, {
+        signal: controller.signal
+      });
       const apiLoaded = r.data.data.posts;
       hasMore = r.data.data.has_more;
       cursor = r.data.data.next_cursor;
@@ -129,4 +135,8 @@ function handleDeletePost(postId: string) {
   items.value = items.value.filter((post) => post.post_id !== postId);
   virtualScroll.value?.updateShowedItems();
 }
+
+onUnmounted(() => {
+  controller.abort();
+});
 </script>

@@ -47,7 +47,7 @@
 </template>
 <script setup lang="ts">
 import { useDialogPluginComponent } from "quasar";
-import { defineAsyncComponent, type DefineComponent, onMounted, ref, watch } from "vue";
+import { defineAsyncComponent, type DefineComponent, onMounted, onUnmounted, ref, watch } from "vue";
 import type { CacheType } from "src/components/notifications/NotificationCard.vue";
 import MyVirtualScroll from "../my/MyVirtualScroll.vue";
 import MyIcon from "src/components/my/MyIcon.vue";
@@ -72,6 +72,8 @@ const items = ref<ApiNotification[]>([]);
 const notifCache = ref<Record<string, CacheType>>({});
 let cursor: string | undefined = undefined;
 
+const controller = new AbortController();
+
 watch(
   mainStore.lastNotifications,
   (newVal) => {
@@ -86,7 +88,7 @@ watch(
 
 async function loadMore(index: number, done: (stop?: boolean) => void) {
   try {
-    const r = await getNotifications(cursor, 25);
+    const r = await getNotifications(cursor, 25, { signal: controller.signal });
     if (r.data.success) {
       cursor = r.data.data.next_cursor;
       r.data.data.notifications.forEach((value) => {
@@ -107,5 +109,9 @@ async function loadMore(index: number, done: (stop?: boolean) => void) {
 onMounted(() => {
   mainStore.openedDialogs.notifications?.();
   mainStore.openedDialogs.notifications = dialogRef.value!.hide;
+});
+
+onUnmounted(() => {
+  controller.abort();
 });
 </script>

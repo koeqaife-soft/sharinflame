@@ -136,6 +136,7 @@ const allowLoading = ref(props.autoLoad);
 
 let hasMore = true;
 let cursor: string | undefined;
+let controller = new AbortController();
 
 const text = ref((postRef.value._meta?.text || "") as string);
 const sending = ref(false);
@@ -157,6 +158,8 @@ function onScroll(info: QScrollObserverDetails) {
 }
 
 function reloadComments() {
+  controller.abort();
+  controller = new AbortController();
   showNoComments.value = false;
   items.value = [];
   nextItems.value = [];
@@ -177,7 +180,7 @@ async function loadComments(index: number, done: (stop?: boolean) => void) {
   nextItems.value ??= [];
   try {
     if (nextItems.value.length === 0) {
-      const r = await getComments(postRef.value.post_id, cursor);
+      const r = await getComments(postRef.value.post_id, cursor, { signal: controller.signal });
       const apiLoaded = r.data.data.comments;
       hasMore = r.data.data.has_more;
       cursor = r.data.data.next_cursor;
@@ -266,5 +269,6 @@ onMounted(() => {
 onUnmounted(() => {
   items.value = [];
   nextItems.value = [];
+  controller.abort();
 });
 </script>
