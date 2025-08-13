@@ -48,7 +48,9 @@ async function ping() {
 
   await delay(Math.random());
   try {
-    await api.post(apiEndpoints.ping);
+    await api.post(apiEndpoints.ping, undefined, {
+      timeout: 3000
+    });
   } catch {
     mainStore.connectTries += 1;
   }
