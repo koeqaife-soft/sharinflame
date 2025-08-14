@@ -14,6 +14,15 @@
         </div>
       </my-item>
       <q-separator v-else-if="option.visible && option.type === 'separator'" class="separator" />
+      <my-item v-else-if="option.visible && option.type === 'label'">
+        <div class="horizontal-container">
+          <my-icon :icon="option.icon!" class="icon" />
+          <div class="container label-container">
+            <div class="text">{{ $t(`comment_options.${option.key}`) }}</div>
+            <div class="description">{{ option.description }}</div>
+          </div>
+        </div>
+      </my-item>
     </template>
   </div>
 </template>
@@ -23,8 +32,11 @@ import { useProfileStore } from "src/stores/profile-store";
 import { computed } from "vue";
 import MyItem from "src/components/my/MyItem.vue";
 import MyIcon from "src/components/my/MyIcon.vue";
+import { formatUnixTime } from "src/utils/format";
+import { useI18n } from "vue-i18n";
 
 const profileStore = useProfileStore();
+const i18n = useI18n();
 
 const emit = defineEmits<{
   (e: "action", key: string, data?: string): void;
@@ -63,6 +75,13 @@ const options = computed(() => [
     visible: true,
     type: "item",
     data: props.post.post_id
+  },
+  {
+    type: "label",
+    key: "created_at",
+    visible: true,
+    icon: "access_time",
+    description: formatUnixTime(props.post.created_at, i18n.locale.value)
   }
 ]);
 </script>
