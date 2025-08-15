@@ -188,7 +188,7 @@ export default {
     new_comment: "Comment from {username}"
   },
   show_all: "Show All",
-  unread_notifications: "Unread Notifications",
+  unread: "Unread",
   read_all: "Read All",
 
   load_more: "Load More",
