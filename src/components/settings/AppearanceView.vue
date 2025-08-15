@@ -129,7 +129,7 @@ function updateRangeStyle() {
   if (generatedRanges[key].length === 0) {
     const colors = generateHueSteps([0, 0, 0], "primary", hueStep, quasar.dark.isActive);
     const gradient = `linear-gradient(to right, ${colors.join(", ")})`;
-    for (let i = 0; i < 360; i += hueStep) {
+    for (let i = 0; i <= 360; i += hueStep) {
       generatedColors[key][i] = colors[Math.floor(i / hueStep)] ?? "#000";
     }
 
@@ -190,13 +190,13 @@ function onSliderChange() {
 }
 
 function findNearestStep(value: number, step: number): number {
-  return Math.ceil(value / step) * step;
+  return Math.floor(value / step) * step;
 }
 
 function onSliderInput() {
   const rawValue = Number(sliderRef.value!.value);
   const nearestValue = findNearestStep(rawValue, 5);
-  currentColor.value = generatedColors[quasar.dark.isActive ? "dark" : "light"][nearestValue] || "";
+  currentColor.value = generatedColors[quasar.dark.isActive ? "dark" : "light"][nearestValue] || currentColor.value;
 }
 
 onMounted(() => {
