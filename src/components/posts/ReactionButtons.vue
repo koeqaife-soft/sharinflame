@@ -3,15 +3,16 @@
     <my-button
       icon="thumb_up"
       :label="formatNumber(itemRef.likes_count)"
-      :class="['like round-left button', { active: itemRef.is_like === true }]"
+      :class="['like round button', { active: itemRef.is_like === true }]"
       @click="like"
       :disable="disable"
     />
-    <q-separator vertical class="separator" />
+  </div>
+  <div class="action-container">
     <my-button
       icon="thumb_down"
       :label="formatNumber(itemRef.dislikes_count)"
-      :class="['dislike round-right button', { active: itemRef.is_like === false }]"
+      :class="['dislike round button', { active: itemRef.is_like === false }]"
       @click="dislike"
       :disable="disable"
     />
