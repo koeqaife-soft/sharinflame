@@ -61,7 +61,7 @@
 </template>
 <script setup lang="ts">
 import { useDialogPluginComponent } from "quasar";
-import { defineAsyncComponent, type DefineComponent, onMounted, onUnmounted, ref, watch } from "vue";
+import { defineAsyncComponent, type DefineComponent, onBeforeUnmount, onMounted, onUnmounted, ref, watch } from "vue";
 import type { CacheType } from "src/components/notifications/NotificationCard.vue";
 import MyVirtualScroll from "../my/MyVirtualScroll.vue";
 import MyIcon from "src/components/my/MyIcon.vue";
@@ -69,6 +69,7 @@ import MyButton from "src/components/my/MyButton.vue";
 import { getNotifications, readAllNotifications } from "src/api/users";
 import { truncate } from "src/utils/format";
 import { useMainStore } from "src/stores/main-store";
+import websockets from "src/utils/websockets";
 
 const NotificationCard = defineAsyncComponent(() => import("src/components/notifications/NotificationCard.vue"));
 
@@ -120,12 +121,29 @@ async function loadMore(index: number, done: (stop?: boolean) => void) {
   }
 }
 
+function on_read(data: { id: string } | object) {
+  if ("id" in data) {
+    const id = data.id;
+    const notif = items.value.find((v) => v.id == id);
+    if (notif && notif.unread) notif.unread = false;
+  } else {
+    for (const notif of items.value) {
+      notif.unread = false;
+    }
+  }
+}
+
 onMounted(() => {
   mainStore.openedDialogs.notifications?.();
   mainStore.openedDialogs.notifications = dialogRef.value!.hide;
+  websockets.on("notification_read", on_read);
 });
 
 onUnmounted(() => {
   controller.abort();
+});
+
+onBeforeUnmount(() => {
+  websockets.off("notification_read", on_read);
 });
 </script>
