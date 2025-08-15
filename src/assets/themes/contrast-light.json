@@ -60,5 +60,13 @@
   },
   "contrast-outline": {
     "hex": "#000"
+  },
+  "attention": {
+    "h": ["=", "0"],
+    "s": ["=", "50"],
+    "l": ["=", "5"]
+  },
+  "on-attention": {
+    "hex": "#ffffff"
   }
 }

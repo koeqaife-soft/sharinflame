@@ -160,3 +160,14 @@
   align-items: center;
   justify-content: center;
 }
+
+// Unread notifications count badge
+.unread-count {
+  background-color: var(--attention);
+  color: var(--on-attention);
+  border-radius: 16px;
+  padding: 0px 6px;
+  text-align: justify;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}

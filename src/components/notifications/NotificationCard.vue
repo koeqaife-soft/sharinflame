@@ -2,6 +2,7 @@
   <my-button
     type="card"
     class="notification"
+    :class="{ unread: props.notif.unread }"
     :loading="loading"
     :disable="disabled"
     tabindex="0"
@@ -29,6 +30,7 @@ import { computed, defineAsyncComponent, onMounted, ref, toRef } from "vue";
 import { useI18n } from "vue-i18n";
 import MyIcon from "src/components/my/MyIcon.vue";
 import MyButton from "src/components/my/MyButton.vue";
+import { readNotification } from "src/api/users";
 
 const { t } = useI18n();
 const quasar = useQuasar();
@@ -110,6 +112,12 @@ async function sync<T>(callback: () => Promise<T>, key: string): Promise<T> {
 
 async function onClicked() {
   if (disabled.value || loading.value) return;
+
+  if (props.notif.unread) {
+    void readNotification(props.notif.id);
+    toRef(props.notif).value.unread = false;
+  }
+
   try {
     if (props.notif.linked_type == "post") {
       const post = await sync(() => getPost(props.notif.loaded!.post_id), "post");

@@ -61,5 +61,12 @@
   },
   "contrast-outline": {
     "hex": "#ffffff00"
+  },
+  "attention": {
+    "s": ["=", "0"],
+    "l": ["=", "10"]
+  },
+  "on-attention": {
+    "hex": "#ffffff"
   }
 }

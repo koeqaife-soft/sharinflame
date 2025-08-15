@@ -2,19 +2,24 @@
   <main-layout :in-router="false" headers-class="index-10" class="full-height">
     <particles-background v-if="mainStore.getSetting('starBackground')" />
     <template #toolbar-actions v-if="hideRightColumn || hideNotifications">
-      <my-button icon="notifications" class="webkit-no-drag">
-        <q-menu class="menu-card notifications-menu" v-model="notificationsMenuOpened">
-          <notifications-list @on-loaded="notificationsMenuOpened = false" />
-          <my-button
-            icon="expand_content"
-            type="primary"
-            :label="$t('show_all')"
-            class="full-width q-mt-sm"
-            @click="openNotifications"
-            v-close-popup
-          />
-        </q-menu>
-      </my-button>
+      <div class="button-and-badge">
+        <my-button icon="notifications" class="webkit-no-drag">
+          <q-menu class="menu-card notifications-menu" v-model="notificationsMenuOpened">
+            <notifications-list @on-loaded="notificationsMenuOpened = false" />
+            <my-button
+              icon="expand_content"
+              type="primary"
+              :label="$t('show_all')"
+              class="full-width q-mt-sm"
+              @click="openNotifications"
+              v-close-popup
+            />
+          </q-menu>
+        </my-button>
+        <span class="button-badge" v-if="unreadNotificationsCount > 0">
+          {{ unreadNotificationsCount }}
+        </span>
+      </div>
       <open-profile-menu v-if="hideRightColumn" />
     </template>
     <q-page class="app-page">
@@ -51,6 +56,9 @@
             <div class="label-container horizontal-container card" @click="openNotifications">
               <my-icon icon="notifications" class="icon" />
               <div class="label">{{ $t("notifications.label") }}</div>
+              <span class="unread-count" v-if="unreadNotificationsCount > 0">
+                {{ unreadNotificationsCount }}
+              </span>
               <q-space />
               <my-button icon="expand_content" />
             </div>
@@ -100,6 +108,10 @@ const isShortScreen = computed(() => screenSize.value[1] <= 750);
 const hideLeftColumn = computed(() => !isBigScreen.value);
 const hideRightColumn = computed(() => isSmallScreen.value);
 const hideNotifications = computed(() => hideRightColumn.value || isShortScreen.value);
+
+const unreadNotificationsCount = computed(() => {
+  return mainStore.getUnreadCount();
+});
 
 const scrolled = ref(false);
 

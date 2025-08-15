@@ -9,7 +9,10 @@ export const usersEndpoints = {
   reactions: "/users/me/reactions",
   follow: (id: string) => `/users/me/following/${id}`,
   following: "/users/me/following",
-  notifications: "/users/me/notifications"
+  notifications: "/users/me/notifications",
+  unread_notifications_count: "/users/me/notifications/unread",
+  read_notification: (id: string) => `/users/me/notifications/${id}/read`,
+  read_all_notifications: "/users/me/notifications/read"
 };
 
 async function getProfile(user_id?: string, config: AxiosRequestConfig = {}) {
@@ -97,6 +100,18 @@ async function unfollow(userId: string, config: AxiosRequestConfig = {}) {
   return await api.delete(usersEndpoints.follow(userId), config);
 }
 
+async function getUnreadNotificationsCount(config: AxiosRequestConfig = {}) {
+  return await api.get<ApiResponse<{ count: number }>>(usersEndpoints.unread_notifications_count, config);
+}
+
+async function readNotification(id: string, config: AxiosRequestConfig = {}) {
+  return await api.post(usersEndpoints.read_notification(id), undefined, config);
+}
+
+async function readAllNotifications(config: AxiosRequestConfig = {}) {
+  return await api.post(usersEndpoints.read_all_notifications, undefined, config);
+}
+
 function init(_api: AxiosInstance) {
   api = _api;
 }
@@ -114,5 +129,8 @@ export {
   getFollowing,
   follow,
   unfollow,
-  getNotifications
+  getNotifications,
+  getUnreadNotificationsCount,
+  readNotification,
+  readAllNotifications
 };

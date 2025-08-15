@@ -74,6 +74,10 @@
   box-sizing: border-box;
   overflow-wrap: anywhere;
 
+  &.unread {
+    border-right: 4px solid var(--primary);
+  }
+
   .image-container {
     @include avatarContainerSkeleton();
     min-height: 42px;
@@ -188,6 +192,24 @@
     &.loading {
       --color-from: var(--card);
       --color-to: var(--card-high);
+    }
+  }
+  .unread-notifications {
+    align-items: center;
+    .my-icon {
+      @include iconSize(22);
+      margin-right: 6px;
+      margin-left: 6px;
+    }
+    span > .label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--on-background);
+    }
+    span > .number {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--on-background-variant);
     }
   }
 }

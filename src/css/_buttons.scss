@@ -253,6 +253,32 @@
     }
   }
 }
+
+.button-and-badge {
+  border: none;
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  vertical-align: middle;
+
+  .button-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 1px solid var(--outline);
+    background-color: var(--attention);
+    color: var(--on-attention);
+    border-radius: 16px;
+    padding: 0px 6px;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+  }
+}
+
 .card .my-button.is-card,
 .menu-card .my-button.is-card {
   box-shadow: none;

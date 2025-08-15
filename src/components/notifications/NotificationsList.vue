@@ -21,10 +21,11 @@
   </div>
 </template>
 <script setup lang="ts">
-import { defineAsyncComponent, onMounted, ref, watch } from "vue";
+import { defineAsyncComponent, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import { useMainStore } from "src/stores/main-store";
 import { getNotifications } from "src/api/users";
 import { truncate } from "src/utils/format";
+import websockets from "src/utils/websockets";
 
 const mainStore = useMainStore();
 
@@ -59,10 +60,25 @@ watch(
   { immediate: true }
 );
 
+function on_read(data: { id: string } | object) {
+  if ("id" in data) {
+    const id = data.id;
+    const notif = notifications.value.find((v) => v.id == id);
+    if (notif && notif.unread) notif.unread = false;
+  } else {
+    for (const notif of notifications.value) {
+      notif.unread = false;
+    }
+  }
+}
+
 onMounted(() => {
   showLoadingTimeout = setTimeout(() => {
     showLoading.value = true;
   }, 150);
+
+  websockets.on("notification_read", on_read);
+
   if (mainStore.lastNotifications.length === 0) {
     void getNotifications(undefined, 5).then((response) => {
       if (showLoadingTimeout) clearTimeout(showLoadingTimeout);
@@ -73,5 +89,9 @@ onMounted(() => {
       }
     });
   }
+});
+
+onBeforeUnmount(() => {
+  websockets.off("notification_read", on_read);
 });
 </script>

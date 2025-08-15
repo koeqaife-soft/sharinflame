@@ -72,5 +72,14 @@
   },
   "contrast-outline": {
     "hex": "#ffffff00"
+  },
+  "attention": {
+    "h": ["=", "0"],
+    "s": ["=", "65"],
+    "l": ["=", "35"],
+    "luminance": "30"
+  },
+  "on-attention": {
+    "hex": "#ffffff"
   }
 }

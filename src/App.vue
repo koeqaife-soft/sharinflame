@@ -113,6 +113,7 @@ defineOptions({
 });
 
 function newNotification(notification: ApiNotification) {
+  if (mainStore.unreadCount != -1) mainStore.unreadCount++;
   mainStore.addNotification(notification);
   quasar.notify({
     avatar: notification.loaded?.user?.avatar_url ?? "",
@@ -124,11 +125,17 @@ function newNotification(notification: ApiNotification) {
   });
 }
 
+function onNotificationRead(data: { id: string; unread: number } | object) {
+  if ("unread" in data) mainStore.unreadCount = data.unread;
+  else mainStore.unreadCount = 0;
+}
+
 onMounted(() => {
   onChange();
   void pingInterval();
 
   websockets.on("notification", newNotification);
+  websockets.on("notification_read", onNotificationRead);
 });
 
 onBeforeMount(() => {
@@ -138,5 +145,6 @@ onBeforeMount(() => {
 
 onBeforeUnmount(() => {
   websockets.off("notification", newNotification);
+  websockets.off("notification_read", onNotificationRead);
 });
 </script>

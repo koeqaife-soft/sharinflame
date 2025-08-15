@@ -137,6 +137,7 @@ interface BaseNotification {
   type: "new_comment" | "followed";
   linked_id: string;
   second_linked_id: string;
+  unread: boolean;
 }
 
 type ApiNotification =

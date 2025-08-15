@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import * as colors from "../utils/colors";
 import { useQuasar } from "quasar";
+import { getUnreadNotificationsCount } from "src/api/users";
 
 const cacheVersion = 3;
 
@@ -14,11 +15,6 @@ const defaultSettings = {
 type KeyOfSettings = keyof typeof defaultSettings;
 
 type OpenedDialogs = Record<string, () => void>;
-
-const getLastReadNotification = () => {
-  const stored = localStorage.getItem("lastReadNotification");
-  return stored ? Number(stored) : 0;
-};
 
 const getSettings = () => {
   const stored = JSON.parse(localStorage.getItem("settings") || "{}");
@@ -43,8 +39,8 @@ export const useMainStore = defineStore("main", {
     openedDialogs: {} as OpenedDialogs,
     settings: getSettings(),
     lastNotifications: [] as ApiNotification[],
-    lastReadNotification: getLastReadNotification(),
-    quasar: useQuasar()
+    quasar: useQuasar(),
+    unreadCount: -1
   }),
   getters: {},
   actions: {
@@ -110,9 +106,13 @@ export const useMainStore = defineStore("main", {
         this.lastNotifications.splice(5);
       }
     },
-    setLastReadNotification(timestamp: number) {
-      this.lastReadNotification = timestamp;
-      localStorage.setItem("lastReadNotification", String(timestamp));
+    getUnreadCount() {
+      if (this.unreadCount === -1) {
+        void getUnreadNotificationsCount().then((v) => {
+          this.unreadCount = v.data.data.count;
+        });
+      }
+      return this.unreadCount;
     }
   }
 });

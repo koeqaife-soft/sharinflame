@@ -3,6 +3,7 @@ interface EventMap {
   auth_success: undefined;
   refresh_recommended: undefined;
   notification: ApiNotification;
+  notification_read: { id: string; unread: number } | object;
 }
 
 type ServerEvent = {
