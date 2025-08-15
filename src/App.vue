@@ -128,6 +128,17 @@ function newNotification(notification: ApiNotification) {
 function onNotificationRead(data: { id: string; unread: number } | object) {
   if ("unread" in data) mainStore.unreadCount = data.unread;
   else mainStore.unreadCount = 0;
+
+  const lastNotifications = mainStore.lastNotifications;
+  if ("id" in data) {
+    const id = data.id;
+    const notif = lastNotifications.find((v) => v.id == id);
+    if (notif && notif.unread) notif.unread = false;
+  } else {
+    for (const notif of lastNotifications) {
+      notif.unread = false;
+    }
+  }
 }
 
 onMounted(() => {
