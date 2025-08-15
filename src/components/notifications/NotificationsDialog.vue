@@ -26,7 +26,12 @@
               <span class="count">{{ mainStore.getUnreadCount() }}</span>
             </span>
             <q-space />
-            <my-button :label="$t('read_all')" type="card" @click="() => void readAllNotifications()" />
+            <my-button
+              :label="$t('read_all')"
+              type="card"
+              @click="() => void readAllNotifications()"
+              :disable="mainStore.unreadCount == 0"
+            />
           </div>
 
           <my-virtual-scroll
