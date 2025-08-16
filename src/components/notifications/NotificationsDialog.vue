@@ -28,7 +28,7 @@
             <q-space />
             <my-button
               :label="$t('read_all')"
-              type="card"
+              type="outlined"
               @click="() => void readAllNotifications()"
               :disable="mainStore.unreadCount == 0"
             />
