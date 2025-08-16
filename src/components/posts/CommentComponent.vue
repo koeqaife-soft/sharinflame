@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, ref, toRef } from "vue";
+import { defineAsyncComponent, onUnmounted, ref, toRef } from "vue";
 import { formatStringForHtml } from "src/utils/format";
 import TextParts from "../misc/TextParts.vue";
 import MyButton from "../my/MyButton.vue";
@@ -41,6 +41,8 @@ const OpenUserDialog = defineAsyncComponent(() => import("../profile/OpenUserDia
 const ReactionButtons = defineAsyncComponent(() => import("./ReactionButtons.vue"));
 const MoreMenu = defineAsyncComponent(() => import("./CommentMoreMenu.vue"));
 const PostDialog = defineAsyncComponent(() => import("src/components/posts/PostDialog.vue"));
+
+let controller: AbortController | null = null;
 
 const emit = defineEmits<{
   (e: "deleteComment", comment_id: string): void;
@@ -91,7 +93,8 @@ async function action(type: string, data: unknown) {
     case "go_to_post": {
       moreMenuLoading.value = true;
       try {
-        const post = await getPost(props.comment.post_id);
+        if (!controller) controller = new AbortController();
+        const post = await getPost(props.comment.post_id, { signal: controller.signal });
         if (post.data.success) {
           quasar.dialog({
             component: PostDialog,
@@ -104,6 +107,7 @@ async function action(type: string, data: unknown) {
         }
         moreMenuLoading.value = false;
       } catch (e) {
+        if (isAxiosError(e) && e.code == "ERR_CANCELED") return;
         if (isAxiosError(e) && e.response?.status == 404) {
           quasar.notify({
             type: "error-notification",
@@ -124,4 +128,8 @@ async function action(type: string, data: unknown) {
       break;
   }
 }
+
+onUnmounted(() => {
+  if (controller) controller.abort();
+});
 </script>

@@ -26,7 +26,7 @@
 import { isAxiosError } from "axios";
 import { useQuasar } from "quasar";
 import { getComment, getPost } from "src/api/posts";
-import { computed, defineAsyncComponent, onMounted, ref, toRef } from "vue";
+import { computed, defineAsyncComponent, onMounted, onUnmounted, ref, toRef } from "vue";
 import { useI18n } from "vue-i18n";
 import MyIcon from "src/components/my/MyIcon.vue";
 import MyButton from "src/components/my/MyButton.vue";
@@ -36,6 +36,8 @@ const { t } = useI18n();
 const quasar = useQuasar();
 const PostDialog = defineAsyncComponent(() => import("src/components/posts/PostDialog.vue"));
 const OpenUserDialog = defineAsyncComponent(() => import("../profile/OpenUserDialog.vue"));
+
+let controller: AbortController | null = null;
 
 interface Entry {
   lastSync: number;
@@ -112,6 +114,7 @@ async function sync<T>(callback: () => Promise<T>, key: string): Promise<T> {
 
 async function onClicked() {
   if (disabled.value || loading.value) return;
+  if (!controller) controller = new AbortController();
 
   if (props.notif.unread) {
     void readNotification(props.notif.id);
@@ -120,7 +123,7 @@ async function onClicked() {
 
   try {
     if (props.notif.linked_type == "post") {
-      const post = await sync(() => getPost(props.notif.loaded!.post_id), "post");
+      const post = await sync(() => getPost(props.notif.loaded!.post_id, { signal: controller!.signal }), "post");
       if (post.data.success) {
         quasar.dialog({
           component: PostDialog,
@@ -133,8 +136,10 @@ async function onClicked() {
       const [post, comment] = await sync(
         () =>
           Promise.all([
-            getPost(props.notif.loaded!.post_id),
-            getComment(props.notif.loaded!.post_id, (props.notif.loaded as CommentWithUser).comment_id)
+            getPost(props.notif.loaded!.post_id, { signal: controller!.signal }),
+            getComment(props.notif.loaded!.post_id, (props.notif.loaded as CommentWithUser).comment_id, {
+              signal: controller!.signal
+            })
           ]),
         "post"
       );
@@ -151,7 +156,9 @@ async function onClicked() {
       }
     }
   } catch (e) {
-    if (isAxiosError(e) && e.response?.status == 404) {
+    if (isAxiosError(e) && e.code == "ERR_CANCELED") {
+      return;
+    } else if (isAxiosError(e) && e.response?.status == 404) {
       quasar.notify({
         type: "error-notification",
         message: t("resource_not_found")
@@ -172,5 +179,9 @@ onMounted(() => {
     globalCache.value[props.notif.id] ??= {};
     disabled.value = (getCache("disabled") as boolean) ?? false;
   }
+});
+
+onUnmounted(() => {
+  controller?.abort();
 });
 </script>
