@@ -18,56 +18,110 @@ const emit = defineEmits<{
   (event: "hide"): void;
 }>();
 
-const touchStartX = ref(0);
-const touchStartY = ref(0);
-const touchEndX = ref(0);
-const touchEndY = ref(0);
-const isSwiping = ref(false);
-const dialogContent = ref<HTMLElement | null>(null);
-const verticalExceeded = ref(false);
+let touchEndY = 0;
+let touchEndX = 0;
 
-const SWIPE_THRESHOLD_X = 100;
-const SWIPE_THRESHOLD_Y = 10;
+let touchStartX = 0;
+let touchStartY = 0;
+let isSwiping = false;
+let ignore = false;
+const dialogContent = ref<HTMLElement | null>(null);
+
+const SWIPE_THRESHOLD = 100;
+
+function canScroll(el: HTMLElement, deltaY: number, deltaX: number): boolean {
+  if (deltaY !== 0) {
+    if (deltaY > 0) {
+      return el.scrollTop !== 0;
+    } else {
+      return el.scrollTop + el.clientHeight < el.scrollHeight;
+    }
+  }
+
+  if (deltaX !== 0) {
+    if (deltaX > 0) {
+      return el.scrollLeft !== 0;
+    } else {
+      return el.scrollLeft + el.clientWidth < el.scrollWidth;
+    }
+  }
+
+  return false;
+}
+
+function hasScrollableParentInDirection(el: HTMLElement, deltaY: number, deltaX: number): boolean {
+  let current: HTMLElement | null = el;
+
+  while (current) {
+    const style = window.getComputedStyle(current);
+    const overflowY = style.overflowY;
+    const overflowX = style.overflowX;
+
+    const isScrollableY =
+      (overflowY === "auto" || overflowY === "scroll") && current.scrollHeight > current.clientHeight;
+
+    const isScrollableX = (overflowX === "auto" || overflowX === "scroll") && current.scrollWidth > current.clientWidth;
+
+    if ((isScrollableY && canScroll(current, deltaY, 0)) || (isScrollableX && canScroll(current, 0, deltaX))) {
+      return true;
+    }
+
+    current = current.parentElement;
+  }
+
+  return false;
+}
+
+function shouldIgnore(target: EventTarget | null, deltaX: number, deltaY: number): boolean {
+  if (!(target instanceof HTMLElement)) return true;
+
+  if (target instanceof HTMLInputElement && target.type === "range") return true;
+  if (hasScrollableParentInDirection(target, deltaY, deltaX)) return true;
+
+  return false;
+}
 
 const onTouchStart = (event: TouchEvent) => {
-  touchStartX.value = event.touches[0]!.clientX;
-  touchStartY.value = event.touches[0]!.clientY;
-  isSwiping.value = false;
-  verticalExceeded.value = false;
+  touchStartX = event.touches[0]!.clientX;
+  touchStartY = event.touches[0]!.clientY;
+  isSwiping = false;
+  ignore = false;
 };
 
 const onTouchMove = (event: TouchEvent) => {
-  touchEndX.value = event.touches[0]!.clientX;
-  touchEndY.value = event.touches[0]!.clientY;
+  touchEndX = event.touches[0]!.clientX;
+  touchEndY = event.touches[0]!.clientY;
 
-  const deltaX = touchEndX.value - touchStartX.value;
-  const deltaY = Math.abs(touchEndY.value - touchStartY.value);
+  const deltaX = touchEndX - touchStartX;
+  const deltaY = touchEndY - touchStartY;
 
-  if (deltaY > SWIPE_THRESHOLD_Y && deltaX < 30) {
-    verticalExceeded.value = true;
-    onTouchEnd();
+  if (ignore || shouldIgnore(event.target, Math.abs(deltaX) > 100 ? deltaX : 0, Math.abs(deltaY) > 100 ? deltaY : 0)) {
+    if (dialogContent.value) {
+      dialogContent.value.style.transform = "translateY(0)";
+    }
+    if (isSwiping) isSwiping = false;
+    ignore = true;
     return;
   }
 
-  if (deltaX > 10 && !verticalExceeded.value) {
-    isSwiping.value = true;
+  if ((deltaY > 100 || deltaX > 100 || isSwiping) && Math.max(deltaY, deltaX) > 0) {
+    isSwiping = true;
     if (dialogContent.value) {
-      dialogContent.value.style.transform = `translateY(${deltaX}px)`;
+      dialogContent.value.style.transform = `translateY(${Math.max(deltaY, deltaX)}px)`;
+    }
+  } else {
+    if (dialogContent.value) {
+      dialogContent.value.style.transform = "translateY(0)";
     }
   }
 };
 
 const onTouchEnd = () => {
-  if (verticalExceeded.value) {
-    if (dialogContent.value) {
-      dialogContent.value.style.transform = "translateY(0)";
-    }
-    return;
-  }
+  ignore = false;
+  const deltaX = touchEndX - touchStartX;
+  const deltaY = touchEndY - touchStartY;
 
-  const deltaX = touchEndX.value - touchStartX.value;
-
-  if (deltaX > SWIPE_THRESHOLD_X && isSwiping.value) {
+  if (Math.max(deltaY, deltaX) > SWIPE_THRESHOLD && isSwiping) {
     emit("hide");
   } else {
     if (dialogContent.value) {
