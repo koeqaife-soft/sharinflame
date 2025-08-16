@@ -55,7 +55,8 @@ export default {
     copy_id: "Copy Id",
     delete: "Delete Comment",
     report: "Report",
-    created_at: "Created At"
+    created_at: "Created At",
+    go_to_post: "Go To Post"
   },
 
   an_error_occurred: "An error occurred",

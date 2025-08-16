@@ -43,8 +43,15 @@ const emit = defineEmits<{
 
 const props = defineProps<{
   comment: Comment | CommentWithUser;
+  showGoToPost: boolean;
 }>();
 const options = computed(() => [
+  {
+    key: "go_to_post",
+    icon: "article",
+    visible: props.showGoToPost,
+    type: "item"
+  },
   {
     key: "delete",
     icon: "delete_forever",

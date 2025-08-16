@@ -48,7 +48,12 @@
             ref="virtualScroll"
           >
             <template v-slot:default="{ item }">
-              <comment-component :comment="item" class="q-mb-sm" @delete-comment="handleDeleteComment" />
+              <comment-component
+                :comment="item"
+                class="q-mb-sm"
+                @delete-comment="handleDeleteComment"
+                :in-dialog="true"
+              />
             </template>
             <template v-slot:loading>
               <div class="row justify-center q-my-md">

@@ -17,9 +17,15 @@
       </div>
       <q-space />
       <div class="action-container circle">
-        <my-button icon="more_horiz" class="more button circle" size="sm" :disable="disable">
+        <my-button
+          icon="more_horiz"
+          class="more button circle"
+          size="sm"
+          :disable="disable || moreMenuLoading"
+          :loading="moreMenuLoading"
+        >
           <q-menu class="comment-more-menu" self="top right">
-            <more-menu :comment="commentRef" @action="action" />
+            <more-menu :comment="commentRef" @action="action" :show-go-to-post="!(inDialog ?? true)" />
           </q-menu>
         </my-button>
       </div>
@@ -34,11 +40,13 @@ import TextParts from "../misc/TextParts.vue";
 import MyButton from "../my/MyButton.vue";
 import { i18n } from "src/boot/i18n";
 import { useQuasar } from "quasar";
-import { deleteComment } from "src/api/posts";
+import { deleteComment, getPost } from "src/api/posts";
+import { isAxiosError } from "axios";
 
 const OpenUserDialog = defineAsyncComponent(() => import("../profile/OpenUserDialog.vue"));
 const ReactionButtons = defineAsyncComponent(() => import("./ReactionButtons.vue"));
 const MoreMenu = defineAsyncComponent(() => import("./CommentMoreMenu.vue"));
+const PostDialog = defineAsyncComponent(() => import("src/components/posts/PostDialog.vue"));
 
 const emit = defineEmits<{
   (e: "deleteComment", comment_id: string): void;
@@ -46,11 +54,13 @@ const emit = defineEmits<{
 
 const props = defineProps<{
   comment: CommentWithUser;
+  inDialog?: boolean;
 }>();
 
 const canAnimate = ref(false);
 const commentRef = toRef(props.comment);
 const disable = ref(false);
+const moreMenuLoading = ref(false);
 
 const quasar = useQuasar();
 
@@ -84,6 +94,37 @@ async function action(type: string, data: unknown) {
       }
 
       break;
+    case "go_to_post": {
+      moreMenuLoading.value = true;
+      try {
+        const post = await getPost(props.comment.post_id);
+        if (post.data.success) {
+          quasar.dialog({
+            component: PostDialog,
+            componentProps: {
+              post: post.data.data,
+              firstComment: props.comment,
+              autoLoad: false
+            }
+          });
+        }
+        moreMenuLoading.value = false;
+      } catch (e) {
+        if (isAxiosError(e) && e.response?.status == 404) {
+          quasar.notify({
+            type: "error-notification",
+            message: t("resource_not_found")
+          });
+        } else {
+          quasar.notify({
+            type: "error-notification",
+            message: t("an_error_occurred")
+          });
+        }
+      }
+
+      break;
+    }
     case "copy_id":
       void navigator.clipboard.writeText(data as string);
       break;
