@@ -85,7 +85,8 @@
     max-height: 42px;
     max-width: 42px;
     margin-right: 8px;
-    position: relative;
+    align-self: start;
+
     .icon {
       @include iconSize(14);
       color: var(--on-tertiary);
