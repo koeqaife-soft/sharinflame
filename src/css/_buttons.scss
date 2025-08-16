@@ -20,11 +20,9 @@
   padding: 0px 12px;
   color: var(--on-background);
   outline: 1px solid var(--contrast-outline);
-  transition: background-color var(--animate-duration) ease-in-out;
-
-  > span {
-    @include onlyColorTransition();
-  }
+  transition:
+    background-color var(--animate-duration) ease-in-out,
+    border-color var(--animate-duration) ease-in-out;
 
   .my-icon {
     @include iconSize(24);
@@ -110,6 +108,7 @@
     display: flex;
     align-items: center;
     align-self: center;
+    transition: color var(--animate-duration) ease-in-out;
   }
 
   &.centered {
