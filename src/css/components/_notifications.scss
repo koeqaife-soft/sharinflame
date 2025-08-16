@@ -202,16 +202,17 @@
       @include iconSize(22);
       margin-right: 6px;
       margin-left: 6px;
+      color: var(--on-background);
     }
     span > .label {
       font-size: 14px;
       font-weight: 500;
       color: var(--on-background);
     }
-    span > .number {
+    span > .count {
       font-size: 14px;
-      font-weight: 300;
-      color: var(--on-background-variant);
+      font-weight: 400;
+      color: var(--on-background);
     }
   }
 }
