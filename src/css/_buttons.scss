@@ -20,6 +20,11 @@
   padding: 0px 12px;
   color: var(--on-background);
   outline: 1px solid var(--contrast-outline);
+  transition: background-color var(--animate-duration) ease-in-out;
+
+  > span {
+    @include onlyColorTransition();
+  }
 
   .my-icon {
     @include iconSize(24);
@@ -56,7 +61,7 @@
   &:active,
   &:focus-visible {
     &::after {
-      opacity: 0.16;
+      opacity: 0.2;
       background-color: var(--_after-bg-color);
     }
   }
@@ -237,10 +242,6 @@
     padding-right: 16px;
     border-radius: 0px;
 
-    transition:
-      background-color 0.2s ease-in,
-      border-color 0.2s ease;
-
     > span {
       color: var(--on-background);
     }
@@ -286,12 +287,6 @@
 }
 
 .my-button.is-category {
-  @include bgColorTransition();
-
-  > span {
-    @include onlyColorTransition();
-  }
-
   .my-icon {
     @include iconSize(24);
   }
