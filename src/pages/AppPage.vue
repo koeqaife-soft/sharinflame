@@ -3,7 +3,7 @@
     <particles-background v-if="mainStore.getSetting('starBackground')" />
     <template #toolbar-actions v-if="hideRightColumn || hideNotifications">
       <div class="button-and-badge">
-        <my-button icon="notifications" class="webkit-no-drag">
+        <my-button icon="notifications" class="webkit-no-drag" v-if="hideNotifications">
           <q-menu class="menu-card notifications-menu" v-model="notificationsMenuOpened">
             <notifications-list @on-loaded="notificationsMenuOpened = false" />
             <my-button
@@ -22,7 +22,7 @@
       </div>
       <open-profile-menu v-if="hideRightColumn" />
     </template>
-    <q-page class="app-page">
+    <q-page class="app-page" :class="`columns-${columnsCount}`">
       <div class="left-column" v-if="!hideLeftColumn">
         <div class="card categories">
           <category-buttons :categories-list="categoriesList" :current-type="currentType" />
@@ -108,6 +108,12 @@ const isShortScreen = computed(() => screenSize.value[1] <= 750);
 const hideLeftColumn = computed(() => !isBigScreen.value);
 const hideRightColumn = computed(() => isSmallScreen.value);
 const hideNotifications = computed(() => hideRightColumn.value || isShortScreen.value);
+const columnsCount = computed(() => {
+  let count = 3;
+  if (hideLeftColumn.value) count--;
+  if (hideRightColumn.value) count--;
+  return count;
+});
 
 const unreadNotificationsCount = computed(() => {
   return mainStore.getUnreadCount();
