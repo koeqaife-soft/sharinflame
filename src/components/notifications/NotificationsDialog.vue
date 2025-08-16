@@ -1,13 +1,13 @@
 <template>
   <q-dialog
-    transition-show="scale"
-    transition-hide="scale"
+    transition-show="slide-up"
+    transition-hide="slide-down"
     class="notifications-dialog card-dialog"
     ref="dialogRef"
     @hide="onDialogHide"
     maximized
   >
-    <div class="dialog-content">
+    <closeable-content v-on:hide="dialogRef!.hide()">
       <div class="dialog-header horizontal-container">
         <div class="horizontal-container label-container">
           <my-icon icon="notifications" class="header-icon" />
@@ -56,7 +56,7 @@
           </my-virtual-scroll>
         </q-scroll-area>
       </div>
-    </div>
+    </closeable-content>
   </q-dialog>
 </template>
 <script setup lang="ts">
@@ -70,6 +70,7 @@ import { getNotifications, readAllNotifications } from "src/api/users";
 import { truncate } from "src/utils/format";
 import { useMainStore } from "src/stores/main-store";
 import websockets from "src/utils/websockets";
+import CloseableContent from "../misc/CloseableContent.vue";
 
 const NotificationCard = defineAsyncComponent(() => import("src/components/notifications/NotificationCard.vue"));
 

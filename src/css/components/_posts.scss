@@ -174,7 +174,8 @@
     width: 100%;
     transition:
       max-height 0.2s ease,
-      margin 0.2s ease;
+      margin 0.2s ease,
+      transform 0.25s ease-out;
     max-width: 600px;
     border-radius: 18px 18px 0px 0px !important;
   }
@@ -240,7 +241,8 @@
     width: 100%;
     transition:
       max-height 0.2s ease,
-      margin 0.2s ease;
+      margin 0.2s ease,
+      transform 0.25s ease-out;
   }
   .dialog-content-inner {
     display: flex;

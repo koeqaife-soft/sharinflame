@@ -134,7 +134,8 @@
       padding: 0;
       transition:
         max-height 0.2s ease,
-        margin 0.2s ease;
+        margin 0.2s ease,
+        transform 0.25s ease-out;
     }
     .dialog-content-inner {
       padding: 8px;

@@ -1,13 +1,13 @@
 <template>
   <q-dialog
-    transition-show="scale"
-    transition-hide="scale"
+    transition-show="slide-up"
+    transition-hide="slide-down"
     class="settings-dialog card-dialog with-sidebar"
     ref="dialogRef"
     @hide="onDialogHide"
     maximized
   >
-    <div class="dialog-content">
+    <closeable-content v-on:hide="dialogRef!.hide()">
       <div class="dialog-header horizontal-container">
         <div v-show="!isSmallScreen || current == 0" class="main-page-label horizontal-container label-container">
           <my-icon icon="settings" class="header-icon" />
@@ -44,7 +44,7 @@
           </div>
         </transition>
       </div>
-    </div>
+    </closeable-content>
   </q-dialog>
 </template>
 <script setup lang="ts">
@@ -53,6 +53,7 @@ import { useMainStore } from "src/stores/main-store";
 import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from "vue";
 import MyButton from "src/components/my/MyButton.vue";
 import MyIcon from "src/components/my/MyIcon.vue";
+import CloseableContent from "../misc/CloseableContent.vue";
 
 const props = defineProps<{
   open?: views[number];

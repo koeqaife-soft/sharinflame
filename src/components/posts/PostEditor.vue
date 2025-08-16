@@ -1,13 +1,13 @@
 <template>
   <q-dialog
-    transition-show="scale"
-    transition-hide="scale"
+    transition-show="slide-up"
+    transition-hide="slide-down"
     class="post-editor-dialog card-dialog"
     ref="dialogRef"
     @hide="onDialogHide"
     maximized
   >
-    <div class="dialog-content">
+    <closeable-content v-on:hide="dialogRef!.hide()">
       <div class="dialog-header horizontal-container">
         <div class="horizontal-container label-container">
           <my-icon :icon="editMode ? 'edit' : 'article'" class="header-icon" />
@@ -82,7 +82,7 @@
           />
         </div>
       </div>
-    </div>
+    </closeable-content>
   </q-dialog>
 </template>
 <script setup lang="ts">
@@ -95,6 +95,7 @@ import ToggleCard from "../misc/ToggleCard.vue";
 import MyIcon from "../my/MyIcon.vue";
 import MyButton from "../my/MyButton.vue";
 import MyChip from "../my/MyChip.vue";
+import CloseableContent from "../misc/CloseableContent.vue";
 import { useMainStore } from "src/stores/main-store";
 
 const props = defineProps<{
