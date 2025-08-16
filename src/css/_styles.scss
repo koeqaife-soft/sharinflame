@@ -99,6 +99,7 @@ body {
   justify-content: center;
   align-items: flex-start;
   padding-top: 8px;
+  box-sizing: border-box;
 
   .notifications-list {
     overflow: hidden;
