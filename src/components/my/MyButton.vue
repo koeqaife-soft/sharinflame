@@ -10,7 +10,7 @@
     :disable="disable ?? false"
   >
     <slot />
-    <span>
+    <span v-if="icon || label || iconRight || $slots['append']">
       <template v-if="icon">
         <my-icon :icon="icon" class="icon-left" />
       </template>
