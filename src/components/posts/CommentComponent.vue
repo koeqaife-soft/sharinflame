@@ -17,14 +17,8 @@
       </div>
       <q-space />
       <div class="action-container circle">
-        <my-button
-          icon="more_horiz"
-          class="more button circle"
-          size="sm"
-          :disable="disable || moreMenuLoading"
-          :loading="moreMenuLoading"
-        >
-          <q-menu class="comment-more-menu" self="top right">
+        <my-button icon="more_horiz" class="more button circle" size="sm" :disable="disable" :loading="moreMenuLoading">
+          <q-menu class="comment-more-menu" self="top right" v-if="!moreMenuLoading">
             <more-menu :comment="commentRef" @action="action" :show-go-to-post="!(inDialog ?? true)" />
           </q-menu>
         </my-button>
