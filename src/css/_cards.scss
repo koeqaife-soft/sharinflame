@@ -111,9 +111,10 @@
       .dialog-content {
         max-height: 100%;
         border-radius: 0px;
+        border-radius: 18px 18px 0px 0px !important;
       }
       .q-dialog__inner {
-        margin-top: 50px;
+        margin-top: 58px;
       }
       .sidebar,
       .view {
