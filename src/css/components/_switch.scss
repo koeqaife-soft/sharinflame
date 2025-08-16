@@ -1,6 +1,7 @@
 .switch {
   user-select: none;
   position: relative;
+  display: flex;
   height: 28px;
   margin-right: 50px;
   -webkit-tap-highlight-color: transparent;
