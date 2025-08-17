@@ -9,11 +9,12 @@ body {
   --toolbar-alt: var(--card);
   --on-toolbar-alt: var(--on-card);
 
+  --error: var(--attention);
+  --on-error: var(--on-attention);
+
   --q-primary: var(--primary);
   --q-secondary: var(--secondary);
-
-  --error: hsl(0, 96%, 80%);
-  --on-error: hsl(0, 96%, 10%);
+  --q-negative: var(--attention);
 
   background: var(--background) !important;
 }
