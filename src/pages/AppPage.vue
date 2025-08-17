@@ -10,7 +10,7 @@
               icon="expand_content"
               type="primary"
               :label="$t('show_all')"
-              class="full-width q-mt-sm"
+              class="full-width q-mt-sm centered"
               @click="openNotifications"
               v-close-popup
             />
