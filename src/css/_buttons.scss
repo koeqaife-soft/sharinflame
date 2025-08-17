@@ -114,6 +114,23 @@
 
   &.centered {
     justify-content: center;
+    position: relative;
+    .my-button-label {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
+    .my-icon {
+      &.icon-left {
+        position: absolute;
+        left: 12px;
+      }
+      &.icon-right {
+        position: absolute;
+        right: 12px;
+      }
+    }
     span {
       justify-content: center;
       width: 100%;
