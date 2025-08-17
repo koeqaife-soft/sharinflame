@@ -60,7 +60,7 @@
   "on-card-secondary": {
     "s": ["=", "40"],
     "l": ["=", "25"],
-    "luminance": "40"
+    "luminance": "25"
   },
   "on-card": {
     "hex": "#000000"
