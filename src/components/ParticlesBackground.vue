@@ -209,7 +209,7 @@ const moveParticles = (currentTime: number) => {
         if (distSquared < particle.threshold * particle.threshold) {
           const distance = Math.sqrt(distSquared);
           const angle = Math.atan2(dy, dx);
-          const speed = ((particle.threshold - distance) / 100 + particle.speedOffset) * 6000 * moveDeltaTime;
+          const speed = ((particle.threshold - distance) / 100 + particle.speedOffset) * 3500 * moveDeltaTime;
           particle.speedX += Math.cos(angle + Math.PI) * speed;
           particle.speedY += Math.sin(angle + Math.PI) * speed;
         }
