@@ -14,6 +14,7 @@ import { useQuasar } from "quasar";
 const quasar = useQuasar();
 const canvas = ref<HTMLCanvasElement | null>(null);
 const container = ref<HTMLDivElement | null>(null);
+const moveInterval = 1 / 30;
 
 const particles: Particle[] = [];
 let ctx: CanvasRenderingContext2D | null = null;
@@ -29,6 +30,7 @@ let mouseX = -1000;
 let mouseY = -1000;
 let mouseMoved = false;
 let lastTime = performance.now();
+let moveLastTime = performance.now();
 
 let centerX: number;
 let centerY: number;
@@ -59,7 +61,7 @@ const generateInitialParticles = () => {
   const canvasWidth = canvas.value?.width ?? 0;
   const canvasHeight = canvas.value?.height ?? 0;
 
-  const particlesCount = canvasWidth * 2.5;
+  const particlesCount = Math.sqrt(canvasWidth * canvasHeight) * 3;
 
   centerX = canvasWidth / 2;
   centerY = canvasHeight / 1.3;
@@ -181,48 +183,47 @@ const updateGrid = () => {
 const moveParticles = (currentTime: number) => {
   if (!ctx || !canvas.value) return;
 
-  const deltaTime = Math.min((currentTime - lastTime) / 1000, 0.1);
+  const deltaTime = Math.min((currentTime - lastTime) / 1000, 0.03);
   lastTime = currentTime;
 
   ctx.clearRect(-5, -5, canvas.value.width + 5, canvas.value.height + 5);
 
   if (mouseMoved) {
-    const mouseCol = Math.floor(mouseX / gridSize);
-    const mouseRow = Math.floor(mouseY / gridSize);
-    const cellsToCheck: Particle[] = [];
-    for (let i = -1; i <= 1; i++) {
-      for (let j = -1; j <= 1; j++) {
-        const key = `${mouseCol + i},${mouseRow + j}`;
-        if (grid[key]) cellsToCheck.push(...grid[key]);
-      }
-    }
+    const moveDeltaTime = Math.min((currentTime - moveLastTime) / 1000, 0.06);
+    if (moveDeltaTime >= moveInterval) {
+      moveLastTime = currentTime;
 
-    cellsToCheck.forEach((particle) => {
-      const dx = mouseX - particle.x;
-      const dy = mouseY - particle.y;
-      const distSquared = dx * dx + dy * dy;
-      if (distSquared < particle.threshold * particle.threshold) {
-        const distance = Math.sqrt(distSquared);
-        const angle = Math.atan2(dy, dx);
-        const speed = ((particle.threshold - distance) / 100 + particle.speedOffset) * 60;
-        particle.speedX += Math.cos(angle + Math.PI) * speed;
-        particle.speedY += Math.sin(angle + Math.PI) * speed;
+      const mouseCol = Math.floor(mouseX / gridSize);
+      const mouseRow = Math.floor(mouseY / gridSize);
+      const cellsToCheck: Particle[] = [];
+      for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+          const key = `${mouseCol + i},${mouseRow + j}`;
+          if (grid[key]) cellsToCheck.push(...grid[key]);
+        }
       }
-    });
-    mouseMoved = false;
+
+      cellsToCheck.forEach((particle) => {
+        const dx = mouseX - particle.x;
+        const dy = mouseY - particle.y;
+        const distSquared = dx * dx + dy * dy;
+        if (distSquared < particle.threshold * particle.threshold) {
+          const distance = Math.sqrt(distSquared);
+          const angle = Math.atan2(dy, dx);
+          const speed = ((particle.threshold - distance) / 100 + particle.speedOffset) * 3000 * moveDeltaTime;
+          particle.speedX += Math.cos(angle + Math.PI) * speed;
+          particle.speedY += Math.sin(angle + Math.PI) * speed;
+        }
+      });
+      mouseMoved = false;
+    }
+  } else {
+    moveLastTime = currentTime;
   }
   const decayFactor = Math.pow(0.94, 60 * deltaTime);
 
   ctx.lineCap = "round";
   visibleParticles.forEach((p) => {
-    ctx!.globalAlpha = p.alpha;
-    ctx!.strokeStyle = p.color;
-    ctx!.lineWidth = p.size * 2;
-    ctx!.beginPath();
-    ctx!.moveTo(p.x, p.y);
-    ctx!.lineTo(p.x, p.y);
-    ctx!.stroke();
-
     p.x += p.speedX * deltaTime;
     p.y += p.speedY * deltaTime;
 
@@ -265,6 +266,16 @@ const moveParticles = (currentTime: number) => {
   });
 
   updateGrid();
+
+  for (const p of visibleParticles) {
+    ctx.globalAlpha = p.alpha;
+    ctx.strokeStyle = p.color;
+    ctx.lineWidth = p.size * 1.5;
+    ctx.beginPath();
+    ctx.moveTo(p.x, p.y);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+  }
 };
 
 const onMouseMove = (event: MouseEvent) => {
