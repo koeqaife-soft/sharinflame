@@ -18,17 +18,17 @@
   "on-primary": {
     "link": "primary",
     "l": ["=", "70"],
-    "luminance": "0.5"
+    "luminance": "1"
   },
   "on-secondary": {
     "link": "secondary",
     "l": ["=", "70"],
-    "luminance": "0.5"
+    "luminance": "1"
   },
   "on-tertiary": {
     "link": "tertiary",
     "l": ["=", "70"],
-    "luminance": "0.5"
+    "luminance": "1"
   },
   "background": {
     "s": ["=", "14"],
