@@ -101,7 +101,7 @@
           class="cancel-button"
           :label="$t('cancel')"
           @click="onLoad"
-          :disable="Object.keys(updateValues).length === 0"
+          :disable="Object.keys(updateValues).length === 0 || applyLoading"
           icon-right="cancel"
         />
         <my-button
@@ -111,6 +111,7 @@
           @click="updateProfile"
           :disable="Object.keys(updateValues).length === 0"
           icon-right="check"
+          :loading="applyLoading"
         />
       </div>
     </div>
@@ -143,6 +144,7 @@ const addLangValue = ref("");
 const languages = ref<string[]>([]);
 const MAX_LANGUAGES = 8;
 
+const applyLoading = ref(false);
 const loaded = ref(false);
 
 const updateValues = computed(() => ({
@@ -177,6 +179,7 @@ function removeLanguage(index: number) {
 }
 
 async function updateProfile() {
+  applyLoading.value = true;
   try {
     await profileStore.updateProfile(updateValues.value);
     profile.value = profileStore.profile;
@@ -194,6 +197,8 @@ async function updateProfile() {
       progress: true
     });
     throw e;
+  } finally {
+    applyLoading.value = false;
   }
 }
 
