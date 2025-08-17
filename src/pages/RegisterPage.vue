@@ -17,7 +17,11 @@
             :error-message="errors.username"
             :hint="t('reg_hints.username')"
             class="q-mb-sm"
-          />
+          >
+            <template #prepend>
+              <my-icon icon="person" />
+            </template>
+          </q-input>
           <q-input
             outlined
             v-model="email"
@@ -29,7 +33,11 @@
             :error-message="errors.email"
             class="q-mb-sm"
             :hint="t('reg_hints.email')"
-          />
+          >
+            <template #prepend>
+              <my-icon icon="mail" />
+            </template>
+          </q-input>
           <q-input
             outlined
             v-model="password"
@@ -41,12 +49,12 @@
             :hint="t('reg_hints.password')"
           >
             <template v-slot:append>
-              <q-icon
-                :name="isPwd ? 'sym_r_visibility_off' : 'sym_r_visibility'"
-                class="cursor-pointer"
-                @click="isPwd = !isPwd"
-              /> </template
-          ></q-input>
+              <my-icon :icon="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer" @click="isPwd = !isPwd" />
+            </template>
+            <template #prepend>
+              <my-icon icon="key" />
+            </template>
+          </q-input>
           <q-input
             outlined
             v-model="confirmPassword"
@@ -56,19 +64,25 @@
             :rules="[validateConfirmPassword]"
             class="q-mb-md"
             :hint="t('reg_hints.confirm_password')"
-          />
+          >
+            <template #prepend>
+              <my-icon icon="key" />
+            </template>
+          </q-input>
 
           <my-button
             :label="$t('register')"
             type="primary"
             btn-type="submit"
             class="full-width centered"
+            icon-right="check"
             :loading="loading"
           />
           <my-button
             type="outlined"
             :label="$t('login')"
             @click="$router.push({ path: '/login' })"
+            icon-right="login"
             class="full-width q-mt-sm centered"
           />
         </q-form>

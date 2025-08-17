@@ -17,7 +17,11 @@
             class="q-mb-sm"
             :error="!!errors.email"
             :error-message="errors.email"
-          />
+          >
+            <template #prepend>
+              <my-icon icon="mail" />
+            </template>
+          </q-input>
           <q-input
             outlined
             v-model="password"
@@ -30,11 +34,10 @@
             :error-message="errors.password"
           >
             <template v-slot:append>
-              <q-icon
-                :name="isPwd ? 'sym_r_visibility_off' : 'sym_r_visibility'"
-                class="cursor-pointer"
-                @click="isPwd = !isPwd"
-              />
+              <my-icon :icon="isPwd ? 'visibility_off' : 'visibility'" class="cursor-pointer" @click="isPwd = !isPwd" />
+            </template>
+            <template #prepend>
+              <my-icon icon="key" />
             </template>
           </q-input>
 
@@ -43,12 +46,14 @@
             type="primary"
             btn-type="submit"
             class="full-width centered"
+            icon-right="check"
             :loading="loading"
           />
           <my-button
             type="outlined"
             :label="$t('register')"
             @click="$router.push({ path: '/register' })"
+            icon-right="person_add"
             class="full-width centered q-mt-sm"
           />
         </q-form>
