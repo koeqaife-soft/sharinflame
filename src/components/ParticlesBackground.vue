@@ -146,9 +146,9 @@ const generatePalette = () => {
 };
 
 const updateParticleColors = () => {
-  particles.forEach((particle) => {
+  for (const particle of particles) {
     particle.color = variationColors[`variation${particle.variation}`] ?? "#fff";
-  });
+  }
 };
 
 watch(
@@ -170,14 +170,14 @@ const updateGrid = () => {
   const minY = -5;
   const maxY = canvasHeight + 5;
 
-  particles.forEach((p) => {
+  for (const p of particles) {
     if ((p.x >= minX && p.x <= maxX && p.y >= minY && p.y <= maxY) || p.originalX - p.x || p.originalY - p.y) {
       const key = `${Math.floor(p.x / gridSize)},${Math.floor(p.y / gridSize)}`;
       grid[key] = grid[key] || [];
       grid[key].push(p);
       visibleParticles.push(p);
     }
-  });
+  }
 };
 
 const moveParticles = (currentTime: number) => {
@@ -203,18 +203,18 @@ const moveParticles = (currentTime: number) => {
         }
       }
 
-      cellsToCheck.forEach((particle) => {
+      for (const particle of cellsToCheck) {
         const dx = mouseX - particle.x;
         const dy = mouseY - particle.y;
         const distSquared = dx * dx + dy * dy;
         if (distSquared < particle.threshold * particle.threshold) {
           const distance = Math.sqrt(distSquared);
           const angle = Math.atan2(dy, dx);
-          const speed = ((particle.threshold - distance) / 100 + particle.speedOffset) * 3000 * moveDeltaTime;
+          const speed = ((particle.threshold - distance) / 100 + particle.speedOffset) * 6000 * moveDeltaTime;
           particle.speedX += Math.cos(angle + Math.PI) * speed;
           particle.speedY += Math.sin(angle + Math.PI) * speed;
         }
-      });
+      }
       mouseMoved = false;
     }
   } else {
@@ -223,7 +223,7 @@ const moveParticles = (currentTime: number) => {
   const decayFactor = Math.pow(0.94, 60 * deltaTime);
 
   ctx.lineCap = "round";
-  visibleParticles.forEach((p) => {
+  for (const p of visibleParticles) {
     p.x += p.speedX * deltaTime;
     p.y += p.speedY * deltaTime;
 
@@ -250,8 +250,9 @@ const moveParticles = (currentTime: number) => {
         p.alphaTarget = Math.random() * 0.4 + 0.6;
       }
     }
-  });
-  particles.forEach((p) => {
+  }
+
+  for (const p of particles) {
     p.theta += p.omega * deltaTime;
     const newX = centerX + p.centerRadius * Math.cos(p.theta);
     const newY = centerY + p.centerRadius * Math.sin(p.theta);
@@ -263,7 +264,7 @@ const moveParticles = (currentTime: number) => {
       p.originalX = newX;
       p.originalY = newY;
     }
-  });
+  }
 
   updateGrid();
 
