@@ -171,7 +171,7 @@ const updateGrid = () => {
   const maxY = canvasHeight + 5;
 
   for (const p of particles) {
-    if ((p.x >= minX && p.x <= maxX && p.y >= minY && p.y <= maxY) || p.originalX - p.x || p.originalY - p.y) {
+    if (p.originalX - p.x || p.originalY - p.y || (p.x >= minX && p.x <= maxX && p.y >= minY && p.y <= maxY)) {
       const key = `${Math.floor(p.x / gridSize)},${Math.floor(p.y / gridSize)}`;
       grid[key] = grid[key] || [];
       grid[key].push(p);
