@@ -20,29 +20,31 @@ const emit = defineEmits<{
 
 let touchEndY = 0;
 let touchEndX = 0;
-
 let touchStartX = 0;
 let touchStartY = 0;
+let moveDeltaX = 0;
+let moveDeltaY = 0;
+
 let isSwiping = false;
-let ignore = false;
+let ignoreX = false;
+let ignoreY = false;
 const dialogContent = ref<HTMLElement | null>(null);
 
 const SWIPE_THRESHOLD = 100;
 
 function canScroll(el: HTMLElement, deltaY: number, deltaX: number): boolean {
-  if (deltaY !== 0) {
-    if (deltaY > 0) {
-      return el.scrollTop !== 0;
-    } else {
-      return el.scrollTop + el.clientHeight < el.scrollHeight;
-    }
-  }
-
   if (deltaX !== 0) {
     if (deltaX > 0) {
       return el.scrollLeft !== 0;
     } else {
       return el.scrollLeft + el.clientWidth < el.scrollWidth;
+    }
+  }
+  if (deltaY !== 0) {
+    if (deltaY > 0) {
+      return el.scrollTop !== 0;
+    } else {
+      return el.scrollTop + el.clientHeight < el.scrollHeight;
     }
   }
 
@@ -85,29 +87,57 @@ const onTouchStart = (event: TouchEvent) => {
   touchStartX = event.touches[0]!.clientX;
   touchStartY = event.touches[0]!.clientY;
   isSwiping = false;
-  ignore = false;
+  ignoreX = false;
+  ignoreY = false;
+};
+
+const getSwipeDelta = () => {
+  const deltaX = touchEndX - touchStartX;
+  const deltaY = touchEndY - touchStartY;
+  if (ignoreX && ignoreY) {
+    return 0;
+  } else if (ignoreY) {
+    return deltaX;
+  } else if (ignoreX) {
+    return deltaY;
+  } else {
+    return Math.max(deltaX, deltaY);
+  }
+};
+
+const getMoveSwipeDelta = () => {
+  if (ignoreX && ignoreY) {
+    return 0;
+  } else if (ignoreY) {
+    return moveDeltaX;
+  } else if (ignoreX) {
+    return moveDeltaY;
+  } else {
+    return Math.max(moveDeltaX, moveDeltaY);
+  }
 };
 
 const onTouchMove = (event: TouchEvent) => {
+  moveDeltaX = event.touches[0]!.clientX - touchEndX;
+  moveDeltaY = event.touches[0]!.clientY - touchEndY;
   touchEndX = event.touches[0]!.clientX;
   touchEndY = event.touches[0]!.clientY;
 
   const deltaX = touchEndX - touchStartX;
   const deltaY = touchEndY - touchStartY;
 
-  if (ignore || shouldIgnore(event.target, Math.abs(deltaX) > 100 ? deltaX : 0, Math.abs(deltaY) > 100 ? deltaY : 0)) {
-    if (dialogContent.value) {
-      dialogContent.value.style.transform = "translateY(0)";
-    }
-    if (isSwiping) isSwiping = false;
-    ignore = true;
-    return;
+  if (Math.abs(deltaY) > 100 || (deltaX > deltaY && shouldIgnore(event.target, deltaX, 0))) {
+    ignoreX = true;
+  }
+  if (Math.abs(deltaX) > 100 || (deltaY > deltaX && shouldIgnore(event.target, 0, deltaY))) {
+    ignoreY = true;
   }
 
-  if ((deltaY > 100 || deltaX > 100 || isSwiping) && Math.max(deltaY, deltaX) > 0) {
+  const swipeDelta = getSwipeDelta();
+  if (swipeDelta > 25 || isSwiping) {
     isSwiping = true;
     if (dialogContent.value) {
-      dialogContent.value.style.transform = `translateY(${Math.max(deltaY, deltaX)}px)`;
+      dialogContent.value.style.transform = `translateY(${Math.max(swipeDelta, 0)}px)`;
     }
   } else {
     if (dialogContent.value) {
@@ -117,11 +147,7 @@ const onTouchMove = (event: TouchEvent) => {
 };
 
 const onTouchEnd = () => {
-  ignore = false;
-  const deltaX = touchEndX - touchStartX;
-  const deltaY = touchEndY - touchStartY;
-
-  if (Math.max(deltaY, deltaX) > SWIPE_THRESHOLD && isSwiping) {
+  if (isSwiping && getSwipeDelta() > SWIPE_THRESHOLD && getMoveSwipeDelta() > 0) {
     emit("hide");
   } else {
     if (dialogContent.value) {
