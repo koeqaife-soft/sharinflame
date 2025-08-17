@@ -101,6 +101,12 @@
       padding-left: 12px;
       padding-right: 12px;
     }
+
+    .theme-container {
+      .my-button:not(.selected) {
+        background-color: transparent;
+      }
+    }
   }
 
   .label {
