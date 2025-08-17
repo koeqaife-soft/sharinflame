@@ -34,3 +34,15 @@
 .q-menu .q-field {
   outline: 0 !important;
 }
+
+.q-field--focused {
+  .my-icon {
+    color: var(--primary);
+  }
+}
+
+.q-field--error {
+  .my-icon {
+    color: var(--q-negative);
+  }
+}
