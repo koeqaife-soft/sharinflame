@@ -41,12 +41,14 @@
     "luminance": "17"
   },
   "on-background-variant": {
-    "s": ["=", "20"],
-    "l": ["=", "85"],
+    "s": ["=", "25"],
+    "l": ["=", "90"],
     "luminance": "50"
   },
   "on-background": {
-    "hex": "#ffffff"
+    "s": ["=", "50"],
+    "l": ["=", "95"],
+    "luminance": "95"
   },
   "card": {
     "link": "background",
@@ -69,7 +71,7 @@
     "luminance": "80"
   },
   "on-card": {
-    "hex": "#ffffff"
+    "link": "on-background"
   },
   "outline": {
     "s": ["=", "15"],
