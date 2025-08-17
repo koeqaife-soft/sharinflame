@@ -265,6 +265,9 @@
 }
 
 .my-button.is-category {
+  span {
+    font-weight: 500;
+  }
   .my-icon {
     @include iconSize(24);
   }
@@ -274,6 +277,9 @@
     color: var(--on-card-secondary);
     .my-icon {
       animation: fillActivate var(--animate-duration) ease-out forwards;
+    }
+    span {
+      font-weight: 900;
     }
   }
 }
