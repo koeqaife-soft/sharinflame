@@ -14,7 +14,6 @@ import { useQuasar } from "quasar";
 const quasar = useQuasar();
 const canvas = ref<HTMLCanvasElement | null>(null);
 const container = ref<HTMLDivElement | null>(null);
-const moveInterval = 1 / 30;
 
 const particles: Particle[] = [];
 let ctx: CanvasRenderingContext2D | null = null;
@@ -190,7 +189,7 @@ const moveParticles = (currentTime: number) => {
 
   if (mouseMoved) {
     const moveDeltaTime = Math.min((currentTime - moveLastTime) / 1000, 0.06);
-    if (moveDeltaTime >= moveInterval) {
+    if (moveDeltaTime >= deltaTime * 2) {
       moveLastTime = currentTime;
 
       const mouseCol = Math.floor(mouseX / gridSize);
