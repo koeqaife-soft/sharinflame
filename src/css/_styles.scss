@@ -371,3 +371,15 @@ mark {
 .emoji {
   font-family: "NotoColorEmoji", sans-serif;
 }
+
+.login-card,
+.register-card {
+  .label-section {
+    display: flex;
+    align-items: center;
+    .my-icon {
+      @include iconSize(24);
+      margin-right: 8px;
+    }
+  }
+}

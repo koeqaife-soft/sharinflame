@@ -2,6 +2,7 @@
   <q-page class="flex flex-center">
     <div class="register-card card">
       <div class="q-pa-xs label-section card-section">
+        <my-icon icon="person_add" />
         <div class="text-h6">{{ $t("register") }}</div>
       </div>
       <div class="card-section">
@@ -12,8 +13,8 @@
             :label="$t('username')"
             lazy-rules
             :rules="[_validateName]"
-            :error="usernameError.hasError"
-            :error-message="usernameError.message"
+            :error="errors.username !== undefined"
+            :error-message="errors.username"
             :hint="t('reg_hints.username')"
             class="q-mb-sm"
           />
@@ -24,8 +25,8 @@
             type="email"
             lazy-rules
             :rules="[_validateEmail]"
-            :error="emailError.hasError"
-            :error-message="emailError.message"
+            :error="errors.email !== undefined"
+            :error-message="errors.email"
             class="q-mb-sm"
             :hint="t('reg_hints.email')"
           />
@@ -77,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { validateEmail, validatePassword, validateName } from "src/utils/validations";
 import { isAxiosError } from "axios";
@@ -85,6 +86,7 @@ import { register } from "src/api/auth";
 import { useRouter } from "vue-router";
 import { useMainStore } from "src/stores/main-store";
 import MyButton from "src/components/my/MyButton.vue";
+import MyIcon from "src/components/my/MyIcon.vue";
 
 const { t } = useI18n();
 const mainStore = useMainStore();
@@ -94,28 +96,15 @@ const email = ref("");
 const password = ref("");
 const confirmPassword = ref("");
 const isPwd = ref(true);
-const existing = ref<{ username: string | null; email: string | null }>({
-  username: null,
-  email: null
+const errors = ref({
+  email: undefined as string | undefined,
+  username: undefined as string | undefined
 });
+
+watch(username, () => (errors.value.username = undefined));
+watch(email, () => (errors.value.email = undefined));
 
 const loading = ref(false);
-
-const usernameError = computed(() => {
-  const message = username.value != existing.value.username;
-  return {
-    hasError: message !== true,
-    message: message === true ? "" : t("username_exists")
-  };
-});
-
-const emailError = computed(() => {
-  const message = email.value != existing.value.email;
-  return {
-    hasError: message !== true,
-    message: message === true ? "" : t("email_exists")
-  };
-});
 
 const router = useRouter();
 
@@ -137,9 +126,9 @@ const _register = async () => {
   } catch (error) {
     if (isAxiosError(error)) {
       if (error.response?.data["error"] == "USERNAME_EXISTS") {
-        existing.value.username = username.value;
+        errors.value.username = t("username_exists");
       } else if (error.response?.data["error"] == "USER_ALREADY_EXISTS") {
-        existing.value.email = email.value;
+        errors.value.email = t("email_exists");
       } else throw error;
     } else throw error;
   } finally {

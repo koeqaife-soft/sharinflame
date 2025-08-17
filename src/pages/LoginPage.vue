@@ -2,6 +2,7 @@
   <q-page class="flex flex-center">
     <div class="login-card card">
       <div class="q-pa-xs label-section card-section">
+        <my-icon icon="login" />
         <div class="text-h6">{{ $t("login") }}</div>
       </div>
       <div class="card-section">
@@ -57,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { validateEmail, validatePassword } from "src/utils/validations";
 import { isAxiosError } from "axios";
@@ -65,6 +66,7 @@ import { login } from "src/api/auth";
 import { useRouter } from "vue-router";
 import { useMainStore } from "src/stores/main-store";
 import MyButton from "src/components/my/MyButton.vue";
+import MyIcon from "src/components/my/MyIcon.vue";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -77,6 +79,8 @@ const errors = ref({
   email: "",
   password: ""
 });
+watch(email, () => (errors.value.email = ""));
+watch(password, () => (errors.value.password = ""));
 
 const loading = ref(false);
 
