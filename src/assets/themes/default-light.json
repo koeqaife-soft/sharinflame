@@ -1,19 +1,19 @@
 {
   "primary": {
-    "s": ["=", "45"],
+    "s": ["=", "40"],
     "l": ["=", "35"],
-    "luminance": "30"
+    "luminance": "35"
   },
   "secondary": {
     "s": ["=", "20"],
-    "l": ["=", "40"],
-    "luminance": "30"
+    "l": ["=", "35"],
+    "luminance": "35"
   },
   "tertiary": {
     "h": ["-", "80"],
-    "s": ["=", "45"],
+    "s": ["=", "40"],
     "l": ["=", "35"],
-    "luminance": "30"
+    "luminance": "35"
   },
   "on-primary": {
     "hex": "#ffffff"
@@ -25,39 +25,39 @@
     "hex": "#ffffff"
   },
   "background": {
-    "s": ["=", "80"],
-    "l": ["=", "98"],
+    "s": ["=", "90"],
+    "l": ["=", "97"],
     "luminance": "97"
   },
   "background-variant": {
-    "s": ["=", "50"],
+    "s": ["=", "40"],
     "l": ["=", "95"],
     "luminance": "85"
   },
   "on-background-variant": {
     "s": ["=", "35"],
     "l": ["=", "30"],
-    "luminance": "20"
+    "luminance": "30"
   },
   "on-background": {
     "s": ["=", "50"],
     "l": ["=", "15"],
-    "luminance": "10"
+    "luminance": "15"
   },
   "card": {
-    "s": ["=", "80"],
+    "s": ["=", "70"],
     "l": ["=", "96"],
-    "luminance": "97"
+    "luminance": "95"
   },
   "card-high": {
-    "s": ["=", "50"],
-    "l": ["=", "92"],
-    "luminance": "95"
+    "s": ["=", "30"],
+    "l": ["=", "90"],
+    "luminance": "90"
   },
   "card-secondary": {
     "s": ["=", "70"],
     "l": ["=", "90"],
-    "luminance": "80"
+    "luminance": "85"
   },
   "on-card-secondary": {
     "s": ["=", "40"],
@@ -78,8 +78,7 @@
   "attention": {
     "h": ["=", "0"],
     "s": ["=", "100"],
-    "l": ["=", "30"],
-    "luminance": "30"
+    "l": ["=", "50"]
   },
   "on-attention": {
     "hex": "#ffffff"

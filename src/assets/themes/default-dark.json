@@ -1,37 +1,37 @@
 {
   "primary": {
     "s": ["=", "60"],
-    "l": ["=", "68"],
-    "luminance": "100"
+    "l": ["=", "85"],
+    "luminance": "73"
   },
   "secondary": {
-    "s": ["=", "30"],
-    "l": ["=", "84"],
-    "luminance": "65"
+    "s": ["=", "20"],
+    "l": ["=", "80"],
+    "luminance": "73"
   },
   "tertiary": {
     "h": ["-", "80"],
-    "s": ["=", "65"],
-    "l": ["=", "70"],
-    "luminance": "85"
+    "s": ["=", "50"],
+    "l": ["=", "75"],
+    "luminance": "70"
   },
   "on-primary": {
     "link": "primary",
-    "l": ["=", "70"],
-    "luminance": "1"
+    "l": ["=", "10"],
+    "luminance": "10"
   },
   "on-secondary": {
     "link": "secondary",
-    "l": ["=", "70"],
-    "luminance": "1"
+    "l": ["=", "10"],
+    "luminance": "10"
   },
   "on-tertiary": {
     "link": "tertiary",
-    "l": ["=", "70"],
-    "luminance": "1"
+    "l": ["=", "10"],
+    "luminance": "10"
   },
   "background": {
-    "s": ["=", "14"],
+    "s": ["=", "16"],
     "l": ["=", "6"],
     "luminance": "7"
   },
@@ -43,7 +43,7 @@
   "on-background-variant": {
     "s": ["=", "25"],
     "l": ["=", "90"],
-    "luminance": "50"
+    "luminance": "80"
   },
   "on-background": {
     "s": ["=", "50"],
@@ -63,12 +63,12 @@
   "card-secondary": {
     "s": ["=", "20"],
     "l": ["=", "25"],
-    "luminance": "55"
+    "luminance": "30"
   },
   "on-card-secondary": {
     "s": ["=", "35"],
     "l": ["=", "93"],
-    "luminance": "80"
+    "luminance": "85"
   },
   "on-card": {
     "link": "on-background"
@@ -84,13 +84,11 @@
   "attention": {
     "h": ["=", "0"],
     "s": ["=", "100"],
-    "l": ["=", "45"],
-    "luminance": "100"
+    "l": ["=", "68"]
   },
   "on-attention": {
     "link": "attention",
     "h": ["=", "0"],
-    "l": ["=", "70"],
-    "luminance": "1"
+    "l": ["=", "10"]
   }
 }
