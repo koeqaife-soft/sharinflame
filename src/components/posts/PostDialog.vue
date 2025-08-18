@@ -171,6 +171,7 @@ function reloadComments() {
   scrollKey.value = Date.now();
   cursor = undefined;
   headerVisible.value = true;
+  if (!allowLoading.value) allowLoad();
 }
 
 function updateMeta<T>(key: string, value: T) {
