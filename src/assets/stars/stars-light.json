@@ -9,26 +9,26 @@
   "variation1": {
     "h": ["=", "0"],
     "link": "$settings",
-    "luminance": "30"
+    "luminance": "20"
   },
   "variation2": {
     "h": ["=", "180"],
     "link": "$settings",
-    "luminance": "30"
+    "luminance": "20"
   },
   "variation3": {
     "h": ["=", "230"],
     "link": "$settings",
-    "luminance": "30"
+    "luminance": "20"
   },
   "variation4": {
     "h": ["=", "30"],
     "link": "$settings",
-    "luminance": "30"
+    "luminance": "20"
   },
   "variation5": {
     "h": ["=", "55"],
     "link": "$settings",
-    "luminance": "30"
+    "luminance": "20"
   }
 }

@@ -1,6 +1,6 @@
 {
   "$settings": {
-    "s": ["=", "90"],
+    "s": ["=", "40"],
     "l": ["=", "68"]
   },
   "variation0": {
@@ -9,26 +9,26 @@
   "variation1": {
     "h": ["=", "0"],
     "link": "$settings",
-    "luminance": "100"
+    "luminance": "65"
   },
   "variation2": {
     "h": ["=", "180"],
     "link": "$settings",
-    "luminance": "100"
+    "luminance": "65"
   },
   "variation3": {
     "h": ["=", "230"],
     "link": "$settings",
-    "luminance": "100"
+    "luminance": "65"
   },
   "variation4": {
     "h": ["=", "30"],
     "link": "$settings",
-    "luminance": "100"
+    "luminance": "65"
   },
   "variation5": {
     "h": ["=", "55"],
     "link": "$settings",
-    "luminance": "100"
+    "luminance": "65"
   }
 }
