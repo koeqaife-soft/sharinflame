@@ -115,11 +115,11 @@ function hueSaturationCorrection(hue: number): number {
 
   const points: [number, number][] = [
     [0, 1],
-    [40, 0.6],
-    [90, 0.7],
+    [40, 0.8],
+    [90, 0.8],
     [180, 0.5],
     [250, 0.7],
-    [320, 0.85],
+    [320, 0.8],
     [360, 1]
   ] as const;
 
