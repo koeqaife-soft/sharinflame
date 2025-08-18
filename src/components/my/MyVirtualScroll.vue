@@ -191,7 +191,9 @@ function onItemHeightChange(index: number, height: number) {
 function shouldLoadMore() {
   const contentHeight = scrollContent.value?.offsetHeight || 0;
   return (
-    props.infiniteLoadType === "bottom" && (bottom.value >= contentHeight || contentHeight < containerHeight.value)
+    isContentVisible.value &&
+    props.infiniteLoadType === "bottom" &&
+    (bottom.value >= contentHeight || contentHeight < containerHeight.value)
   );
 }
 
@@ -228,6 +230,7 @@ function checkVisibility(entries: IntersectionObserverEntry[]) {
     recalculatePositionVariables();
     updateVisibleItems();
     updateObservedElements(divs.value);
+    checkLoading();
   }
 }
 
@@ -276,15 +279,32 @@ let intersectionObserver: IntersectionObserver;
 
 onMounted(() => {
   showedItems.value = props.items;
-  updateShowedItems();
-  updateVisibleItems();
-  checkLoading();
 
   intersectionObserver = new IntersectionObserver(checkVisibility, {
     root: scrollContainer.value,
     threshold: 0.1
   });
-  if (scrollContent.value) intersectionObserver.observe(scrollContent.value);
+  if (scrollContent.value) {
+    intersectionObserver.observe(scrollContent.value);
+
+    const rect = scrollContent.value.getBoundingClientRect();
+    const rootRect = scrollContainer.value
+      ? scrollContainer.value.getBoundingClientRect()
+      : { top: 0, bottom: window.innerHeight };
+
+    const isVisible = rect.bottom > rootRect.top && rect.top < rootRect.bottom;
+    checkVisibility([
+      {
+        target: scrollContent.value,
+        isIntersecting: isVisible,
+        intersectionRatio: isVisible ? 1 : 0,
+        boundingClientRect: rect,
+        intersectionRect: rect,
+        rootBounds: rootRect,
+        time: performance.now()
+      } as IntersectionObserverEntry
+    ]);
+  }
 
   if (!props.noResizeObserver)
     resizeObserver = new ResizeObserver((entries) => {
@@ -292,8 +312,6 @@ onMounted(() => {
         const indexAttr = entry.target.getAttribute("data-index");
         if (indexAttr !== null) {
           onItemHeightChange(Number(indexAttr), entry.contentRect.height);
-        } else {
-          checkLoading();
         }
       }
     });
@@ -304,9 +322,9 @@ onMounted(() => {
 
   window.addEventListener("resize", onResize, { passive: true });
 
-  void nextTick(() => {
-    isContentVisible.value = scrollContent.value?.checkVisibility() ?? false;
-  });
+  updateShowedItems();
+  updateVisibleItems();
+  checkLoading();
 });
 
 onBeforeUnmount(() => {
