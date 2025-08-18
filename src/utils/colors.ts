@@ -110,15 +110,31 @@ function adjustLightness(h: number, s: number, l: number, targetLuminance = 50):
   return Math.max(0, Math.min(100, newL));
 }
 
-const hueSaturationCorrection = (hue: number): number => {
-  const h = hue % 360;
+function hueSaturationCorrection(hue: number): number {
+  const h = ((hue % 360) + 360) % 360;
 
-  if (h >= 40 && h < 90) return 0.7;
-  if (h >= 90 && h < 160) return 0.85;
-  if (h >= 160 && h < 250) return 0.95;
-  if (h >= 250 && h < 320) return 1;
-  return 1.0;
-};
+  const points: [number, number][] = [
+    [0, 1],
+    [40, 0.6],
+    [90, 0.7],
+    [180, 0.5],
+    [250, 0.7],
+    [320, 0.85],
+    [360, 1]
+  ] as const;
+
+  for (let i = 0; i < points.length - 1; i++) {
+    const [h1, f1] = points[i]!;
+    const [h2, f2] = points[i + 1]!;
+
+    if (h >= h1 && h <= h2) {
+      const t = (h - h1) / (h2 - h1);
+      return f1 + (f2 - f1) * t;
+    }
+  }
+
+  return 1;
+}
 
 function adjustSaturation(h: number, s: number): number {
   const factor = hueSaturationCorrection(h);
