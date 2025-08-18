@@ -21,7 +21,7 @@
           <div class="no-notifications" v-if="showNoNotifications">{{ $t("no_notifications") }}</div>
           <div class="unread-notifications card horizontal-container q-mb-sm">
             <span>
-              <my-icon icon="notifications_unread" />
+              <my-icon icon="visibility" />
               <span class="label">{{ $t("unread") }}: </span>
               <span class="count">{{ mainStore.getUnreadCount() }}</span>
             </span>
