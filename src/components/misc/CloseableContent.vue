@@ -126,10 +126,10 @@ const onTouchMove = (event: TouchEvent) => {
   const deltaX = touchEndX - touchStartX;
   const deltaY = touchEndY - touchStartY;
 
-  if (Math.abs(deltaY) > 100 || (deltaX > deltaY && shouldIgnore(event.target, deltaX, 0))) {
+  if ((Math.abs(deltaY) > 100 && !ignoreY) || (deltaX > deltaY && shouldIgnore(event.target, deltaX, 0))) {
     ignoreX = true;
   }
-  if (Math.abs(deltaX) > 100 || (deltaY > deltaX && shouldIgnore(event.target, 0, deltaY))) {
+  if ((Math.abs(deltaX) > 100 && !ignoreX) || (deltaY > deltaX && shouldIgnore(event.target, 0, deltaY))) {
     ignoreY = true;
   }
 
