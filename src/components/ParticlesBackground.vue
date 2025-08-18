@@ -104,7 +104,7 @@ const generateInitialParticles = () => {
 
     const z = Math.random() * 10;
     const size = Math.random() * 2 + 1;
-    const threshold = 130 - z;
+    const threshold = 150 - z;
     const speedOffset = (20 - z * 2) / 40;
 
     const alpha = Math.random();
