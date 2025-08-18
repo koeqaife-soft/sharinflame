@@ -31,9 +31,9 @@
     "luminance": "10"
   },
   "background": {
-    "s": ["=", "16"],
+    "s": ["=", "14"],
     "l": ["=", "6"],
-    "luminance": "7"
+    "luminance": "5"
   },
   "background-variant": {
     "s": ["=", "10"],
@@ -53,12 +53,12 @@
   "card": {
     "link": "background",
     "l": ["=", "9"],
-    "luminance": "10"
+    "luminance": "8"
   },
   "card-high": {
     "link": "background",
     "l": ["=", "13"],
-    "luminance": "15"
+    "luminance": "12"
   },
   "card-secondary": {
     "s": ["=", "20"],
