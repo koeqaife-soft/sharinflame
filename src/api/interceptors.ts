@@ -226,7 +226,7 @@ export function waitForRefresh() {
         if (success) {
           resolve();
         } else {
-          reject(new Error("Ошибка обновления токена"));
+          reject(new Error("Failed refreshing token"));
         }
       });
     } else {
