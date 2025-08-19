@@ -122,7 +122,9 @@ class WebSocketService {
     this.isReconnecting = true;
     this.reconnectAttempts++;
     const delay =
-      Math.min(this.baseReconnectInterval * Math.pow(1.5, this.reconnectAttempts), 60000) + Math.random() * 500;
+      this.reconnectAttempts == 1
+        ? 500
+        : Math.min(this.baseReconnectInterval * Math.pow(1.5, this.reconnectAttempts - 1), 60000) + Math.random() * 500;
 
     console.debug(`Reconnecting attempt ${this.reconnectAttempts} in ${Math.round(delay)}ms...`);
     await new Promise<void>((resolve) => {
