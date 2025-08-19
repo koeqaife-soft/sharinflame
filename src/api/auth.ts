@@ -1,7 +1,7 @@
 import type { AxiosInstance } from "axios";
 import router from "src/router";
 import websockets from "src/utils/websockets";
-import { waitForRefresh } from "./interceptors";
+import { waitForRefresh, refreshNow } from "./interceptors";
 
 let api: AxiosInstance;
 
@@ -69,7 +69,7 @@ function init(_api: AxiosInstance) {
       token: getAccessToken()!
     });
   });
-  websockets.on("refresh_recommended", () => void refresh());
+  websockets.on("refresh_recommended", () => void refreshNow());
 }
 
 function setTokens({ refresh, access }: { refresh?: string; access?: string }) {

@@ -242,4 +242,25 @@ function init(_api: AxiosInstance, _mainStore: mainStoreType) {
   connectionInterceptor();
 }
 
+export const refreshNow = async () => {
+  if (!isRefreshing) {
+    isRefreshing = true;
+    refreshChannel.postMessage({ type: "refresh_start" });
+    let success = false;
+
+    try {
+      const refreshResponse = await refresh();
+      success = refreshResponse.data.success;
+
+      if (success) {
+        onRefreshed(true);
+      } else throw new Error("Unable to refresh token");
+    } catch (refreshError) {
+      onRefreshed(false);
+      invalidAuth();
+      return Promise.reject(refreshError as Error);
+    }
+  }
+};
+
 export { init, connectionInterceptor, authInterceptor };
