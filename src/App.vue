@@ -78,6 +78,7 @@ function onChange() {
   } else {
     offlineDialog.value = false;
     mainStore.connectTries = 0;
+    websockets.skipReconnectTimeout();
   }
 }
 

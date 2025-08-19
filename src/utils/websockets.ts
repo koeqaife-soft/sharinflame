@@ -29,6 +29,8 @@ class WebSocketService {
   private isManualDisconnect: boolean = false;
   private shouldStayConnected: boolean = true;
   private isReconnecting: boolean = false;
+  private reconnectResolve: (() => void) | undefined = undefined;
+  private reconnectTimeout: NodeJS.Timeout | undefined = undefined;
 
   connect(url: string): void {
     if (this.isConnected()) {
@@ -80,20 +82,7 @@ class WebSocketService {
     this.socket.onmessage = async (event: MessageEvent) => {
       try {
         const message: ServerEvent = JSON.parse(event.data);
-        const eventName = message.event;
-        const payload = message.data;
-
-        const callbacks = this.listeners.get(eventName);
-        if (callbacks) {
-          for (const callback of callbacks) {
-            try {
-              const result = callback(payload);
-              if (result instanceof Promise) await result;
-            } catch (error) {
-              console.error(`Error in callback for event "${eventName}":`, error);
-            }
-          }
-        }
+        await this.handleEvent(message);
       } catch (error) {
         console.error("Failed to parse WebSocket message:", error);
       }
@@ -107,6 +96,23 @@ class WebSocketService {
     };
   }
 
+  private async handleEvent(message: ServerEvent) {
+    const eventName = message.event;
+    const payload = message.data;
+
+    const callbacks = this.listeners.get(eventName);
+    if (callbacks) {
+      for (const callback of callbacks) {
+        try {
+          const result = callback(payload);
+          if (result instanceof Promise) await result;
+        } catch (error) {
+          console.error(`Error in callback for event "${eventName}":`, error);
+        }
+      }
+    }
+  }
+
   private async handleReconnect(): Promise<void> {
     if (this.isReconnecting) {
       console.debug("Reconnect already in progress, skipping");
@@ -116,10 +122,17 @@ class WebSocketService {
     this.isReconnecting = true;
     this.reconnectAttempts++;
     const delay =
-      Math.min(this.baseReconnectInterval * Math.pow(1.5, this.reconnectAttempts), 10000) + Math.random() * 500;
+      Math.min(this.baseReconnectInterval * Math.pow(1.5, this.reconnectAttempts), 60000) + Math.random() * 500;
 
     console.debug(`Reconnecting attempt ${this.reconnectAttempts} in ${Math.round(delay)}ms...`);
-    await new Promise((resolve) => setTimeout(resolve, delay));
+    await new Promise<void>((resolve) => {
+      this.reconnectResolve = resolve;
+      this.reconnectTimeout = setTimeout(() => {
+        resolve();
+        this.reconnectResolve = undefined;
+        this.reconnectTimeout = undefined;
+      }, delay);
+    });
 
     this.isReconnecting = false;
     this.attemptConnection();
@@ -136,6 +149,14 @@ class WebSocketService {
     const callbacks = this.listeners.get(eventName);
     if (callbacks) {
       (callbacks as Set<EventListener<EventMap[K]>>).delete(callback);
+    }
+  }
+
+  skipReconnectTimeout(): void {
+    if (this.reconnectAttempts > 5 && this.reconnectResolve && this.reconnectTimeout) {
+      console.debug("Skipping reconnect timeout");
+      this.reconnectResolve();
+      clearTimeout(this.reconnectTimeout);
     }
   }
 
