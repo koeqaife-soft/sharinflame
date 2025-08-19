@@ -121,18 +121,18 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed, defineAsyncComponent, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useProfileStore } from "src/stores/profile-store";
 import { type QInput, useQuasar } from "quasar";
 import { useI18n } from "vue-i18n";
 import MyButton from "src/components/my/MyButton.vue";
 import MyIcon from "src/components/my/MyIcon.vue";
 import MyChip from "src/components/my/MyChip.vue";
-
-const UserDialog = defineAsyncComponent(() => import("src/components/profile/UserDialog.vue"));
+import { useMainStore } from "src/stores/main-store";
 
 const { t } = useI18n();
 const quasar = useQuasar();
+const mainStore = useMainStore();
 const profileStore = useProfileStore();
 const profile = ref(profileStore.profile);
 const aboutMeRef = ref<QInput | null>(null);
@@ -203,10 +203,7 @@ async function updateProfile() {
 }
 
 function previewProfile() {
-  quasar.dialog({
-    component: UserDialog,
-    componentProps: { user: newProfile.value, notSync: true }
-  });
+  mainStore.openDialog("user", "preview", { user: newProfile.value, notSync: true });
 }
 
 async function onLoad() {

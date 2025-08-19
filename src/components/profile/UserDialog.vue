@@ -76,7 +76,7 @@
   </q-dialog>
 </template>
 <script setup lang="ts">
-import { useDialogPluginComponent, useQuasar } from "quasar";
+import { useDialogPluginComponent } from "quasar";
 import UserAvatar from "../profile/UserAvatar.vue";
 import CloseableContent from "../misc/CloseableContent.vue";
 import CategoryButtons from "src/components/misc/CategoryButtons.vue";
@@ -89,14 +89,12 @@ import { useProfileStore } from "src/stores/profile-store";
 import { randomSize } from "src/utils/random";
 import { follow, unfollow } from "src/api/users";
 
-const SettingsDialog = defineAsyncComponent(() => import("../settings/SettingsDialog.vue"));
 const UserDialogInfo = defineAsyncComponent(() => import("./user-dialog/UserInfo.vue"));
 const UserDialogPosts = defineAsyncComponent(() => import("./user-dialog/UserPosts.vue"));
 
 defineEmits([...useDialogPluginComponent.emits]);
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
 const { t } = useI18n();
-const quasar = useQuasar();
 const mainStore = useMainStore();
 const profileStore = useProfileStore();
 const meta = ref({});
@@ -149,17 +147,10 @@ const changeType = (type: string) => {
 };
 
 function editProfile() {
-  quasar.dialog({
-    component: SettingsDialog,
-    componentProps: {
-      open: "my_account"
-    }
-  });
+  mainStore.openDialog("settings", "", { open: "my_account" });
 }
 
 onMounted(async () => {
-  mainStore.openedDialogs.user?.();
-  mainStore.openedDialogs.user = dialogRef.value!.hide;
   if (props.notSync) {
     userRef.value = props.user;
     isMe.value = userRef.value.user_id == profileStore.profile?.user_id;

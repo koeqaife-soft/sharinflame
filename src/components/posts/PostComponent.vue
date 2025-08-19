@@ -86,13 +86,14 @@ import { i18n } from "src/boot/i18n";
 import TextParts from "../misc/TextParts.vue";
 import MyChip from "../my/MyChip.vue";
 import MyButton from "../my/MyButton.vue";
+import { useMainStore } from "src/stores/main-store";
 
 const ReactionButtons = defineAsyncComponent(() => import("./ReactionButtons.vue"));
 const OpenUserDialog = defineAsyncComponent(() => import("../profile/OpenUserDialog.vue"));
-const PostDialog = defineAsyncComponent(() => import("../posts/PostDialog.vue"));
 const MoreMenu = defineAsyncComponent(() => import("./PostMoreMenu.vue"));
 const PostEditor = defineAsyncComponent(() => import("./PostEditor.vue"));
 const quasar = useQuasar();
+const mainStore = useMainStore();
 
 const emit = defineEmits<{
   (event: "deletePost", postId: string): void;
@@ -117,12 +118,7 @@ function allowAnimate() {
 
 function postDialog() {
   if (props.inDialog) return;
-  quasar.dialog({
-    component: PostDialog,
-    componentProps: {
-      post: postRef.value
-    }
-  });
+  mainStore.openDialog("post", postRef.value.post_id, { post: postRef.value });
 }
 
 async function action(type: string, data: unknown) {

@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import * as colors from "../utils/colors";
 import { useQuasar } from "quasar";
 import { getUnreadNotificationsCount } from "src/api/users";
+import { defineAsyncComponent } from "vue";
 
 const cacheVersion = 3;
 
@@ -14,7 +15,21 @@ const defaultSettings = {
 
 type KeyOfSettings = keyof typeof defaultSettings;
 
-type OpenedDialogs = Record<string, () => void>;
+type OpenedDialogs = Map<
+  string,
+  {
+    key: string;
+    hide: () => void;
+  }
+>;
+
+const dialogs = {
+  user: defineAsyncComponent(() => import("src/components/profile/UserDialog.vue")),
+  settings: defineAsyncComponent(() => import("src/components/settings/SettingsDialog.vue")),
+  post: defineAsyncComponent(() => import("src/components/posts/PostDialog.vue")),
+  myActivity: defineAsyncComponent(() => import("src/components/my-activity/MyActivityDialog.vue")),
+  postEditor: defineAsyncComponent(() => import("src/components/posts/PostEditor.vue"))
+} as const;
 
 const getSettings = () => {
   const stored = JSON.parse(localStorage.getItem("settings") || "{}");
@@ -36,7 +51,7 @@ export const useMainStore = defineStore("main", {
     initialized: 0 as 0 | 1 | 2 | 3,
     isOffline: false,
     connectTries: 0,
-    openedDialogs: {} as OpenedDialogs,
+    openedDialogs: new Map() as OpenedDialogs,
     settings: getSettings(),
     lastNotifications: [] as ApiNotification[],
     quasar: useQuasar(),
@@ -113,6 +128,28 @@ export const useMainStore = defineStore("main", {
         });
       }
       return this.unreadCount;
+    },
+    openDialog(name: keyof typeof dialogs, key: string, props: Record<string, unknown>) {
+      const existingDialog = this.openedDialogs.get(name);
+      if (existingDialog) {
+        try {
+          existingDialog.hide();
+        } catch {
+          // noop
+        }
+      }
+
+      const component = dialogs[name];
+
+      const dialog = this.quasar.dialog({
+        component: component,
+        componentProps: props
+      });
+
+      this.openedDialogs.set(name, {
+        key: key,
+        hide: () => dialog.hide()
+      });
     }
   }
 });

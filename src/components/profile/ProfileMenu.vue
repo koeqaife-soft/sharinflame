@@ -1,6 +1,11 @@
 <template>
   <div class="container profile-menu-component">
-    <my-button type="card" :class="['open-profile', buttonsClass]" :key="user?.user_id || 0" @click="openUserDialog">
+    <my-button
+      type="card"
+      :class="['open-profile', buttonsClass]"
+      :key="user?.user_id || 0"
+      @click="openDialog('user', user!.user_id, { user: user })"
+    >
       <user-avatar :user="user!" />
       <div class="text-container">
         <div class="label">{{ $t("view_profile") }}</div>
@@ -23,7 +28,7 @@
       :class="['create-post', buttonsClass]"
       icon="add_circle"
       :label="$t('create_post')"
-      @click="createPost"
+      @click="mainStore.openDialog('postEditor', '', {})"
       unelevated
       no-caps
     />
@@ -32,7 +37,7 @@
       :class="['my-activity', buttonsClass]"
       icon="browse_activity"
       :label="$t('my_activity')"
-      @click="openMyActivity"
+      @click="mainStore.openDialog('myActivity', '', {})"
       unelevated
       no-caps
     />
@@ -44,23 +49,18 @@
       :label="$t('settings')"
       unelevated
       no-caps
-      @click="openSettings"
+      @click="mainStore.openDialog('settings', '', {})"
     />
   </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted, watch, defineAsyncComponent, type Component } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { useProfileStore } from "src/stores/profile-store";
 import { useQuasar } from "quasar";
 import MySwitch from "../my/MySwitch.vue";
 import MyButton from "../my/MyButton.vue";
 import UserAvatar from "./UserAvatar.vue";
 import { useMainStore } from "src/stores/main-store";
-
-const UserDialog = defineAsyncComponent(() => import("./UserDialog.vue"));
-const PostEditor = defineAsyncComponent(() => import("../posts/PostEditor.vue"));
-const MyActivity = defineAsyncComponent(() => import("../my-activity/MyActivityDialog.vue"));
-const SettingsDialog = defineAsyncComponent(() => import("../settings/SettingsDialog.vue"));
 
 const quasar = useQuasar();
 
@@ -95,18 +95,10 @@ const emit = defineEmits<{
   (e: "close-menu"): void;
 }>();
 
-function openDialog(component: Component, props: unknown) {
-  quasar.dialog({
-    component: component,
-    componentProps: props
-  });
+function openDialog(...props: Parameters<typeof mainStore.openDialog>) {
+  mainStore.openDialog(...props);
   emit("close-menu");
 }
-
-const openUserDialog = () => openDialog(UserDialog, { user: user.value });
-const openMyActivity = () => openDialog(MyActivity, {});
-const createPost = () => openDialog(PostEditor, {});
-const openSettings = () => openDialog(SettingsDialog, {});
 
 defineProps<Props>();
 onMounted(loadUser);

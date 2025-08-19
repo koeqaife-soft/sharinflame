@@ -87,7 +87,7 @@
 </template>
 <script setup lang="ts">
 import { useDialogPluginComponent, useQuasar } from "quasar";
-import { defineAsyncComponent, onMounted, type Ref, ref } from "vue";
+import { onMounted, type Ref, ref } from "vue";
 import { createPost, editPost } from "src/api/posts";
 import { useProfileStore } from "src/stores/profile-store";
 import { useI18n } from "vue-i18n";
@@ -104,8 +104,6 @@ const props = defineProps<{
 
 defineEmits([...useDialogPluginComponent.emits]);
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
-
-const PostDialog = defineAsyncComponent(() => import("./PostDialog.vue"));
 
 const quasar = useQuasar();
 const profileStore = useProfileStore();
@@ -205,12 +203,7 @@ async function createPostButton() {
       ...r.data.data,
       user: await profileStore.getProfile()
     };
-    quasar.dialog({
-      component: PostDialog,
-      componentProps: {
-        post: post
-      }
-    });
+    mainStore.openDialog("post", post.post_id, { post: post });
     quasar.notify({
       type: "default-notification",
       message: t("post_created.msg"),
@@ -235,9 +228,6 @@ const removeTag = (index: number) => {
 };
 
 onMounted(() => {
-  mainStore.openedDialogs.createPost?.();
-  mainStore.openedDialogs.createPost = dialogRef.value!.hide;
-
   if (props.originalPost) {
     editMode.value = true;
 

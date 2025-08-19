@@ -36,11 +36,11 @@ import { i18n } from "src/boot/i18n";
 import { useQuasar } from "quasar";
 import { deleteComment, getPost } from "src/api/posts";
 import { isAxiosError } from "axios";
+import { useMainStore } from "src/stores/main-store";
 
 const OpenUserDialog = defineAsyncComponent(() => import("../profile/OpenUserDialog.vue"));
 const ReactionButtons = defineAsyncComponent(() => import("./ReactionButtons.vue"));
 const MoreMenu = defineAsyncComponent(() => import("./CommentMoreMenu.vue"));
-const PostDialog = defineAsyncComponent(() => import("src/components/posts/PostDialog.vue"));
 
 let controller: AbortController | null = null;
 
@@ -59,6 +59,7 @@ const disable = ref(false);
 const moreMenuLoading = ref(false);
 
 const quasar = useQuasar();
+const mainStore = useMainStore();
 
 function allowAnimate() {
   canAnimate.value = true;
@@ -96,13 +97,10 @@ async function action(type: string, data: unknown) {
         if (!controller) controller = new AbortController();
         const post = await getPost(props.comment.post_id, { signal: controller.signal });
         if (post.data.success) {
-          quasar.dialog({
-            component: PostDialog,
-            componentProps: {
-              post: post.data.data,
-              firstComment: props.comment,
-              autoLoad: false
-            }
+          mainStore.openDialog("post", post.data.data.post_id, {
+            post: post.data.data,
+            firstComment: props.comment,
+            autoLoad: false
           });
         }
         moreMenuLoading.value = false;

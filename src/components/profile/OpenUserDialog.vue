@@ -4,25 +4,19 @@
   </my-button>
 </template>
 <script setup lang="ts">
-import { useQuasar } from "quasar";
 import { defineAsyncComponent } from "vue";
 import MyButton from "../my/MyButton.vue";
+import { useMainStore } from "src/stores/main-store";
 
-const quasar = useQuasar();
+const mainStore = useMainStore();
 
 const UserAvatar = defineAsyncComponent(() => import("./UserAvatar.vue"));
-const UserDialog = defineAsyncComponent(() => import("./UserDialog.vue"));
 
 const props = defineProps<{
   user: User;
 }>();
 
 function openDialog() {
-  quasar.dialog({
-    component: UserDialog,
-    componentProps: {
-      user: props.user
-    }
-  });
+  mainStore.openDialog("user", props.user.user_id, { user: props.user });
 }
 </script>

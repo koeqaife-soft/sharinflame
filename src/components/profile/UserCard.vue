@@ -21,13 +21,12 @@
 <script setup lang="ts">
 import { defineAsyncComponent, ref } from "vue";
 import { follow, unfollow } from "src/api/users";
-import { useQuasar } from "quasar";
 import MyButton from "../my/MyButton.vue";
+import { useMainStore } from "src/stores/main-store";
 
-const UserDialog = defineAsyncComponent(() => import("./UserDialog.vue"));
 const OpenUserDialog = defineAsyncComponent(() => import("./OpenUserDialog.vue"));
 
-const quasar = useQuasar();
+const mainStore = useMainStore();
 
 const props = defineProps<{
   user: User;
@@ -52,11 +51,6 @@ async function followButton() {
 }
 
 function userDialog() {
-  quasar.dialog({
-    component: UserDialog,
-    componentProps: {
-      user: userRef
-    }
-  });
+  mainStore.openDialog("user", userRef.value.user_id, { user: userRef.value });
 }
 </script>

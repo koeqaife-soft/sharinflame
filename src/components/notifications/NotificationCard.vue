@@ -31,10 +31,11 @@ import { useI18n } from "vue-i18n";
 import MyIcon from "src/components/my/MyIcon.vue";
 import MyButton from "src/components/my/MyButton.vue";
 import { readNotification } from "src/api/users";
+import { useMainStore } from "src/stores/main-store";
 
 const { t } = useI18n();
 const quasar = useQuasar();
-const PostDialog = defineAsyncComponent(() => import("src/components/posts/PostDialog.vue"));
+const mainStore = useMainStore();
 const OpenUserDialog = defineAsyncComponent(() => import("../profile/OpenUserDialog.vue"));
 
 let controller: AbortController | null = null;
@@ -125,12 +126,7 @@ async function onClicked() {
     if (props.notif.linked_type == "post") {
       const post = await sync(() => getPost(props.notif.loaded!.post_id, { signal: controller!.signal }), "post");
       if (post.data.success) {
-        quasar.dialog({
-          component: PostDialog,
-          componentProps: {
-            post: post.data.data
-          }
-        });
+        mainStore.openDialog("post", post.data.data.post_id, { post: post.data.data });
       }
     } else if (props.notif.linked_type == "comment") {
       const [post, comment] = await sync(
@@ -144,13 +140,10 @@ async function onClicked() {
         "post"
       );
       if (post.data.success && comment.data.success) {
-        quasar.dialog({
-          component: PostDialog,
-          componentProps: {
-            post: post.data.data,
-            firstComment: comment.data.data,
-            autoLoad: false
-          }
+        mainStore.openDialog("post", post.data.data.post_id, {
+          post: post.data.data,
+          firstComment: comment.data.data,
+          autoLoad: false
         });
         emit("onLoaded");
       }

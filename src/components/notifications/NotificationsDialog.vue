@@ -135,8 +135,6 @@ function on_read(data: { id: string } | object) {
 }
 
 onMounted(() => {
-  mainStore.openedDialogs.notifications?.();
-  mainStore.openedDialogs.notifications = dialogRef.value!.hide;
   websockets.on("notification_read", on_read);
 });
 

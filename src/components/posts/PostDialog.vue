@@ -104,7 +104,6 @@ import MyVirtualScroll from "../my/MyVirtualScroll.vue";
 import { useDialogPluginComponent } from "quasar";
 import { createComment, getComments } from "src/api/posts";
 import { useProfileStore } from "src/stores/profile-store";
-import { useMainStore } from "src/stores/main-store";
 import MyIcon from "../my/MyIcon.vue";
 import MyButton from "../my/MyButton.vue";
 
@@ -124,7 +123,6 @@ const props = withDefaults(
 
 const showNoComments = ref(false);
 
-const mainStore = useMainStore();
 const profileStore = useProfileStore();
 
 const postRef = toRef(props.post);
@@ -265,8 +263,6 @@ function handleDeleteComment(comment_id: string) {
 }
 
 onMounted(() => {
-  mainStore.openedDialogs.post?.();
-  mainStore.openedDialogs.post = dialogRef.value!.hide;
   if (props.firstComment) {
     items.value.push(props.firstComment);
   }
