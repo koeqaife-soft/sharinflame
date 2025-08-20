@@ -1,14 +1,10 @@
 <template>
   <div class="card q-mb-sm dialog-section" style="z-index: 2">
     <div class="horizontal-container">
-      <my-icon icon="sort" class="icon" />
-      <q-select
+      <my-select
         class="select"
         v-model="sort"
         :options="sortOptions"
-        :option-label="(opt) => $t(`sort.${opt}`)"
-        dense
-        borderless
         style="min-width: 100px; width: 150px; max-width: 300px"
         @update:model-value="reloadPosts"
       />
@@ -44,8 +40,8 @@
 import { getUserPosts } from "src/api/posts";
 import { defineAsyncComponent, type DefineComponent, onUnmounted, ref } from "vue";
 import MyVirtualScroll from "src/components/my/MyVirtualScroll.vue";
-import MyIcon from "src/components/my/MyIcon.vue";
 import MyButton from "src/components/my/MyButton.vue";
+import MySelect from "src/components/my/MySelect.vue";
 
 const PostComponent = defineAsyncComponent(() => import("../../posts/PostComponent.vue"));
 
@@ -64,8 +60,24 @@ const expand = defineModel<boolean>("expand");
 const items = ref<PostWithSystem[]>([]);
 const nextItems = ref<PostWithSystem[]>([]);
 const scrollKey = ref(Date.now());
-const sortOptions = ["old", "new", "popular"] as const;
-const sort = ref<(typeof sortOptions)[number]>("new");
+const sortOptions = [
+  {
+    labelKey: "sort.old",
+    icon: "history_2",
+    key: "old"
+  },
+  {
+    labelKey: "sort.new",
+    icon: "update",
+    key: "new"
+  },
+  {
+    labelKey: "sort.popular",
+    icon: "whatshot",
+    key: "popular"
+  }
+] as const;
+const sort = ref<(typeof sortOptions)[number]["key"]>("new");
 
 let controller = new AbortController();
 

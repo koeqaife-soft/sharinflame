@@ -10,6 +10,7 @@
       :class="{ selected: currentType == category.type }"
       :disable="disabled"
       @click="category.click"
+      v-close-popup="category.closePopup ?? false"
     />
   </div>
 </template>
@@ -22,6 +23,7 @@ export interface ButtonProps {
   click: () => void;
   type?: string;
   disabled?: boolean;
+  closePopup?: boolean;
 }
 
 interface Props {

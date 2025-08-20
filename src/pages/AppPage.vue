@@ -30,14 +30,8 @@
       </div>
       <div class="center-column container" style="gap: 0px">
         <div class="horizontal-container categories-label card" :class="{ scrolled }" v-if="hideLeftColumn">
-          <my-button :label="currentCategory?.label" :icon="currentCategory?.icon" :is-category="true" type="card">
-            <q-menu class="categories-menu menu-card" v-model="categoriesMenuOpened">
-              <category-buttons :categories-list="categoriesList" :current-type="currentType" />
-            </q-menu>
-            <template #append>
-              <my-icon icon="arrow_drop_up" :class="['menu-arrow', { active: categoriesMenuOpened }]" />
-            </template>
-          </my-button>
+          <my-select :options="optionsList" v-model="currentType" />
+
           <q-space />
           <my-button icon="refresh" class="reload-button" @click="reloadKey = Date.now()" />
         </div>
@@ -71,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, defineAsyncComponent, onBeforeMount } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, defineAsyncComponent, onBeforeMount, watch } from "vue";
 import type { KeyOfGetPostsTypes } from "src/api/posts";
 import { useI18n } from "vue-i18n";
 import type { ButtonProps } from "src/components/misc/CategoryButtons.vue";
@@ -88,6 +82,7 @@ const ProfileMenu = defineAsyncComponent(() => import("src/components/profile/Pr
 const OpenProfileMenu = defineAsyncComponent(() => import("src/components/profile/OpenProfileMenu.vue"));
 const ParticlesBackground = defineAsyncComponent(() => import("src/components/ParticlesBackground.vue"));
 const NotificationsDialog = defineAsyncComponent(() => import("src/components/notifications/NotificationsDialog.vue"));
+const MySelect = defineAsyncComponent(() => import("src/components/my/MySelect.vue"));
 
 const quasar = useQuasar();
 const mainStore = useMainStore();
@@ -95,9 +90,6 @@ const { t } = useI18n();
 
 const currentType = ref<KeyOfGetPostsTypes>("popular");
 const reloadKey = ref(Date.now());
-const currentCategory = computed(() => categoriesList.value.find((category) => category.type === currentType.value));
-
-const categoriesMenuOpened = ref(false);
 const notificationsMenuOpened = ref(false);
 
 const screenSize = ref<[number, number]>([window.innerWidth, window.innerHeight]);
@@ -122,7 +114,6 @@ const unreadNotificationsCount = computed(() => {
 const scrolled = ref(false);
 
 const changeType = (type: KeyOfGetPostsTypes) => {
-  localStorage.setItem("lastSelectedType", type);
   if (currentType.value == type) reloadKey.value = Date.now();
   else currentType.value = type;
 };
@@ -152,6 +143,24 @@ const categoriesList = computed<ButtonProps[]>(() => [
   }
 ]);
 
+const optionsList = [
+  {
+    labelKey: "categories.popular",
+    icon: "whatshot",
+    key: "popular"
+  },
+  {
+    labelKey: "categories.new",
+    icon: "update",
+    key: "new"
+  },
+  {
+    labelKey: "categories.following",
+    icon: "group",
+    key: "following"
+  }
+];
+
 const updateScreenSize = () => {
   screenSize.value[0] = window.innerWidth;
   screenSize.value[1] = window.innerHeight;
@@ -162,6 +171,10 @@ function openNotifications() {
     component: NotificationsDialog
   });
 }
+
+watch(currentType, (v) => {
+  localStorage.setItem("lastSelectedType", v);
+});
 
 onMounted(() => {
   updateScreenSize();
