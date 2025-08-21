@@ -36,7 +36,12 @@
           </div>
         </transition>
         <transition name="scale" :css="isSmallScreen">
-          <div class="view full-width full-height crossfade-div" v-show="!isSmallScreen || current == 1" key="view">
+          <div
+            class="view full-width full-height"
+            :class="{ 'crossfade-div': !isSmallScreen }"
+            v-show="!isSmallScreen || current == 1"
+            key="view"
+          >
             <transition name="crossfade" :css="!isSmallScreen">
               <keep-alive>
                 <main-view type="favorites" v-if="selected == 'favorites'" />
