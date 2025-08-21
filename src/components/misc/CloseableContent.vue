@@ -77,7 +77,6 @@ function hasScrollableParentInDirection(el: HTMLElement, deltaY: number, deltaX:
 function shouldIgnore(target: EventTarget | null, deltaX: number, deltaY: number): boolean {
   if (!(target instanceof HTMLElement)) return true;
 
-  if (target instanceof HTMLInputElement && target.type === "range") return true;
   if (hasScrollableParentInDirection(target, deltaY, deltaX)) return true;
 
   return false;
@@ -125,6 +124,10 @@ const onTouchMove = (event: TouchEvent) => {
 
   const deltaX = touchEndX - touchStartX;
   const deltaY = touchEndY - touchStartY;
+  if (event.target instanceof HTMLInputElement && event.target.type === "range") {
+    ignoreX = true;
+    ignoreY = true;
+  }
 
   if ((Math.abs(deltaY) > 100 && !ignoreY) || (deltaX > deltaY && shouldIgnore(event.target, deltaX, 0))) {
     ignoreX = true;
