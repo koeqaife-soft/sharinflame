@@ -5,6 +5,7 @@
       :class="['open-profile', buttonsClass]"
       :key="user?.user_id || 0"
       @click="openDialog('user', user!.user_id, { user: user })"
+      v-close-popup
     >
       <user-avatar :user="user!" />
       <div class="text-container">
@@ -29,8 +30,7 @@
       icon="add_circle"
       :label="$t('create_post')"
       @click="mainStore.openDialog('postEditor', '', {})"
-      unelevated
-      no-caps
+      v-close-popup
     />
     <my-button
       type="card"
@@ -38,8 +38,7 @@
       icon="browse_activity"
       :label="$t('my_activity')"
       @click="mainStore.openDialog('myActivity', '', {})"
-      unelevated
-      no-caps
+      v-close-popup
     />
     <q-separator />
     <my-button
@@ -47,8 +46,7 @@
       :class="['settings', buttonsClass]"
       icon="settings"
       :label="$t('settings')"
-      unelevated
-      no-caps
+      v-close-popup
       @click="mainStore.openDialog('settings', '', {})"
     />
   </div>
