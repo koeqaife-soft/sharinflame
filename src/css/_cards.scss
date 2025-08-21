@@ -59,9 +59,10 @@
   border-radius: 18px;
   padding: 8px;
   background-color: var(--card);
+  box-sizing: border-box;
 
   width: 100%;
-  max-width: 250px;
+  max-width: 275px;
 
   > div {
     color: var(--on-card);
