@@ -222,22 +222,23 @@
 
 .crossfade-enter-active,
 .crossfade-leave-active {
-  transition: opacity 0.3s;
   will-change: opacity;
 }
 
-.crossfade-enter-from {
-  opacity: 0;
+.crossfade-enter-active {
+  transition: opacity 0.2s ease-out;
 }
 
-.crossfade-enter-to {
-  opacity: 1;
+.crossfade-leave-active {
+  transition: opacity 0.2s ease-in;
 }
 
+.crossfade-enter-from,
 .crossfade-leave-to {
   opacity: 0;
 }
 
+.crossfade-enter-to,
 .crossfade-leave-from {
   opacity: 1;
 }

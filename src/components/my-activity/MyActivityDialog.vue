@@ -36,13 +36,15 @@
           </div>
         </transition>
         <transition name="scale" :css="isSmallScreen">
-          <div class="view full-width full-height" v-show="!isSmallScreen || current == 1" key="view">
-            <keep-alive>
-              <main-view type="favorites" v-if="selected == 'favorites'" />
-              <main-view type="liked" v-else-if="selected == 'liked'" />
-              <main-view type="disliked" v-else-if="selected == 'disliked'" />
-              <following-view v-else-if="selected == 'following'" />
-            </keep-alive>
+          <div class="view full-width full-height crossfade-div" v-show="!isSmallScreen || current == 1" key="view">
+            <transition name="crossfade" :css="!isSmallScreen">
+              <keep-alive>
+                <main-view type="favorites" v-if="selected == 'favorites'" />
+                <main-view type="liked" v-else-if="selected == 'liked'" />
+                <main-view type="disliked" v-else-if="selected == 'disliked'" />
+                <following-view v-else-if="selected == 'following'" />
+              </keep-alive>
+            </transition>
           </div>
         </transition>
       </div>
