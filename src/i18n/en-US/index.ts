@@ -67,6 +67,9 @@ export default {
   comments: "Comments",
   post: "Post",
   enter_comment: "Enter comment",
+  no_updates: "No Updates",
+  updates: "Updates",
+  add_update: "Add Update",
 
   info: "Info",
   posts: "Posts",

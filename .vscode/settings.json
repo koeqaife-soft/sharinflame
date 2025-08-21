@@ -14,5 +14,5 @@
     "**/Thumbs.db": true,
     "**/CVS": true
   },
-  "cSpell.words": ["asar", "autogrow", "Axios", "notif", "opsz", "pinia", "sharinflame"]
+  "cSpell.words": ["asar", "autogrow", "Axios", "crossfade", "notif", "opsz", "pinia", "sharinflame"]
 }

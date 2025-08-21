@@ -37,10 +37,14 @@
         </transition>
         <transition name="scale" :css="isSmallScreen">
           <div class="view full-width full-height" v-show="!isSmallScreen || current == 1" key="view">
-            <keep-alive>
-              <account-view v-if="showIf('my_account')" />
-              <appearance-view v-else-if="showIf('appearance')" />
-            </keep-alive>
+            <div class="crossfade-div">
+              <transition name="crossfade" :css="!isSmallScreen">
+                <keep-alive>
+                  <account-view v-if="showIf('my_account')" />
+                  <appearance-view v-else-if="showIf('appearance')" />
+                </keep-alive>
+              </transition>
+            </div>
           </div>
         </transition>
       </div>

@@ -116,8 +116,8 @@ async function remReaction(postId: string, commentId?: string, config: AxiosRequ
   return await api.delete(endpoint, config);
 }
 
-async function createComment(post_id: string, content: string, config: AxiosRequestConfig = {}) {
-  const data = { content };
+async function createComment(post_id: string, content: string, type?: string, config: AxiosRequestConfig = {}) {
+  const data = { content, ...(type && { type }) };
   return await api.post<ApiResponse<Comment>>(postsEndpoints.comments(post_id), data, config);
 }
 
@@ -125,9 +125,12 @@ async function deleteComment(post_id: string, comment_id: string, config: AxiosR
   return await api.delete(postsEndpoints.comment_actions(post_id, comment_id), config);
 }
 
-async function getComments(post_id: string, cursor?: string, config: AxiosRequestConfig = {}) {
+async function getComments(post_id: string, cursor?: string, type?: string, config: AxiosRequestConfig = {}) {
   return await api.get<GetCommentsResponse>(postsEndpoints.comments(post_id), {
-    params: cursor ? { cursor } : undefined,
+    params: {
+      ...(cursor && { cursor }),
+      ...(type && { type })
+    },
     ...config
   });
 }

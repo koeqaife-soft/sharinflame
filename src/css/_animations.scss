@@ -104,6 +104,7 @@
   }
 }
 
+// Scale animation
 .scale-enter-active,
 .scale-leave-active {
   transition:
@@ -203,4 +204,40 @@
   to {
     --angle: 360deg;
   }
+}
+
+// Cross fade animation
+.crossfade-div {
+  height: 100%;
+  width: 100%;
+  position: relative;
+  > div {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+}
+
+.crossfade-enter-active,
+.crossfade-leave-active {
+  transition: opacity 0.3s;
+  will-change: opacity;
+}
+
+.crossfade-enter-from {
+  opacity: 0;
+}
+
+.crossfade-enter-to {
+  opacity: 1;
+}
+
+.crossfade-leave-to {
+  opacity: 0;
+}
+
+.crossfade-leave-from {
+  opacity: 1;
 }

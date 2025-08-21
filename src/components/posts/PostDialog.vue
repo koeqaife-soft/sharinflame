@@ -27,15 +27,16 @@
           <div class="sticky-label scroll-header q-pt-sm" :class="{ 'is-visible': headerVisible }">
             <div class="card dialog-section q-mb-sm" style="z-index: 2">
               <div class="horizontal-container">
-                <my-icon icon="chat_bubble" class="icon" />
-                <div>{{ $t("comments") }}</div>
+                <my-select :options="select" v-model="currentType" />
                 <q-space />
                 <my-button icon="refresh" @click="reloadComments" />
               </div>
             </div>
           </div>
 
-          <div class="no-comments" v-if="showNoComments">{{ $t("no_comments") }}</div>
+          <div class="no-comments" v-if="showNoComments">
+            {{ currentType == "comment" ? $t("no_comments") : $t("no_updates") }}
+          </div>
           <my-virtual-scroll
             :items="items"
             :margins="8"
@@ -65,8 +66,8 @@
             <my-button class="load-more" type="primary" @click="allowLoad" :label="$t('load_more')" />
           </div>
         </q-scroll-area>
-        <q-separator class="q-mb-sm q-mt-sm" />
-        <div class="card send-comment">
+        <q-separator class="q-mb-sm q-mt-sm" v-if="canWriteComment" />
+        <div class="card send-comment" v-if="canWriteComment">
           <div class="card-section">
             <div class="horizontal-container align-end full-width">
               <user-avatar :me="true" />
@@ -77,7 +78,7 @@
                 v-model="text"
                 autogrow
                 maxlength="1024"
-                :label="$t('enter_comment')"
+                :label="currentType == 'comment' ? $t('enter_comment') : $t('add_update')"
                 class="full-width enter-comment"
                 :disable="sending"
               />
@@ -97,7 +98,17 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, type DefineComponent, nextTick, onMounted, onUnmounted, ref, toRef, watch } from "vue";
+import {
+  defineAsyncComponent,
+  type DefineComponent,
+  nextTick,
+  onMounted,
+  onUnmounted,
+  ref,
+  toRef,
+  watch,
+  computed
+} from "vue";
 import PostComponent from "../posts/PostComponent.vue";
 import CloseableContent from "../misc/CloseableContent.vue";
 import MyVirtualScroll from "../my/MyVirtualScroll.vue";
@@ -106,6 +117,7 @@ import { createComment, getComments } from "src/api/posts";
 import { useProfileStore } from "src/stores/profile-store";
 import MyIcon from "../my/MyIcon.vue";
 import MyButton from "../my/MyButton.vue";
+import MySelect from "../my/MySelect.vue";
 
 const CommentComponent = defineAsyncComponent(() => import("../posts/CommentComponent.vue"));
 const UserAvatar = defineAsyncComponent(() => import("../profile/UserAvatar.vue"));
@@ -136,6 +148,29 @@ const postComponentRef = ref<HTMLElement | null>(null);
 
 const virtualScroll = ref<DefineComponent | null>(null);
 const allowLoading = ref(props.autoLoad);
+const currentType = ref<"comment" | "update">("comment");
+const canWriteComment = computed(
+  () =>
+    currentType.value == "comment" ||
+    (currentType.value == "update" && postRef.value.user_id == profileStore.profile?.user_id)
+);
+
+const select = [
+  {
+    key: "comment",
+    labelKey: "comments",
+    icon: "chat_bubble"
+  },
+  {
+    key: "update",
+    labelKey: "updates",
+    icon: "update"
+  }
+];
+
+watch(currentType, () => {
+  reloadComments();
+});
 
 let hasMore = true;
 let cursor: string | undefined;
@@ -184,7 +219,7 @@ async function loadComments(index: number, done: (stop?: boolean) => void) {
   nextItems.value ??= [];
   try {
     if (nextItems.value.length === 0) {
-      const r = await getComments(postRef.value.post_id, cursor, { signal: controller.signal });
+      const r = await getComments(postRef.value.post_id, cursor, currentType.value, { signal: controller.signal });
       const apiLoaded = r.data.data.comments;
       hasMore = r.data.data.has_more;
       cursor = r.data.data.next_cursor;
@@ -234,7 +269,7 @@ async function loadComments(index: number, done: (stop?: boolean) => void) {
 async function sendComment() {
   sending.value = true;
   try {
-    const r = await createComment(postRef.value.post_id, text.value);
+    const r = await createComment(postRef.value.post_id, text.value, currentType.value);
     if (r.data.success) {
       const comment: CommentWithUser = {
         ...r.data.data,
