@@ -2,7 +2,7 @@
 
 .card {
   @include elevation(2);
-  border-radius: 18px;
+  border-radius: 16px;
   padding: 8px;
   background-color: var(--card);
   outline: 1px solid var(--contrast-outline);
@@ -56,7 +56,7 @@
   @include elevation(1);
   transition-duration: 150ms;
   transition-timing-function: ease-in;
-  border-radius: 18px;
+  border-radius: 16px;
   padding: 8px;
   background-color: var(--card);
   box-sizing: border-box;
