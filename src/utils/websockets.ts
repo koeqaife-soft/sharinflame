@@ -4,6 +4,7 @@ interface EventMap {
   refresh_recommended: undefined;
   notification: ApiNotification;
   notification_read: { id: string; unread: number } | object;
+  local__isOffline: { attempt: number };
 }
 
 type ServerEvent = {
@@ -75,10 +76,6 @@ class WebSocketService {
       this.isReconnecting = false;
     };
 
-    this.socket.onerror = (error: Event) => {
-      console.error("WebSocket error:", error);
-    };
-
     this.socket.onmessage = async (event: MessageEvent) => {
       try {
         const message: ServerEvent = JSON.parse(event.data);
@@ -92,6 +89,12 @@ class WebSocketService {
       console.debug(`WebSocket closed with code: ${event.code}, reason: ${event.reason}`);
       if (this.shouldStayConnected && !this.isManualDisconnect && !this.isReconnecting) {
         void this.handleReconnect();
+        void this.handleEvent({
+          event: "local__isOffline",
+          data: {
+            attempt: this.reconnectAttempts
+          }
+        });
       }
     };
   }
@@ -124,7 +127,8 @@ class WebSocketService {
     const delay =
       this.reconnectAttempts == 1
         ? 500
-        : Math.min(this.baseReconnectInterval * Math.pow(1.5, this.reconnectAttempts - 1), 60000) + Math.random() * 500;
+        : Math.min(this.baseReconnectInterval * Math.pow(1.75, this.reconnectAttempts - 1), 60000) +
+          Math.random() * 500;
 
     console.debug(`Reconnecting attempt ${this.reconnectAttempts} in ${Math.round(delay)}ms...`);
     await new Promise<void>((resolve) => {

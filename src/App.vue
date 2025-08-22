@@ -142,12 +142,24 @@ function onNotificationRead(data: { id: string; unread: number } | object) {
   }
 }
 
+function wsOffline({ attempt }: { attempt: number }) {
+  try {
+    if (!mainStore.isOffline && attempt < 5)
+      void api.post(apiEndpoints.ping, undefined, {
+        timeout: 3000
+      });
+  } catch {
+    // noop
+  }
+}
+
 onMounted(() => {
   onChange();
   void pingInterval();
 
   websockets.on("notification", newNotification);
   websockets.on("notification_read", onNotificationRead);
+  websockets.on("local__isOffline", wsOffline);
 });
 
 onBeforeMount(() => {
@@ -158,5 +170,6 @@ onBeforeMount(() => {
 onBeforeUnmount(() => {
   websockets.off("notification", newNotification);
   websockets.off("notification_read", onNotificationRead);
+  websockets.off("local__isOffline", wsOffline);
 });
 </script>
