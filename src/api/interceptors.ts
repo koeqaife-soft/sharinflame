@@ -19,7 +19,6 @@ const connectionInterceptor = () => {
     if (e.code === "ERR_CANCELED") {
       return false;
     }
-    console.error("Connection error", e);
     return !e.response || e.code === "ECONNABORTED";
   };
 
@@ -121,6 +120,7 @@ const authInterceptor = () => {
   api.interceptors.request.use(
     async (config) => {
       if (!config.url || noAuthEndpoints.includes(config.url)) return config;
+      await waitForRefresh();
 
       let token = getAccessToken();
       const _refreshToken = refreshToken();
