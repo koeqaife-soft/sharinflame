@@ -63,7 +63,13 @@
             </template>
           </my-virtual-scroll>
           <div class="load-more-container" v-if="!allowLoading">
-            <my-button class="load-more" type="primary" @click="allowLoad" :label="$t('load_more')" />
+            <my-button
+              class="load-more"
+              type="primary"
+              @click="allowLoad"
+              icon-right="arrow_circle_down"
+              :label="$t('load_more')"
+            />
           </div>
         </q-scroll-area>
         <q-separator class="q-mb-sm q-mt-sm" v-if="canWriteComment" />
