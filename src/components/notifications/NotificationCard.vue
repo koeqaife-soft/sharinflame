@@ -4,7 +4,7 @@
     class="notification"
     :class="{ unread: props.notif.unread }"
     :loading="loading"
-    :disable="disabled"
+    :disable="disabled || isUnavailable"
     tabindex="0"
     ref="elementRef"
     @click="onClicked"
@@ -85,12 +85,26 @@ const linkedContent = computed(() => {
     return { username: undefined, message: props.notif.message };
   }
   if (props.notif.linked_type === "post" || props.notif.linked_type === "comment") {
+    let message;
+    if (!props.notif.loaded.content) message = t("resource_not_found");
+    else message = props.notif.loaded.content;
+
     return {
       username: props.notif.loaded.user.username,
-      message: props.notif.loaded.content
+      message: message
     };
   }
   return { username: undefined, message: undefined };
+});
+
+const isUnavailable = computed(() => {
+  if (!props.notif.loaded) {
+    return false;
+  }
+  if (props.notif.linked_type === "post" || props.notif.linked_type === "comment") {
+    if (!props.notif.loaded.content) return true;
+  }
+  return false;
 });
 
 async function sync<T>(callback: () => Promise<T>, key: string): Promise<T> {
