@@ -1,8 +1,8 @@
 {
   "primary": {
-    "s": ["=", "70"],
+    "s": ["=", "73"],
     "l": ["=", "80"],
-    "luminance": "73"
+    "luminance": "74"
   },
   "secondary": {
     "s": ["=", "40"],
@@ -11,9 +11,9 @@
   },
   "tertiary": {
     "h": ["-", "80"],
-    "s": ["=", "70"],
+    "s": ["=", "73"],
     "l": ["=", "80"],
-    "luminance": "73"
+    "luminance": "74"
   },
   "on-primary": {
     "link": "primary",
@@ -61,14 +61,14 @@
     "luminance": "12"
   },
   "card-secondary": {
-    "s": ["=", "20"],
+    "s": ["=", "18"],
     "l": ["=", "25"],
-    "luminance": "30"
+    "luminance": "27"
   },
   "on-card-secondary": {
     "s": ["=", "35"],
     "l": ["=", "93"],
-    "luminance": "85"
+    "luminance": "90"
   },
   "on-card": {
     "link": "on-background"
