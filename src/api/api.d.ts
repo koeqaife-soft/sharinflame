@@ -77,11 +77,13 @@ interface Comment {
   user_id: string;
   content: string;
   parent_comment_id?: string;
+  replies_count: number;
   likes_count: number;
   dislikes_count: number;
   is_like?: boolean;
   is_fav?: boolean;
   created_at: number;
+  _meta?: MetaData;
 }
 
 type CommentWithUser = Comment & {

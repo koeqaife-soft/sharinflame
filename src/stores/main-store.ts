@@ -28,8 +28,11 @@ const dialogs = {
   settings: defineAsyncComponent(() => import("src/components/settings/SettingsDialog.vue")),
   post: defineAsyncComponent(() => import("src/components/posts/PostDialog.vue")),
   myActivity: defineAsyncComponent(() => import("src/components/my-activity/MyActivityDialog.vue")),
-  postEditor: defineAsyncComponent(() => import("src/components/posts/PostEditor.vue"))
+  postEditor: defineAsyncComponent(() => import("src/components/posts/PostEditor.vue")),
+  repliesDialog: defineAsyncComponent(() => import("src/components/posts/RepliesDialog.vue"))
 } as const;
+
+const stackDialogs = ["repliesDialog"];
 
 const getSettings = () => {
   const stored = JSON.parse(localStorage.getItem("settings") || "{}");
@@ -130,15 +133,7 @@ export const useMainStore = defineStore("main", {
       return this.unreadCount;
     },
     openDialog(name: keyof typeof dialogs, key: string, props: Record<string, unknown>) {
-      const existingDialog = this.openedDialogs.get(name);
-      if (existingDialog) {
-        try {
-          existingDialog.hide();
-        } catch {
-          // noop
-        }
-      }
-
+      const uniqueKey = stackDialogs.includes(name) ? name + key : name;
       const component = dialogs[name];
 
       const dialog = this.quasar.dialog({
@@ -146,7 +141,18 @@ export const useMainStore = defineStore("main", {
         componentProps: props
       });
 
-      this.openedDialogs.set(name, {
+      const existingDialog = this.openedDialogs.get(uniqueKey);
+      if (existingDialog) {
+        setTimeout(() => {
+          try {
+            existingDialog.hide();
+          } catch {
+            // noop
+          }
+        }, 150);
+      }
+
+      this.openedDialogs.set(uniqueKey, {
         key: key,
         hide: () => dialog.hide()
       });

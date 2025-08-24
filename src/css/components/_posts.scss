@@ -158,7 +158,8 @@
 }
 
 // Post dialog styles
-.post-dialog {
+.post-dialog,
+.comment-dialog {
   .q-dialog__inner {
     margin-top: 58px;
   }

@@ -43,13 +43,19 @@ const emit = defineEmits<{
 
 const props = defineProps<{
   comment: Comment | CommentWithUser;
-  showGoToPost: boolean;
+  showGoTo: boolean;
 }>();
 const options = computed(() => [
   {
     key: "go_to_post",
     icon: "article",
-    visible: props.showGoToPost,
+    visible: props.showGoTo,
+    type: "item"
+  },
+  {
+    key: "jump_to_replied",
+    icon: "reply",
+    visible: props.comment.parent_comment_id && props.showGoTo,
     type: "item"
   },
   {

@@ -14,10 +14,10 @@
         v-if="notif.linked_type == 'post' || notif.linked_type == 'comment'"
         :user="notif.loaded.user"
       />
-      <my-icon :icon="typeIcons[notif.type] ?? ''" class="icon" />
+      <my-icon :icon="typeIcons[actualType] ?? ''" class="icon" />
     </div>
     <div class="text-container" @click="onClicked">
-      <div class="title">{{ $t(`notifications.${notif.type}`, { username: linkedContent.username }) }}</div>
+      <div class="title">{{ $t(`notifications.${actualType}`, { username: linkedContent.username }) }}</div>
       <div class="message">{{ linkedContent.message }}</div>
     </div>
   </my-button>
@@ -39,6 +39,13 @@ const mainStore = useMainStore();
 const OpenUserDialog = defineAsyncComponent(() => import("../profile/OpenUserDialog.vue"));
 
 let controller: AbortController | null = null;
+
+const actualType = computed(() => {
+  if (props.notif.type == "new_comment") {
+    if ((props.notif.loaded as CommentWithUser)?.parent_comment_id) return "new_reply";
+  }
+  return props.notif.type;
+});
 
 interface Entry {
   lastSync: number;
@@ -67,6 +74,7 @@ const disabled = ref(false);
 
 const typeIcons = {
   new_comment: "chat_bubble",
+  new_reply: "reply",
   followed: "person_add"
 };
 
@@ -143,26 +151,52 @@ async function onClicked() {
         mainStore.openDialog("post", post.data.data.post_id, { post: post.data.data });
       }
     } else if (props.notif.linked_type == "comment") {
-      const [post, comment] = await sync(
-        () =>
-          Promise.all([
-            getPost(props.notif.loaded!.post_id, { signal: controller!.signal }),
-            getComment(props.notif.loaded!.post_id, (props.notif.loaded as CommentWithUser).comment_id, {
-              signal: controller!.signal
-            })
-          ]),
-        "post"
-      );
-      if (post.data.success && comment.data.success) {
-        mainStore.openDialog("post", post.data.data.post_id, {
-          post: post.data.data,
-          firstComment: comment.data.data,
-          autoLoad: false
-        });
-        emit("onLoaded");
+      if (props.notif.loaded.parent_comment_id) {
+        const [parent, comment] = await sync(
+          () =>
+            Promise.all([
+              getComment(props.notif.loaded!.post_id, (props.notif.loaded as CommentWithUser).parent_comment_id!, {
+                signal: controller!.signal
+              }),
+              getComment(props.notif.loaded!.post_id, (props.notif.loaded as CommentWithUser).comment_id, {
+                signal: controller!.signal
+              })
+            ]),
+          "reply"
+        );
+        if (comment.data.success && parent.data.success) {
+          mainStore.openDialog("repliesDialog", parent.data.data.comment_id, {
+            comment: parent.data.data,
+            inDialog: false,
+            firstComment: comment.data.data,
+            autoLoad: false
+          });
+          emit("onLoaded");
+        }
+      } else {
+        const [post, comment] = await sync(
+          () =>
+            Promise.all([
+              getPost(props.notif.loaded!.post_id, { signal: controller!.signal }),
+              getComment(props.notif.loaded!.post_id, (props.notif.loaded as CommentWithUser).comment_id, {
+                signal: controller!.signal
+              })
+            ]),
+          "post+comment"
+        );
+        if (post.data.success && comment.data.success) {
+          mainStore.openDialog("post", post.data.data.post_id, {
+            post: post.data.data,
+            firstComment: comment.data.data,
+            autoLoad: false
+          });
+          emit("onLoaded");
+        }
       }
     }
   } catch (e) {
+    disabled.value = true;
+    setCache("disabled", true);
     if (isAxiosError(e) && e.code == "ERR_CANCELED") {
       return;
     } else if (isAxiosError(e) && e.response?.status == 404) {
@@ -175,9 +209,8 @@ async function onClicked() {
         type: "error-notification",
         message: t("an_error_occurred")
       });
+      throw e;
     }
-    disabled.value = true;
-    setCache("disabled", true);
   }
 }
 

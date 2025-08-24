@@ -56,7 +56,8 @@ export default {
     delete: "Delete Comment",
     report: "Report",
     created_at: "Created At",
-    go_to_post: "Go To Post"
+    go_to_post: "Go To Post",
+    jump_to_replied: "Jump to Replied"
   },
 
   an_error_occurred: "An error occurred",
@@ -70,6 +71,11 @@ export default {
   no_updates: "No Updates",
   updates: "Updates",
   add_update: "Add Update",
+
+  no_replies: "No Replies",
+  enter_reply: "Enter Reply",
+  replies: "Replies",
+  comment: "Comment",
 
   info: "Info",
   posts: "Posts",
@@ -189,7 +195,8 @@ export default {
   notifications: {
     label: "Notifications",
     no_notifications: "No notifications",
-    new_comment: "Comment from {username}"
+    new_comment: "Comment from {username}",
+    new_reply: "New reply from {username}"
   },
   show_all: "Show All",
   unread: "Unread",

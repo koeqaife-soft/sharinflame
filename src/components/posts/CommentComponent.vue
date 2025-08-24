@@ -15,11 +15,21 @@
       <div class="reaction-buttons">
         <reaction-buttons :object="commentRef" :before-action="allowAnimate" :is-comment="true" :disable="disable" />
       </div>
+      <div class="action-container">
+        <my-button
+          icon="reply"
+          :label="formatNumber(commentRef.replies_count)"
+          class="comments round button"
+          size="sm"
+          @click="repliesDialog"
+          :disable="disable"
+        />
+      </div>
       <q-space />
       <div class="action-container circle">
         <my-button icon="more_horiz" class="more button circle" size="sm" :disable="disable" :loading="moreMenuLoading">
           <q-menu class="comment-more-menu" self="top right" v-if="!moreMenuLoading">
-            <more-menu :comment="commentRef" @action="action" :show-go-to-post="!(inDialog ?? true)" />
+            <more-menu :comment="commentRef" @action="action" :show-go-to="!hideGoTo && !(inDialog ?? true)" />
           </q-menu>
         </my-button>
       </div>
@@ -29,12 +39,12 @@
 
 <script setup lang="ts">
 import { defineAsyncComponent, onUnmounted, ref, toRef } from "vue";
-import { formatStringForHtml } from "src/utils/format";
+import { formatStringForHtml, formatNumber } from "src/utils/format";
 import TextParts from "../misc/TextParts.vue";
 import MyButton from "../my/MyButton.vue";
 import { i18n } from "src/boot/i18n";
 import { useQuasar } from "quasar";
-import { deleteComment, getPost } from "src/api/posts";
+import { deleteComment, getComment, getPost } from "src/api/posts";
 import { isAxiosError } from "axios";
 import { useMainStore } from "src/stores/main-store";
 
@@ -50,7 +60,9 @@ const emit = defineEmits<{
 
 const props = defineProps<{
   comment: CommentWithUser;
+  hideGoTo?: boolean;
   inDialog?: boolean;
+  inRepliesDialog?: boolean;
 }>();
 
 const canAnimate = ref(false);
@@ -121,10 +133,50 @@ async function action(type: string, data: unknown) {
 
       break;
     }
+    case "jump_to_replied":
+      moreMenuLoading.value = true;
+      try {
+        if (!controller) controller = new AbortController();
+        const comment = await getComment(props.comment.post_id, props.comment.parent_comment_id!, {
+          signal: controller.signal
+        });
+        if (comment.data.success) {
+          mainStore.openDialog("repliesDialog", comment.data.data.comment_id, {
+            comment: comment.data.data
+          });
+        }
+        moreMenuLoading.value = false;
+      } catch (e) {
+        if (isAxiosError(e) && e.code == "ERR_CANCELED") return;
+        if (isAxiosError(e) && e.response?.status == 404) {
+          quasar.notify({
+            type: "error-notification",
+            message: t("resource_not_found")
+          });
+        } else {
+          quasar.notify({
+            type: "error-notification",
+            message: t("an_error_occurred")
+          });
+        }
+      }
+      break;
     case "copy_id":
       void navigator.clipboard.writeText(data as string);
       break;
   }
+}
+
+function repliesDialog() {
+  if (props.inRepliesDialog) return;
+  mainStore.openDialog("repliesDialog", commentRef.value.comment_id, {
+    comment: commentRef.value,
+    onDelete: () => {
+      disable.value = true;
+      emit("deleteComment", commentRef.value.comment_id);
+    },
+    inDialog: props.inDialog
+  });
 }
 
 onUnmounted(() => {
