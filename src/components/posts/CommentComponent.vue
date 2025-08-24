@@ -144,7 +144,8 @@ async function action(type: string, data: unknown) {
           mainStore.openDialog("repliesDialog", comment.data.data.comment_id, {
             comment: comment.data.data,
             firstComment: commentRef.value,
-            autoLoad: false
+            autoLoad: false,
+            inDialog: props.inDialog
           });
         }
         moreMenuLoading.value = false;
