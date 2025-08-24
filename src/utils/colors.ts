@@ -131,10 +131,6 @@ function generateColor(hsl: Hsl, entry: PaletteEntry): Hsl {
     while (iterations < 50) {
       const oldLightness = lightness;
       lightness = adjustLightness(hue, saturation, lightness, Number(entry.luminance));
-      if (lightness == 0) {
-        lightness = 2;
-        saturation += 5;
-      }
       const difference = lightness / oldLightness;
 
       if (Math.abs(difference - 1) < epsilon) break;
