@@ -110,40 +110,6 @@ function adjustLightness(h: number, s: number, l: number, targetLuminance = 50):
   return Math.max(0, Math.min(100, newL));
 }
 
-function hueSaturationCorrection(hue: number): number {
-  const h = ((hue % 360) + 360) % 360;
-
-  const points: [number, number][] = [
-    [0, 1],
-    [20, 0.8],
-    [40, 0.75],
-    [90, 0.75],
-    [120, 0.7],
-    [180, 0.7],
-    [250, 0.85],
-    [320, 0.8],
-    [360, 1]
-  ] as const;
-
-  for (let i = 0; i < points.length - 1; i++) {
-    const [h1, f1] = points[i]!;
-    const [h2, f2] = points[i + 1]!;
-
-    if (h >= h1 && h <= h2) {
-      const t = (h - h1) / (h2 - h1);
-      return f1 + (f2 - f1) * t;
-    }
-  }
-
-  return 1;
-}
-
-function adjustSaturation(h: number, s: number): number {
-  const factor = hueSaturationCorrection(h);
-  const newS = s * factor;
-  return newS > 100 ? 100 : newS;
-}
-
 function generateColor(hsl: Hsl, entry: PaletteEntry): Hsl {
   let [hue, saturation, lightness] = hsl;
 
@@ -158,9 +124,28 @@ function generateColor(hsl: Hsl, entry: PaletteEntry): Hsl {
   if (entry.h) hue = applyValue(hue, entry.h, adjustHue);
   if (entry.s) saturation = applyValue(saturation, entry.s, adjustValue);
   if (entry.l) lightness = applyValue(lightness, entry.l, adjustValue);
-  if (!entry.flags?.includes("no-adjust")) saturation = adjustSaturation(hue, saturation);
 
-  if (entry.luminance !== undefined) lightness = adjustLightness(hue, saturation, lightness, Number(entry.luminance));
+  if (entry.luminance !== undefined) {
+    const epsilon = 0.0001;
+    let iterations = 0;
+    while (iterations < 50) {
+      const oldLightness = lightness;
+      lightness = adjustLightness(hue, saturation, lightness, Number(entry.luminance));
+      if (lightness == 0) {
+        lightness = 2;
+        saturation += 5;
+      }
+      const difference = lightness / oldLightness;
+
+      if (Math.abs(difference - 1) < epsilon) break;
+      if (lightness == 0) break; // It break the whole thing hah
+      if (difference < 1) saturation *= difference;
+      if (difference > 1) saturation /= difference;
+
+      iterations++;
+    }
+    saturation = Math.max(Math.min(saturation, 100), 0);
+  }
 
   const minL = entry.min_l ? Number(entry.min_l) : 0;
   const maxL = entry.max_l ? Number(entry.max_l) : 100;
