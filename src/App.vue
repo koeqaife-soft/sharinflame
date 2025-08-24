@@ -153,6 +153,15 @@ function wsOffline({ attempt }: { attempt: number }) {
   }
 }
 
+function onReturn() {
+  for (let i = mainStore.dialogStack.length - 1; i >= 0; i--) {
+    const dialogKey = mainStore.dialogStack[i]!;
+    const dialog = mainStore.openedDialogs.get(dialogKey);
+    if (dialog && dialog.hide()) break;
+  }
+  history.pushState({ time: Date.now() }, "");
+}
+
 onMounted(() => {
   onChange();
   void pingInterval();
@@ -160,6 +169,9 @@ onMounted(() => {
   websockets.on("notification", newNotification);
   websockets.on("notification_read", onNotificationRead);
   websockets.on("local__isOffline", wsOffline);
+
+  history.pushState({ time: Date.now() }, "");
+  window.addEventListener("popstate", onReturn);
 });
 
 onBeforeMount(() => {
@@ -171,5 +183,6 @@ onBeforeUnmount(() => {
   websockets.off("notification", newNotification);
   websockets.off("notification_read", onNotificationRead);
   websockets.off("local__isOffline", wsOffline);
+  window.removeEventListener("popstate", onReturn);
 });
 </script>

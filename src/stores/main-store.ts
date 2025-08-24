@@ -19,7 +19,8 @@ type OpenedDialogs = Map<
   string,
   {
     key: string;
-    hide: () => void;
+    hide: () => boolean;
+    component: object;
   }
 >;
 
@@ -55,6 +56,7 @@ export const useMainStore = defineStore("main", {
     isOffline: false,
     connectTries: 0,
     openedDialogs: new Map() as OpenedDialogs,
+    dialogStack: [] as string[],
     settings: getSettings(),
     lastNotifications: [] as ApiNotification[],
     quasar: useQuasar(),
@@ -154,8 +156,22 @@ export const useMainStore = defineStore("main", {
 
       this.openedDialogs.set(uniqueKey, {
         key: key,
-        hide: () => dialog.hide()
+        hide: () => {
+          let hidden = false;
+          try {
+            dialog.hide();
+            hidden = true;
+          } catch {
+            // noop
+          }
+          this.openedDialogs.delete(uniqueKey);
+          this.dialogStack = this.dialogStack.filter((v) => v !== uniqueKey && this.openedDialogs.has(v));
+          return hidden;
+        },
+        component: dialog
       });
+      this.dialogStack = this.dialogStack.filter((v) => v !== uniqueKey && this.openedDialogs.has(v));
+      this.dialogStack.push(uniqueKey);
     }
   }
 });

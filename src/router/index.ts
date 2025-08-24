@@ -1,15 +1,9 @@
-import { createMemoryHistory, createRouter, createWebHashHistory, createWebHistory } from "vue-router";
+import { createMemoryHistory, createRouter } from "vue-router";
 
 import routes from "./routes";
 import { useMainStore } from "src/stores/main-store";
 
 let mainStore: ReturnType<typeof useMainStore>;
-
-const createHistory = process.env.SERVER
-  ? createMemoryHistory
-  : process.env.VUE_ROUTER_MODE === "history"
-    ? createWebHistory
-    : createWebHashHistory;
 
 const router = createRouter({
   scrollBehavior: () => ({ left: 0, top: 0 }),
@@ -17,7 +11,7 @@ const router = createRouter({
 
   // quasar.conf.js -> build -> vueRouterMode
   // quasar.conf.js -> build -> publicPath
-  history: createHistory(process.env.VUE_ROUTER_BASE)
+  history: createMemoryHistory()
 });
 
 router.beforeEach((to, from, next) => {
