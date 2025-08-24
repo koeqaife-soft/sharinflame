@@ -87,6 +87,7 @@
                 :label="currentType == 'comment' ? $t('enter_comment') : $t('add_update')"
                 class="full-width enter-comment"
                 :disable="sending"
+                @keydown.enter="sendComment"
               />
               <my-button
                 icon="send"
@@ -272,7 +273,8 @@ async function loadComments(index: number, done: (stop?: boolean) => void) {
   }
 }
 
-async function sendComment() {
+async function sendComment(event?: KeyboardEvent | MouseEvent) {
+  if (event instanceof KeyboardEvent && event.shiftKey) return;
   sending.value = true;
   try {
     const r = await createComment(postRef.value.post_id, text.value, currentType.value);
