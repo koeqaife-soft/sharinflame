@@ -142,7 +142,9 @@ async function action(type: string, data: unknown) {
         });
         if (comment.data.success) {
           mainStore.openDialog("repliesDialog", comment.data.data.comment_id, {
-            comment: comment.data.data
+            comment: comment.data.data,
+            firstComment: commentRef.value,
+            autoLoad: false
           });
         }
         moreMenuLoading.value = false;
