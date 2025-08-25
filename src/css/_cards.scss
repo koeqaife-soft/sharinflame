@@ -46,6 +46,16 @@
   margin-right: 10px;
   margin-left: 10px;
   max-width: 500px;
+  animation-duration: 300ms;
+  animation-timing-function: ease;
+  animation-fill-mode: both;
+
+  &:not(.is-exit) {
+    animation-name: fadeInDown;
+  }
+  &.is-exit {
+    animation-name: fadeOutUp;
+  }
 
   .label-section {
     margin-left: 2px;

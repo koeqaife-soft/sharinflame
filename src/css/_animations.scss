@@ -41,6 +41,28 @@
   }
 }
 
+@keyframes fadeOutUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-35px);
+  }
+}
+
+@keyframes fadeOutDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(35px);
+  }
+}
+
 .animation-fade-in-up {
   opacity: 0;
   animation: fadeInUp var(--anim-duration, 0.5s) ease forwards var(--anim-delay, 0ms);

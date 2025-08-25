@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex flex-center">
-    <div class="login-card card">
+    <div class="login-card card" ref="cardRef">
       <div class="q-pa-xs label-section card-section">
         <my-icon icon="login" />
         <div class="text-h6">{{ $t("login") }}</div>
@@ -52,7 +52,7 @@
           <my-button
             type="outlined"
             :label="$t('register')"
-            @click="$router.push({ path: '/register' })"
+            @click="push({ path: '/register' })"
             icon-right="person_add"
             class="full-width centered q-mt-sm"
           />
@@ -77,6 +77,7 @@ const { t } = useI18n();
 const router = useRouter();
 const mainStore = useMainStore();
 
+const cardRef = ref<HTMLDivElement>();
 const email = ref("");
 const password = ref("");
 const isPwd = ref(true);
@@ -88,6 +89,29 @@ watch(email, () => (errors.value.email = ""));
 watch(password, () => (errors.value.password = ""));
 
 const loading = ref(false);
+
+function push(...props: Parameters<typeof router.push>) {
+  if (cardRef.value) {
+    cardRef.value.classList.add("is-exit");
+    const style = getComputedStyle(cardRef.value);
+    const duration = style.animationDuration || style.transitionDuration;
+    if (duration) {
+      let ms = 0;
+      if (duration.includes("ms")) {
+        ms = parseFloat(duration);
+      } else if (duration.includes("s")) {
+        ms = parseFloat(duration) * 1000;
+      }
+      setTimeout(() => {
+        void router.push(...props);
+      }, ms);
+    } else {
+      void router.push(...props);
+    }
+  } else {
+    void router.push(...props);
+  }
+}
 
 const _validate = (result: string | boolean) => (result === true ? true : t(result || ""));
 const _validateEmail = (val: string) => _validate(validateEmail(val));
@@ -101,7 +125,7 @@ const _login = async () => {
     const r = await login(email.value, password.value);
     if (r.data.success) {
       mainStore.initialized = 0;
-      void router.push({ path: "/" });
+      push({ path: "/" });
     }
   } catch (error) {
     if (isAxiosError(error)) {

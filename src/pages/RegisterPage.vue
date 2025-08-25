@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex flex-center">
-    <div class="register-card card">
+    <div class="register-card card" ref="cardRef">
       <div class="q-pa-xs label-section card-section">
         <my-icon icon="person_add" />
         <div class="text-h6">{{ $t("register") }}</div>
@@ -81,7 +81,7 @@
           <my-button
             type="outlined"
             :label="$t('login')"
-            @click="$router.push({ path: '/login' })"
+            @click="push({ path: '/login' })"
             icon-right="login"
             class="full-width q-mt-sm centered"
           />
@@ -92,7 +92,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { onUnmounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { validateEmail, validatePassword, validateName } from "src/utils/validations";
 import { isAxiosError } from "axios";
@@ -105,6 +105,7 @@ import MyIcon from "src/components/my/MyIcon.vue";
 const { t } = useI18n();
 const mainStore = useMainStore();
 
+const cardRef = ref<HTMLDivElement>();
 const username = ref("");
 const email = ref("");
 const password = ref("");
@@ -114,6 +115,7 @@ const errors = ref({
   email: undefined as string | undefined,
   username: undefined as string | undefined
 });
+let timeout: NodeJS.Timeout | null = null;
 
 watch(username, () => (errors.value.username = undefined));
 watch(email, () => (errors.value.email = undefined));
@@ -121,6 +123,29 @@ watch(email, () => (errors.value.email = undefined));
 const loading = ref(false);
 
 const router = useRouter();
+
+function push(...props: Parameters<typeof router.push>) {
+  if (cardRef.value) {
+    cardRef.value.classList.add("is-exit");
+    const style = getComputedStyle(cardRef.value);
+    const duration = style.animationDuration || style.transitionDuration;
+    if (duration) {
+      let ms = 0;
+      if (duration.includes("ms")) {
+        ms = parseFloat(duration);
+      } else if (duration.includes("s")) {
+        ms = parseFloat(duration) * 1000;
+      }
+      timeout = setTimeout(() => {
+        void router.push(...props);
+      }, ms);
+    } else {
+      void router.push(...props);
+    }
+  } else {
+    void router.push(...props);
+  }
+}
 
 const _validate = (result: string | boolean) => (result === true ? true : t(result || ""));
 const _validateEmail = (val: string) => _validate(validateEmail(val));
@@ -135,7 +160,7 @@ const _register = async () => {
     const r = await register(username.value, email.value, password.value);
     if (r.data.success) {
       mainStore.initialized = 0;
-      void router.push({ path: "/" });
+      push({ path: "/" });
     }
   } catch (error) {
     if (isAxiosError(error)) {
@@ -149,4 +174,8 @@ const _register = async () => {
     loading.value = false;
   }
 };
+
+onUnmounted(() => {
+  if (timeout) clearTimeout(timeout);
+});
 </script>
