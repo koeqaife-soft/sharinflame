@@ -121,12 +121,14 @@ function generateColor(hsl: Hsl, entry: PaletteEntry): Hsl {
     let iterations = 0;
     const targetLuminance = Number(entry.luminance);
 
-    while (iterations < 25) {
+    while (iterations <= 25) {
       const Y = getLuminance(hue, saturation, lightness);
       const correctionFactor = targetLuminance / (Y * 100);
       lightness = lightness * Math.sqrt(correctionFactor);
-      if (correctionFactor > 1) saturation /= correctionFactor;
-      if (correctionFactor < 1) saturation *= correctionFactor;
+      if (iterations < 25) {
+        if (correctionFactor > 1) saturation /= correctionFactor;
+        if (correctionFactor < 1) saturation *= correctionFactor;
+      }
 
       if (lightness == 0) break; // No more NaN colors :P
 
