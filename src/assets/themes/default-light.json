@@ -5,7 +5,7 @@
     "luminance": "32"
   },
   "secondary": {
-    "s": ["=", "20"],
+    "s": ["=", "15"],
     "l": ["=", "35"],
     "luminance": "35"
   },
@@ -27,7 +27,7 @@
   "background": {
     "s": ["=", "90"],
     "l": ["=", "97"],
-    "luminance": "96"
+    "luminance": "97"
   },
   "background-variant": {
     "s": ["=", "40"],
@@ -56,8 +56,8 @@
   },
   "card-secondary": {
     "s": ["=", "70"],
-    "l": ["=", "90"],
-    "luminance": "85"
+    "l": ["=", "86"],
+    "luminance": "86"
   },
   "on-card-secondary": {
     "s": ["=", "40"],

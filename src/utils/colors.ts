@@ -97,17 +97,9 @@ function hslToRgb(h: number, s: number, l: number): Rgb {
   return result;
 }
 
-function adjustLightness(h: number, s: number, l: number, targetLuminance = 50): number {
+function getLuminance(h: number, s: number, l: number): number {
   const [r, g, b] = hslToRgb(h, s, l);
-
-  const Y = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
-
-  if (Y === 0) return l;
-
-  const correctionFactor = targetLuminance / (Y * 100);
-  const newL = l * correctionFactor;
-
-  return Math.max(0, Math.min(100, newL));
+  return (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
 }
 
 function generateColor(hsl: Hsl, entry: PaletteEntry): Hsl {
@@ -126,20 +118,21 @@ function generateColor(hsl: Hsl, entry: PaletteEntry): Hsl {
   if (entry.l) lightness = applyValue(lightness, entry.l, adjustValue);
 
   if (entry.luminance !== undefined) {
-    const epsilon = 0.0001;
     let iterations = 0;
-    while (iterations < 50) {
-      const oldLightness = lightness;
-      lightness = adjustLightness(hue, saturation, lightness, Number(entry.luminance));
-      const difference = lightness / oldLightness;
+    const targetLuminance = Number(entry.luminance);
 
-      if (Math.abs(difference - 1) < epsilon) break;
-      if (lightness == 0) break; // It break the whole thing hah
-      if (difference < 1) saturation *= difference;
-      if (difference > 1) saturation /= difference;
+    while (iterations < 25) {
+      const Y = getLuminance(hue, saturation, lightness);
+      const correctionFactor = targetLuminance / (Y * 100);
+      lightness = lightness * Math.sqrt(correctionFactor);
+      if (correctionFactor > 1) saturation /= correctionFactor;
+      if (correctionFactor < 1) saturation *= correctionFactor;
+
+      if (lightness == 0) break; // No more NaN colors :P
 
       iterations++;
     }
+
     saturation = Math.max(Math.min(saturation, 100), 0);
   }
 
