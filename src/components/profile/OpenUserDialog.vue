@@ -1,5 +1,5 @@
 <template>
-  <my-button class="profile webkit-no-drag is-icon" @click="openDialog">
+  <my-button class="profile webkit-no-drag is-icon" @click.stop="openDialog">
     <user-avatar :user="user" />
   </my-button>
 </template>
