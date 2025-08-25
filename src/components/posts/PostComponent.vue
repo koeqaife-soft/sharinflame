@@ -86,9 +86,9 @@ import { i18n } from "src/boot/i18n";
 import TextParts from "../misc/TextParts.vue";
 import MyChip from "../my/MyChip.vue";
 import MyButton from "../my/MyButton.vue";
+import ReactionButtons from "./ReactionButtons.vue";
 import { useMainStore } from "src/stores/main-store";
 
-const ReactionButtons = defineAsyncComponent(() => import("./ReactionButtons.vue"));
 const OpenUserDialog = defineAsyncComponent(() => import("../profile/OpenUserDialog.vue"));
 const MoreMenu = defineAsyncComponent(() => import("./PostMoreMenu.vue"));
 const PostEditor = defineAsyncComponent(() => import("./PostEditor.vue"));

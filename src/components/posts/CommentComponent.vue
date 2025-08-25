@@ -41,6 +41,7 @@
 import { defineAsyncComponent, onUnmounted, ref, toRef } from "vue";
 import { formatStringForHtml, formatNumber } from "src/utils/format";
 import TextParts from "../misc/TextParts.vue";
+import ReactionButtons from "./ReactionButtons.vue";
 import MyButton from "../my/MyButton.vue";
 import { i18n } from "src/boot/i18n";
 import { useQuasar } from "quasar";
@@ -49,7 +50,6 @@ import { isAxiosError } from "axios";
 import { useMainStore } from "src/stores/main-store";
 
 const OpenUserDialog = defineAsyncComponent(() => import("../profile/OpenUserDialog.vue"));
-const ReactionButtons = defineAsyncComponent(() => import("./ReactionButtons.vue"));
 const MoreMenu = defineAsyncComponent(() => import("./CommentMoreMenu.vue"));
 
 let controller: AbortController | null = null;
