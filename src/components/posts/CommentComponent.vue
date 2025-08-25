@@ -111,8 +111,8 @@ async function action(type: string, data: unknown) {
         if (post.data.success) {
           mainStore.openDialog("post", post.data.data.post_id, {
             post: post.data.data,
-            firstComment: props.comment,
-            autoLoad: false
+            autoLoad: false,
+            ...(!commentRef.value.parent_comment_id && { firstComment: props.comment })
           });
         }
         moreMenuLoading.value = false;

@@ -155,7 +155,7 @@ const postComponentRef = ref<HTMLElement | null>(null);
 
 const virtualScroll = ref<DefineComponent | null>(null);
 const allowLoading = ref(props.autoLoad);
-const currentType = ref<"comment" | "update">("comment");
+const currentType = ref<"comment" | "update">(props.firstComment?.type ?? "comment");
 const canWriteComment = computed(
   () =>
     currentType.value == "comment" ||

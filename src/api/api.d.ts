@@ -83,6 +83,7 @@ interface Comment {
   is_like?: boolean;
   is_fav?: boolean;
   created_at: number;
+  type?: "update" | "comment";
   _meta?: MetaData;
 }
 
