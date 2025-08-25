@@ -21,6 +21,7 @@ type OpenedDialogs = Map<
     key: string;
     hide: () => boolean;
     component: object;
+    time: number;
   }
 >;
 
@@ -137,6 +138,7 @@ export const useMainStore = defineStore("main", {
     openDialog(name: keyof typeof dialogs, key: string, props: Record<string, unknown>) {
       const uniqueKey = stackDialogs.includes(name) ? name + key : name;
       const component = dialogs[name];
+      const time = Date.now();
 
       const dialog = this.quasar.dialog({
         component: component,
@@ -164,11 +166,15 @@ export const useMainStore = defineStore("main", {
           } catch {
             // noop
           }
-          this.openedDialogs.delete(uniqueKey);
-          this.dialogStack = this.dialogStack.filter((v) => v !== uniqueKey && this.openedDialogs.has(v));
+          if (this.openedDialogs.get(uniqueKey)?.component == dialog) {
+            this.openedDialogs.delete(uniqueKey);
+            this.dialogStack = this.dialogStack.filter((v) => v !== uniqueKey && this.openedDialogs.has(v));
+          }
+
           return hidden;
         },
-        component: dialog
+        component: dialog,
+        time: time
       });
       this.dialogStack = this.dialogStack.filter((v) => v !== uniqueKey && this.openedDialogs.has(v));
       this.dialogStack.push(uniqueKey);
