@@ -27,7 +27,7 @@
   },
   "background-variant": {
     "s": ["=", "0"],
-    "l": ["=", "95"]
+    "l": ["=", "90"]
   },
   "on-background-variant": {
     "s": ["=", "0"],
