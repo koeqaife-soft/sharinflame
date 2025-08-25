@@ -83,6 +83,13 @@ function onChange() {
 }
 
 watch(
+  () => quasar.dark.mode,
+  () => {
+    mainStore.setSettings("darkMode", quasar.dark.mode);
+  }
+);
+
+watch(
   () => mainStore.isOffline,
   () => onChange()
 );

@@ -146,7 +146,6 @@ watch(selectedMode, (v) => {
   if (v !== quasar.dark.mode) {
     if (v == "auto") quasar.dark.set(v);
     else quasar.dark.set(v == "dark");
-    mainStore.setSettings("darkMode", quasar.dark.mode);
   }
 });
 

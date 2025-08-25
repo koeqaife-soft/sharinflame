@@ -70,7 +70,6 @@ const darkMode = ref(quasar.dark.isActive);
 watch(darkMode, (v) => {
   if (quasar.dark.isActive != v) {
     quasar.dark.set(v);
-    mainStore.setSettings("darkMode", quasar.dark.mode);
   }
 });
 
