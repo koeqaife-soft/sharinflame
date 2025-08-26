@@ -13,49 +13,53 @@
         :icon="icons[category]"
       />
     </div>
-    <keep-alive>
-      <q-scroll-area class="scroll-area full-height fix-scroll-area" :visible="false" v-if="selected == 'posts'">
-        <my-virtual-scroll
-          :items="items[0]"
-          item-key="post_id"
-          infinite-load-type="bottom"
-          :margins="8"
-          @load-more="(i: number, done: DoneType) => onLoadData(0, 'posts', done)"
-          ref="virtualScroll"
-        >
-          <template v-slot:default="{ item }">
-            <post-component :post="item" class="q-mb-sm" @delete-post="handleDeletePost" />
-          </template>
-          <template v-slot:loading>
-            <div class="row justify-center q-my-md">
-              <q-spinner class="loading full-height q-my-md" size="40px" />
-            </div>
-          </template>
-        </my-virtual-scroll>
-      </q-scroll-area>
-      <q-scroll-area
-        class="scroll-area full-height fix-scroll-area"
-        :visible="false"
-        v-else-if="selected == 'comments'"
-      >
-        <my-virtual-scroll
-          :items="items[1]"
-          item-key="comment_id"
-          infinite-load-type="bottom"
-          :margins="8"
-          @load-more="(i: number, done: DoneType) => onLoadData(1, 'comments', done)"
-        >
-          <template v-slot:default="{ item }">
-            <comment-component :comment="item" class="q-mb-sm" />
-          </template>
-          <template v-slot:loading>
-            <div class="row justify-center q-my-md">
-              <q-spinner class="loading full-height q-my-md" size="40px" />
-            </div>
-          </template>
-        </my-virtual-scroll>
-      </q-scroll-area>
-    </keep-alive>
+    <div class="crossfade-div">
+      <transition name="crossfade">
+        <keep-alive>
+          <q-scroll-area class="scroll-area full-height fix-scroll-area" :visible="false" v-if="selected == 'posts'">
+            <my-virtual-scroll
+              :items="items[0]"
+              item-key="post_id"
+              infinite-load-type="bottom"
+              :margins="8"
+              @load-more="(i: number, done: DoneType) => onLoadData(0, 'posts', done)"
+              ref="virtualScroll"
+            >
+              <template v-slot:default="{ item }">
+                <post-component :post="item" class="q-mb-sm" @delete-post="handleDeletePost" />
+              </template>
+              <template v-slot:loading>
+                <div class="row justify-center q-my-md">
+                  <q-spinner class="loading full-height q-my-md" size="40px" />
+                </div>
+              </template>
+            </my-virtual-scroll>
+          </q-scroll-area>
+          <q-scroll-area
+            class="scroll-area full-height fix-scroll-area"
+            :visible="false"
+            v-else-if="selected == 'comments'"
+          >
+            <my-virtual-scroll
+              :items="items[1]"
+              item-key="comment_id"
+              infinite-load-type="bottom"
+              :margins="8"
+              @load-more="(i: number, done: DoneType) => onLoadData(1, 'comments', done)"
+            >
+              <template v-slot:default="{ item }">
+                <comment-component :comment="item" class="q-mb-sm" />
+              </template>
+              <template v-slot:loading>
+                <div class="row justify-center q-my-md">
+                  <q-spinner class="loading full-height q-my-md" size="40px" />
+                </div>
+              </template>
+            </my-virtual-scroll>
+          </q-scroll-area>
+        </keep-alive>
+      </transition>
+    </div>
   </div>
 </template>
 
