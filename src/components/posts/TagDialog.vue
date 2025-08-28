@@ -43,6 +43,7 @@
                 <my-icon icon="article" class="icon" />
                 <div>{{ $t("posts") }}</div>
                 <q-space />
+                <my-button icon="add_2" @click="createPost" />
                 <my-button icon="refresh" @click="reloadPosts" />
               </div>
             </div>
@@ -88,9 +89,11 @@ import { useI18n } from "vue-i18n";
 import { getPostsBatch, getTag, getTagPosts } from "src/api/posts";
 import { type AxiosError, isAxiosError } from "axios";
 import { formatUnixTime } from "src/utils/format";
+import { useMainStore } from "src/stores/main-store";
 
 const PostComponent = defineAsyncComponent(() => import("./PostComponent.vue"));
 
+const mainStore = useMainStore();
 const { t } = useI18n();
 defineEmits([...useDialogPluginComponent.emits]);
 const props = defineProps<{
@@ -129,6 +132,10 @@ const virtualScroll = ref<DefineComponent | null>(null);
 
 function onScroll(info: QScrollObserverDetails) {
   headerVisible.value = info.position.top < tagComponentRef.value!.scrollHeight + 66 || info.direction == "up";
+}
+
+function createPost() {
+  mainStore.openDialog("postEditor", "", { withCtags: [props.tagName] });
 }
 
 function reset() {

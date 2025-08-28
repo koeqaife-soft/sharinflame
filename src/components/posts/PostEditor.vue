@@ -106,6 +106,7 @@ import { useMainStore } from "src/stores/main-store";
 
 const props = defineProps<{
   originalPost?: Post;
+  withCtags?: string[];
 }>();
 
 defineEmits([...useDialogPluginComponent.emits]);
@@ -122,7 +123,7 @@ const addTagValue = ref<string>("");
 const is_nsfw = ref(false);
 const ai_generated = ref(false);
 
-const ctags = ref<string[]>([]);
+const ctags = ref<string[]>(props.withCtags ?? []);
 const tags = ref<string[]>([]);
 const MAX_TAGS = 6;
 
