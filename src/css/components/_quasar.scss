@@ -24,13 +24,13 @@
 }
 
 body.body--dark .q-dialog__backdrop {
-  background-color: rgba(0, 0, 0, 0.2) !important;
-  backdrop-filter: blur(3px);
+  background-color: rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: blur(1px);
 }
 
 body.body--light .q-dialog__backdrop {
-  background-color: rgba(255, 255, 255, 0.2) !important;
-  backdrop-filter: blur(3px);
+  background-color: rgba(255, 255, 255, 0.4) !important;
+  backdrop-filter: blur(1px);
 }
 
 .q-field:not(.q-select):not(.q-field--outlined) {
