@@ -11,8 +11,8 @@
         :min-item-height="58"
         :no-resize-observer="true"
       >
-        <template v-slot:default="{ item }">
-          <user-card :user="item" class="q-mb-sm" />
+        <template v-slot:default="{ item, index }">
+          <user-card :user="item" :class="{ 'q-mb-sm': index + 1 < items.length }" />
         </template>
         <template v-slot:loading>
           <div class="row justify-center q-my-md">

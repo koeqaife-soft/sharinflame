@@ -59,8 +59,12 @@
             class="posts-infinite-scroll"
             ref="virtualScroll"
           >
-            <template v-slot:default="{ item }">
-              <post-component class="q-mb-sm" :post="item" @delete-post="handleDeletePost" />
+            <template v-slot:default="{ item, index }">
+              <post-component
+                :class="{ 'q-mb-sm': index + 1 < items.length }"
+                :post="item"
+                @delete-post="handleDeletePost"
+              />
             </template>
             <template v-slot:loading>
               <div class="row justify-center q-my-md">

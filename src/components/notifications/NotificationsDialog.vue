@@ -16,7 +16,7 @@
         <q-space />
         <my-button icon="close" @click="dialogRef?.hide()" />
       </div>
-      <div class="dialog-content-inner">
+      <div class="dialog-content-inner" :style="{ 'padding-bottom': '0px' }">
         <q-scroll-area class="scroll-area fix-scroll-area full-height" :visible="false">
           <div class="no-notifications" v-if="showNoNotifications">{{ $t("no_notifications") }}</div>
           <div class="unread-notifications card horizontal-container q-mb-sm">
@@ -45,8 +45,8 @@
             ref="virtualScroll"
             :min-item-height="60"
           >
-            <template v-slot:default="{ item }">
-              <notification-card :notif="item" :cache="notifCache" class="q-mb-sm" />
+            <template v-slot:default="{ item, index }">
+              <notification-card :notif="item" :cache="notifCache" :class="{ 'q-mb-sm': index + 1 < items.length }" />
             </template>
             <template v-slot:loading>
               <div class="row justify-center q-my-md">

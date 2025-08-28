@@ -48,10 +48,10 @@
             class="posts-infinite-scroll"
             ref="virtualScroll"
           >
-            <template v-slot:default="{ item }">
+            <template v-slot:default="{ item, index }">
               <comment-component
                 :comment="item"
-                class="q-mb-sm"
+                :class="{ 'q-mb-sm': index + 1 < items.length }"
                 @delete-comment="handleDeleteComment"
                 :in-dialog="true"
               />

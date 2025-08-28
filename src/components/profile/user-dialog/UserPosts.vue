@@ -25,8 +25,8 @@
       :key="scrollKey"
       ref="virtualScroll"
     >
-      <template v-slot:default="{ item }">
-        <post-component :post="item" class="q-mb-sm" @delete-post="handleDeletePost" />
+      <template v-slot:default="{ item, index }">
+        <post-component :post="item" :class="{ 'q-mb-sm': index + 1 < items.length }" @delete-post="handleDeletePost" />
       </template>
       <template v-slot:loading>
         <div class="row justify-center q-my-md">
