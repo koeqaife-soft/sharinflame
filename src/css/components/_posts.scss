@@ -283,6 +283,16 @@
       flex-wrap: wrap;
       gap: 8px;
     }
+    .tag {
+      .my-icon.icon-left {
+        @include iconSize(20);
+      }
+    }
+    .hint {
+      margin-left: 4px;
+      font-size: 13px;
+      color: var(--on-background-variant);
+    }
   }
   .send-container {
     display: flex;

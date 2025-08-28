@@ -29,12 +29,24 @@
         </q-carousel-slide>
       </q-carousel>
     </div>
-    <div class="tags tags-section card-section" v-if="!postRef.is_system && postRef.tags?.length > 0">
+    <div
+      class="tags tags-section card-section"
+      v-if="!postRef.is_system && (postRef.tags?.length > 0 || postRef.ctags?.length > 0)"
+    >
+      <my-chip
+        v-for="(tag, index) in postRef.ctags"
+        :key="index"
+        class="tag"
+        icon="tag"
+        :disable="disable"
+        :label="tag"
+        :clickable="true"
+      />
       <my-chip
         v-for="(tag, index) in postRef.tags"
         :key="index"
         class="tag"
-        :icon="$tagsInfo.value[tag]?.icon || 'tag'"
+        :icon="$tagsInfo.value[tag]?.icon || 'experiment'"
         :disable="disable"
         :label="$tagsInfo.value[tag]?.name || tag"
       />

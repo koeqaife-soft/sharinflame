@@ -126,6 +126,7 @@ export default {
   enter_tag: "Enter Tag",
   edit_post: "Edit Post",
   apply: "Apply",
+  cant_change_tags_edit: "Can't change tags when editing a post",
 
   post_created: {
     msg: "Post created",

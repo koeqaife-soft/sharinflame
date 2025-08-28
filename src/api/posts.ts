@@ -15,7 +15,9 @@ export const postsEndpoints = {
   comment_actions: (post_id: string, comment_id: string) => `/posts/${post_id}/comments/${comment_id}`,
   comment_reactions: (post_id: string, comment_id: string) => `/posts/${post_id}/comments/${comment_id}/reactions`,
   get_user_posts: (user_id: string) => `/users/${user_id}/posts`,
-  get_comment: (post_id: string, comment_id: string) => `/posts/${post_id}/comments/${comment_id}`
+  get_comment: (post_id: string, comment_id: string) => `/posts/${post_id}/comments/${comment_id}`,
+  get_tag_posts: (name: string) => `/tags/${name}/posts`,
+  get_tag: (name: string) => `/tags/${name}`
 };
 
 export const getPostsTypes = {
@@ -171,6 +173,19 @@ async function createPost(values: CreatePostValues, config: AxiosRequestConfig =
   return await api.post<ApiResponse<Post>>(postsEndpoints.create_post, values, config);
 }
 
+async function getTagPosts(name: string, cursor?: string, config: AxiosRequestConfig = {}) {
+  return await api.get<ApiResponse<{ posts: string[]; next_cursor: string }>>(postsEndpoints.get_tag_posts(name), {
+    params: {
+      ...(cursor && { cursor })
+    },
+    ...config
+  });
+}
+
+async function getTag(name: string, config: AxiosRequestConfig = {}) {
+  return await api.get<ApiResponse<Tag>>(postsEndpoints.get_tag(name), config);
+}
+
 function init(_api: AxiosInstance) {
   api = _api;
 }
@@ -190,5 +205,7 @@ export {
   createPost,
   deletePost,
   deleteComment,
-  getComment
+  getComment,
+  getTagPosts,
+  getTag
 };

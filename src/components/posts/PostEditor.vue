@@ -32,9 +32,9 @@
               <my-icon icon="tag" class="icon" />
               <div class="label">{{ $t("tags") }}</div>
             </div>
-            <div class="chips">
+            <div class="chips" v-if="!editMode">
               <my-chip
-                v-for="(tag, index) in tags"
+                v-for="(tag, index) in ctags"
                 :key="index"
                 :removable="true"
                 @remove="removeTag(index)"
@@ -45,10 +45,10 @@
                 :clickable="true"
                 icon="add"
                 class="tag"
-                :disable="tags.length >= MAX_TAGS"
+                :disable="ctags.length >= MAX_TAGS"
                 :label="$t('add_tag')"
               >
-                <q-menu class="menu-card enter-tag-menu field-menu" v-if="tags.length < MAX_TAGS">
+                <q-menu class="menu-card enter-tag-menu field-menu" v-if="ctags.length < MAX_TAGS">
                   <q-input
                     v-model="addTagValue"
                     :label="$t('enter_tag')"
@@ -63,6 +63,12 @@
                   </q-input>
                 </q-menu>
               </my-chip>
+            </div>
+            <div v-else>
+              <div class="hint">{{ $t("cant_change_tags_edit") }}</div>
+              <div class="chips">
+                <my-chip v-for="(tag, index) in ctags" :key="index" icon="tag" :label="tag" class="tag" />
+              </div>
             </div>
           </div>
 
@@ -116,6 +122,7 @@ const addTagValue = ref<string>("");
 const is_nsfw = ref(false);
 const ai_generated = ref(false);
 
+const ctags = ref<string[]>([]);
 const tags = ref<string[]>([]);
 const MAX_TAGS = 6;
 
@@ -147,10 +154,10 @@ function arraysEqualUnordered<T>(arr1: T[], arr2: T[]) {
 async function editPostButton() {
   if (!props.originalPost) return;
   loading.value = true;
-  const tags = generateTags();
+  const tags = generateTags() ?? [];
   const content = text.value;
   const data = {
-    ...(!arraysEqualUnordered(tags!, props.originalPost.tags) && { tags }),
+    ...(!arraysEqualUnordered(tags, props.originalPost.tags) && { tags }),
     ...(content != props.originalPost.content && { content })
   };
   try {
@@ -195,7 +202,8 @@ async function createPostButton() {
   const tags = generateTags();
   const r = await createPost({
     content: text.value,
-    tags: tags!
+    tags: tags!,
+    ctags: ctags.value
   });
   loading.value = false;
   if (r.data.success && r.data.data) {
@@ -217,14 +225,14 @@ async function createPostButton() {
 }
 
 const addTag = () => {
-  if (addTagValue.value && !tags.value.includes(addTagValue.value)) {
-    tags.value.push(addTagValue.value);
+  if (addTagValue.value && !ctags.value.includes(addTagValue.value)) {
+    ctags.value.push(addTagValue.value);
     addTagValue.value = "";
   }
 };
 
 const removeTag = (index: number) => {
-  tags.value.splice(index, 1);
+  ctags.value.splice(index, 1);
 };
 
 onMounted(() => {
@@ -232,6 +240,7 @@ onMounted(() => {
     editMode.value = true;
 
     tags.value = [...props.originalPost.tags];
+    ctags.value = [...props.originalPost.ctags];
 
     const checkAndRemoveTag = (tag: string, ref: Ref<boolean>) => {
       const index = tags.value.indexOf(tag);

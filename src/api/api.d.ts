@@ -44,6 +44,7 @@ interface Post {
   comments_count: number;
   tags: string[];
   media: string[];
+  ctags: string[];
   is_like?: boolean | undefined;
   is_system?: boolean | undefined;
   is_fav?: boolean | undefined;
@@ -87,6 +88,13 @@ interface Comment {
   _meta?: MetaData;
 }
 
+interface Tag {
+  tag_id: string;
+  name: string;
+  created_at: number;
+  posts_count: number;
+}
+
 type CommentWithUser = Comment & {
   user: User;
 };
@@ -97,6 +105,7 @@ interface CreatePostValues {
   content: string;
   tags?: string[];
   media?: string[];
+  ctags?: string[];
 }
 
 type ResponseWithPost = ApiResponse<Post>;
