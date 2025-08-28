@@ -181,13 +181,6 @@
     max-width: 600px;
     border-radius: 18px 18px 0px 0px !important;
   }
-  .dialog-content-inner {
-    display: flex;
-    flex-direction: column;
-    padding: 8px;
-    height: 100%;
-    position: relative;
-  }
   .send-comment {
     .card-section {
       padding: 2px;
@@ -246,13 +239,6 @@
       max-height 0.2s ease,
       margin 0.2s ease,
       transform 0.25s ease-out;
-  }
-  .dialog-content-inner {
-    display: flex;
-    flex-direction: column;
-    padding: 8px;
-    height: 100%;
-    position: relative;
   }
   .post-text {
     padding-top: 0px;

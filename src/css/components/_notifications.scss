@@ -174,10 +174,6 @@
       margin 0.2s ease,
       transform 0.25s ease-out;
   }
-  .dialog-content-inner {
-    padding: 8px;
-    height: 100%;
-  }
   .notification {
     @include elevation(0);
     background-color: var(--card);

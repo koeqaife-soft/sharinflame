@@ -91,10 +91,19 @@
     will-change: transform;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
     transition: transform 0.25s ease-out;
-    padding: 8px;
     background-color: var(--background);
     display: flex;
     flex-direction: column;
+  }
+  &:not(:has(.dialog-content-inner)) .dialog-content {
+    padding: 12px;
+  }
+  .dialog-content-inner {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    height: 100%;
+    position: relative;
   }
 
   .card {
@@ -148,11 +157,6 @@
         max-height 0.2s ease,
         margin 0.2s ease,
         transform 0.25s ease-out;
-    }
-    .dialog-content-inner {
-      padding: 8px;
-      height: 100%;
-      position: relative;
     }
     .card-button {
       @include elevation(1);
