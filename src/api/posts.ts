@@ -174,12 +174,15 @@ async function createPost(values: CreatePostValues, config: AxiosRequestConfig =
 }
 
 async function getTagPosts(name: string, cursor?: string, config: AxiosRequestConfig = {}) {
-  return await api.get<ApiResponse<{ posts: string[]; next_cursor: string }>>(postsEndpoints.get_tag_posts(name), {
-    params: {
-      ...(cursor && { cursor })
-    },
-    ...config
-  });
+  return await api.get<ApiResponse<{ posts: string[]; next_cursor: string; has_more: boolean }>>(
+    postsEndpoints.get_tag_posts(name),
+    {
+      params: {
+        ...(cursor && { cursor })
+      },
+      ...config
+    }
+  );
 }
 
 async function getTag(name: string, config: AxiosRequestConfig = {}) {

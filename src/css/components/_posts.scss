@@ -159,7 +159,8 @@
 
 // Post dialog styles
 .post-dialog,
-.comment-dialog {
+.comment-dialog,
+.tag-dialog {
   .q-dialog__inner {
     margin-top: 58px;
   }
@@ -297,5 +298,20 @@
   .send-container {
     display: flex;
     justify-content: flex-end;
+  }
+}
+
+.tag-card {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .my-icon {
+    @include iconSize(20);
+    margin-right: 8px;
+  }
+  b {
+    font-weight: 500;
   }
 }

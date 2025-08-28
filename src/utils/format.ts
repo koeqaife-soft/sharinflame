@@ -91,7 +91,7 @@ export function formatStringForHtml(str: string) {
 }
 
 export function formatUnixTime(unixTime: number, locale: string = "en"): string {
-  const date = new Date(unixTime);
+  const date = new Date(unixTime * 1000);
   let formatter = dateFormatters.get(locale);
   if (!formatter) {
     formatter = new Intl.DateTimeFormat(locale, {

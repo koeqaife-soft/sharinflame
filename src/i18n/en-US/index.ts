@@ -128,6 +128,10 @@ export default {
   apply: "Apply",
   cant_change_tags_edit: "Can't change tags when editing a post",
 
+  ctag: "Tag",
+  tag_name: "Tag Name",
+  posts_count: "Posts Count",
+
   post_created: {
     msg: "Post created",
     caption: "You can find your post in your profile."

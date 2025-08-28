@@ -39,6 +39,7 @@
         class="tag"
         icon="tag"
         :disable="disable"
+        @click="mainStore.openDialog('tagDialog', tag, { tagName: tag })"
         :label="tag"
         :clickable="true"
       />
