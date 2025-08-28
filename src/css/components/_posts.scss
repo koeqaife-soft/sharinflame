@@ -180,6 +180,7 @@
       transform 0.25s ease-out;
     max-width: 600px;
     border-radius: 18px 18px 0px 0px !important;
+    border-bottom: none;
   }
   .send-comment {
     .card-section {
@@ -221,6 +222,7 @@
     .dialog-content {
       max-height: 100%;
       border-radius: 18px 18px 0px 0px !important;
+      border-bottom: none;
     }
   }
   .q-dialog__inner {
