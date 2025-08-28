@@ -146,6 +146,9 @@
         padding: 8px;
       }
     }
+    .dialog-content-inner {
+      flex-direction: row;
+    }
     .sidebar {
       width: 100%;
     }
