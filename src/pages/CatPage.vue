@@ -607,10 +607,5 @@ onBeforeUnmount(() => {
   align-items: center;
   height: 100%;
   width: 100%;
-  background: black;
-}
-
-canvas {
-  background: black;
 }
 </style>
