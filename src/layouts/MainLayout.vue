@@ -69,7 +69,7 @@ function logoClick() {
     void router.back();
     return;
   }
-  if (clickCount >= 5) {
+  if (clickCount >= 3) {
     void router.push({ path: "/cat" });
     return;
   }
