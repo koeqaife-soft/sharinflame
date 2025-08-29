@@ -27,6 +27,12 @@ const routes: RouteRecordRaw[] = [
     props: { showDarkModeToggle: true },
     children: [{ path: "", component: () => import("pages/BetaInfo.vue") }]
   },
+  {
+    path: "/cat",
+    component: () => import("layouts/MainLayout.vue"),
+    props: { showDarkModeToggle: true },
+    children: [{ path: "", component: () => import("pages/CatPage.vue") }]
+  },
 
   {
     path: "/:catchAll(.*)*",

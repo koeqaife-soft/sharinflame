@@ -49,21 +49,36 @@ import LogoComponent from "src/components/misc/LogoComponent.vue";
 import { onBeforeUnmount, ref, defineAsyncComponent } from "vue";
 import MyButton from "src/components/my/MyButton.vue";
 import MyIcon from "src/components/my/MyIcon.vue";
+import { useRouter } from "vue-router";
 
 const WindowActions = defineAsyncComponent(() => import("src/components/WindowActions.vue"));
 
+const router = useRouter();
+
 const isIconAnimated = ref(false);
 let animationTimeout: ReturnType<typeof setTimeout>;
+let clickCount = 0;
 
 function logoClick() {
   if (animationTimeout) {
     clearTimeout(animationTimeout);
+    clickCount++;
+  }
+
+  if (router.currentRoute.value.path === "/cat") {
+    void router.back();
+    return;
+  }
+  if (clickCount >= 5) {
+    void router.push({ path: "/cat" });
+    return;
   }
 
   isIconAnimated.value = true;
 
   animationTimeout = setTimeout(() => {
     isIconAnimated.value = false;
+    clickCount = 0;
   }, 500);
 }
 

@@ -17,6 +17,11 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   if (!mainStore) mainStore = useMainStore();
 
+  if (to.path === "/cat") {
+    next();
+    return;
+  }
+
   if (mainStore.initialized === 3 && to.path !== "/info") {
     next({ path: "/info" });
   } else if (mainStore.initialized === 0 && to.path !== "/") {
