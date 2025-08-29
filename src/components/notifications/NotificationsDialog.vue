@@ -16,7 +16,7 @@
         <q-space />
         <my-button icon="close" @click="dialogRef?.hide()" />
       </div>
-      <div class="dialog-content-inner" :style="{ 'padding-bottom': '0px' }">
+      <div class="dialog-content-inner">
         <q-scroll-area class="scroll-area fix-scroll-area full-height" :visible="false">
           <div class="no-notifications" v-if="showNoNotifications">{{ $t("no_notifications") }}</div>
           <div class="unread-notifications card horizontal-container q-mb-sm">
