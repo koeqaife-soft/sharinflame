@@ -12,7 +12,7 @@
       <div class="title">{{ $t(`${localeKey}.title`) }}</div>
       <div class="message">{{ $t(`${localeKey}.message`) }}</div>
       <div class="buttons horizontal-container">
-        <my-button v-if="showCancel" :label="$t(cancelKey!)" type="card" icon="close" @click="dialogRef!.hide()" />
+        <my-button v-if="showCancel" :label="$t(cancelKey!)" type="flat" icon="close" @click="dialogRef!.hide()" />
         <my-button v-if="showOk" :label="$t(okKey!)" :type="okType!" :icon="okIcon" @click="$emit('ok')" />
       </div>
     </div>
@@ -30,7 +30,7 @@ withDefaults(
     localeKey: string;
     cancelKey?: string;
     okKey?: string;
-    okType?: "primary" | "secondary" | "outlined" | "card" | "none" | "attention";
+    okType?: "primary" | "secondary" | "outlined" | "card" | "none" | "attention" | "flat";
     okIcon?: string;
     showCancel?: boolean;
     showOk?: boolean;

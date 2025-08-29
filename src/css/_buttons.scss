@@ -160,6 +160,27 @@
   background-color: transparent;
 }
 
+.my-button.is-flat {
+  @include elevation(1);
+  border-radius: 8px;
+  background-color: var(--card);
+  color: var(--primary);
+  justify-content: start;
+  min-height: 40px;
+
+  &.disabled {
+    opacity: 1 !important;
+    background-color: var(--disabled-button-bg);
+    color: var(--disabled-button-fg);
+  }
+
+  &.loading .my-button-label,
+  &.loading .my-icon {
+    transition: color 0.1s ease 0.2s;
+    color: var(--primary);
+  }
+}
+
 .my-button.is-primary {
   @include elevation(1);
   --_after-bg-color: var(--background);
