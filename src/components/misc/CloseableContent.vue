@@ -25,6 +25,7 @@ let touchStartY = 0;
 let moveDeltaX = 0;
 let moveDeltaY = 0;
 
+let started = false;
 let isSwiping = false;
 let ignoreX = false;
 let ignoreY = false;
@@ -88,6 +89,7 @@ const onTouchStart = (event: TouchEvent) => {
   isSwiping = false;
   ignoreX = false;
   ignoreY = false;
+  started = true;
 };
 
 const getSwipeDelta = () => {
@@ -117,6 +119,8 @@ const getMoveSwipeDelta = () => {
 };
 
 const onTouchMove = (event: TouchEvent) => {
+  // Fixes weird behavior on some devices
+  if (!started) return;
   moveDeltaX = event.touches[0]!.clientX - touchEndX;
   moveDeltaY = event.touches[0]!.clientY - touchEndY;
   touchEndX = event.touches[0]!.clientX;
@@ -150,6 +154,7 @@ const onTouchMove = (event: TouchEvent) => {
 };
 
 const onTouchEnd = () => {
+  started = false;
   if (isSwiping && getSwipeDelta() > SWIPE_THRESHOLD && getMoveSwipeDelta() > 0) {
     emit("hide");
   } else {
