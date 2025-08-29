@@ -155,7 +155,7 @@ async function action(type: string, data: unknown) {
           signal: controller.signal
         });
         if (comment.data.success) {
-          mainStore.openDialog("repliesDialog", comment.data.data.comment_id, {
+          mainStore.openDialog("replies", comment.data.data.comment_id, {
             comment: comment.data.data,
             firstComment: commentRef.value,
             autoLoad: false,
@@ -186,7 +186,7 @@ async function action(type: string, data: unknown) {
 
 function repliesDialog() {
   if (props.inRepliesDialog) return;
-  mainStore.openDialog("repliesDialog", commentRef.value.comment_id, {
+  mainStore.openDialog("replies", commentRef.value.comment_id, {
     comment: commentRef.value,
     onDelete: () => {
       disable.value = true;

@@ -31,8 +31,8 @@ const dialogs = {
   post: defineAsyncComponent(() => import("src/components/posts/PostDialog.vue")),
   myActivity: defineAsyncComponent(() => import("src/components/my-activity/MyActivityDialog.vue")),
   postEditor: defineAsyncComponent(() => import("src/components/posts/PostEditor.vue")),
-  repliesDialog: defineAsyncComponent(() => import("src/components/posts/RepliesDialog.vue")),
-  tagDialog: defineAsyncComponent(() => import("src/components/posts/TagDialog.vue")),
+  replies: defineAsyncComponent(() => import("src/components/posts/RepliesDialog.vue")),
+  tag: defineAsyncComponent(() => import("src/components/posts/TagDialog.vue")),
   okCancel: defineAsyncComponent(() => import("src/components/misc/OkCancelDialog.vue"))
 } as const;
 

@@ -165,7 +165,7 @@ async function onClicked() {
           "reply"
         );
         if (comment.data.success && parent.data.success) {
-          mainStore.openDialog("repliesDialog", parent.data.data.comment_id, {
+          mainStore.openDialog("replies", parent.data.data.comment_id, {
             comment: parent.data.data,
             inDialog: false,
             firstComment: comment.data.data,
