@@ -32,7 +32,8 @@ const dialogs = {
   myActivity: defineAsyncComponent(() => import("src/components/my-activity/MyActivityDialog.vue")),
   postEditor: defineAsyncComponent(() => import("src/components/posts/PostEditor.vue")),
   repliesDialog: defineAsyncComponent(() => import("src/components/posts/RepliesDialog.vue")),
-  tagDialog: defineAsyncComponent(() => import("src/components/posts/TagDialog.vue"))
+  tagDialog: defineAsyncComponent(() => import("src/components/posts/TagDialog.vue")),
+  okCancel: defineAsyncComponent(() => import("src/components/misc/OkCancelDialog.vue"))
 } as const;
 
 const stackDialogs = ["repliesDialog"];
@@ -136,7 +137,7 @@ export const useMainStore = defineStore("main", {
       }
       return this.unreadCount;
     },
-    openDialog(name: keyof typeof dialogs, key: string, props: Record<string, unknown>) {
+    openDialog(name: keyof typeof dialogs, key: string, props: Record<string, unknown>, onOk?: () => void) {
       const uniqueKey = stackDialogs.includes(name) ? name + key : name;
       const component = dialogs[name];
       const time = Date.now();
@@ -145,6 +146,13 @@ export const useMainStore = defineStore("main", {
         component: component,
         componentProps: props
       });
+      if (onOk) {
+        dialog.onOk(() => {
+          onOk();
+          const existingDialog = this.openedDialogs.get(uniqueKey);
+          existingDialog?.hide();
+        });
+      }
 
       const existingDialog = this.openedDialogs.get(uniqueKey);
       if (existingDialog) {
