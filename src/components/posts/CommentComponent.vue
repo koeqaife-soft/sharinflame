@@ -77,31 +77,45 @@ function allowAnimate() {
   canAnimate.value = true;
 }
 
+async function onCommentDelete() {
+  const { t } = i18n.global;
+  try {
+    await deleteComment(commentRef.value.post_id, commentRef.value.comment_id);
+    quasar.notify({
+      type: "default-notification",
+      progress: true,
+      icon: "sym_r_delete_forever",
+      message: t("comment_deleted.msg"),
+      caption: t("comment_deleted.caption")
+    });
+    emit("deleteComment", commentRef.value.comment_id);
+    disable.value = true;
+  } catch (e) {
+    quasar.notify({
+      type: "error-notification",
+      progress: true,
+      message: t("comment_deleted.failed")
+    });
+    throw e;
+  }
+}
+
 async function action(type: string, data: unknown) {
   const { t } = i18n.global;
 
   switch (type) {
     case "delete":
-      try {
-        await deleteComment(commentRef.value.post_id, commentRef.value.comment_id);
-        quasar.notify({
-          type: "default-notification",
-          progress: true,
-          icon: "sym_r_delete_forever",
-          message: t("comment_deleted.msg"),
-          caption: t("comment_deleted.caption")
-        });
-        emit("deleteComment", commentRef.value.comment_id);
-        disable.value = true;
-      } catch (e) {
-        quasar.notify({
-          type: "error-notification",
-          progress: true,
-          message: t("comment_deleted.failed")
-        });
-        throw e;
-      }
-
+      mainStore.openDialog(
+        "okCancel",
+        "",
+        {
+          localeKey: "delete_comment_dialog",
+          okKey: "delete",
+          okType: "attention",
+          okIcon: "delete_forever"
+        },
+        () => void onCommentDelete()
+      );
       break;
     case "go_to_post": {
       moreMenuLoading.value = true;

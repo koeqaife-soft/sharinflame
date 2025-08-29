@@ -152,9 +152,14 @@ export default {
     caption: "Your comment has been deleted.",
     failed: "Could not delete the comment."
   },
+
   delete_post_dialog: {
     title: "Delete Post",
     message: "Are you sure you want to delete this post?"
+  },
+  delete_comment_dialog: {
+    title: "Delete Comment",
+    message: "Are you sure you want to delete this comment?"
   },
   delete: "Delete",
 
