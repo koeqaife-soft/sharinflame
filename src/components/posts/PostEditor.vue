@@ -38,8 +38,10 @@
                 :key="index"
                 :removable="true"
                 @remove="removeTag(index)"
+                @click="removeTag(index)"
                 :label="tag"
                 class="tag"
+                icon="tag"
               />
               <my-chip
                 :clickable="true"

@@ -2,7 +2,7 @@
   <button
     class="my-chip"
     :class="{ disabled: disable, loading, clickable }"
-    @click="(payload) => emit('click', payload)"
+    @click.stop="(payload) => emit('click', payload)"
     :disable="disable ?? false"
   >
     <slot />
