@@ -162,12 +162,12 @@
 
 .my-button.is-primary {
   @include elevation(1);
-  --_after-bg-color: var(--background-variant);
+  --_after-bg-color: var(--background);
   border-radius: 8px;
   background-color: var(--primary);
   color: var(--on-primary);
   justify-content: start;
-  min-height: 36px;
+  min-height: 40px;
 
   &.disabled {
     opacity: 1 !important;
@@ -184,12 +184,12 @@
 
 .my-button.is-secondary {
   @include elevation(1);
-  --_after-bg-color: var(--background-variant);
+  --_after-bg-color: var(--background);
   border-radius: 8px;
   background-color: var(--secondary);
   color: var(--on-secondary);
   justify-content: start;
-  min-height: 36px;
+  min-height: 40px;
 
   &.disabled {
     opacity: 1 !important;
@@ -200,6 +200,28 @@
   &.loading .my-icon {
     transition: color 0.1s ease 0.2s;
     color: var(--secondary);
+  }
+}
+
+.my-button.is-attention {
+  @include elevation(1);
+  --_after-bg-color: var(--background);
+  border-radius: 8px;
+  background-color: var(--attention);
+  color: var(--on-attention);
+  justify-content: start;
+  min-height: 40px;
+
+  &.disabled {
+    opacity: 1 !important;
+    background-color: var(--disabled-button-bg);
+    color: var(--disabled-button-fg);
+  }
+
+  &.loading .my-button-label,
+  &.loading .my-icon {
+    transition: color 0.1s ease 0.2s;
+    color: var(--attention);
   }
 }
 

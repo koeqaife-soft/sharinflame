@@ -32,7 +32,7 @@ withDefaults(
     iconRight?: string | undefined;
     loading?: boolean;
     disable?: boolean | undefined;
-    type?: "primary" | "secondary" | "outlined" | "card" | "none" | "item";
+    type?: "primary" | "secondary" | "outlined" | "card" | "none" | "attention";
     isCategory?: boolean;
     btnType?: "button" | "submit" | "reset";
   }>(),
