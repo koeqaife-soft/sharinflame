@@ -134,31 +134,43 @@ function postDialog() {
   mainStore.openDialog("post", postRef.value.post_id, { post: postRef.value });
 }
 
-async function action(type: string, data: unknown) {
+async function onDeletePost() {
   const { t } = i18n.global;
+  try {
+    await deletePost(postRef.value.post_id);
+    quasar.notify({
+      type: "default-notification",
+      progress: true,
+      icon: "sym_r_delete_forever",
+      message: t("post_deleted.msg"),
+      caption: t("post_deleted.caption")
+    });
+    emit("deletePost", postRef.value.post_id);
+    disable.value = true;
+  } catch (e) {
+    quasar.notify({
+      type: "error-notification",
+      progress: true,
+      message: t("post_deleted.failed")
+    });
+    throw e;
+  }
+}
 
+function action(type: string, data: unknown) {
   switch (type) {
     case "delete":
-      try {
-        await deletePost(postRef.value.post_id);
-        quasar.notify({
-          type: "default-notification",
-          progress: true,
-          icon: "sym_r_delete_forever",
-          message: t("post_deleted.msg"),
-          caption: t("post_deleted.caption")
-        });
-        emit("deletePost", postRef.value.post_id);
-        disable.value = true;
-      } catch (e) {
-        quasar.notify({
-          type: "error-notification",
-          progress: true,
-          message: t("post_deleted.failed")
-        });
-        throw e;
-      }
-
+      mainStore.openDialog(
+        "okCancel",
+        "",
+        {
+          localeKey: "delete_post_dialog",
+          okKey: "delete",
+          okType: "attention",
+          okIcon: "delete_forever"
+        },
+        () => void onDeletePost()
+      );
       break;
     case "edit":
       quasar.dialog({
