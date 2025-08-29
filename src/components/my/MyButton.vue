@@ -6,7 +6,7 @@
       { disabled: disable, loading, 'is-category': isCategory, 'is-icon': !label && (icon || iconRight) },
       `is-${type}`
     ]"
-    @click="(payload) => emit('click', payload)"
+    @click.stop="(payload) => !disable && emit('click', payload)"
     :disable="disable ?? false"
   >
     <slot />

@@ -2,7 +2,7 @@
   <button
     class="my-item"
     :class="[{ disabled: disable, loading, clickable }]"
-    @click="(payload) => emit('click', payload)"
+    @click.stop="(payload) => !disable && emit('click', payload)"
     :disable="disable ?? false"
   >
     <slot />

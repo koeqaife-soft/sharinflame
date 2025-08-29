@@ -10,7 +10,7 @@
       :class="{ selected: item.key === model }"
       :icon="item.iconLeft"
       :icon-right="item.iconRight"
-      @click="select(item)"
+      @click.stop="select(item)"
     />
   </div>
 </template>
