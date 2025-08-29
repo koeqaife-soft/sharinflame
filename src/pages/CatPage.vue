@@ -149,7 +149,7 @@ function drawEar(
   ctx.closePath();
   ctx.fill();
 
-  ctx.fillStyle = "#ffeeee";
+  ctx.fillStyle = "#eecccc";
   size *= 0.7;
   ctx.beginPath();
   ctx.moveTo(-size * 1, -size * 0.05);
@@ -255,7 +255,7 @@ function drawWhiskers(
   leftOffset: number = 0,
   rightOffset: number = 0
 ) {
-  ctx.strokeStyle = "white";
+  ctx.strokeStyle = "#ccc";
   ctx.lineWidth = 1.5;
 
   const whiskerLength = size * 1.4;
