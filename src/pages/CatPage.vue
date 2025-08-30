@@ -524,7 +524,7 @@ function drawCat(ctx: CanvasRenderingContext2D, time: number) {
   } else {
     isPetting = false;
     if (currentState < 2 && currentState < 1.98) {
-      currentState += (2 - currentState) * (currentState < 1 ? 0.05 : 0.005) * (deltaTime / 16.67);
+      currentState += (2 - currentState) * (currentState < 1 ? 0.05 : 0.001) * (deltaTime / 16.67);
       currentState = Math.min(currentState, 1.98);
     }
     if (currentState >= 1.98 && currentState < 2 && isBlinking) {
