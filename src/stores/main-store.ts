@@ -36,7 +36,7 @@ const dialogs = {
   okCancel: defineAsyncComponent(() => import("src/components/misc/OkCancelDialog.vue"))
 } as const;
 
-const stackDialogs = ["repliesDialog"];
+const stackDialogs = ["replies"];
 
 const getSettings = () => {
   const stored = JSON.parse(localStorage.getItem("settings") || "{}");
