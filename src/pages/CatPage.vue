@@ -332,7 +332,7 @@ function drawCat(ctx: CanvasRenderingContext2D, time: number) {
   const dy = mouseY - catY;
   const dist = Math.hypot(dx, dy);
 
-  const earInfluenceRadius = headSize * 1.5;
+  const earInfluenceRadius = headSize * 1.6;
 
   const leftDistToMouse = Math.hypot(mouseX - leftEarX, mouseY - earY);
   const rightDistToMouse = Math.hypot(mouseX - rightEarX, mouseY - earY);
@@ -382,7 +382,7 @@ function drawCat(ctx: CanvasRenderingContext2D, time: number) {
 
   if (mouseIsDown && leftDistToMouse < earInfluenceRadius) {
     const influenceX = Math.max(-1, Math.min(1, (mouseX - leftEarX) / (headSize * 1.5)));
-    leftEarAngleTarget = -0.6 + influenceX * 0.25 + dragX / 120 + dragY / 400;
+    leftEarAngleTarget = -0.75 + influenceX * 0.25 + dragX / 120 + dragY / 400;
   } else {
     leftEarIdleTimer += deltaTime;
     const idleSwingLeft = Math.sin(leftEarIdleTimer / 600) * 0.03;
@@ -391,7 +391,7 @@ function drawCat(ctx: CanvasRenderingContext2D, time: number) {
 
   if (mouseIsDown && rightDistToMouse < earInfluenceRadius) {
     const influenceX = Math.max(-1, Math.min(1, (mouseX - rightEarX) / (headSize * 1.5)));
-    rightEarAngleTarget = 0.6 - influenceX * -0.25 + dragX / 120 + dragY / 400;
+    rightEarAngleTarget = 0.75 - influenceX * -0.25 + dragX / 120 + dragY / 400;
   } else {
     rightEarIdleTimer += deltaTime;
     const idleSwingRight = Math.sin(rightEarIdleTimer / 700) * 0.03;
@@ -427,8 +427,8 @@ function drawCat(ctx: CanvasRenderingContext2D, time: number) {
   whiskerLeftAngleOffset += (whiskerLeftAngleTarget - whiskerLeftAngleOffset) * whiskerLerpSpeed;
   whiskerRightAngleOffset += (whiskerRightAngleTarget - whiskerRightAngleOffset) * whiskerLerpSpeed;
 
-  drawEar(ctx, leftEarX, earY, headSize * 0.9, 0, Math.max(Math.min(leftEarAngleOffset, -0.35), -2));
-  drawEar(ctx, rightEarX, earY, headSize * 0.9, 0, Math.max(Math.min(rightEarAngleOffset, 2), 0.35));
+  drawEar(ctx, leftEarX, earY, headSize * 0.9, 0, Math.max(Math.min(leftEarAngleOffset, -0.35), -1.5));
+  drawEar(ctx, rightEarX, earY, headSize * 0.9, 0, Math.max(Math.min(rightEarAngleOffset, 1.5), 0.35));
 
   drawHead(catX, catY, headSize, ctx);
 
