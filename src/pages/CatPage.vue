@@ -6,9 +6,9 @@
         @mousemove="onMouseMove"
         @mousedown="onMouseDown"
         @mouseup="onMouseUp"
-        @touchstart="onMouseDown"
-        @touchend="onTouchEnd"
-        @touchmove="onTouchMove"
+        @touchstart.passive="onMouseDown"
+        @touchend.passive="onTouchEnd"
+        @touchmove.passive="onTouchMove"
       />
     </div>
   </q-page>
