@@ -131,6 +131,7 @@ export default {
   ctag: "Tag",
   tag_name: "Tag Name",
   posts_count: "Posts Count",
+  loading: "Loading",
 
   post_created: {
     msg: "Post created",
