@@ -4,7 +4,7 @@ import { usersEndpoints } from "./users";
 
 const useLocalhost = false;
 const isSsl = true;
-const url = useLocalhost ? `localhost:6169` : `koeqaife.ddns.net:6169`;
+const url = useLocalhost ? `localhost:6169` : `api.sharinflame.com`;
 
 export const apiUrl = `${isSsl ? "https" : "http"}://${url}/v1`;
 export const websocketUrl = `${isSsl ? "wss" : "ws"}://${url}/ws`;
