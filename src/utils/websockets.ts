@@ -49,7 +49,6 @@ class WebSocketService {
     this.shouldStayConnected = true;
     this.reconnectAttempts = 0;
     this.attemptConnection();
-    this.heartbeatTimeoutFunc();
   }
 
   private attemptConnection(): void {
@@ -76,6 +75,7 @@ class WebSocketService {
       console.debug("WebSocket connected");
       this.reconnectAttempts = 0;
       this.isReconnecting = false;
+      this.heartbeatTimeoutFunc();
     };
 
     this.socket.onmessage = async (event: MessageEvent) => {
@@ -190,12 +190,13 @@ class WebSocketService {
   heartbeatTimeoutFunc(): void {
     if (this.heartbeatTimeout) clearTimeout(this.heartbeatTimeout);
     this.heartbeatTimeout = setTimeout(() => {
+      this.heartbeatTimeout = undefined;
       if (this.isConnected()) {
         this.send({
           type: "heartbeat"
         });
-        this.heartbeatTimeoutFunc();
       }
+      this.heartbeatTimeoutFunc();
     }, 30000);
   }
 
