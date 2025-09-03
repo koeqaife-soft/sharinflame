@@ -26,7 +26,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, watch, defineAsyncComponent, type DefineComponent, onUnmounted } from "vue";
+import { ref, watch, defineAsyncComponent, type DefineComponent, onUnmounted, nextTick } from "vue";
 import { getPosts, getPostsBatch, type KeyOfGetPostsTypes, viewPosts } from "src/api/posts";
 import { type AxiosError, isAxiosError } from "axios";
 import { useI18n } from "vue-i18n";
@@ -193,7 +193,7 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
 
 function handleDeletePost(postId: string) {
   items.value = items.value.filter((post) => post.post_id !== postId);
-  virtualScroll.value?.updateShowedItems();
+  void nextTick(() => virtualScroll.value?.updateShowedItems());
 }
 
 onUnmounted(() => {

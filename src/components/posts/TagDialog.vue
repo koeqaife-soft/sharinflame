@@ -79,7 +79,7 @@
   </q-dialog>
 </template>
 <script lang="ts" setup>
-import { computed, defineAsyncComponent, onMounted, onUnmounted, ref, type DefineComponent } from "vue";
+import { computed, defineAsyncComponent, nextTick, onMounted, onUnmounted, ref, type DefineComponent } from "vue";
 import { useDialogPluginComponent } from "quasar";
 import CloseableContent from "../misc/CloseableContent.vue";
 import MyVirtualScroll from "../my/MyVirtualScroll.vue";
@@ -268,7 +268,7 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
 
 function handleDeletePost(postId: string) {
   items.value = items.value.filter((post) => post.post_id !== postId);
-  virtualScroll.value?.updateShowedItems();
+  void nextTick(() => virtualScroll.value?.updateShowedItems());
 }
 
 onMounted(async () => {

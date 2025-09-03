@@ -61,7 +61,16 @@
 </template>
 <script setup lang="ts">
 import { useDialogPluginComponent } from "quasar";
-import { defineAsyncComponent, type DefineComponent, onBeforeUnmount, onMounted, onUnmounted, ref, watch } from "vue";
+import {
+  defineAsyncComponent,
+  type DefineComponent,
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  onUnmounted,
+  ref,
+  watch
+} from "vue";
 import type { CacheType } from "src/components/notifications/NotificationCard.vue";
 import MyVirtualScroll from "../my/MyVirtualScroll.vue";
 import MyIcon from "src/components/my/MyIcon.vue";
@@ -96,7 +105,7 @@ watch(
     newVal.forEach((value) => {
       if (items.value.some((v) => value.id === v.id)) return;
       items.value.unshift(value);
-      virtualScroll.value?.updateShowedItems();
+      void nextTick(() => virtualScroll.value?.updateShowedItems());
     });
   },
   { deep: false, immediate: false }

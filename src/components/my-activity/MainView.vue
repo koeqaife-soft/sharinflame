@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, type DefineComponent, ref } from "vue";
+import { defineAsyncComponent, type DefineComponent, nextTick, ref } from "vue";
 import MyVirtualScroll from "src/components/my/MyVirtualScroll.vue";
 import MyButton from "src/components/my/MyButton.vue";
 import { getFavorites, getReactions } from "src/api/users";
@@ -126,6 +126,6 @@ async function onLoadData(index: number, category: Category, done: DoneType) {
 
 function handleDeletePost(postId: string) {
   items.value[0] = items.value[0].filter((post) => post.post_id !== postId);
-  virtualScroll.value?.updateShowedItems();
+  void nextTick(() => virtualScroll.value?.updateShowedItems());
 }
 </script>

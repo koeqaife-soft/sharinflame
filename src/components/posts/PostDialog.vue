@@ -291,7 +291,7 @@ async function sendComment(event?: KeyboardEvent | MouseEvent) {
   } finally {
     showNoComments.value = false;
     sending.value = false;
-    virtualScroll.value?.updateShowedItems(1);
+    void nextTick(() => virtualScroll.value?.updateShowedItems(1));
   }
 }
 
@@ -302,7 +302,7 @@ function handleDeletePost() {
 function handleDeleteComment(comment_id: string) {
   items.value = items.value.filter((comment) => comment.comment_id !== comment_id);
   postRef.value.comments_count -= 1;
-  virtualScroll.value?.updateShowedItems();
+  void nextTick(() => virtualScroll.value?.updateShowedItems());
 }
 
 onMounted(() => {

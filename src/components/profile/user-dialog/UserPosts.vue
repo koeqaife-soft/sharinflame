@@ -38,7 +38,7 @@
 </template>
 <script setup lang="ts">
 import { getUserPosts } from "src/api/posts";
-import { defineAsyncComponent, type DefineComponent, onUnmounted, ref } from "vue";
+import { defineAsyncComponent, type DefineComponent, nextTick, onUnmounted, ref } from "vue";
 import MyVirtualScroll from "src/components/my/MyVirtualScroll.vue";
 import MyButton from "src/components/my/MyButton.vue";
 import MySelect from "src/components/my/MySelect.vue";
@@ -145,7 +145,7 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
 
 function handleDeletePost(postId: string) {
   items.value = items.value.filter((post) => post.post_id !== postId);
-  virtualScroll.value?.updateShowedItems();
+  void nextTick(() => virtualScroll.value?.updateShowedItems());
 }
 
 onUnmounted(() => {
