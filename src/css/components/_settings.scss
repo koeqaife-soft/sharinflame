@@ -1,7 +1,10 @@
 .settings-dialog {
   .account-view {
     .languages {
+      flex-direction: column;
+      display: flex;
       border-radius: 6px;
+      gap: 8px;
       .label-icon {
         margin-left: 8px;
       }
