@@ -361,16 +361,27 @@ async function updateProfile() {
       }
     }
 
+    const uploadPromises = [];
+
     if (toUpload.avatar) {
-      const r = await uploadFile(toUpload.avatar.filename, toUpload.avatar.blob, "avatar");
-      _avatarUrl = r.data.data.file_url;
-      _updateValues.avatar_context_id = r.data.data.context_id;
+      uploadPromises.push(
+        uploadFile(toUpload.avatar.filename, toUpload.avatar.blob, "avatar").then((r) => {
+          _avatarUrl = r.data.data.file_url;
+          _updateValues.avatar_context_id = r.data.data.context_id;
+        })
+      );
     }
+
     if (toUpload.banner) {
-      const r = await uploadFile(toUpload.banner.filename, toUpload.banner.blob, "banner");
-      _bannerUrl = r.data.data.file_url;
-      _updateValues.banner_context_id = r.data.data.context_id;
+      uploadPromises.push(
+        uploadFile(toUpload.banner.filename, toUpload.banner.blob, "banner").then((r) => {
+          _bannerUrl = r.data.data.file_url;
+          _updateValues.banner_context_id = r.data.data.context_id;
+        })
+      );
     }
+
+    await Promise.all(uploadPromises);
 
     await profileStore.updateProfile(_updateValues, _avatarUrl, _bannerUrl);
     profile.value = profileStore.profile;
