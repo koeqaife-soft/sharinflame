@@ -144,32 +144,33 @@
         />
       </div>
     </div>
-  </q-scroll-area>
-  <div class="loading-container" v-else>
-    <q-spinner size="42px" color="primary" />
-  </div>
-  <template v-if="cropperProps.if">
     <q-dialog
       v-model="cropperProps.show"
       transition-show="scale"
       transition-hide="scale"
       class="cropper-dialog card-dialog"
       maximized
+      v-if="cropperProps.if"
     >
       <div class="dialog-content">
         <div class="title">{{ $t("crop_image") }}</div>
-        <profile-cropper
-          :img="cropperProps.img"
-          :aspect-ratio="cropperProps.aspectRatio"
-          :is-circle="cropperProps.type == 'avatar'"
-          :target-width="cropperProps.type == 'avatar' ? 256 : 624"
-          :target-height="cropperProps.type == 'avatar' ? 256 : 170"
-          @dismiss="cropperDismiss"
-          @apply="cropperApply"
-        />
+        <div>
+          <profile-cropper
+            :img="cropperProps.img"
+            :aspect-ratio="cropperProps.aspectRatio"
+            :is-circle="cropperProps.type == 'avatar'"
+            :target-width="cropperProps.type == 'avatar' ? 256 : 624"
+            :target-height="cropperProps.type == 'avatar' ? 256 : 170"
+            @dismiss="cropperDismiss"
+            @apply="cropperApply"
+          />
+        </div>
       </div>
     </q-dialog>
-  </template>
+  </q-scroll-area>
+  <div class="loading-container" v-else>
+    <q-spinner size="42px" color="primary" />
+  </div>
 </template>
 <script setup lang="ts">
 import { ref, computed, onMounted, defineAsyncComponent, onUnmounted } from "vue";
