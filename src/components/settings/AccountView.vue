@@ -162,6 +162,8 @@
           :img="cropperProps.img"
           :aspect-ratio="cropperProps.aspectRatio"
           :is-circle="cropperProps.type == 'avatar'"
+          :target-width="cropperProps.type == 'avatar' ? 256 : 624"
+          :target-height="cropperProps.type == 'avatar' ? 256 : 170"
           @dismiss="cropperDismiss"
           @apply="cropperApply"
         />

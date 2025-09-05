@@ -30,6 +30,8 @@ const props = defineProps<{
   img: string;
   aspectRatio: number;
   isCircle: boolean;
+  targetWidth: number;
+  targetHeight: number;
 }>();
 
 let imgCanvas: HTMLCanvasElement | null = null;
@@ -46,14 +48,23 @@ function change({ canvas }: { canvas: HTMLCanvasElement }) {
 function onApply() {
   if (!imgCanvas) return;
 
-  imgCanvas.toBlob(
+  const tempCanvas = document.createElement("canvas");
+  tempCanvas.width = props.targetWidth;
+  tempCanvas.height = props.targetHeight;
+  const ctx = tempCanvas.getContext("2d");
+  if (!ctx) return;
+
+  ctx.drawImage(imgCanvas, 0, 0, props.targetWidth, props.targetHeight);
+
+  tempCanvas.toBlob(
     (blob) => {
       if (!blob) return;
       emit("apply", blob);
     },
     "image/webp",
-    0.9
+    0.75
   );
+
   loading.value = true;
 }
 
