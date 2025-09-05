@@ -5,9 +5,10 @@ import * as interceptors from "src/api/interceptors";
 import { init as initAuth } from "src/api/auth";
 import { init as initPosts } from "src/api/posts";
 import { init as initUsers } from "src/api/users";
+import { init as initStorage } from "src/api/storage";
 import { apiUrl } from "src/api/config";
 
-const initFunctions = [initAuth, initPosts, initUsers, interceptors.init];
+const initFunctions = [initAuth, initPosts, initUsers, initStorage, interceptors.init];
 
 declare module "vue" {
   interface ComponentCustomProperties {

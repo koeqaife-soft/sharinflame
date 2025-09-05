@@ -66,16 +66,25 @@ export const useProfileStore = defineStore("profile", {
 
       return profile.data;
     },
-    async updateProfile(values: UpdateProfileValues) {
+    async updateProfile(values: UpdateProfileValues, avatarUrl?: string, bannerUrl?: string) {
       await this.getProfile("me");
       const r = await updateProfile(values);
       if (r.status === 204) {
         const profileData = this.profiles["me"]!.data!;
-        const keys: (keyof UpdateProfileValues)[] = ["display_name", "languages", "bio", "avatar_url", "banner_url"];
+        const keys: (keyof UpdateProfileValues)[] = [
+          "display_name",
+          "languages",
+          "bio",
+          "avatar_context_id",
+          "banner_context_id"
+        ];
+        if (avatarUrl !== undefined) profileData["avatar_url"] = avatarUrl;
+        if (bannerUrl !== undefined) profileData["banner_url"] = bannerUrl;
         keys.forEach((key) => {
           const value = values[key];
           if (value !== undefined) {
-            profileData[key] = (key === "languages" ? [...(value as string[])] : value) as string & string[];
+            if (key !== "avatar_context_id" && key !== "banner_context_id")
+              profileData[key] = (key === "languages" ? [...(value as string[])] : value) as string & string[];
           }
         });
       }

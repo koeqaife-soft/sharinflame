@@ -1,6 +1,7 @@
 import { authEndpoints } from "./auth";
 import { postsEndpoints } from "./posts";
 import { usersEndpoints } from "./users";
+import { storageEndpoints } from "./storage";
 
 const useLocalhost = false;
 const isSsl = true;
@@ -13,5 +14,6 @@ export const apiEndpoints = {
   auth: authEndpoints,
   posts: postsEndpoints,
   users: usersEndpoints,
+  storage: storageEndpoints,
   ping: "/ping"
 };

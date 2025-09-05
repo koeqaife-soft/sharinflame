@@ -14,8 +14,8 @@ interface MetaData {
 
 interface UpdateProfileValues {
   display_name?: string;
-  avatar_url?: string;
-  banner_url?: string;
+  avatar_context_id?: string | null;
+  banner_context_id?: string | null;
   bio?: string;
   languages?: string[];
 }

@@ -192,6 +192,11 @@ export default {
     caption: "Your profile has been updated.",
     failed: "Failed to edit profile"
   },
+  crop_image: "Crop Image",
+  set: "Set",
+  not_set: "Not Set",
+  changed: "Changed",
+  removed: "Removed",
 
   appearance: "Appearance",
   dark: "Dark",

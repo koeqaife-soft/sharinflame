@@ -25,14 +25,29 @@
         box-shadow: none;
         border-radius: 6px;
         background-color: var(--card-high);
+        padding-top: 12px;
+        padding-bottom: 12px;
       }
     }
     .change-banner,
     .change-avatar {
       padding-left: 16px;
       padding-right: 16px;
+
       .label-icon {
         margin: 0;
+      }
+    }
+    .image-state {
+      background-color: var(--card) !important;
+      margin: 12px 0px;
+      padding: 0px 14px;
+      .my-icon {
+        @include iconSize(22);
+      }
+      .image-state-label {
+        font-size: 16px;
+        font-weight: 500;
       }
     }
   }
@@ -139,5 +154,43 @@
     &.q-field--focused {
       border-color: var(--primary);
     }
+  }
+}
+
+.cropper-dialog {
+  .dialog-content {
+    height: auto;
+    width: 100%;
+    max-width: 500px;
+    margin-left: 24px;
+    margin-right: 24px;
+    border-radius: 18px !important;
+    padding: 24px !important;
+    background-color: var(--card-high);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--on-card);
+  }
+
+  .buttons-container {
+    margin-top: 12px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+
+  .cropper,
+  .cropper-container {
+    height: 100%;
+    width: 100%;
+    max-height: 500px;
+    max-width: 500px;
   }
 }

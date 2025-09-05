@@ -22,8 +22,8 @@ export default defineConfig((ctx) => {
     boot: ["i18n", "axios", "notif-types", "computed"],
     htmlVariables: {
       CSP_POLICY_DEV:
-        "default-src 'self'; script-src * 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src *; connect-src *",
-      CSP_POLICY: "default-src 'self'; script-src 'self'; style-src 'self'; img-src *; connect-src *"
+        "default-src 'self'; script-src * 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src * blob:; connect-src * blob:",
+      CSP_POLICY: "default-src 'self'; script-src 'self'; style-src 'self'; img-src * blob:; connect-src * blob:"
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
