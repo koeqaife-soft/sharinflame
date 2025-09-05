@@ -24,6 +24,7 @@
             :margins="8"
             @load-more="(i: number, done: DoneType) => onLoadData(0, 'posts', done)"
             ref="virtualScroll"
+            :skeleton-height="200"
           >
             <template v-slot:default="{ item, index }">
               <post-component
@@ -36,6 +37,9 @@
               <div class="row justify-center q-my-md">
                 <q-spinner class="loading full-height q-my-md" size="40px" />
               </div>
+            </template>
+            <template v-slot:skeleton>
+              <rect-skeleton height="200px" class="card q-mb-sm" />
             </template>
           </my-virtual-scroll>
         </q-scroll-area>
@@ -50,6 +54,7 @@
             infinite-load-type="bottom"
             :margins="8"
             @load-more="(i: number, done: DoneType) => onLoadData(1, 'comments', done)"
+            :skeleton-height="126"
           >
             <template v-slot:default="{ item, index }">
               <comment-component :comment="item" :class="{ 'q-mb-sm': index + 1 < items[1].length }" />
@@ -59,6 +64,9 @@
                 <q-spinner class="loading full-height q-my-md" size="40px" />
               </div>
             </template>
+            <template v-slot:skeleton>
+              <rect-skeleton height="126px" class="card q-mb-sm" />
+            </template>
           </my-virtual-scroll>
         </q-scroll-area>
       </keep-alive>
@@ -67,13 +75,13 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, type DefineComponent, nextTick, ref } from "vue";
+import { type DefineComponent, nextTick, ref } from "vue";
 import MyVirtualScroll from "src/components/my/MyVirtualScroll.vue";
 import MyButton from "src/components/my/MyButton.vue";
+import RectSkeleton from "src/components/skeletons/RectSkeleton.vue";
+import PostComponent from "../posts/PostComponent.vue";
+import CommentComponent from "../posts/CommentComponent.vue";
 import { getFavorites, getReactions } from "src/api/users";
-
-const PostComponent = defineAsyncComponent(() => import("../posts/PostComponent.vue"));
-const CommentComponent = defineAsyncComponent(() => import("../posts/CommentComponent.vue"));
 
 type DoneType = (stop?: boolean) => void;
 

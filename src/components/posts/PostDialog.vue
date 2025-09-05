@@ -47,6 +47,7 @@
             :key="scrollKey"
             class="posts-infinite-scroll"
             ref="virtualScroll"
+            :skeleton-height="126"
           >
             <template v-slot:default="{ item, index }">
               <comment-component
@@ -60,6 +61,9 @@
               <div class="row justify-center q-my-md">
                 <q-spinner class="loading full-height q-my-md" size="40px" />
               </div>
+            </template>
+            <template v-slot:skeleton>
+              <rect-skeleton height="126px" class="card q-mb-sm" />
             </template>
           </my-virtual-scroll>
           <div class="load-more-container" v-if="!allowLoading">
@@ -125,6 +129,7 @@ import { useProfileStore } from "src/stores/profile-store";
 import MyIcon from "../my/MyIcon.vue";
 import MyButton from "../my/MyButton.vue";
 import MySelect from "../my/MySelect.vue";
+import RectSkeleton from "src/components/skeletons/RectSkeleton.vue";
 
 const CommentComponent = defineAsyncComponent(() => import("../posts/CommentComponent.vue"));
 const UserAvatar = defineAsyncComponent(() => import("../profile/UserAvatar.vue"));

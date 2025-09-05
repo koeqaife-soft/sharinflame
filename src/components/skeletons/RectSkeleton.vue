@@ -1,14 +1,26 @@
 <template>
-  <q-skeleton type="rect" :height="height" class="card post post-skeleton" />
+  <div class="skeleton" :class="{ animated: isAnimated }" :style="{ width, height }" />
 </template>
+
 <script setup lang="ts">
-import { randomSize } from "src/utils/random";
+import { ref, onMounted } from "vue";
 
-const props = defineProps<{
-  height: string;
-  minSize?: number;
-  maxSize?: number;
-}>();
+interface Props {
+  width?: string;
+  height?: string;
+  waitTime?: number;
+}
 
-const height = props.height === "random" ? randomSize(props.minSize || 125, props.maxSize || 300) : props.height;
+const props = withDefaults(defineProps<Props>(), {
+  width: "100%",
+  waitTime: 200
+});
+
+const isAnimated = ref(false);
+
+onMounted(() => {
+  setTimeout(() => {
+    isAnimated.value = true;
+  }, props.waitTime);
+});
 </script>

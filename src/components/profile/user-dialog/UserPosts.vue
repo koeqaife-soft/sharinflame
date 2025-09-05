@@ -24,6 +24,7 @@
       infinite-load-type="bottom"
       :key="scrollKey"
       ref="virtualScroll"
+      :skeleton-height="200"
     >
       <template v-slot:default="{ item, index }">
         <post-component :post="item" :class="{ 'q-mb-sm': index + 1 < items.length }" @delete-post="handleDeletePost" />
@@ -33,17 +34,20 @@
           <q-spinner class="loading full-height q-my-md" size="40px" />
         </div>
       </template>
+      <template v-slot:skeleton>
+        <rect-skeleton height="200px" class="card q-mb-sm" />
+      </template>
     </my-virtual-scroll>
   </q-scroll-area>
 </template>
 <script setup lang="ts">
 import { getUserPosts } from "src/api/posts";
-import { defineAsyncComponent, type DefineComponent, nextTick, onUnmounted, ref } from "vue";
+import { type DefineComponent, nextTick, onUnmounted, ref } from "vue";
 import MyVirtualScroll from "src/components/my/MyVirtualScroll.vue";
 import MyButton from "src/components/my/MyButton.vue";
 import MySelect from "src/components/my/MySelect.vue";
-
-const PostComponent = defineAsyncComponent(() => import("../../posts/PostComponent.vue"));
+import RectSkeleton from "src/components/skeletons/RectSkeleton.vue";
+import PostComponent from "../../posts/PostComponent.vue";
 
 const props = defineProps<{
   user: User;

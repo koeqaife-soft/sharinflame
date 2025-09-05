@@ -50,13 +50,13 @@
       </template>
       <template v-else>
         <div class="profile-info">
-          <q-skeleton type="rect" class="card banner" />
+          <rect-skeleton class="card banner" />
           <my-button class="close" icon="close" @click="dialogRef?.hide" />
           <div class="profile-inner">
             <q-skeleton type="QAvatar" class="avatar" />
             <div class="container name-container">
-              <q-skeleton type="text" class="display-name" style="min-width: 120px" />
-              <q-skeleton type="text" class="username" style="min-width: 60px" />
+              <rect-skeleton class="display-name" width="120px" height="25px" />
+              <rect-skeleton class="username" width="120px" height="21px" />
             </div>
           </div>
         </div>
@@ -68,7 +68,7 @@
         />
         <q-scroll-area class="scroll-area full-height fix-scroll-area" :visible="false">
           <div class="full-height full-width container">
-            <q-skeleton type="rect" v-for="n in 5" :key="n" :height="randomSize(50, 250)" class="card" />
+            <rect-skeleton v-for="n in 5" :key="n" :height="randomSize(50, 250)" class="card" />
           </div>
         </q-scroll-area>
       </template>
@@ -81,6 +81,7 @@ import UserAvatar from "../profile/UserAvatar.vue";
 import CloseableContent from "../misc/CloseableContent.vue";
 import CategoryButtons from "src/components/misc/CategoryButtons.vue";
 import MyButton from "../my/MyButton.vue";
+import RectSkeleton from "../skeletons/RectSkeleton.vue";
 import { onMounted, ref, computed, defineAsyncComponent } from "vue";
 import type { ButtonProps } from "src/components/misc/CategoryButtons.vue";
 import { useI18n } from "vue-i18n";

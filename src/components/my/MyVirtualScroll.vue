@@ -26,8 +26,15 @@
       v-if="!stopInfiniteLoad && infiniteLoadType === 'bottom'"
       ref="loadingRef"
     >
-      <slot name="loading" />
+      <slot v-if="!$slots['skeleton'] || items.length > 0" name="loading" />
     </div>
+    <template
+      v-if="$slots['skeleton'] && !stopInfiniteLoad && visibleItems.length == 0 && infiniteLoadType === 'bottom'"
+    >
+      <template v-for="index in Math.round(containerHeight / (skeletonHeight ?? 100))" :key="index">
+        <slot name="skeleton" />
+      </template>
+    </template>
   </div>
 </template>
 
@@ -45,6 +52,7 @@ interface Props {
   infiniteLoadType?: "bottom" | "none";
   minItemHeight?: number;
   noResizeObserver?: boolean;
+  skeletonHeight?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -203,12 +211,19 @@ function checkLoading() {
   if (shouldLoadMore()) {
     isLoading.value = true;
     showLoading.value = true;
+
     emit("loadMore", props.items.length - 1, (stop?: boolean) => {
       isLoading.value = false;
       showLoading.value = false;
       if (stop) stopInfiniteLoad.value = true;
+
+      const scrollValue = scrollContainer.value!.scrollTop;
+      const scrollHeight = scrollContainer.value!.scrollHeight;
       void nextTick(() => {
         updateShowedItems();
+        if (scrollContainer.value!.scrollHeight > scrollHeight && props.infiniteLoadType === "bottom") {
+          scrollContainer.value!.scrollTop = scrollValue;
+        }
       });
     });
   }

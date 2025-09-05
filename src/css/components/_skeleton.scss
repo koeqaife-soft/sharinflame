@@ -1,0 +1,34 @@
+.skeleton {
+  border-radius: 4px;
+  background: var(--card);
+  overflow: hidden;
+  position: relative;
+
+  &.animated::after {
+    content: "";
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent 25%, var(--background-variant) 50%, transparent 75%);
+    background-size: 200% 100%;
+    opacity: 0;
+    animation:
+      shimmer-left 1s linear infinite,
+      fadeIn 250ms linear forwards 100ms;
+  }
+}
+
+@keyframes shimmer-left {
+  0% {
+    background-position: 0% 0;
+  }
+  50% {
+    background-position: -100% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

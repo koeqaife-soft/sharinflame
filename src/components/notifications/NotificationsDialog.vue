@@ -44,6 +44,7 @@
             class="posts-infinite-scroll"
             ref="virtualScroll"
             :min-item-height="60"
+            :skeleton-height="60"
           >
             <template v-slot:default="{ item, index }">
               <notification-card :notif="item" :cache="notifCache" :class="{ 'q-mb-sm': index + 1 < items.length }" />
@@ -52,6 +53,9 @@
               <div class="row justify-center q-my-md">
                 <q-spinner class="loading full-height q-my-md" size="40px" />
               </div>
+            </template>
+            <template v-slot:skeleton>
+              <rect-skeleton height="60px" class="card q-mb-sm" />
             </template>
           </my-virtual-scroll>
         </q-scroll-area>
@@ -75,6 +79,7 @@ import type { CacheType } from "src/components/notifications/NotificationCard.vu
 import MyVirtualScroll from "../my/MyVirtualScroll.vue";
 import MyIcon from "src/components/my/MyIcon.vue";
 import MyButton from "src/components/my/MyButton.vue";
+import RectSkeleton from "src/components/skeletons/RectSkeleton.vue";
 import { getNotifications, readAllNotifications } from "src/api/users";
 import { truncate } from "src/utils/format";
 import { useMainStore } from "src/stores/main-store";

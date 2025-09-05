@@ -11,6 +11,7 @@
           @load-more="onLoad"
           @scroll="(info) => emit('scroll', info)"
           ref="virtualScroll"
+          :skeleton-height="200"
         >
           <template v-slot:default="{ item }">
             <post-component class="q-mb-sm" :post="item" @delete-post="handleDeletePost" />
@@ -20,20 +21,22 @@
               <q-spinner class="loading" size="40px" />
             </div>
           </template>
+          <template v-slot:skeleton>
+            <rect-skeleton height="200px" class="card q-mb-sm" :wait-time="1000" />
+          </template>
         </my-virtual-scroll>
       </q-scroll-area>
     </transition>
   </div>
 </template>
 <script setup lang="ts">
-import { ref, watch, defineAsyncComponent, type DefineComponent, onUnmounted, nextTick } from "vue";
+import { ref, watch, type DefineComponent, onUnmounted, nextTick } from "vue";
 import { getPosts, getPostsBatch, type KeyOfGetPostsTypes, viewPosts } from "src/api/posts";
 import { type AxiosError, isAxiosError } from "axios";
 import { useI18n } from "vue-i18n";
 import MyVirtualScroll from "src/components/my/MyVirtualScroll.vue";
-
-const PostComponent = defineAsyncComponent(() => import("./PostComponent.vue"));
-
+import RectSkeleton from "src/components/skeletons/RectSkeleton.vue";
+import PostComponent from "./PostComponent.vue";
 let controller = new AbortController();
 
 const props = defineProps<{

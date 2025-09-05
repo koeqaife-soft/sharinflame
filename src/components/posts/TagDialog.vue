@@ -59,6 +59,7 @@
             :key="scrollKey"
             class="posts-infinite-scroll"
             ref="virtualScroll"
+            :skeleton-height="200"
           >
             <template v-slot:default="{ item, index }">
               <post-component
@@ -71,6 +72,9 @@
               <div class="row justify-center q-my-md">
                 <q-spinner class="loading full-height q-my-md" size="40px" />
               </div>
+            </template>
+            <template v-slot:skeleton>
+              <rect-skeleton height="200px" class="card q-mb-sm" />
             </template>
           </my-virtual-scroll>
         </q-scroll-area>
@@ -90,6 +94,7 @@ import { getPostsBatch, getTag, getTagPosts } from "src/api/posts";
 import { type AxiosError, isAxiosError } from "axios";
 import { formatUnixTime } from "src/utils/format";
 import { useMainStore } from "src/stores/main-store";
+import RectSkeleton from "src/components/skeletons/RectSkeleton.vue";
 
 const PostComponent = defineAsyncComponent(() => import("./PostComponent.vue"));
 

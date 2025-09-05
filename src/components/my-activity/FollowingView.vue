@@ -9,6 +9,7 @@
         @load-more="loadMore"
         ref="virtualScroll"
         :min-item-height="58"
+        :skeleton-height="58"
         :no-resize-observer="true"
       >
         <template v-slot:default="{ item, index }">
@@ -19,6 +20,9 @@
             <q-spinner class="loading full-height q-my-md" size="40px" />
           </div>
         </template>
+        <template v-slot:skeleton>
+          <rect-skeleton height="58px" class="card q-mb-sm" />
+        </template>
       </my-virtual-scroll>
     </q-scroll-area>
   </div>
@@ -27,6 +31,7 @@
 import { getFollowing } from "src/api/users";
 import MyVirtualScroll from "src/components/my/MyVirtualScroll.vue";
 import UserCard from "../profile/UserCard.vue";
+import RectSkeleton from "src/components/skeletons/RectSkeleton.vue";
 import { type DefineComponent, ref } from "vue";
 
 const items = ref<User[]>([]);
