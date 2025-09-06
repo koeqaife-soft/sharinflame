@@ -13,7 +13,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   width: "100%",
-  waitTime: 200
+  waitTime: 750
 });
 
 const isAnimated = ref(false);
