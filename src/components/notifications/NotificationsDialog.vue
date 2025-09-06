@@ -65,16 +65,7 @@
 </template>
 <script setup lang="ts">
 import { useDialogPluginComponent } from "quasar";
-import {
-  defineAsyncComponent,
-  type DefineComponent,
-  nextTick,
-  onBeforeUnmount,
-  onMounted,
-  onUnmounted,
-  ref,
-  watch
-} from "vue";
+import { type DefineComponent, nextTick, onBeforeUnmount, onMounted, onUnmounted, ref, watch } from "vue";
 import type { CacheType } from "src/components/notifications/NotificationCard.vue";
 import MyVirtualScroll from "../my/MyVirtualScroll.vue";
 import MyIcon from "src/components/my/MyIcon.vue";
@@ -85,8 +76,7 @@ import { truncate } from "src/utils/format";
 import { useMainStore } from "src/stores/main-store";
 import websockets from "src/utils/websockets";
 import CloseableContent from "../misc/CloseableContent.vue";
-
-const NotificationCard = defineAsyncComponent(() => import("src/components/notifications/NotificationCard.vue"));
+import NotificationCard from "src/components/notifications/NotificationCard.vue";
 
 defineEmits([...useDialogPluginComponent.emits]);
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
