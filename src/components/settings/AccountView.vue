@@ -169,7 +169,7 @@
     </q-dialog>
   </q-scroll-area>
   <div class="loading-container" v-else>
-    <q-spinner size="42px" color="primary" />
+    <my-spinner size="55px" color="primary" />
   </div>
 </template>
 <script setup lang="ts">
@@ -184,6 +184,7 @@ import { useMainStore } from "src/stores/main-store";
 import { uploadFile } from "src/api/storage";
 
 const ProfileCropper = defineAsyncComponent(() => import("./ProfileCropper.vue"));
+const MySpinner = defineAsyncComponent(() => import("src/components/my/MySpinner.vue"));
 
 const stateIcons: Record<string, string> = {
   set: "check",

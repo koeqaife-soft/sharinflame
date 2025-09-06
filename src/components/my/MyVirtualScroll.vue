@@ -26,7 +26,11 @@
       v-if="!stopInfiniteLoad && infiniteLoadType === 'bottom'"
       ref="loadingRef"
     >
-      <slot v-if="!$slots['skeleton'] || items.length > 0" name="loading" />
+      <slot v-if="!$slots['skeleton'] || items.length > 0" name="loading">
+        <div class="row justify-center q-my-md" style="min-height: 55px">
+          <my-spinner class="loading" size="55px" v-if="showLoadingSlot" />
+        </div>
+      </slot>
     </div>
     <template
       v-if="$slots['skeleton'] && !stopInfiniteLoad && visibleItems.length == 0 && infiniteLoadType === 'bottom'"
@@ -39,7 +43,19 @@
 </template>
 
 <script setup lang="ts" generic="T">
-import { computed, onBeforeUnmount, onBeforeUpdate, onMounted, nextTick, ref, watch, type Ref } from "vue";
+import {
+  computed,
+  onBeforeUnmount,
+  onBeforeUpdate,
+  onMounted,
+  nextTick,
+  ref,
+  watch,
+  type Ref,
+  defineAsyncComponent
+} from "vue";
+
+const MySpinner = defineAsyncComponent(() => import("./MySpinner.vue"));
 
 interface Props {
   items: T[];

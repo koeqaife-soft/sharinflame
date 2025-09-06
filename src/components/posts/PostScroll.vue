@@ -16,11 +16,6 @@
           <template v-slot:default="{ item }">
             <post-component class="q-mb-sm" :post="item" @delete-post="handleDeletePost" />
           </template>
-          <template v-slot:loading>
-            <div class="row justify-center q-my-md">
-              <q-spinner class="loading" size="40px" />
-            </div>
-          </template>
           <template v-slot:skeleton>
             <rect-skeleton height="200px" class="card q-mb-sm" :wait-time="1000" />
           </template>

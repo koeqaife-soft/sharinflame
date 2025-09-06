@@ -15,11 +15,6 @@
         <template v-slot:default="{ item, index }">
           <user-card :user="item" :class="{ 'q-mb-sm': index + 1 < items.length }" />
         </template>
-        <template v-slot:loading>
-          <div class="row justify-center q-my-md">
-            <q-spinner class="loading full-height q-my-md" size="40px" />
-          </div>
-        </template>
         <template v-slot:skeleton>
           <rect-skeleton height="58px" class="card q-mb-sm" />
         </template>
