@@ -233,12 +233,16 @@ function checkLoading() {
       showLoading.value = false;
       if (stop) stopInfiniteLoad.value = true;
 
-      const scrollValue = scrollContainer.value!.scrollTop;
-      const scrollHeight = scrollContainer.value!.scrollHeight;
+      const scrollValue = scrollContainer.value?.scrollTop ?? 0;
+      const scrollHeight = scrollContainer.value?.scrollHeight ?? 0;
       void nextTick(() => {
         updateShowedItems();
-        if (scrollContainer.value!.scrollHeight > scrollHeight && props.infiniteLoadType === "bottom") {
-          scrollContainer.value!.scrollTop = scrollValue;
+        if (
+          scrollContainer.value &&
+          scrollContainer.value.scrollHeight > scrollHeight &&
+          props.infiniteLoadType === "bottom"
+        ) {
+          scrollContainer.value.scrollTop = scrollValue;
         }
       });
     });

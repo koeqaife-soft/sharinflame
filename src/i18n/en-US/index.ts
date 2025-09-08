@@ -127,6 +127,20 @@ export default {
   edit_post: "Edit Post",
   apply: "Apply",
   cant_change_tags_edit: "Can't change tags when editing a post",
+  drag_drop_title: "Drag & Drop files here to upload",
+  add_file: "Add File",
+  files: "Files",
+  file_error: {
+    too_big: "Error: File is too big",
+    failed_to_upload: "Error: Failed to upload file"
+  },
+  file_size: {
+    b: "B",
+    kb: "KB",
+    mb: "MB",
+    gb: "GB",
+    tb: "TB"
+  },
 
   ctag: "Tag",
   tag_name: "Tag Name",
@@ -135,7 +149,8 @@ export default {
 
   post_created: {
     msg: "Post created",
-    caption: "You can find your post in your profile."
+    caption: "You can find your post in your profile.",
+    failed: "Could not create the post."
   },
   post_deleted: {
     msg: "Post deleted",

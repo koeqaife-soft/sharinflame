@@ -287,6 +287,78 @@
     display: flex;
     justify-content: flex-end;
   }
+
+  .file-container {
+    padding-left: 16px;
+    padding-right: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+
+    .label {
+      font-size: 15px;
+      font-weight: 500;
+    }
+    .icon {
+      @include iconSize(20);
+      font-weight: 400;
+      height: 22px;
+      width: 22px;
+    }
+
+    .card,
+    .files-list {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .horizontal-container {
+      width: 100%;
+    }
+
+    .file {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: stretch;
+      min-width: 0;
+      padding: 8px 14px;
+      min-width: 0;
+      width: 100%;
+      box-sizing: border-box;
+
+      .file-name {
+        align-content: center;
+        font-size: 16px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .file-size {
+        white-space: nowrap;
+        width: 100%;
+      }
+      &.is-error {
+        border: 2px solid var(--attention);
+      }
+    }
+    .drop-area {
+      border: 2px solid var(--outline);
+      transition: border-color 0.25s ease;
+      padding: 14px 14px;
+      background-color: transparent;
+      .drag-title {
+        font-size: 14px;
+      }
+      &.drag-over {
+        border-color: var(--primary);
+      }
+      &.disabled {
+        opacity: 0.8;
+        pointer-events: none;
+      }
+    }
+  }
 }
 
 .tag-card {

@@ -74,6 +74,45 @@
             </div>
           </div>
 
+          <div v-if="!editMode" class="card file-container">
+            <div class="horizontal-container">
+              <my-icon icon="files" class="icon" />
+              <div class="label">{{ $t("files") }}</div>
+            </div>
+            <div
+              class="drop-area card"
+              @dragover.prevent="dragOver = true"
+              @dragleave.prevent="dragOver = false"
+              @drop.prevent="handleDrop"
+              :class="{ 'drag-over': dragOver, disabled: files.length >= 5 }"
+            >
+              <div class="drag-title">{{ $t("drag_drop_title") }}</div>
+              <input type="file" ref="fileInput" @change="handleFile" multiple hidden />
+            </div>
+            <div class="files-list container">
+              <div
+                class="card file horizontal-container"
+                :class="{ 'is-error': !!file.error }"
+                v-for="(file, index) in files"
+                :key="index"
+              >
+                <div class="file-name">
+                  {{ (file.error && $t(file.error)) || file.name }}
+                </div>
+                <div class="file-size">({{ formatSize(file.size) }})</div>
+                <my-button icon="close" @click="removeFileIndex(index)" />
+              </div>
+            </div>
+            <my-button
+              class="add-file"
+              @click="triggerFileInput"
+              icon="add"
+              type="secondary"
+              :label="$t('add_file')"
+              :disable="files.length >= 5"
+            />
+          </div>
+
           <q-separator class="separator" />
           <toggle-card label-key="tag.nsfw" icon="explicit" v-model="is_nsfw" />
           <toggle-card label-key="tag.ai" icon="robot_2" v-model="ai_generated" />
@@ -105,6 +144,7 @@ import MyButton from "../my/MyButton.vue";
 import MyChip from "../my/MyChip.vue";
 import CloseableContent from "../misc/CloseableContent.vue";
 import { useMainStore } from "src/stores/main-store";
+import { createContext, uploadFile } from "src/api/storage";
 
 const props = defineProps<{
   originalPost?: Post;
@@ -132,6 +172,70 @@ const MAX_TAGS = 6;
 const loading = ref(false);
 
 const editMode = ref(false);
+
+const MAX_SIZE = 10 * 1024 * 1024;
+const files = ref<
+  {
+    name: string;
+    size: number;
+    blob: Blob;
+    error?: string | null;
+  }[]
+>([]);
+const dragOver = ref(false);
+const fileInput = ref<HTMLInputElement>();
+
+function formatSize(size: number) {
+  let label = "b";
+  if (size > 1024) {
+    label = "kb";
+    size /= 1024;
+  }
+  if (size > 1024) {
+    label = "mb";
+    size /= 1024;
+  }
+  if (size > 1024) {
+    label = "gb";
+    size /= 1024;
+  }
+  return `${Math.round(size)} ${t(`file_size.${label}`)}`;
+}
+
+const removeFileIndex = (index: number) => {
+  files.value.splice(index, 1);
+};
+
+const triggerFileInput = () => {
+  fileInput.value!.click();
+};
+
+const validateFile = (file: File) => {
+  if (file.size > MAX_SIZE) {
+    return "file_error.too_big";
+  }
+  return null;
+};
+
+const addFiles = (newFiles: FileList | null) => {
+  if (!newFiles) return;
+  for (const f of newFiles) {
+    const error = validateFile(f);
+    files.value.push({ name: f.name, size: f.size, blob: f, error });
+  }
+};
+
+const handleFile = (event: Event) => {
+  if (!event.target) return;
+  addFiles((event.target as HTMLInputElement).files);
+  (event.target as HTMLInputElement).value = "";
+};
+
+const handleDrop = (event: DragEvent) => {
+  dragOver.value = false;
+  if (!event.dataTransfer) return;
+  addFiles(event.dataTransfer.files);
+};
 
 function generateTags() {
   const generatedTags = [...tags.value];
@@ -203,27 +307,60 @@ async function editPostButton() {
 async function createPostButton() {
   loading.value = true;
   const tags = generateTags();
-  const r = await createPost({
-    content: text.value,
-    tags: tags!,
-    ctags: ctags.value
-  });
-  loading.value = false;
-  if (r.data.success && r.data.data) {
-    const post = {
-      ...r.data.data,
-      user: await profileStore.getProfile()
-    };
-    mainStore.openDialog("post", post.post_id, { post: post });
-    quasar.notify({
-      type: "default-notification",
-      message: t("post_created.msg"),
-      caption: t("post_created.caption"),
-      progress: true,
-      icon: "sym_r_done_outline"
-    });
 
-    dialogRef.value?.hide();
+  let contextId: string | undefined = undefined;
+
+  try {
+    if (files.value.length > 0) {
+      const context = await createContext();
+      contextId = context.data.data.context_id;
+      let index = 0;
+
+      // Uploading file by file without Promises.all to ensure that all files will be in the same order
+
+      for (const file of files.value) {
+        if (file.error) continue;
+        try {
+          // Adding index to filename for case if names are the same
+          await uploadFile(`${index}-${file.name}`, file.blob, "context", undefined, contextId);
+        } catch (e) {
+          file.error = "file_error.failed_to_upload";
+          throw e;
+        }
+        index++;
+      }
+    }
+    const r = await createPost({
+      content: text.value,
+      ...(contextId && { file_context_id: contextId }),
+      tags: tags!,
+      ctags: ctags.value
+    });
+    loading.value = false;
+    if (r.data.success && r.data.data) {
+      const post = {
+        ...r.data.data,
+        user: await profileStore.getProfile()
+      };
+      mainStore.openDialog("post", post.post_id, { post: post });
+      quasar.notify({
+        type: "default-notification",
+        message: t("post_created.msg"),
+        caption: t("post_created.caption"),
+        progress: true,
+        icon: "sym_r_done_outline"
+      });
+
+      dialogRef.value?.hide();
+    }
+  } catch {
+    quasar.notify({
+      type: "error-notification",
+      message: t("post_created.failed"),
+      progress: true
+    });
+  } finally {
+    loading.value = false;
   }
 }
 

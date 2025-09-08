@@ -48,8 +48,20 @@ async function uploadFile(
   return r;
 }
 
+async function createContext(config?: AxiosRequestConfig) {
+  const r = await api.post<
+    ApiResponse<{
+      context_id: string;
+      max_size: number;
+      max_count: number;
+      expires: number;
+    }>
+  >(storageEndpoints.context, undefined, config);
+  return r;
+}
+
 function init(_api: AxiosInstance) {
   api = _api;
 }
 
-export { init, uploadFile };
+export { init, uploadFile, createContext };

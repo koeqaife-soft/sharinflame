@@ -104,7 +104,7 @@ type PostWithSystem = Post | (PostSystem & { is_system: true });
 interface CreatePostValues {
   content: string;
   tags?: string[];
-  media?: string[];
+  file_context_id?: string;
   ctags?: string[];
 }
 
