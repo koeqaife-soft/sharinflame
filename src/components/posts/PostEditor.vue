@@ -124,7 +124,7 @@
             :icon-right="editMode ? 'edit' : 'add'"
             :label="editMode ? $t('apply') : $t('create')"
             @click="buttonClick"
-            :disable="text.trim().length == 0"
+            :disable="text.trim().length == 0 || files.some((v) => !!v.error)"
             :loading="loading"
           />
         </div>
