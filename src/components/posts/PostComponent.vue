@@ -11,23 +11,28 @@
         <text-parts class="content wrap-text" :text="formatStringForHtml(postRef.content)" :html="true" />
       </div>
     </div>
-    <div class="post-image-section card-section" v-if="!postRef.is_system && postRef.media?.length > 0">
-      <q-carousel
-        class="post-image"
-        animated
-        arrows
-        keep-alive
-        swipeable
-        transition-prev="slide-right"
-        transition-next="slide-left"
-        navigation
-        v-model="currentSlide"
-        v-model:fullscreen="isFullscreen"
-      >
-        <q-carousel-slide v-for="(src, index) in postRef.media" :key="index" :name="index" class="q-pa-none">
-          <q-img :src="src" fit="contain" class="full-width full-height" />
-        </q-carousel-slide>
-      </q-carousel>
+    <div class="post-file-section card-section" v-if="!postRef.is_system && postRef.media?.length > 0">
+      <template v-if="postRef.media_type == 'post_image'">
+        <q-carousel
+          class="post-image"
+          animated
+          arrows
+          keep-alive
+          swipeable
+          transition-prev="slide-right"
+          transition-next="slide-left"
+          navigation
+          v-model="currentSlide"
+          v-model:fullscreen="isFullscreen"
+        >
+          <q-carousel-slide v-for="(src, index) in postRef.media" :key="index" :name="index" class="q-pa-none">
+            <q-img :src="src" fit="contain" class="full-width full-height" />
+          </q-carousel-slide>
+        </q-carousel>
+      </template>
+      <template v-else-if="postRef.media_type == 'post_video'">
+        <video-payer :src="postRef.media[0]!" />
+      </template>
     </div>
     <div
       class="tags tags-section card-section"
@@ -102,6 +107,7 @@ import MyButton from "../my/MyButton.vue";
 import ReactionButtons from "./ReactionButtons.vue";
 import { useMainStore } from "src/stores/main-store";
 
+const VideoPayer = defineAsyncComponent(() => import("../my/MyVideoPlayer.vue"));
 const OpenUserDialog = defineAsyncComponent(() => import("../profile/OpenUserDialog.vue"));
 const MoreMenu = defineAsyncComponent(() => import("./PostMoreMenu.vue"));
 const PostEditor = defineAsyncComponent(() => import("./PostEditor.vue"));

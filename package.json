@@ -17,10 +17,12 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.17.0",
+    "@videojs-player/vue": "^1.0.0",
     "axios": "^1.11.0",
     "dompurify": "^3.2.6",
     "pinia": "^2.3.1",
     "quasar": "^2.18.2",
+    "video.js": "^8.23.4",
     "vue": "^3.5.18",
     "vue-advanced-cropper": "^2.8.9",
     "vue-i18n": "^11.1.11",
