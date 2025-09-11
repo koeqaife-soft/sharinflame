@@ -167,7 +167,7 @@ const ai_generated = ref(false);
 
 const ctags = ref<string[]>(props.withCtags ?? []);
 const tags = ref<string[]>([]);
-const MAX_TAGS = 6;
+const MAX_TAGS = 4;
 
 const loading = ref(false);
 
