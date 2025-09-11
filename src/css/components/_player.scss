@@ -1,4 +1,4 @@
-@import "video.js/dist/video-js.css";
+@import "video.js/dist/video-js.min.css";
 
 .my-video-player {
   border-radius: 8px;
@@ -123,7 +123,7 @@
   }
 
   // Some labels
-  .vjs-remaining-time-display {
+  .vjs-remaining-time {
     color: var(--on-card);
   }
 
