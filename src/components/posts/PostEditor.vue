@@ -119,7 +119,11 @@
                   {{ (file.error && $t("file_error.error", { error: $t(file.error) })) || file.name }}
                 </div>
                 <div class="file-size">({{ formatSize(file.size) }})</div>
-                <my-button icon="close" @click="removeFileIndex(index)" />
+                <my-button
+                  icon="close"
+                  @click="removeFileIndex(index)"
+                  :disable="files.length >= currentUploadConfig.maxCount"
+                />
               </div>
             </div>
           </div>
