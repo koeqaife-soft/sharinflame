@@ -74,6 +74,7 @@ import PostScroll from "src/components/posts/PostScroll.vue";
 import MainLayout from "src/layouts/MainLayout.vue";
 import MyButton from "src/components/my/MyButton.vue";
 import MyIcon from "src/components/my/MyIcon.vue";
+import MySelect from "src/components/my/MySelect.vue";
 import { useQuasar } from "quasar";
 
 const CategoryButtons = defineAsyncComponent(() => import("src/components/misc/CategoryButtons.vue"));
@@ -82,7 +83,6 @@ const ProfileMenu = defineAsyncComponent(() => import("src/components/profile/Pr
 const OpenProfileMenu = defineAsyncComponent(() => import("src/components/profile/OpenProfileMenu.vue"));
 const ParticlesBackground = defineAsyncComponent(() => import("src/components/ParticlesBackground.vue"));
 const NotificationsDialog = defineAsyncComponent(() => import("src/components/notifications/NotificationsDialog.vue"));
-const MySelect = defineAsyncComponent(() => import("src/components/my/MySelect.vue"));
 
 const quasar = useQuasar();
 const mainStore = useMainStore();
