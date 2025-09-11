@@ -55,3 +55,13 @@ body {
 .absolute {
   position: absolute;
 }
+
+::selection {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+::-moz-selection {
+  background: var(--primary);
+  color: var(--on-primary);
+}
