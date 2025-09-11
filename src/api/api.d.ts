@@ -48,6 +48,7 @@ interface Post {
   is_like?: boolean | undefined;
   is_system?: boolean | undefined;
   is_fav?: boolean | undefined;
+  media_type: "post_video" | "post_image";
 
   user: User;
   _meta?: MetaData;
@@ -162,3 +163,5 @@ type NotificationsResponse = ApiResponse<{
   next_cursor: string;
   has_more: boolean;
 }>;
+
+type CreateContextType = "post_video" | "post_image";

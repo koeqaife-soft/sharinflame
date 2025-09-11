@@ -79,17 +79,36 @@
               <my-icon icon="files" class="icon" />
               <div class="label">{{ $t("files") }}</div>
             </div>
-            <div
-              class="drop-area card"
-              @dragover.prevent="dragOver = true"
-              @dragleave.prevent="dragOver = false"
-              @drop.prevent="handleDrop"
-              :class="{ 'drag-over': dragOver, disabled: files.length >= 5 }"
-            >
-              <div class="drag-title">{{ $t("drag_drop_title") }}</div>
-              <input type="file" ref="fileInput" @change="handleFile" multiple hidden />
-            </div>
             <div class="files-list container">
+              <div class="type-container horizontal-container">
+                <my-button
+                  :label="$t('image')"
+                  :is-category="true"
+                  type="card"
+                  icon="image"
+                  :class="{ selected: currentUploadType == 'post_image' }"
+                  @click="changeUploadType('post_image')"
+                />
+                <my-button
+                  :label="$t('video')"
+                  :is-category="true"
+                  type="card"
+                  icon="video_file"
+                  :class="{ selected: currentUploadType == 'post_video' }"
+                  @click="changeUploadType('post_video')"
+                />
+              </div>
+              <div
+                class="drop-area card"
+                @dragover.prevent="dragOver = true"
+                @dragleave.prevent="dragOver = false"
+                @drop.prevent="handleDrop"
+                @click="triggerFileInput"
+                :class="{ 'drag-over': dragOver, disabled: files.length >= currentUploadConfig.maxCount }"
+              >
+                <div class="drag-title">{{ $t("drag_drop_title") }}</div>
+                <input type="file" ref="fileInput" @change="handleFile" multiple hidden />
+              </div>
               <div
                 class="card file horizontal-container"
                 :class="{ 'is-error': !!file.error }"
@@ -97,20 +116,12 @@
                 :key="index"
               >
                 <div class="file-name">
-                  {{ (file.error && $t(file.error)) || file.name }}
+                  {{ (file.error && $t("file_error.error", { error: $t(file.error) })) || file.name }}
                 </div>
                 <div class="file-size">({{ formatSize(file.size) }})</div>
                 <my-button icon="close" @click="removeFileIndex(index)" />
               </div>
             </div>
-            <my-button
-              class="add-file"
-              @click="triggerFileInput"
-              icon="add"
-              type="secondary"
-              :label="$t('add_file')"
-              :disable="files.length >= 5"
-            />
           </div>
 
           <q-separator class="separator" />
@@ -134,7 +145,7 @@
 </template>
 <script setup lang="ts">
 import { useDialogPluginComponent, useQuasar } from "quasar";
-import { onMounted, type Ref, ref } from "vue";
+import { computed, onMounted, type Ref, ref } from "vue";
 import { createPost, editPost } from "src/api/posts";
 import { useProfileStore } from "src/stores/profile-store";
 import { useI18n } from "vue-i18n";
@@ -145,6 +156,7 @@ import MyChip from "../my/MyChip.vue";
 import CloseableContent from "../misc/CloseableContent.vue";
 import { useMainStore } from "src/stores/main-store";
 import { createContext, uploadFile } from "src/api/storage";
+import { storageConfig } from "src/api/storage";
 
 const props = defineProps<{
   originalPost?: Post;
@@ -173,7 +185,6 @@ const loading = ref(false);
 
 const editMode = ref(false);
 
-const MAX_SIZE = 10 * 1024 * 1024;
 const files = ref<
   {
     name: string;
@@ -184,6 +195,8 @@ const files = ref<
 >([]);
 const dragOver = ref(false);
 const fileInput = ref<HTMLInputElement>();
+const currentUploadType = ref<CreateContextType>("post_image");
+const currentUploadConfig = computed(() => storageConfig[currentUploadType.value]);
 
 function formatSize(size: number) {
   let label = "b";
@@ -202,40 +215,48 @@ function formatSize(size: number) {
   return `${Math.round(size)} ${t(`file_size.${label}`)}`;
 }
 
-const removeFileIndex = (index: number) => {
+function changeUploadType(type: CreateContextType) {
+  currentUploadType.value = type;
+  files.value.length = 0;
+}
+
+function removeFileIndex(index: number) {
   files.value.splice(index, 1);
-};
+}
 
-const triggerFileInput = () => {
+function triggerFileInput() {
   fileInput.value!.click();
-};
+}
 
-const validateFile = (file: File) => {
-  if (file.size > MAX_SIZE) {
+function validateFile(file: File) {
+  if (file.size > currentUploadConfig.value.maxSize * 1024 * 1024) {
     return "file_error.too_big";
   }
+  if (!currentUploadConfig.value.allowedTypes.includes(file.type)) {
+    return "file_error.not_allowed_type";
+  }
   return null;
-};
+}
 
-const addFiles = (newFiles: FileList | null) => {
+function addFiles(newFiles: FileList | null) {
   if (!newFiles) return;
   for (const f of newFiles) {
     const error = validateFile(f);
     files.value.push({ name: f.name, size: f.size, blob: f, error });
   }
-};
+}
 
-const handleFile = (event: Event) => {
+function handleFile(event: Event) {
   if (!event.target) return;
   addFiles((event.target as HTMLInputElement).files);
   (event.target as HTMLInputElement).value = "";
-};
+}
 
-const handleDrop = (event: DragEvent) => {
+function handleDrop(event: DragEvent) {
   dragOver.value = false;
   if (!event.dataTransfer) return;
   addFiles(event.dataTransfer.files);
-};
+}
 
 function generateTags() {
   const generatedTags = [...tags.value];
@@ -312,7 +333,7 @@ async function createPostButton() {
 
   try {
     if (files.value.length > 0) {
-      const context = await createContext();
+      const context = await createContext(currentUploadType.value);
       contextId = context.data.data.context_id;
       let index = 0;
 

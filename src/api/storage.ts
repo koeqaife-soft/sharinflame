@@ -8,6 +8,25 @@ export const storageEndpoints = {
   context: "/storage/context"
 };
 
+export interface StorageConfigEntry {
+  maxSize: number;
+  maxCount: number;
+  allowedTypes: string[];
+}
+
+export const storageConfig: Record<CreateContextType, StorageConfigEntry> = {
+  post_video: {
+    maxSize: 15,
+    maxCount: 1,
+    allowedTypes: ["video/mp4", "video/webm"]
+  },
+  post_image: {
+    maxSize: 10,
+    maxCount: 5,
+    allowedTypes: ["image/webp", "image/png", "image/jeg", "image/gif"]
+  }
+};
+
 async function uploadFile(
   filename: string,
   blob: Blob,
@@ -48,7 +67,7 @@ async function uploadFile(
   return r;
 }
 
-async function createContext(config?: AxiosRequestConfig) {
+async function createContext(type: CreateContextType, config?: AxiosRequestConfig) {
   const r = await api.post<
     ApiResponse<{
       context_id: string;
@@ -56,7 +75,7 @@ async function createContext(config?: AxiosRequestConfig) {
       max_count: number;
       expires: number;
     }>
-  >(storageEndpoints.context, undefined, config);
+  >(storageEndpoints.context, { type: type }, config);
   return r;
 }
 

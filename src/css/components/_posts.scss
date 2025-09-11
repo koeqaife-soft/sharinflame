@@ -347,6 +347,8 @@
       transition: border-color 0.25s ease;
       padding: 14px 14px;
       background-color: transparent;
+      cursor: pointer;
+      user-select: none;
       .drag-title {
         font-size: 14px;
       }

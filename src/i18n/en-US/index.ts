@@ -127,12 +127,14 @@ export default {
   edit_post: "Edit Post",
   apply: "Apply",
   cant_change_tags_edit: "Can't change tags when editing a post",
-  drag_drop_title: "Drag & Drop files here to upload",
+  drag_drop_title: "Drag & Drop files or click here to upload",
   add_file: "Add File",
   files: "Files",
   file_error: {
-    too_big: "Error: File is too big",
-    failed_to_upload: "Error: Failed to upload file"
+    error: "Error: {error}",
+    too_big: "File is too big",
+    not_allowed_type: "File type is not allowed",
+    failed_to_upload: "Failed to upload file"
   },
   file_size: {
     b: "B",
@@ -141,6 +143,8 @@ export default {
     gb: "GB",
     tb: "TB"
   },
+  image: "Image",
+  video: "Video",
 
   ctag: "Tag",
   tag_name: "Tag Name",
