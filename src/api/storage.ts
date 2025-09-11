@@ -23,7 +23,7 @@ export const storageConfig: Record<CreateContextType, StorageConfigEntry> = {
   post_image: {
     maxSize: 10,
     maxCount: 5,
-    allowedTypes: ["image/webp", "image/png", "image/jeg", "image/gif"]
+    allowedTypes: ["image/webp", "image/png", "image/jpeg", "image/gif"]
   }
 };
 
