@@ -54,7 +54,7 @@
                 {{ unreadNotificationsCount }}
               </span>
               <q-space />
-              <my-button icon="expand_content" />
+              <my-button icon="expand_content" @click="openNotifications" />
             </div>
             <notifications-list />
           </div>
