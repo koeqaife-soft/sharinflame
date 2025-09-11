@@ -57,6 +57,14 @@
     }
   }
 
+  &.vjs-picture-in-picture {
+    .vjs-picture-in-picture-control {
+      .vjs-icon-placeholder::before {
+        content: "picture_in_picture_off";
+      }
+    }
+  }
+
   // Fullscreen button
   .vjs-fullscreen-control {
     .vjs-icon-placeholder::before {
