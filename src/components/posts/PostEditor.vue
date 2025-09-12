@@ -329,6 +329,15 @@ async function editPostButton() {
   }
 }
 
+function indexToLetters(index: number): string {
+  let result = "";
+  while (index >= 0) {
+    result = String.fromCharCode(97 + (index % 26)) + result;
+    index = Math.floor(index / 26) - 1;
+  }
+  return result;
+}
+
 async function createPostButton() {
   loading.value = true;
   const tags = generateTags();
@@ -341,19 +350,23 @@ async function createPostButton() {
       contextId = context.data.data.context_id;
       let index = 0;
 
-      // Uploading file by file without Promises.all to ensure that all files will be in the same order
+      const promises: Promise<void>[] = [];
 
       for (const file of files.value) {
         if (file.error) continue;
-        try {
-          // Adding index to filename for case if names are the same
-          await uploadFile(`${index}-${file.name}`, file.blob, "context", undefined, contextId);
-        } catch (e) {
-          file.error = "file_error.failed_to_upload";
-          throw e;
-        }
+        const prefix = indexToLetters(index);
+        const func = async () => {
+          try {
+            await uploadFile(`${prefix}-${file.name}`, file.blob, "context", undefined, contextId);
+          } catch (e) {
+            file.error = "file_error.failed_to_upload";
+            throw e;
+          }
+        };
+        promises.push(func());
         index++;
       }
+      await Promise.all(promises);
     }
     const r = await createPost({
       content: text.value,

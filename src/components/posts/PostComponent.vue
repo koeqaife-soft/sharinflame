@@ -13,19 +13,7 @@
     </div>
     <div class="post-file-section card-section" v-if="!postRef.is_system && postRef.media?.length > 0">
       <template v-if="postRef.media_type == 'post_image'">
-        <my-carousel
-          class="post-image"
-          animated
-          arrows
-          keep-alive
-          swipeable
-          transition-prev="slide-right"
-          transition-next="slide-left"
-          navigation
-          :slides="postRef.media"
-          v-model="currentSlide"
-          v-model:fullscreen="isFullscreen"
-        >
+        <my-carousel class="post-image" :slides="postRef.media.sort()">
           <template v-slot:default="{ data }">
             <my-image :src="data" />
           </template>
@@ -97,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineAsyncComponent, type Ref, ref, toRef } from "vue";
+import { defineAsyncComponent, ref, toRef } from "vue";
 import { deletePost } from "src/api/posts";
 import { formatNumber, formatStringForHtml } from "src/utils/format";
 import { useQuasar } from "quasar";
@@ -128,8 +116,6 @@ const props = defineProps<{
 
 const postRef = toRef(props.post);
 
-const currentSlide: Ref<string | number> = ref(0);
-const isFullscreen = ref(false);
 const disable = ref(false);
 
 const canAnimate = ref(false);
