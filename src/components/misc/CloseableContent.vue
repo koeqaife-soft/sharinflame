@@ -75,10 +75,22 @@ function hasScrollableParentInDirection(el: HTMLElement, deltaY: number, deltaX:
   return false;
 }
 
+function hasCarouselAncestor(element: HTMLElement | null): boolean {
+  let current = element;
+  while (current) {
+    if (current.getAttribute("data-is-carousel") !== null) {
+      return true;
+    }
+    current = current.parentElement;
+  }
+  return false;
+}
+
 function shouldIgnore(target: EventTarget | null, deltaX: number, deltaY: number): boolean {
   if (!(target instanceof HTMLElement)) return true;
 
   if (hasScrollableParentInDirection(target, deltaY, deltaX)) return true;
+  if (Math.abs(deltaX) > 0 && hasCarouselAncestor(target)) return true;
 
   return false;
 }

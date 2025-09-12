@@ -1,0 +1,81 @@
+.my-carousel {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 400px;
+
+  .slides-container {
+    display: flex;
+    transition: transform 0.3s ease;
+    height: 400px;
+  }
+
+  .slide-element {
+    flex: 0 0 100%;
+    height: 400px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    &.is-empty {
+      pointer-events: none;
+    }
+  }
+
+  .prev-btn,
+  .next-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    opacity: 0.9;
+    transition: opacity 0.25s ease-in-out 0.33s;
+
+    @media (hover: hover) {
+      &:hover {
+        opacity: 1;
+      }
+    }
+    &:active {
+      opacity: 1;
+    }
+  }
+
+  .prev-btn {
+    left: 10px;
+  }
+  .next-btn {
+    right: 10px;
+  }
+
+  .pagination {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    background-color: var(--background);
+    padding: 8px 8px;
+    border-radius: 12px;
+  }
+
+  .dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: var(--background-variant);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s;
+
+    &:hover {
+      background-color: var(--on-card);
+    }
+  }
+
+  .dot.active {
+    background: var(--primary);
+  }
+}

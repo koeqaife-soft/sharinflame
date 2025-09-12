@@ -13,7 +13,7 @@
     </div>
     <div class="post-file-section card-section" v-if="!postRef.is_system && postRef.media?.length > 0">
       <template v-if="postRef.media_type == 'post_image'">
-        <q-carousel
+        <my-carousel
           class="post-image"
           animated
           arrows
@@ -22,13 +22,14 @@
           transition-prev="slide-right"
           transition-next="slide-left"
           navigation
+          :slides="postRef.media"
           v-model="currentSlide"
           v-model:fullscreen="isFullscreen"
         >
-          <q-carousel-slide v-for="(src, index) in postRef.media" :key="index" :name="index" class="q-pa-none">
-            <q-img :src="src" fit="contain" class="full-width full-height" />
-          </q-carousel-slide>
-        </q-carousel>
+          <template v-slot:default="{ data }">
+            <my-image :src="data" />
+          </template>
+        </my-carousel>
       </template>
       <template v-else-if="postRef.media_type == 'post_video'">
         <video-payer :src="postRef.media[0]!" />
@@ -107,6 +108,8 @@ import MyButton from "../my/MyButton.vue";
 import ReactionButtons from "./ReactionButtons.vue";
 import { useMainStore } from "src/stores/main-store";
 
+const MyImage = defineAsyncComponent(() => import("../my/MyImage.vue"));
+const MyCarousel = defineAsyncComponent(() => import("../my/MyCarousel.vue"));
 const VideoPayer = defineAsyncComponent(() => import("../my/MyVideoPlayer.vue"));
 const OpenUserDialog = defineAsyncComponent(() => import("../profile/OpenUserDialog.vue"));
 const MoreMenu = defineAsyncComponent(() => import("./PostMoreMenu.vue"));
