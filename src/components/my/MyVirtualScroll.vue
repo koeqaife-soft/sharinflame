@@ -112,6 +112,17 @@ const isLoading = ref(false);
 const stopInfiniteLoad = ref(false);
 const showLoading = ref(false);
 const showLoadingSlot = computed(() => isLoading.value && showLoading.value);
+let showLoadingTimeout: NodeJS.Timeout | null = null;
+
+watch(isLoading, (v) => {
+  if (showLoadingTimeout) clearTimeout(showLoadingTimeout);
+  if (v)
+    showLoadingTimeout = setTimeout(() => {
+      showLoading.value = true;
+    }, 200);
+  else showLoading.value = false;
+});
+
 // -------------------------
 // HELPERS & UTILS
 // -------------------------
@@ -226,11 +237,9 @@ function checkLoading() {
 
   if (shouldLoadMore()) {
     isLoading.value = true;
-    showLoading.value = true;
 
     emit("loadMore", props.items.length - 1, (stop?: boolean) => {
       isLoading.value = false;
-      showLoading.value = false;
       if (stop) stopInfiniteLoad.value = true;
 
       const scrollValue = scrollContainer.value?.scrollTop ?? 0;
@@ -368,6 +377,7 @@ onBeforeUnmount(() => {
     intersectionObserver.unobserve(scrollContent.value);
     intersectionObserver.disconnect();
   }
+  if (showLoadingTimeout) clearTimeout(showLoadingTimeout);
 
   if (resizeObserver) {
     observedElements.forEach((el) => resizeObserver?.unobserve(el));
