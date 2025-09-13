@@ -25,6 +25,7 @@
             @load-more="(i: number, done: DoneType) => onLoadData(0, 'posts', done)"
             ref="virtualScroll"
             :skeleton-height="200"
+            no-items-key="no_posts"
           >
             <template v-slot:default="{ item, index }">
               <post-component
@@ -50,6 +51,7 @@
             :margins="8"
             @load-more="(i: number, done: DoneType) => onLoadData(1, 'comments', done)"
             :skeleton-height="126"
+            no-items-key="no_comments"
           >
             <template v-slot:default="{ item, index }">
               <comment-component :comment="item" :class="{ 'q-mb-sm': index + 1 < items[1].length }" />

@@ -11,6 +11,7 @@
         :min-item-height="58"
         :skeleton-height="58"
         :no-resize-observer="true"
+        no-items-key="no_following"
       >
         <template v-slot:default="{ item, index }">
           <user-card :user="item" :class="{ 'q-mb-sm': index + 1 < items.length }" />

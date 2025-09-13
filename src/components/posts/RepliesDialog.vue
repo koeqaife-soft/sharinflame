@@ -50,9 +50,6 @@
             </div>
           </div>
 
-          <div class="no-comments" v-if="showNoComments">
-            {{ $t("no_replies") }}
-          </div>
           <my-virtual-scroll
             :items="items"
             :margins="8"
@@ -149,8 +146,6 @@ const props = withDefaults(
   }
 );
 
-const showNoComments = ref(false);
-
 const profileStore = useProfileStore();
 
 const commentRef = toRef(props.comment);
@@ -194,7 +189,6 @@ function onScroll(info: QScrollObserverDetails) {
 function reloadComments() {
   controller.abort();
   controller = new AbortController();
-  showNoComments.value = false;
   items.value = [];
   nextItems.value = [];
   scrollKey.value = Date.now();
@@ -209,8 +203,6 @@ function updateMeta<T>(key: string, value: T) {
 }
 
 async function loadComments(index: number, done: (stop?: boolean) => void) {
-  showNoComments.value = false;
-
   const toAdd: CommentWithUser[] = [];
   nextItems.value ??= [];
   try {
@@ -261,10 +253,6 @@ async function loadComments(index: number, done: (stop?: boolean) => void) {
   } catch (e) {
     done(true);
     throw e;
-  } finally {
-    if (items.value.length == 0) {
-      showNoComments.value = true;
-    }
   }
 }
 
@@ -290,7 +278,6 @@ async function sendComment(event?: KeyboardEvent | MouseEvent) {
       commentRef.value.replies_count += 1;
     }
   } finally {
-    showNoComments.value = false;
     sending.value = false;
     void nextTick(() => virtualScroll.value?.updateShowedItems(1));
   }

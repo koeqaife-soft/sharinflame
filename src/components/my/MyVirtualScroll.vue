@@ -1,6 +1,9 @@
 <template>
   <div class="virtual-scroll" ref="scrollContainer">
     <q-scroll-observer @scroll="onScroll" :debounce="debounce" />
+    <div class="no-items-label" v-if="noItemsLabel && !isLoading && items.length == 0">
+      {{ $t(noItemsKey ?? "no_items") }}
+    </div>
     <div class="virtual-scroll-content" ref="scrollContent">
       <div class="virtual-filler-top" :style="{ height: `${fillersHeight[0]}px` }" />
 
@@ -69,6 +72,8 @@ interface Props {
   minItemHeight?: number;
   noResizeObserver?: boolean;
   skeletonHeight?: number;
+  noItemsLabel?: boolean;
+  noItemsKey?: string;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -77,7 +82,9 @@ const props = withDefaults(defineProps<Props>(), {
   bottomOffset: 250,
   debounce: 25,
   minItemHeight: 125,
-  infiniteLoadType: "none"
+  infiniteLoadType: "none",
+  noItemsLabel: true,
+  noItemsKey: "no_items"
 });
 
 const emit = defineEmits<{

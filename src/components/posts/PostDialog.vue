@@ -34,9 +34,6 @@
             </div>
           </div>
 
-          <div class="no-comments" v-if="showNoComments">
-            {{ currentType == "comment" ? $t("no_comments") : $t("no_updates") }}
-          </div>
           <my-virtual-scroll
             :items="items"
             :margins="8"
@@ -48,6 +45,7 @@
             class="posts-infinite-scroll"
             ref="virtualScroll"
             :skeleton-height="126"
+            :no-items-key="currentType == 'comment' ? $t('no_comments') : $t('no_updates')"
           >
             <template v-slot:default="{ item, index }">
               <comment-component
@@ -140,8 +138,6 @@ const props = withDefaults(
   }
 );
 
-const showNoComments = ref(false);
-
 const profileStore = useProfileStore();
 
 const postRef = toRef(props.post);
@@ -205,7 +201,6 @@ function onScroll(info: QScrollObserverDetails) {
 function reloadComments() {
   controller.abort();
   controller = new AbortController();
-  showNoComments.value = false;
   items.value = [];
   nextItems.value = [];
   scrollKey.value = Date.now();
@@ -220,8 +215,6 @@ function updateMeta<T>(key: string, value: T) {
 }
 
 async function loadComments(index: number, done: (stop?: boolean) => void) {
-  showNoComments.value = false;
-
   const toAdd: CommentWithUser[] = [];
   nextItems.value ??= [];
   try {
@@ -266,10 +259,6 @@ async function loadComments(index: number, done: (stop?: boolean) => void) {
   } catch (e) {
     done(true);
     throw e;
-  } finally {
-    if (items.value.length == 0) {
-      showNoComments.value = true;
-    }
   }
 }
 
@@ -289,7 +278,6 @@ async function sendComment(event?: KeyboardEvent | MouseEvent) {
       postRef.value.comments_count += 1;
     }
   } finally {
-    showNoComments.value = false;
     sending.value = false;
     void nextTick(() => virtualScroll.value?.updateShowedItems(1));
   }

@@ -25,6 +25,7 @@
       :key="scrollKey"
       ref="virtualScroll"
       :skeleton-height="200"
+      no-items-key="no_posts"
     >
       <template v-slot:default="{ item, index }">
         <post-component :post="item" :class="{ 'q-mb-sm': index + 1 < items.length }" @delete-post="handleDeletePost" />

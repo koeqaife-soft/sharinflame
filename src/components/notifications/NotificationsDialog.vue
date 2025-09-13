@@ -18,7 +18,6 @@
       </div>
       <div class="dialog-content-inner">
         <q-scroll-area class="scroll-area fix-scroll-area full-height" :visible="false">
-          <div class="no-notifications" v-if="showNoNotifications">{{ $t("no_notifications") }}</div>
           <div class="unread-notifications card horizontal-container q-mb-sm">
             <span>
               <my-icon icon="visibility" />
@@ -45,6 +44,7 @@
             ref="virtualScroll"
             :min-item-height="60"
             :skeleton-height="60"
+            no-items-key="notifications.no_notifications"
           >
             <template v-slot:default="{ item, index }">
               <notification-card :notif="item" :cache="notifCache" :class="{ 'q-mb-sm': index + 1 < items.length }" />
@@ -77,8 +77,6 @@ defineEmits([...useDialogPluginComponent.emits]);
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
 const mainStore = useMainStore();
-
-const showNoNotifications = ref(false);
 
 const virtualScroll = ref<DefineComponent | null>(null);
 const scrollKey = ref(Date.now());

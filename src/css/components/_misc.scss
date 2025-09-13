@@ -232,3 +232,13 @@
     }
   }
 }
+
+// Virtual scroll "No Items" label
+.virtual-scroll {
+  .no-items-label {
+    width: 100%;
+    text-align: center;
+    font-size: 14px;
+    color: var(--on-background-variant);
+  }
+}
