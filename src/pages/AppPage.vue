@@ -75,16 +75,13 @@ import MainLayout from "src/layouts/MainLayout.vue";
 import MyButton from "src/components/my/MyButton.vue";
 import MyIcon from "src/components/my/MyIcon.vue";
 import MySelect from "src/components/my/MySelect.vue";
-import { useQuasar } from "quasar";
 
 const CategoryButtons = defineAsyncComponent(() => import("src/components/misc/CategoryButtons.vue"));
 const NotificationsList = defineAsyncComponent(() => import("src/components/notifications/NotificationsList.vue"));
 const ProfileMenu = defineAsyncComponent(() => import("src/components/profile/ProfileMenu.vue"));
 const OpenProfileMenu = defineAsyncComponent(() => import("src/components/profile/OpenProfileMenu.vue"));
 const ParticlesBackground = defineAsyncComponent(() => import("src/components/ParticlesBackground.vue"));
-const NotificationsDialog = defineAsyncComponent(() => import("src/components/notifications/NotificationsDialog.vue"));
 
-const quasar = useQuasar();
 const mainStore = useMainStore();
 const { t } = useI18n();
 
@@ -167,9 +164,7 @@ const updateScreenSize = () => {
 };
 
 function openNotifications() {
-  quasar.dialog({
-    component: NotificationsDialog
-  });
+  mainStore.openDialog("notifications", "", {});
 }
 
 watch(currentType, (v) => {

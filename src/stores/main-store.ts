@@ -33,7 +33,8 @@ const dialogs = {
   postEditor: defineAsyncComponent(() => import("src/components/posts/PostEditor.vue")),
   replies: defineAsyncComponent(() => import("src/components/posts/RepliesDialog.vue")),
   tag: defineAsyncComponent(() => import("src/components/posts/TagDialog.vue")),
-  okCancel: defineAsyncComponent(() => import("src/components/misc/OkCancelDialog.vue"))
+  okCancel: defineAsyncComponent(() => import("src/components/misc/OkCancelDialog.vue")),
+  notifications: defineAsyncComponent(() => import("src/components/notifications/NotificationsDialog.vue"))
 } as const;
 
 const stackDialogs = ["replies"];
