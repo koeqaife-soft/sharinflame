@@ -86,8 +86,13 @@ watch(currentIndex, () => {
 
 const containerStyle = computed(() => {
   const baseTranslate = -currentIndex.value * width.value;
-  const translateX = baseTranslate + (dragging.value ? deltaX.value : deltaX.value);
+  let translateX = baseTranslate + (dragging.value ? deltaX.value : deltaX.value);
   const transition = dragging.value ? "none" : "transform 0.3s ease";
+  if (translateX > 0) translateX = 0;
+
+  const allWidth = width.value * (slides.value.length - 1);
+  if (-translateX > allWidth) translateX = -allWidth;
+
   return {
     transform: `translateX(${Math.round(translateX)}px)`,
     transition
