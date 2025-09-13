@@ -4,16 +4,27 @@
     <template #toolbar-actions v-if="hideRightColumn || hideNotifications">
       <div class="button-and-badge">
         <my-button icon="notifications" class="webkit-no-drag" v-if="hideNotifications">
-          <q-menu class="menu-card notifications-menu" v-model="notificationsMenuOpened">
+          <q-menu class="menu-card notifications-menu" v-model="notificationsMenuOpened" max-height="999px">
             <notifications-list @on-loaded="notificationsMenuOpened = false" />
-            <my-button
-              icon="expand_content"
-              type="primary"
-              :label="$t('show_all')"
-              class="full-width q-mt-sm centered"
-              @click="openNotifications"
-              v-close-popup
-            />
+            <div class="horizontal-container">
+              <my-button
+                icon="expand_content"
+                type="primary"
+                :label="$t('show_all')"
+                class="full-width q-mt-sm centered"
+                @click="openNotifications"
+                v-close-popup
+              />
+              <my-button
+                icon="mark_chat_read"
+                type="outlined"
+                :label="$t('read_all')"
+                class="full-width q-mt-sm centered"
+                @click="() => void readAllNotifications()"
+                :disable="mainStore.unreadCount == 0"
+                v-close-popup
+              />
+            </div>
           </q-menu>
         </my-button>
         <span class="button-badge" v-if="unreadNotificationsCount > 0">
@@ -70,6 +81,7 @@ import type { KeyOfGetPostsTypes } from "src/api/posts";
 import { useI18n } from "vue-i18n";
 import type { ButtonProps } from "src/components/misc/CategoryButtons.vue";
 import { useMainStore } from "src/stores/main-store";
+import { readAllNotifications } from "src/api/users";
 import PostScroll from "src/components/posts/PostScroll.vue";
 import MainLayout from "src/layouts/MainLayout.vue";
 import MyButton from "src/components/my/MyButton.vue";
