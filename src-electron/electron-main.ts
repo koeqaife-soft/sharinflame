@@ -16,6 +16,8 @@ if (!gotTheLock) {
   app.quit();
 }
 
+app.commandLine.appendSwitch("disable-features", "MediaSessionService,MPRISService,AudioServiceOutOfProcess");
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     icon: path.resolve(currentDir, "icons/icon.png"),
