@@ -178,6 +178,9 @@ async function action(type: string, data: unknown) {
         }
       }
       break;
+    case "report":
+      mainStore.openDialog("report", "", { targetType: "comment", targetId: commentRef.value.post_id });
+      break;
     case "copy_id":
       void navigator.clipboard.writeText(data as string);
       break;

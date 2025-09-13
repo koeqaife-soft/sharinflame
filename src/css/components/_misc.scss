@@ -196,3 +196,39 @@
     color: var(--on-card);
   }
 }
+
+// ReportDialog style
+.report-dialog {
+  .dialog-content {
+    max-width: 500px;
+    height: auto;
+    margin-left: 24px;
+    margin-right: 24px;
+    border-radius: 18px !important;
+    padding: 24px !important;
+    background-color: var(--card-high);
+  }
+  .buttons {
+    margin-top: 12px;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+  .title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--on-card);
+    margin-bottom: 12px;
+  }
+  .report-text {
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 16px;
+    padding-right: 16px;
+    border: 1px solid transparent;
+    transition: border-color 0.2s ease-out;
+    will-change: border-color;
+    &.q-field--focused {
+      border-color: var(--primary);
+    }
+  }
+}

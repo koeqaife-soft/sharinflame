@@ -146,6 +146,14 @@ export default {
   image: "Image",
   video: "Video",
 
+  report: "Report",
+  reason: "Reason",
+  report_dialog: {
+    title: "Report Resource",
+    success: "Successfully created report",
+    failed: "Failed to create report"
+  },
+
   ctag: "Tag",
   tag_name: "Tag Name",
   posts_count: "Posts Count",

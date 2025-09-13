@@ -12,7 +12,8 @@ export const usersEndpoints = {
   notifications: "/users/me/notifications",
   unread_notifications_count: "/users/me/notifications/unread",
   read_notification: (id: string) => `/users/me/notifications/${id}/read`,
-  read_all_notifications: "/users/me/notifications/read"
+  read_all_notifications: "/users/me/notifications/read",
+  create_report: "/reports"
 };
 
 async function getProfile(user_id?: string, config: AxiosRequestConfig = {}) {
@@ -112,6 +113,15 @@ async function readAllNotifications(config: AxiosRequestConfig = {}) {
   return await api.post(usersEndpoints.read_all_notifications, undefined, config);
 }
 
+async function createReport(
+  reason: string,
+  targetId: string,
+  targetType: "comment" | "post" | "user" | "message",
+  config: AxiosRequestConfig = {}
+) {
+  return await api.post(usersEndpoints.create_report, { reason, target_id: targetId, target_type: targetType }, config);
+}
+
 function init(_api: AxiosInstance) {
   api = _api;
 }
@@ -132,5 +142,6 @@ export {
   getNotifications,
   getUnreadNotificationsCount,
   readNotification,
-  readAllNotifications
+  readAllNotifications,
+  createReport
 };
