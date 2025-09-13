@@ -76,6 +76,7 @@ export default {
   enter_reply: "Enter Reply",
   replies: "Replies",
   comment: "Comment",
+  replied_to: "Replied to",
 
   info: "Info",
   posts: "Posts",

@@ -148,6 +148,21 @@
   }
 }
 
+// Styles specific to comments
+.comment {
+  .replied-to-section {
+    display: flex;
+    .my-icon {
+      @include iconSize(20);
+      margin-right: 4px;
+    }
+    .label {
+      font-size: 14px;
+      font-weight: 500;
+    }
+  }
+}
+
 // More menu for posts and comments
 .post-more-menu,
 .comment-more-menu {

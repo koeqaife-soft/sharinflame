@@ -1,5 +1,9 @@
 <template>
   <div class="card comment" :key="commentRef.comment_id">
+    <div class="card-section replied-to-section" v-if="isParent">
+      <my-icon icon="reply" />
+      <div class="label">{{ $t("replied_to") }}</div>
+    </div>
     <div class="card-section content-section">
       <div class="avatar-container">
         <open-user-dialog :user="commentRef.user" />
@@ -43,6 +47,7 @@ import { formatStringForHtml, formatNumber } from "src/utils/format";
 import TextParts from "../misc/TextParts.vue";
 import ReactionButtons from "./ReactionButtons.vue";
 import MyButton from "../my/MyButton.vue";
+import MyIcon from "../my/MyIcon.vue";
 import { i18n } from "src/boot/i18n";
 import { useQuasar } from "quasar";
 import { deleteComment, getComment, getPost } from "src/api/posts";
@@ -59,6 +64,7 @@ const emit = defineEmits<{
 }>();
 
 const props = defineProps<{
+  isParent?: boolean;
   comment: CommentWithUser;
   hideGoTo?: boolean;
   inDialog?: boolean;

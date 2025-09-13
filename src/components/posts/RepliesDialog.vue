@@ -20,6 +20,15 @@
 
       <div class="dialog-content-inner">
         <q-scroll-area class="scroll-area fix-scroll-area" :visible="false">
+          <div ref="parentCommentComponentRef" v-if="parentComment" class="q-mb-sm">
+            <comment-component
+              :comment="parentComment"
+              :in-dialog="props.inDialog"
+              @delete-comment="handleDeleteMainComment"
+              is-parent
+              style="z-index: 2"
+            />
+          </div>
           <div ref="commentComponentRef">
             <comment-component
               :comment="commentRef"
@@ -127,6 +136,7 @@ const UserAvatar = defineAsyncComponent(() => import("../profile/UserAvatar.vue"
 
 const props = withDefaults(
   defineProps<{
+    parentComment?: CommentWithUser;
     comment: CommentWithUser;
     firstComment?: CommentWithUser;
     autoLoad?: boolean;
@@ -151,6 +161,7 @@ const nextItems = ref<CommentWithUser[]>([]);
 
 const headerVisible = ref(true);
 const commentComponentRef = ref<HTMLElement | null>(null);
+const parentCommentComponentRef = ref<HTMLElement | null>(null);
 
 const virtualScroll = ref<DefineComponent | null>(null);
 const allowLoading = ref(props.autoLoad);
@@ -175,7 +186,9 @@ function allowLoad() {
 }
 
 function onScroll(info: QScrollObserverDetails) {
-  headerVisible.value = info.position.top < commentComponentRef.value!.scrollHeight + 66 || info.direction == "up";
+  headerVisible.value =
+    info.position.top < commentComponentRef.value!.scrollHeight + parentCommentComponentRef.value!.scrollHeight + 66 ||
+    info.direction == "up";
 }
 
 function reloadComments() {
