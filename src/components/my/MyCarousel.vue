@@ -100,6 +100,7 @@ const containerStyle = computed(() => {
 });
 
 function onTouchStart(e: TouchEvent) {
+  if (slides.value.length == 1) return;
   if (e.touches.length !== 1) return;
   dragging.value = true;
   startX.value = e.touches[0]!.clientX;
@@ -107,6 +108,7 @@ function onTouchStart(e: TouchEvent) {
 }
 
 function onTouchMove(e: TouchEvent) {
+  if (slides.value.length == 1) return;
   if (!dragging.value || e.touches.length !== 1) return;
   const x = e.touches[0]!.clientX;
   deltaX.value = x - startX.value;
@@ -122,6 +124,7 @@ function onTouchMove(e: TouchEvent) {
 }
 
 function onTouchEnd() {
+  if (slides.value.length == 1) return;
   if (!dragging.value) return;
   dragging.value = false;
 
