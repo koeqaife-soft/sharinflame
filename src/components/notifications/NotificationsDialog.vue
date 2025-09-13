@@ -26,6 +26,7 @@
             </span>
             <q-space />
             <my-button
+              icon="mark_chat_read"
               :label="$t('read_all')"
               type="outlined"
               @click="() => void readAllNotifications()"
