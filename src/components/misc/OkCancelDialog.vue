@@ -41,6 +41,7 @@ withDefaults(
     cancelKey: "cancel",
     okKey: "ok",
     okType: "primary",
+    okIcon: "check",
     showCancel: true,
     showOk: true,
     persistent: false
