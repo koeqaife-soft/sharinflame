@@ -1,12 +1,13 @@
 <template>
-  <div class="post card" :key="postRef.post_id">
+  <div class="post card" :class="{ 'is-system': postRef.is_system }" :key="postRef.post_id">
     <div class="content-section card-section">
       <div class="avatar-container" v-if="!postRef.is_system">
         <open-user-dialog :user="postRef.user" />
       </div>
+      <my-icon icon="chat_info" v-if="postRef.is_system" />
       <div class="text-container">
-        <div class="username">
-          {{ postRef.is_system ? $t("system") : postRef.user.display_name || postRef.user.username }}
+        <div class="username" v-if="!postRef.is_system">
+          {{ postRef.user.username }}
         </div>
         <text-parts class="content wrap-text" :text="formatStringForHtml(postRef.content)" :html="true" />
       </div>
@@ -94,6 +95,7 @@ import TextParts from "../misc/TextParts.vue";
 import MyChip from "../my/MyChip.vue";
 import MyButton from "../my/MyButton.vue";
 import ReactionButtons from "./ReactionButtons.vue";
+import MyIcon from "../my/MyIcon.vue";
 import { useMainStore } from "src/stores/main-store";
 
 const MyImage = defineAsyncComponent(() => import("../my/MyImage.vue"));

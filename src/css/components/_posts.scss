@@ -123,6 +123,29 @@
     width: 100%;
     height: 400px;
   }
+  &.is-system {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding-top: 12px;
+    padding-bottom: 12px;
+
+    .content-section {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .card-section {
+      margin: 0 !important;
+    }
+    .actions {
+      align-items: center;
+    }
+    .my-icon {
+      @include iconSize(24);
+      align-self: center;
+      margin-right: 4px;
+    }
+  }
 }
 
 // More menu for posts and comments
