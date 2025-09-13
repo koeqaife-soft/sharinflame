@@ -19,7 +19,10 @@ const connectionInterceptor = () => {
     if (e.code === "ERR_CANCELED") {
       return false;
     }
-    return !e.response || e.code === "ECONNABORTED";
+    if (!e.response || e.code === "ECONNABORTED") {
+      return true;
+    }
+    return e.response.status === 502;
   };
 
   api.interceptors.response.use(
