@@ -122,6 +122,12 @@ defineOptions({
   name: "App"
 });
 
+function decodeHTMLEntities(input: string): string {
+  const textarea = document.createElement("textarea");
+  textarea.innerHTML = input;
+  return textarea.value;
+}
+
 function newNotification(notification: ApiNotification) {
   if (mainStore.unreadCount != -1) mainStore.unreadCount++;
   mainStore.addNotification(notification);
@@ -134,14 +140,14 @@ function newNotification(notification: ApiNotification) {
     timeout: 2000
   });
 
-  if (Notification.permission == "granted") {
+  if (Notification.permission == "granted" && !document.hasFocus()) {
     const key = `${notification.from_id}`;
     if (lastNotifications[key]) lastNotifications[key].close();
 
     const newNotification = new Notification(
       t(`notifications.${notification.type}`, { username: notification.loaded?.user?.username }),
       {
-        body: notification.message ?? notification.loaded?.content ?? ""
+        body: decodeHTMLEntities(notification.message ?? notification.loaded?.content ?? "")
       }
     );
     lastNotifications[key] = newNotification;
