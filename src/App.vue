@@ -39,7 +39,7 @@ const mainStore = useMainStore();
 const offlineDialog = ref(false);
 let pingIntervalWorking = false;
 
-const lastNotifications: Record<string, Notification> = {};
+const lastNotifications: Record<string, { desktopNotification: Notification; data: ApiNotification }> = {};
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -142,7 +142,7 @@ function newNotification(notification: ApiNotification) {
 
   if (Notification.permission == "granted" && !document.hasFocus()) {
     const key = `${notification.from_id}`;
-    if (lastNotifications[key]) lastNotifications[key].close();
+    if (lastNotifications[key]) lastNotifications[key].desktopNotification.close();
 
     const newNotification = new Notification(
       t(`notifications.${notification.type}`, { username: notification.loaded?.user?.username }),
@@ -150,9 +150,12 @@ function newNotification(notification: ApiNotification) {
         body: decodeHTMLEntities(notification.message ?? notification.loaded?.content ?? "")
       }
     );
-    lastNotifications[key] = newNotification;
+    lastNotifications[key] = {
+      desktopNotification: newNotification,
+      data: notification
+    };
     newNotification.onclose = () => {
-      if (lastNotifications[key] == newNotification) delete lastNotifications[key];
+      if (lastNotifications[key]?.desktopNotification == newNotification) delete lastNotifications[key];
     };
   }
 }
@@ -161,13 +164,17 @@ function onNotificationRead(data: { id: string; unread: number } | object) {
   if ("unread" in data) mainStore.unreadCount = data.unread;
   else mainStore.unreadCount = 0;
 
-  const lastNotifications = mainStore.lastNotifications;
+  const _lastNotifications = mainStore.lastNotifications;
   if ("id" in data) {
     const id = data.id;
-    const notif = lastNotifications.find((v) => v.id == id);
+    const notif = _lastNotifications.find((v) => v.id == id);
     if (notif && notif.unread) notif.unread = false;
+
+    Object.values(lastNotifications).forEach((value) => {
+      if (value.data.id == data.id) value.desktopNotification.close();
+    });
   } else {
-    for (const notif of lastNotifications) {
+    for (const notif of _lastNotifications) {
       notif.unread = false;
     }
   }
