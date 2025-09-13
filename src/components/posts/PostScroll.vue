@@ -50,6 +50,8 @@ const notLoaded: string[] = [];
 const loaded: Post[] = [];
 
 const virtualScroll = ref<DefineComponent | null>(null);
+const withCursor: KeyOfGetPostsTypes[] = ["new", "following", "popular"];
+let cursor: string | undefined = undefined;
 
 const { t } = useI18n();
 
@@ -62,6 +64,7 @@ function reset() {
   toView.length = 0;
   notLoaded.length = 0;
   loaded.length = 0;
+  cursor = undefined;
 }
 
 async function viewInChunks(posts: string[], chunkSize: number = 50) {
@@ -82,8 +85,13 @@ function reloadPosts() {
 }
 
 async function getPostsIds(type: KeyOfGetPostsTypes) {
-  const r = await getPosts(type, undefined, undefined, { signal: controller.signal });
+  const addCursor = withCursor.some((v) => v == type);
+  if (!addCursor && toView.length > 0) {
+    await viewInChunks(toView);
+  }
+  const r = await getPosts(type, addCursor ? cursor : undefined, !addCursor, { signal: controller.signal });
   if (r.data.success) {
+    cursor = r.data.data.next_cursor;
     notLoaded.push(...r.data.data.posts);
   }
   return r.data;
@@ -139,9 +147,6 @@ async function onLoad(index: number, done: (stop?: boolean) => void) {
   const toLoad = items.value.length == 0 ? Math.min(window.innerHeight / 125 + 1, 15) : 5;
   try {
     if (loaded.length == 0 && notLoaded.length == 0) {
-      if (toView.length > 0) {
-        await viewInChunks(toView);
-      }
       const r = await getPostsIds(props.type);
       if (!r.success) return;
     }
