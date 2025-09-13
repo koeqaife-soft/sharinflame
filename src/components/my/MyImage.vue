@@ -15,7 +15,7 @@ const MySpinner = defineAsyncComponent(() => import("../my/MySpinner.vue"));
 defineProps<{ src: string }>();
 
 const imgRef = ref<HTMLImageElement | null>(null);
-const loading = ref(false);
+const loading = ref<boolean | null>(null);
 let observer: IntersectionObserver | null = null;
 
 function onLoad() {
@@ -40,7 +40,7 @@ onMounted(() => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting && imgRef.value) {
-            loading.value = true;
+            if (loading.value == null) loading.value = true;
             observer?.disconnect();
           }
         });
