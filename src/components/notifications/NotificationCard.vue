@@ -18,7 +18,7 @@
     </div>
     <div class="text-container" @click="onClicked">
       <div class="title">{{ $t(`notifications.${actualType}`, { username: linkedContent.username }) }}</div>
-      <div class="message">{{ linkedContent.message }}</div>
+      <div class="message" v-if="linkedContent.message" v-html="formatStringForHtml(linkedContent.message)" />
     </div>
   </my-button>
 </template>
@@ -32,6 +32,7 @@ import MyIcon from "src/components/my/MyIcon.vue";
 import MyButton from "src/components/my/MyButton.vue";
 import { readNotification } from "src/api/users";
 import { useMainStore } from "src/stores/main-store";
+import { formatStringForHtml } from "src/utils/format";
 
 const { t } = useI18n();
 const quasar = useQuasar();
