@@ -154,6 +154,13 @@ export default {
     failed: "Failed to create report"
   },
 
+  notification_permission: {
+    title: "Notifications",
+    message: "Do you want to receive notifications?"
+  },
+  yes: "Yes",
+  no: "No",
+
   ctag: "Tag",
   tag_name: "Tag Name",
   posts_count: "Posts Count",
@@ -214,6 +221,7 @@ export default {
   remove_avatar: "Remove Avatar",
   remove_banner: "Remove Banner",
   cancel: "Cancel",
+  ok: "Ok",
   profile_updated: {
     msg: "Profile updated",
     caption: "Your profile has been updated.",

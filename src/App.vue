@@ -39,6 +39,8 @@ const mainStore = useMainStore();
 const offlineDialog = ref(false);
 let pingIntervalWorking = false;
 
+const lastNotifications: Record<string, Notification> = {};
+
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function ping() {
@@ -131,6 +133,22 @@ function newNotification(notification: ApiNotification) {
     type: "default-notification",
     timeout: 2000
   });
+
+  if (Notification.permission == "granted") {
+    const key = `${notification.from_id}`;
+    if (lastNotifications[key]) lastNotifications[key].close();
+
+    const newNotification = new Notification(
+      t(`notifications.${notification.type}`, { username: notification.loaded?.user?.username }),
+      {
+        body: notification.message ?? notification.loaded?.content ?? ""
+      }
+    );
+    lastNotifications[key] = newNotification;
+    newNotification.onclose = () => {
+      if (lastNotifications[key] == newNotification) delete lastNotifications[key];
+    };
+  }
 }
 
 function onNotificationRead(data: { id: string; unread: number } | object) {

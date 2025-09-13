@@ -171,9 +171,27 @@ watch(currentType, (v) => {
   localStorage.setItem("lastSelectedType", v);
 });
 
+async function getNotificationPermission() {
+  await Notification.requestPermission();
+  mainStore.openedDialogs.get("okCancel")?.hide();
+}
+
 onMounted(() => {
   updateScreenSize();
   window.addEventListener("resize", updateScreenSize, { passive: true });
+
+  if (Notification.permission == "default") {
+    mainStore.openDialog(
+      "okCancel",
+      "",
+      {
+        localeKey: "notification_permission",
+        okKey: "yes",
+        cancelKey: "no"
+      },
+      () => void getNotificationPermission()
+    );
+  }
 });
 
 onBeforeUnmount(() => {
