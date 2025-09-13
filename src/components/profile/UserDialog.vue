@@ -10,7 +10,12 @@
     <closeable-content v-on:hide="dialogRef!.hide()" :class="{ expand: expand }">
       <template v-if="loaded">
         <div class="profile-info">
-          <q-img :src="userRef.banner_url" class="card banner" />
+          <template v-if="userRef.banner_url">
+            <my-image :src="userRef.banner_url" class="card banner" />
+          </template>
+          <template v-else>
+            <div class="card banner" />
+          </template>
           <my-button class="close" icon="close" @click="dialogRef?.hide" />
           <div class="profile-inner">
             <user-avatar :user="userRef" />
@@ -82,6 +87,7 @@ import CloseableContent from "../misc/CloseableContent.vue";
 import CategoryButtons from "src/components/misc/CategoryButtons.vue";
 import MyButton from "../my/MyButton.vue";
 import RectSkeleton from "../skeletons/RectSkeleton.vue";
+import MyImage from "../my/MyImage.vue";
 import { onMounted, ref, computed, defineAsyncComponent } from "vue";
 import type { ButtonProps } from "src/components/misc/CategoryButtons.vue";
 import { useI18n } from "vue-i18n";
