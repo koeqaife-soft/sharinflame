@@ -129,7 +129,6 @@
           </div>
 
           <q-separator class="separator" />
-          <toggle-card label-key="tag.nsfw" icon="explicit" v-model="is_nsfw" />
           <toggle-card label-key="tag.ai" icon="robot_2" v-model="ai_generated" />
         </q-scroll-area>
         <q-separator class="separator q-my-sm" />
@@ -178,7 +177,6 @@ const { t } = useI18n();
 const text = ref<string>("");
 const addTagValue = ref<string>("");
 
-const is_nsfw = ref(false);
 const ai_generated = ref(false);
 
 const ctags = ref<string[]>(props.withCtags ?? []);
@@ -264,7 +262,6 @@ function handleDrop(event: DragEvent) {
 
 function generateTags() {
   const generatedTags = [...tags.value];
-  if (is_nsfw.value && !generatedTags.includes("is-nsfw")) generatedTags.push("is-nsfw");
   if (ai_generated.value && !generatedTags.includes("ai-generated")) generatedTags.push("ai-generated");
   return generatedTags.length > 0 ? generatedTags : undefined;
 }
@@ -428,7 +425,6 @@ onMounted(() => {
       }
     };
 
-    checkAndRemoveTag("is-nsfw", is_nsfw);
     checkAndRemoveTag("ai-generated", ai_generated);
 
     text.value = props.originalPost.content;
