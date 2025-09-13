@@ -36,7 +36,7 @@
       </div>
     </div>
 
-    <div class="controls" v-show="!controlsHidden" :class="{ hide: !showControls }">
+    <div class="controls" v-show="!controlsHidden" :class="{ hide: !showControls || !playedOnce }">
       <div class="top-row">
         <div class="title">{{ title }}</div>
       </div>
@@ -109,8 +109,13 @@ const pipSupported = ref(false);
 const hideControlsTimeout = ref<number | null>(null);
 const showControls = ref(true);
 const isBuffering = ref(true);
+const playedOnce = ref(false);
 
 const isFullscreen = ref(false);
+
+watch(isPlaying, (v) => {
+  if (v) playedOnce.value = true;
+});
 
 const volumeIcon = computed(() => {
   if (isMuted.value || volume.value == 0) return "volume_off";
@@ -276,7 +281,7 @@ onMounted(() => {
     v.volume = volume.value;
   }
 
-  // hide controls after delay
+  showControls.value = false;
   scheduleHideControls();
 
   // keyboard focus
