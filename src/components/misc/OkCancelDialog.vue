@@ -12,7 +12,7 @@
       <div class="title">{{ $t(`${localeKey}.title`) }}</div>
       <div class="message">{{ $t(`${localeKey}.message`) }}</div>
       <div class="buttons horizontal-container">
-        <my-button v-if="showCancel" :label="$t(cancelKey!)" type="flat" icon="close" @click="dialogRef!.hide()" />
+        <my-button v-if="showCancel" :label="$t(cancelKey!)" type="flat" icon="close" @click="onCancel" />
         <my-button v-if="showOk" :label="$t(okKey!)" :type="okType!" :icon="okIcon" @click="$emit('ok')" />
       </div>
     </div>
@@ -22,8 +22,13 @@
 import { useDialogPluginComponent } from "quasar";
 import MyButton from "../my/MyButton.vue";
 
-defineEmits([...useDialogPluginComponent.emits]);
+const emit = defineEmits([...useDialogPluginComponent.emits]);
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
+
+function onCancel() {
+  dialogRef.value?.hide();
+  emit("hide");
+}
 
 withDefaults(
   defineProps<{

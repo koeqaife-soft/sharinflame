@@ -10,7 +10,8 @@ const defaultSettings = {
   themeHue: 8,
   darkMode: "auto" as boolean | "auto",
   currentTheme: "default" as "default" | "monochrome" | "contrast",
-  starBackground: false
+  starBackground: false,
+  getNotifications: undefined as undefined | boolean
 };
 
 type KeyOfSettings = keyof typeof defaultSettings;
@@ -139,7 +140,13 @@ export const useMainStore = defineStore("main", {
       }
       return this.unreadCount;
     },
-    openDialog(name: keyof typeof dialogs, key: string, props: Record<string, unknown>, onOk?: () => void) {
+    openDialog(
+      name: keyof typeof dialogs,
+      key: string,
+      props: Record<string, unknown>,
+      onOk?: () => void,
+      onCancel?: () => void
+    ) {
       const uniqueKey = stackDialogs.includes(name) ? name + key : name;
       const component = dialogs[name];
       const time = Date.now();
@@ -151,6 +158,13 @@ export const useMainStore = defineStore("main", {
       if (onOk) {
         dialog.onOk(() => {
           onOk();
+          const existingDialog = this.openedDialogs.get(uniqueKey);
+          existingDialog?.hide();
+        });
+      }
+      if (onCancel) {
+        dialog.onCancel(() => {
+          onCancel();
           const existingDialog = this.openedDialogs.get(uniqueKey);
           existingDialog?.hide();
         });

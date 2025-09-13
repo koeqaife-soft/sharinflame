@@ -192,7 +192,7 @@ onMounted(() => {
   updateScreenSize();
   window.addEventListener("resize", updateScreenSize, { passive: true });
 
-  if (Notification.permission == "default") {
+  if (Notification.permission == "default" && mainStore.getSetting("getNotifications") === undefined) {
     mainStore.openDialog(
       "okCancel",
       "",
@@ -201,7 +201,8 @@ onMounted(() => {
         okKey: "yes",
         cancelKey: "no"
       },
-      () => void getNotificationPermission()
+      () => void getNotificationPermission(),
+      () => mainStore.setSettings("getNotifications", false)
     );
   }
 });

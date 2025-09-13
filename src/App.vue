@@ -140,7 +140,7 @@ function newNotification(notification: ApiNotification) {
     timeout: 2000
   });
 
-  if (Notification.permission == "granted" && !document.hasFocus()) {
+  if (Notification.permission == "granted" && !document.hasFocus() && mainStore.getSetting("getNotifications")) {
     const key = `${notification.from_id}`;
     if (lastNotifications[key]) lastNotifications[key].desktopNotification.close();
 
