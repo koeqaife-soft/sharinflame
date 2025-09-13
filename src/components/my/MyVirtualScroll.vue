@@ -1,7 +1,7 @@
 <template>
   <div class="virtual-scroll" ref="scrollContainer">
     <q-scroll-observer @scroll="onScroll" :debounce="debounce" />
-    <div class="no-items-label" v-if="noItemsLabel && !isLoading && items.length == 0">
+    <div class="no-items-label" v-if="noItemsLabel && !isLoading && items.length == 0 && infiniteLoadType !== 'none'">
       {{ $t(noItemsKey ?? "no_items") }}
     </div>
     <div class="virtual-scroll-content" ref="scrollContent">

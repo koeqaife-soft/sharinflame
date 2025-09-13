@@ -61,6 +61,7 @@
             class="posts-infinite-scroll"
             ref="virtualScroll"
             :skeleton-height="126"
+            no-items-key="no_replies"
           >
             <template v-slot:default="{ item, index }">
               <comment-component
