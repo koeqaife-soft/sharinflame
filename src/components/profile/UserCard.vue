@@ -9,8 +9,6 @@
     </div>
     <my-button
       :label="userRef.followed ? $t('unfollow') : $t('follow')"
-      no-caps
-      unelevated
       icon="add"
       class="follow-button"
       :type="userRef.followed ? 'outlined' : 'primary'"
