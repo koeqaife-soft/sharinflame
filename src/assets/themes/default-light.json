@@ -56,8 +56,8 @@
   },
   "card-secondary": {
     "s": ["=", "60"],
-    "l": ["=", "87"],
-    "luminance": "87"
+    "l": ["=", "84"],
+    "luminance": "84"
   },
   "on-card-secondary": {
     "s": ["=", "20"],
