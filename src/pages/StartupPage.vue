@@ -45,6 +45,10 @@ onMounted(async () => {
   timeout = setTimeout(() => {
     show.value = true;
   }, 250);
+  if (!localStorage.getItem("build_num") && localStorage.getItem("first_start")) {
+    localStorage.clear();
+  }
+  localStorage.setItem("build_num", "1");
   if (!localStorage.getItem("first_start")) toInfo();
   else if (refreshToken()) {
     try {

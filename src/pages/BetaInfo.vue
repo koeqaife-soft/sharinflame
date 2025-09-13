@@ -5,14 +5,19 @@
       <q-separator class="separator" />
       <div class="content">
         Hello user! <br /><br />
-        Welcome to the first public beta test of SharinFlame! Don't judge all the features just yet — things are still
-        in progress. <br />
-        <b>Notifications aren't ready yet</b>, so you might not immediately see when someone comments on your post.
+        Welcome to the second public beta test of SharinFlame! Don't judge all the features just yet — things are still
+        in progress.
         <br /><br />
-        Go ahead — <b>create posts, leave comments, and explore!</b> You don't need to use your real email or password
-        to register, since <b>all accounts will be wiped before release.</b> <br /><br />
-        <b>Found a bug?</b> DM me on Discord (<b>@faxmak</b>).<br />
-        Server will be live until <b>March 22</b>, so enjoy testing while you can! <br /><br />
+        Go ahead — <b>create posts, leave comments, and explore!</b> <br /><br />
+        <b>Found a bug?</b> DM me on Discord (<b>@koeqaife</b>) <br /><br />
+        Unlike the first beta test, this one will not be shut down, accounts won't be wiped and even will receive
+        updates!
+        <br /><br />
+        You can come back next Saturday and see what I've added!!
+        <br /><br />
+        My plans include: “Forgot Password?”, account settings (username, email, password, etc.), reputation, DMs, and
+        more.
+        <br /><br />
         <b>Have fun!</b> ♥
       </div>
       <div class="action-container">
