@@ -65,6 +65,8 @@ export default {
   connecting: "Connecting",
 
   no_items: "No Items",
+  no_posts: "No Posts",
+  no_following: "No Following",
 
   no_comments: "No Comments",
   comments: "Comments",
