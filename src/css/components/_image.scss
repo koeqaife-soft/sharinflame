@@ -5,6 +5,7 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  position: relative;
 
   img {
     width: 100%;
@@ -12,5 +13,23 @@
     object-fit: contain;
     object-position: center;
     display: block;
+  }
+
+  .loading {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+
+    svg {
+      color: var(--primary);
+      background-color: var(--background);
+      padding: 8px;
+      border-radius: 50%;
+      height: 60px;
+      width: 60px;
+    }
   }
 }
