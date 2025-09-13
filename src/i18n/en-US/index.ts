@@ -161,6 +161,12 @@ export default {
   yes: "Yes",
   no: "No",
 
+  logout: "Logout",
+  logout_dialog: {
+    title: "Logout",
+    message: "Are you sure you want to logout from your account?"
+  },
+
   ctag: "Tag",
   tag_name: "Tag Name",
   posts_count: "Posts Count",

@@ -33,6 +33,8 @@
                 @click="setSelected(item.key)"
               />
             </template>
+            <q-separator />
+            <my-button :label="$t('logout')" icon="logout" type="flat" @click="onLogout" />
           </div>
         </transition>
         <transition name="scale" :css="isSmallScreen">
@@ -60,6 +62,8 @@ import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from 
 import MyButton from "src/components/my/MyButton.vue";
 import MyIcon from "src/components/my/MyIcon.vue";
 import CloseableContent from "../misc/CloseableContent.vue";
+import { clientLogout, logout } from "src/api/auth";
+import { useMainStore } from "src/stores/main-store";
 
 const props = defineProps<{
   open?: views[number];
@@ -72,6 +76,7 @@ const AccountView = defineAsyncComponent(() => import("./AccountView.vue"));
 const AppearanceView = defineAsyncComponent(() => import("./AppearanceView.vue"));
 type views = ["my_account", "appearance"];
 
+const mainStore = useMainStore();
 const screenSize = ref(window.innerWidth);
 const isSmallScreen = computed(() => screenSize.value < 750);
 const current = ref(props.open ? 1 : 0);
@@ -101,6 +106,30 @@ const getItemByKey = (key: ItemKey) => items.find((item) => item.key === key)!;
 function setSelected(value: views[number]) {
   selected.value = value;
   current.value = 1;
+}
+
+async function onLogoutOk() {
+  try {
+    await logout();
+  } catch {
+    // noop
+  }
+  clientLogout();
+}
+
+function onLogout() {
+  mainStore.openDialog(
+    "okCancel",
+    "",
+    {
+      localeKey: "logout_dialog",
+      okKey: "yes",
+      cancelKey: "no",
+      okType: "attention",
+      persistent: true
+    },
+    () => void onLogoutOk()
+  );
 }
 
 onMounted(() => {
