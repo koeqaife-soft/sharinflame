@@ -1,6 +1,7 @@
 <template>
   <button
     class="my-button"
+    :title="title"
     :type="btnType ?? 'button'"
     :class="[
       { disabled: disable, loading, 'is-category': isCategory, 'is-icon': !label && (icon || iconRight) },
@@ -35,6 +36,7 @@ withDefaults(
     type?: "primary" | "secondary" | "outlined" | "card" | "none" | "attention" | "flat";
     isCategory?: boolean;
     btnType?: "button" | "submit" | "reset";
+    title?: string;
   }>(),
   {
     type: "none",

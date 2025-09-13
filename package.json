@@ -17,12 +17,10 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.17.0",
-    "@videojs-player/vue": "^1.0.0",
     "axios": "^1.12.1",
     "dompurify": "^3.2.6",
     "pinia": "^2.3.1",
     "quasar": "^2.18.2",
-    "video.js": "^7.21.7",
     "vue": "^3.5.21",
     "vue-advanced-cropper": "^2.8.9",
     "vue-i18n": "^11.1.12",
@@ -45,7 +43,7 @@
     "eslint-plugin-vue": "^9.33.0",
     "globals": "^15.15.0",
     "prettier": "^3.6.2",
-    "typescript": "~5.5.4",
+    "typescript": "^5.9.2",
     "vite-plugin-checker": "^0.8.0",
     "vue-tsc": "^2.1.10"
   },

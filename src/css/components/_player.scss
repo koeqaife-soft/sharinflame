@@ -1,169 +1,176 @@
-@import "video.js/dist/video-js.min.css";
-
 .my-video-player {
-  border-radius: 8px;
+  background: var(--background);
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  outline: none;
+  user-select: none;
+  pointer-events: auto;
+  width: 100%;
+  height: 100%;
+
+  .video-stage {
+    position: relative;
+    background: #000;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   video {
-    border-radius: 8px;
-    outline: none !important;
-  }
-  .vjs-control-bar {
-    background-color: var(--card-high);
-    border-radius: 4px;
-  }
-  .vjs-icon-placeholder,
-  .vjs-icon-placeholder::before {
-    @include iconSize(20);
-    font-family: "Material Symbols Rounded" !important;
-    color: var(--on-card);
-  }
-  .vjs-control {
-    text-shadow: none !important;
-  }
-  .vjs-slider:focus {
-    text-shadow: none !important;
-    box-shadow: none !important;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    background: #000;
   }
 
-  // Play-pause
-  .vjs-play-control {
-    &.vjs-paused .vjs-icon-placeholder::before {
-      content: "play_arrow";
-    }
-    &.vjs-playing .vjs-icon-placeholder::before {
-      content: "pause";
+  .center-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .big-play {
+    z-index: 3;
+    pointer-events: auto;
+    height: 60px;
+    .my-icon {
+      @include iconSize(30);
     }
   }
 
-  // Volume button
-  .vjs-mute-control {
-    &.vjs-vol-0 .vjs-icon-placeholder::before {
-      content: "volume_off";
-    }
-    &.vjs-vol-1 .vjs-icon-placeholder::before {
-      content: "volume_mute";
-    }
-    &.vjs-vol-2 .vjs-icon-placeholder::before {
-      content: "volume_down";
-    }
-    &.vjs-vol-3 .vjs-icon-placeholder::before {
-      content: "volume_up";
+  .loader {
+    justify-self: center;
+    align-self: center;
+    svg {
+      color: var(--primary);
+      background-color: var(--background);
+      padding: 8px;
+      border-radius: 50%;
+      height: 60px;
+      width: 60px;
     }
   }
 
-  // Picture-in-picture
-  .vjs-picture-in-picture-control {
-    .vjs-icon-placeholder::before {
-      content: "picture_in_picture";
-    }
-  }
+  .controls {
+    padding: 4px 12px;
+    background: var(--background);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    transition: opacity 0.18s ease;
 
-  &.vjs-picture-in-picture {
-    .vjs-picture-in-picture-control {
-      .vjs-icon-placeholder::before {
-        content: "picture_in_picture_off";
-      }
-    }
-  }
-
-  // Fullscreen button
-  .vjs-fullscreen-control {
-    .vjs-icon-placeholder::before {
-      content: "fullscreen";
-    }
-  }
-  &.vjs-fullscreen {
-    .vjs-fullscreen-control {
-      .vjs-icon-placeholder::before {
-        content: "fullscreen_exit";
-      }
-    }
-  }
-
-  // Big play button
-  .vjs-big-play-button {
-    @include elevation(1);
-    border-radius: 8px;
-    background-color: var(--primary) !important;
-    color: var(--on-primary);
-    justify-content: start;
-    height: 65px;
-    width: 65px;
-    border: none !important;
-    overflow: hidden;
-
-    &::after {
-      pointer-events: none;
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+    &.hide {
       opacity: 0;
-      transition:
-        background-color 0.2s ease-in,
-        opacity 0.2s ease-in;
-    }
-
-    @media (hover: hover) {
-      &:hover {
-        &::after {
-          opacity: 0.1;
-          background-color: var(--background);
-        }
-      }
-    }
-
-    &:active,
-    &:focus-visible {
-      &::after {
-        opacity: 0.2;
-        background-color: var(--background);
-      }
-    }
-
-    .vjs-icon-placeholder::before {
-      @include iconSize(40);
-      content: "play_arrow";
-      align-content: center;
-      color: var(--on-primary);
+      pointer-events: none;
     }
   }
 
-  // Some labels
-  .vjs-remaining-time {
-    color: var(--on-card);
+  .progress-row {
+    margin: 8px 0;
+    cursor: pointer;
+    display: flex;
+    width: 100%;
   }
 
-  // Progress bar
-  .vjs-slider {
-    background-color: var(--background-variant);
-    border-radius: 8px;
-  }
-  .vjs-load-progress div,
-  .vjs-load-progress {
-    border-radius: 8px;
-    background: none;
-    background-color: color-mix(in srgb, var(--on-background-variant) 25%, var(--background-variant));
-  }
-  .vjs-play-progress {
-    border-radius: 8px;
-    background-color: var(--primary);
-    color: var(--primary);
+  .progress-bar-bg {
+    width: 100%;
+    height: 6px;
+    outline: 1px solid var(--contrast-outline);
+
+    background: var(--background-variant);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
   }
 
-  // Volume slider
-  .vjs-volume-bar {
-    background-color: var(--background-variant);
-    border-radius: 8px;
-    border: none;
+  .progress-played {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--primary);
+    width: 0%;
+    transition: width 0.12s linear;
+  }
+
+  .bottom-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .time {
+    min-width: 30%;
+    font-feature-settings: "tnum";
+    white-space: nowrap;
+    height: 100%;
+    align-self: center;
+    align-content: center;
+  }
+
+  .title {
+    font-size: 13px;
+    opacity: 0.9;
+    padding-bottom: 6px;
+  }
+
+  .volume {
+    width: 20%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(to right, var(--primary) var(--val, 0%), var(--background-variant) var(--val, 0%));
     outline: none;
-  }
-  .vjs-volume-level {
-    background-color: var(--primary);
-    border-radius: 8px;
-  }
-  .vjs-volume-level::before {
-    color: var(--primary);
+    cursor: pointer;
+
+    &::-moz-range-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s;
+      &:hover {
+        background: var(--on-card);
+      }
+    }
+
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s;
+      &:hover {
+        background: var(--on-card);
+      }
+    }
   }
 }
