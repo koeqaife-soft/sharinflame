@@ -7,7 +7,7 @@
       <my-icon icon="chat_info" v-if="postRef.is_system" />
       <div class="text-container">
         <div class="username" v-if="!postRef.is_system">
-          {{ postRef.user.username }}
+          {{ postRef.user.display_name || postRef.user.username }}
         </div>
         <text-parts class="content wrap-text" :text="formatStringForHtml(postRef.content)" :html="true" />
       </div>
