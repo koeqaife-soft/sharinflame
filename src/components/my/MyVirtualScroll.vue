@@ -6,7 +6,6 @@
       v-if="noItemsLabel && !isLoading && items.length == 0 && infiniteLoadType !== 'none'"
     >
       <div class="horizontal-container card">
-        <my-icon icon="error" />
         <div class="no-items-label">
           {{ $t(noItemsKey ?? "no_items") }}
         </div>
@@ -54,7 +53,6 @@
 </template>
 
 <script setup lang="ts" generic="T">
-import MyIcon from "./MyIcon.vue";
 import {
   computed,
   onBeforeUnmount,
