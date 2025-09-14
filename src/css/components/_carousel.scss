@@ -23,14 +23,19 @@
     }
   }
 
+  &.is-fullscreen {
+    .slides-container,
+    .slide-element {
+      height: 100%;
+    }
+  }
+
   .prev-btn,
-  .next-btn {
+  .next-btn,
+  .fullscreen-btn {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+
     z-index: 10;
-    opacity: 0.9;
-    transition: opacity 0.25s ease-in-out 0.33s;
 
     @media (hover: hover) {
       &:hover {
@@ -43,10 +48,18 @@
   }
 
   .prev-btn {
+    top: 50%;
+    transform: translateY(-50%);
     left: 10px;
   }
   .next-btn {
+    top: 50%;
+    transform: translateY(-50%);
     right: 10px;
+  }
+  .fullscreen-btn {
+    right: 10px;
+    top: 10px;
   }
 
   .pagination {
@@ -77,5 +90,13 @@
 
   .dot.active {
     background: var(--primary);
+  }
+
+  .control-element {
+    opacity: 1;
+    transition: opacity 0.18s ease;
+    &.hide {
+      opacity: 0;
+    }
   }
 }

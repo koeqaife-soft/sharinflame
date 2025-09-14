@@ -3,36 +3,40 @@
     class="my-carousel"
     data-is-carousel="1"
     ref="carouselRef"
+    :class="{ 'is-fullscreen': isFullscreen }"
+    @mousemove.passive="showControlsTemporarily"
     @touchstart="onTouchStart"
     @touchmove="onTouchMove"
     @touchend="onTouchEnd"
     @touchcancel="onTouchEnd"
   >
     <my-button
-      class="prev-btn"
+      class="prev-btn control-element"
       type="flat"
       icon="chevron_left"
       @click="prevSlide"
       v-show="slides[currentIndex - 1] !== undefined"
+      :class="{ hide: !showControls }"
     />
 
     <div class="slides-container" :style="containerStyle">
       <template v-for="slide in slides" :key="slide.index">
-        <div class="slide-element">
+        <div class="slide-element" @click="onClick">
           <slot :data="slide.data" v-if="loadedSlides.includes(slide.index)" />
         </div>
       </template>
     </div>
 
     <my-button
-      class="next-btn"
+      class="next-btn control-element"
       type="flat"
       icon="chevron_right"
       @click="nextSlide"
       v-show="slides[currentIndex + 1] !== undefined"
+      :class="{ hide: !showControls }"
     />
 
-    <div class="pagination" v-if="slides.length > 1">
+    <div class="pagination control-element" v-if="slides.length > 1" :class="{ hide: !showControls }">
       <span
         v-for="(slide, index) in slides"
         :key="index"
@@ -40,6 +44,15 @@
         @click="goToSlide(index)"
       ></span>
     </div>
+
+    <my-button
+      class="fullscreen-btn control-element"
+      type="primary"
+      icon="close"
+      v-if="isFullscreen"
+      @click="toggleFullscreen"
+      :class="{ hide: !showControls }"
+    />
   </div>
 </template>
 
@@ -57,6 +70,8 @@ const props = defineProps<{ slides: T[] }>();
 const currentIndex = ref(0);
 const slides = computed<Slide[]>(() => props.slides.map((v, i) => ({ index: i, data: v })));
 const loadedSlides = ref<number[]>([0]);
+const showControls = ref<boolean>(true);
+const isFullscreen = ref<boolean>(false);
 
 const carouselRef = ref<HTMLElement | null>(null);
 const width = ref(0);
@@ -66,18 +81,29 @@ const dragging = ref(false);
 const startX = ref(0);
 const deltaX = ref(0);
 
+function onClick() {
+  if (!isFullscreen.value) {
+    toggleFullscreen();
+  } else {
+    showControlsTemporarily();
+  }
+}
+
 function updateWidth() {
   width.value = carouselRef.value ? carouselRef.value.clientWidth : window.innerWidth;
 }
 
-onMounted(() => {
-  updateWidth();
-  window.addEventListener("resize", updateWidth);
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener("resize", updateWidth);
-});
+function toggleFullscreen(): void {
+  const el = carouselRef.value;
+  if (!el) return;
+  const doc = document;
+  if (!doc.fullscreenElement) {
+    el.requestFullscreen?.().catch(() => {});
+  } else {
+    void doc.exitFullscreen?.();
+  }
+  showControlsTemporarily();
+}
 
 watch(currentIndex, () => {
   deltaX.value = 0;
@@ -100,6 +126,7 @@ const containerStyle = computed(() => {
 });
 
 function onTouchStart(e: TouchEvent) {
+  showControlsTemporarily();
   if (slides.value.length == 1) return;
   if (e.touches.length !== 1) return;
   dragging.value = true;
@@ -151,4 +178,38 @@ function goToSlide(index: number) {
   if (index < 0 || index >= slides.value.length) return;
   currentIndex.value = index;
 }
+
+let hideControlsTimeout: NodeJS.Timeout | null = null;
+
+function showControlsTemporarily(): void {
+  showControls.value = true;
+  if (isFullscreen.value) scheduleHideControls();
+}
+
+function scheduleHideControls(): void {
+  if (hideControlsTimeout) clearTimeout(hideControlsTimeout);
+  hideControlsTimeout = setTimeout(() => {
+    showControls.value = false;
+  }, 3500);
+}
+
+function fullscreenHandler() {
+  document.body.classList.add("no-animate");
+  isFullscreen.value = document.fullscreenElement == carouselRef.value;
+  updateWidth();
+  setTimeout(() => {
+    document.body.classList.remove("no-animate");
+  }, 1);
+}
+
+onMounted(() => {
+  updateWidth();
+  window.addEventListener("resize", updateWidth);
+  document.addEventListener("fullscreenchange", fullscreenHandler);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", updateWidth);
+  document.removeEventListener("fullscreenchange", fullscreenHandler);
+});
 </script>
