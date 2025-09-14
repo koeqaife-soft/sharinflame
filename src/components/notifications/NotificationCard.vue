@@ -99,7 +99,7 @@ const linkedContent = computed(() => {
     else message = props.notif.loaded.content;
 
     return {
-      username: props.notif.loaded.user.username,
+      username: props.notif.loaded.user.display_name || props.notif.loaded.user.username,
       message: message
     };
   }
