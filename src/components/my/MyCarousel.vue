@@ -3,7 +3,7 @@
     class="my-carousel"
     data-is-carousel="1"
     ref="carouselRef"
-    :class="{ 'is-fullscreen': isFullscreen }"
+    :class="{ 'is-fullscreen': isFullscreen, 'cursor-hidden': !showControls && isFullscreen }"
     @mousemove.passive="showControlsTemporarily"
     @touchstart="onTouchStart"
     @touchmove="onTouchMove"
@@ -102,7 +102,6 @@ function toggleFullscreen(): void {
   } else {
     void doc.exitFullscreen?.();
   }
-  showControlsTemporarily();
 }
 
 watch(currentIndex, () => {
@@ -200,6 +199,7 @@ function fullscreenHandler() {
   setTimeout(() => {
     document.body.classList.remove("no-animate");
   }, 1);
+  showControlsTemporarily();
 }
 
 onMounted(() => {

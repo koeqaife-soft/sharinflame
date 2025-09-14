@@ -8,6 +8,7 @@
     @keydown.m.prevent="toggleMute"
     tabindex="0"
     ref="containerRef"
+    :class="{ 'cursor-hidden': !showControls }"
   >
     <div class="video-stage" @click="onClick">
       <video
