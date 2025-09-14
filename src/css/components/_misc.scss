@@ -235,11 +235,22 @@
 
 // Virtual scroll "No Items" label
 .virtual-scroll {
-  .no-items-label {
-    width: 100%;
-    text-align: center;
-    font-size: 14px;
-    color: var(--on-background-variant);
+  .no-items-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    flex: 1;
+    min-height: 200px;
     animation: fadeInUp 0.2s forwards;
+    .no-items-label {
+      text-align: center;
+      font-size: 14px;
+      color: var(--on-background-variant);
+    }
+    .my-icon {
+      @include iconSize(22);
+      color: var(--on-background-variant);
+    }
   }
 }

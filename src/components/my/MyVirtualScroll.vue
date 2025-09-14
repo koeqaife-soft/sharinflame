@@ -1,8 +1,16 @@
 <template>
   <div class="virtual-scroll" ref="scrollContainer">
     <q-scroll-observer @scroll="onScroll" :debounce="debounce" />
-    <div class="no-items-label" v-if="noItemsLabel && !isLoading && items.length == 0 && infiniteLoadType !== 'none'">
-      {{ $t(noItemsKey ?? "no_items") }}
+    <div
+      class="no-items-container"
+      v-if="noItemsLabel && !isLoading && items.length == 0 && infiniteLoadType !== 'none'"
+    >
+      <div class="horizontal-container card">
+        <my-icon icon="error" />
+        <div class="no-items-label">
+          {{ $t(noItemsKey ?? "no_items") }}
+        </div>
+      </div>
     </div>
     <div class="virtual-scroll-content" ref="scrollContent">
       <div class="virtual-filler-top" :style="{ height: `${fillersHeight[0]}px` }" />
@@ -46,6 +54,7 @@
 </template>
 
 <script setup lang="ts" generic="T">
+import MyIcon from "./MyIcon.vue";
 import {
   computed,
   onBeforeUnmount,
