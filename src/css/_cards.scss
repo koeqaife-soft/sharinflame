@@ -182,7 +182,7 @@
 
   .dialog-header {
     @include elevation(1);
-    background-color: var(--card);
+    background-color: var(--card-high);
     color: var(--on-card);
     align-items: center;
     padding: 4px;

@@ -58,6 +58,7 @@
     }
   }
 
+  &.tap-active,
   &:active,
   &:focus-visible {
     &::after {

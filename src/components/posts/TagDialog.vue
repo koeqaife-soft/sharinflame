@@ -12,7 +12,7 @@
       <div class="dialog-header" style="z-index: 2">
         <div class="horizontal-container label-container">
           <my-icon icon="tag" class="header-icon" />
-          <div>{{ $t("ctag") }}</div>
+          <div class="label">{{ $t("ctag") }}</div>
           <q-space />
           <my-button icon="close" @click="dialogRef!.hide()" />
         </div>

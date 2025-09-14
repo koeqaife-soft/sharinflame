@@ -4,11 +4,18 @@
     :title="title"
     :type="btnType ?? 'button'"
     :class="[
-      { disabled: disable, loading, 'is-category': isCategory, 'is-icon': !label && (icon || iconRight) },
+      {
+        disabled: disable,
+        loading,
+        'is-category': isCategory,
+        'is-icon': !label && (icon || iconRight),
+        'tap-active': tap
+      },
       `is-${type}`
     ]"
     @click.stop="(payload) => !disable && emit('click', payload)"
     :disable="disable ?? false"
+    @touchstart.passive="onTap"
   >
     <slot />
     <span v-if="icon || label || iconRight || $slots['append']">
@@ -25,6 +32,7 @@
 </template>
 <script setup lang="ts">
 import MyIcon from "src/components/my/MyIcon.vue";
+import { onBeforeUnmount, ref } from "vue";
 
 withDefaults(
   defineProps<{
@@ -50,4 +58,17 @@ withDefaults(
 const emit = defineEmits<{
   (e: "click", event: MouseEvent): void;
 }>();
+
+const tap = ref(false);
+let timeout: NodeJS.Timeout | null = null;
+
+function onTap() {
+  if (timeout) clearTimeout(timeout);
+  tap.value = true;
+  timeout = setTimeout(() => (tap.value = false), 250);
+}
+
+onBeforeUnmount(() => {
+  if (timeout) clearTimeout(timeout);
+});
 </script>

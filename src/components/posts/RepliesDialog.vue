@@ -12,7 +12,7 @@
       <div class="dialog-header" style="z-index: 2">
         <div class="horizontal-container label-container">
           <my-icon icon="chat_bubble" class="header-icon" />
-          <div>{{ $t("comment") }}</div>
+          <div class="label">{{ $t("comment") }}</div>
           <q-space />
           <my-button icon="close" @click="dialogRef!.hide()" />
         </div>
