@@ -250,10 +250,8 @@ function toggleFullscreen(): void {
   const doc = document;
   if (!doc.fullscreenElement) {
     el.requestFullscreen?.().catch(() => {});
-    isFullscreen.value = true;
   } else {
     void doc.exitFullscreen?.();
-    isFullscreen.value = false;
   }
 }
 
@@ -286,6 +284,7 @@ onMounted(() => {
 
   // keyboard focus
   containerRef.value?.addEventListener("focus", showControlsTemporarily);
+  document.addEventListener("fullscreenchange", fullscreenHandler);
 });
 
 onBeforeUnmount(() => {
@@ -302,5 +301,10 @@ onBeforeUnmount(() => {
   }
 
   containerRef.value?.removeEventListener("focus", showControlsTemporarily);
+  document.removeEventListener("fullscreenchange", fullscreenHandler);
 });
+
+function fullscreenHandler() {
+  isFullscreen.value = document.fullscreenElement == containerRef.value;
+}
 </script>
