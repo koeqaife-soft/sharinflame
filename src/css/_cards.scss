@@ -87,6 +87,7 @@
 .card-dialog {
   z-index: 1;
   .dialog-content {
+    position: relative;
     outline: 1px solid var(--contrast-outline);
     border: 1px solid color-mix(in srgb, var(--outline) 13%, transparent 87%);
     will-change: transform;
@@ -112,6 +113,7 @@
       padding: 8px;
     }
   }
+
   .dialog-content-inner {
     display: flex;
     flex-direction: column;
@@ -219,5 +221,33 @@
     .icon {
       @include iconSize(20);
     }
+  }
+}
+
+body.touch {
+  .dialog-header {
+    position: relative;
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 35px;
+      height: 4px;
+      margin: 8px 0;
+      border-radius: 2px;
+      background-color: var(--on-background-variant);
+      transition: opacity 0.25s ease;
+      opacity: 0.3;
+      z-index: 4;
+    }
+
+    &:active::after {
+      opacity: 1;
+    }
+  }
+  &:has(.dialog-content.swiping) .dialog-header::after {
+    opacity: 1;
   }
 }

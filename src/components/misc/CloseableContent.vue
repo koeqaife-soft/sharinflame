@@ -158,10 +158,12 @@ const onTouchMove = (event: TouchEvent) => {
     if (dialogContent.value) {
       dialogContent.value.style.transform = `translateY(${Math.max(swipeDelta, 0)}px)`;
     }
+    dialogContent.value?.classList.add("swiping");
   } else {
     if (dialogContent.value) {
       dialogContent.value.style.transform = "translateY(0)";
     }
+    dialogContent.value?.classList.remove("swiping");
   }
 };
 
@@ -174,5 +176,6 @@ const onTouchEnd = () => {
       dialogContent.value.style.transform = "translateY(0)";
     }
   }
+  dialogContent.value?.classList.remove("swiping");
 };
 </script>
