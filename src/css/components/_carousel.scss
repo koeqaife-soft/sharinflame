@@ -58,8 +58,15 @@
     right: 10px;
   }
   .fullscreen-btn {
-    right: 10px;
     top: 10px;
+    right: 10px;
+  }
+
+  @supports (top: env(safe-area-inset-top)) {
+    .fullscreen-btn {
+      top: calc(10px + env(safe-area-inset-top));
+      right: calc(10px + env(safe-area-inset-right));
+    }
   }
 
   .pagination {
