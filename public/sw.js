@@ -87,3 +87,24 @@ self.addEventListener("notificationclick", (event) => {
   const url = event.notification.data;
   event.waitUntil(self.clients.openWindow(url));
 });
+
+self.addEventListener("install", () => {
+  self.skipWaiting();
+});
+
+/**
+ * @param {NotificationEvent} event
+ */
+self.addEventListener("activate", (event) => {
+  event.waitUntil(self.clients.claim());
+});
+
+/**
+ * @param {NotificationEvent} event
+ */
+self.addEventListener("message", (event) => {
+  if (!event.data) return;
+  if (event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
