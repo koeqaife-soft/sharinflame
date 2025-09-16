@@ -52,6 +52,7 @@ self.addEventListener("push", (event) => {
 
   /** @type {WebPushNotification} */
   const data = event.data?.json() || {};
+  console.debug("Got new notification");
 
   const key = data.is_reply ? "new_reply" : data.type;
   const template = t[key] ?? t.new_notification;
@@ -63,19 +64,20 @@ self.addEventListener("push", (event) => {
     body: decodeHTMLEntities(data.message) ?? "",
     icon: data.avatar_url ?? "/icons/favicon-96x96.png",
     tag: `notif-${data.id}`,
-    silent: false,
-    vibrate: [100, 50, 100],
-    renotify: true
+    vibrate: [100, 50, 100]
   };
 
   event.waitUntil(
     (async () => {
+      console.debug("Checking for handleable clients");
       const hidePush = await askClientsIfAnyHandleable();
+      console.debug("Hide push: " + hidePush);
 
       if (hidePush) {
         return;
       }
 
+      console.debug("Showing notification");
       await self.registration.showNotification(title, options);
     })()
   );
@@ -85,28 +87,8 @@ self.addEventListener("push", (event) => {
  * @param {NotificationEvent} event
  */
 self.addEventListener("notificationclick", (event) => {
+  console.debug("Handling notification click");
   event.notification.close();
   const url = event.notification.data;
   event.waitUntil(self.clients.openWindow(url));
-});
-
-self.addEventListener("install", () => {
-  self.skipWaiting();
-});
-
-/**
- * @param {NotificationEvent} event
- */
-self.addEventListener("activate", (event) => {
-  event.waitUntil(self.clients.claim());
-});
-
-/**
- * @param {NotificationEvent} event
- */
-self.addEventListener("message", (event) => {
-  if (!event.data) return;
-  if (event.data.type === "SKIP_WAITING") {
-    self.skipWaiting();
-  }
 });

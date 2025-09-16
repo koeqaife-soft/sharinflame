@@ -152,7 +152,6 @@ function newNotification(notification: ApiNotification) {
         body: decodeHTMLEntities(notification.message ?? notification.loaded?.content ?? ""),
         icon: notification.loaded?.user.avatar_url ? notification.loaded?.user.avatar_url : "",
         tag: `notif-${notification.id}`,
-        silent: false,
         vibrate: [100, 50, 100]
       } as NotificationOptions
     );
