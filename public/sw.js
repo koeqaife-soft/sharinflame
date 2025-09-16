@@ -61,7 +61,11 @@ self.addEventListener("push", (event) => {
   /** @type {NotificationOptions} */
   const options = {
     body: decodeHTMLEntities(data.message) ?? "",
-    icon: data.avatar_url ?? "/icons/favicon-96x96.png"
+    icon: data.avatar_url ?? "/icons/favicon-96x96.png",
+    tag: `notif-${data.id}`,
+    silent: false,
+    vibrate: [100, 50, 100],
+    renotify: true
   };
 
   event.waitUntil(

@@ -150,8 +150,11 @@ function newNotification(notification: ApiNotification) {
       t(`notifications.${notification.type}`, { username: notification.loaded?.user?.username }),
       {
         body: decodeHTMLEntities(notification.message ?? notification.loaded?.content ?? ""),
-        icon: notification.loaded?.user.avatar_url ? notification.loaded?.user.avatar_url : ""
-      }
+        icon: notification.loaded?.user.avatar_url ? notification.loaded?.user.avatar_url : "",
+        tag: `notif-${notification.id}`,
+        silent: false,
+        vibrate: [100, 50, 100]
+      } as NotificationOptions
     );
     lastNotifications[key] = {
       desktopNotification: newNotification,
