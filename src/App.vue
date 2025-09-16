@@ -149,7 +149,8 @@ function newNotification(notification: ApiNotification) {
     const newNotification = new Notification(
       t(`notifications.${notification.type}`, { username: notification.loaded?.user?.username }),
       {
-        body: decodeHTMLEntities(notification.message ?? notification.loaded?.content ?? "")
+        body: decodeHTMLEntities(notification.message ?? notification.loaded?.content ?? ""),
+        icon: notification.loaded?.user.avatar_url ? notification.loaded?.user.avatar_url : ""
       }
     );
     lastNotifications[key] = {
