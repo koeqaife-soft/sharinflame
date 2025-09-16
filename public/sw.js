@@ -10,6 +10,11 @@ function format(template, params) {
   return template.replace(/{(\w+)}/g, (_, key) => params[key] ?? `{${key}}`);
 }
 
+function decodeHTMLEntities(str) {
+  const txt = new DOMParser().parseFromString(str, "text/html");
+  return txt.documentElement.textContent;
+}
+
 async function askClientsIfAnyHandleable(timeoutMs = 500) {
   const clientsList = await self.clients.matchAll({
     type: "window",
@@ -55,7 +60,7 @@ self.addEventListener("push", (event) => {
 
   /** @type {NotificationOptions} */
   const options = {
-    body: data.message ?? "",
+    body: decodeHTMLEntities(data.message) ?? "",
     icon: data.avatar_url ?? "/icons/favicon-96x96.png"
   };
 
