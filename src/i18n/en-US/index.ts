@@ -160,8 +160,8 @@ export default {
   },
 
   notification_permission: {
-    title: "Notifications",
-    message: "Do you want to receive notifications?"
+    title: "Enable Notifications?",
+    message: "Would you like to receive notifications about comments, replies, and more?"
   },
   yes: "Yes",
   no: "No",

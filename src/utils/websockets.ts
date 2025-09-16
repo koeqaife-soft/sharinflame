@@ -1,6 +1,6 @@
 interface EventMap {
   please_token: undefined;
-  auth_success: undefined;
+  success_auth: undefined;
   refresh_recommended: undefined;
   notification: ApiNotification;
   notification_read: { id: string; unread: number } | object;
@@ -21,6 +21,8 @@ interface ClientPayload {
 
 type EventListener<T> = (data: T) => void | Promise<void>;
 
+const lastActiveChannel = new BroadcastChannel("lastActive");
+
 class WebSocketService {
   private listeners: Map<keyof EventMap, Set<EventListener<EventMap[keyof EventMap]>>> = new Map();
   private socket: WebSocket | null = null;
@@ -33,6 +35,12 @@ class WebSocketService {
   private reconnectResolve: (() => void) | undefined = undefined;
   private reconnectTimeout: NodeJS.Timeout | undefined = undefined;
   private heartbeatTimeout: NodeJS.Timeout | undefined = undefined;
+  private _lastActive: number = Date.now();
+
+  set lastActive(value: number) {
+    this._lastActive = value;
+    lastActiveChannel.postMessage(value);
+  }
 
   connect(url: string): void {
     if (this.isConnected()) {
@@ -49,6 +57,10 @@ class WebSocketService {
     this.shouldStayConnected = true;
     this.reconnectAttempts = 0;
     this.attemptConnection();
+
+    lastActiveChannel.onmessage = (e) => {
+      this._lastActive = e.data;
+    };
   }
 
   private attemptConnection(): void {
@@ -187,16 +199,21 @@ class WebSocketService {
     }
   }
 
+  public sendHeartbeat() {
+    if (this.isConnected()) {
+      this.send({
+        type: "heartbeat",
+        last_active: this._lastActive
+      });
+    }
+    this.heartbeatTimeoutFunc();
+  }
+
   heartbeatTimeoutFunc(): void {
     if (this.heartbeatTimeout) clearTimeout(this.heartbeatTimeout);
     this.heartbeatTimeout = setTimeout(() => {
       this.heartbeatTimeout = undefined;
-      if (this.isConnected()) {
-        this.send({
-          type: "heartbeat"
-        });
-      }
-      this.heartbeatTimeoutFunc();
+      this.sendHeartbeat();
     }, 30000);
   }
 

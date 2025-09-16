@@ -165,3 +165,12 @@ type NotificationsResponse = ApiResponse<{
 }>;
 
 type CreateContextType = "post_video" | "post_image";
+
+interface WebPushNotification {
+  id: string;
+  type: string;
+  username: string;
+  avatar_url: string;
+  message: string;
+  is_reply?: string;
+}

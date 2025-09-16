@@ -87,6 +87,7 @@ import MainLayout from "src/layouts/MainLayout.vue";
 import MyButton from "src/components/my/MyButton.vue";
 import MyIcon from "src/components/my/MyIcon.vue";
 import MySelect from "src/components/my/MySelect.vue";
+import { initPush } from "src/utils/worker";
 
 const CategoryButtons = defineAsyncComponent(() => import("src/components/misc/CategoryButtons.vue"));
 const NotificationsList = defineAsyncComponent(() => import("src/components/notifications/NotificationsList.vue"));
@@ -186,13 +187,18 @@ watch(currentType, (v) => {
 async function getNotificationPermission() {
   await Notification.requestPermission();
   mainStore.openedDialogs.get("okCancel")?.hide();
+  mainStore.setSettings("getNotifications", true);
+  await initPush();
 }
 
 onMounted(() => {
   updateScreenSize();
   window.addEventListener("resize", updateScreenSize, { passive: true });
 
-  if (Notification.permission == "default" && mainStore.getSetting("getNotifications") === undefined) {
+  if (
+    Notification.permission != "denied" &&
+    (Notification.permission == "default" || mainStore.getSetting("getNotifications") === undefined)
+  ) {
     mainStore.openDialog(
       "okCancel",
       "",

@@ -27,6 +27,7 @@ import { apiEndpoints } from "./api/config";
 import { useQuasar } from "quasar";
 import websockets from "src/utils/websockets";
 import { useI18n } from "vue-i18n";
+import { initPush } from "./utils/worker";
 
 const LogoComponent = defineAsyncComponent(() => import("./components/misc/LogoComponent.vue"));
 const MiscLayout = defineAsyncComponent(() => import("./layouts/MiscLayout.vue"));
@@ -39,7 +40,8 @@ const mainStore = useMainStore();
 const offlineDialog = ref(false);
 let pingIntervalWorking = false;
 
-const lastNotifications: Record<string, { desktopNotification: Notification; data: ApiNotification }> = {};
+type NotificationItem = { desktopNotification: Notification; data: ApiNotification };
+const lastNotifications: Record<string, NotificationItem> = {};
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -200,6 +202,15 @@ function onReturn() {
   history.pushState({ time: Date.now() }, "");
 }
 
+function updateActivity() {
+  websockets.lastActive = Date.now() / 1000;
+}
+
+function onFocus() {
+  websockets.lastActive = Date.now() / 1000;
+  websockets.sendHeartbeat();
+}
+
 onMounted(() => {
   onChange();
   void pingInterval();
@@ -210,6 +221,23 @@ onMounted(() => {
 
   history.pushState({ time: Date.now() }, "");
   window.addEventListener("popstate", onReturn);
+
+  ["mousemove", "mousedown", "keydown", "scroll", "touchstart", "click"].forEach((event) =>
+    window.addEventListener(event, updateActivity, { passive: true })
+  );
+
+  window.addEventListener("focus", onFocus, { passive: true });
+
+  websockets.on("success_auth", async () => {
+    if (mainStore.getSetting("getNotifications") === true) await initPush();
+    websockets.sendHeartbeat();
+  });
+
+  navigator.serviceWorker.addEventListener("message", (event) => {
+    if (event.data && event.data.type === "SW_PING") {
+      event.ports[0]!.postMessage({ canHandle: websockets.isConnected() });
+    }
+  });
 });
 
 onBeforeMount(() => {
@@ -222,5 +250,10 @@ onBeforeUnmount(() => {
   websockets.off("notification_read", onNotificationRead);
   websockets.off("local__isOffline", wsOffline);
   window.removeEventListener("popstate", onReturn);
+  window.removeEventListener("focus", onFocus);
+
+  ["mousemove", "mousedown", "keydown", "scroll", "touchstart", "click"].forEach((event) =>
+    window.removeEventListener(event, updateActivity)
+  );
 });
 </script>
