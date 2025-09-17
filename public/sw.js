@@ -84,7 +84,7 @@ self.addEventListener("push", (event) => {
 self.addEventListener("notificationclick", (event) => {
   console.debug("Handling notification click");
   event.notification.close();
-  const url = event.notification.data;
+  const url = event.notification.data ?? "";
   event.waitUntil(self.clients.openWindow(url));
 });
 
