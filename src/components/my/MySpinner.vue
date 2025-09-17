@@ -20,7 +20,7 @@
       <animate
         attributeName="stroke-dashoffset"
         calcMode="spline"
-        dur="2s"
+        :dur="pageFocused && isPlaying ? '2s' : '0ms'"
         values="685;-685"
         keySplines="0 0 1 1"
         repeatCount="indefinite"
@@ -36,6 +36,8 @@ defineProps<{
   size: string | number;
 }>();
 
+const pageFocused = ref<boolean>(document.hasFocus());
+const isPlaying = ref<boolean>(true);
 const spinner = ref<SVGSVGElement | null>(null);
 const path = ref<SVGPathElement | null>(null);
 let observer: IntersectionObserver | null = null;
@@ -44,47 +46,34 @@ const toggleAnimation = (play: boolean) => {
   if (!path.value) return;
   const animateEl = path.value.querySelector("animate");
   if (!animateEl) return;
-  if (play) animateEl.setAttribute("begin", "0s");
-  else animateEl.removeAttribute("begin");
-};
-
-const checkVisibility = () => {
-  if (!document.hidden) {
-    observer?.observe(spinner.value!);
-  } else {
-    toggleAnimation(false);
-  }
+  isPlaying.value = play;
 };
 
 const handleWindowFocus = () => {
-  if (spinner.value && document.visibilityState === "visible") {
-    observer?.observe(spinner.value);
-  }
+  pageFocused.value = true;
 };
 
 const handleWindowBlur = () => {
-  toggleAnimation(false);
+  pageFocused.value = false;
 };
 
 onMounted(() => {
   observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        toggleAnimation(entry.isIntersecting && !document.hidden);
+        toggleAnimation(entry.isIntersecting);
       });
     },
     { threshold: 0.1 }
   );
+  observer?.observe(spinner.value!);
 
-  checkVisibility();
-  document.addEventListener("visibilitychange", checkVisibility, { passive: true });
   window.addEventListener("focus", handleWindowFocus, { passive: true });
   window.addEventListener("blur", handleWindowBlur, { passive: true });
 });
 
 onBeforeUnmount(() => {
   observer?.disconnect();
-  document.removeEventListener("visibilitychange", checkVisibility);
   document.removeEventListener("focus", handleWindowFocus);
   document.removeEventListener("blur", handleWindowBlur);
 });
