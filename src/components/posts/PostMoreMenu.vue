@@ -54,9 +54,11 @@ const options = computed(() => [
     type: "item"
   },
   {
-    key: "delete",
+    key: props.post.user_id == profileStore.profile?.user_id ? "delete" : "mod_delete",
     icon: "delete_forever",
-    visible: props.post.user_id == profileStore.profile?.user_id,
+    visible:
+      props.post.user_id == profileStore.profile?.user_id ||
+      profileStore.profile?.permissions?.some((v) => v == "MODERATE_POSTS"),
     type: "item"
   },
   {

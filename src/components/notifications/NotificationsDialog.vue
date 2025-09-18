@@ -107,7 +107,7 @@ async function loadMore(index: number, done: (stop?: boolean) => void) {
       cursor = r.data.data.next_cursor;
       r.data.data.notifications.forEach((value) => {
         if (value.message) value.message = truncate(value.message, 256);
-        if (value.loaded?.content) value.loaded.content = truncate(value.loaded.content, 256);
+        if (value.loaded?.content) value.loaded.content = truncate(value.loaded.content as string, 256);
       });
       items.value.push(...r.data.data.notifications);
       done(!r.data.data.has_more);

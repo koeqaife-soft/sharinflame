@@ -169,6 +169,17 @@ function action(type: string, data: unknown) {
         () => void onDeletePost()
       );
       break;
+    case "mod_delete":
+      mainStore.openDialog(
+        "modDelete",
+        "",
+        {
+          targetType: "post",
+          postId: postRef.value.post_id
+        },
+        () => emit("deletePost", postRef.value.post_id)
+      );
+      break;
     case "edit":
       quasar.dialog({
         component: PostEditor,

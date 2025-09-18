@@ -2,13 +2,13 @@
   <q-dialog
     transition-show="scale"
     transition-hide="scale"
-    class="report-dialog card-dialog"
+    class="mod-delete-dialog card-dialog"
     ref="dialogRef"
     @hide="onDialogHide"
     maximized
   >
     <div class="dialog-content">
-      <div class="title">{{ $t(`report_dialog.title`) }}</div>
+      <div class="title">{{ $t(`mod_delete_dialog.title`) }}</div>
       <q-input
         borderless
         v-model="text"
@@ -20,7 +20,7 @@
       />
       <div class="buttons horizontal-container">
         <my-button :label="$t('cancel')" type="flat" icon="close" @click="dialogRef!.hide()" :disable="loading" />
-        <my-button :label="$t('report')" type="primary" icon="report" @click="onOk" :loading="loading" />
+        <my-button :label="$t('delete')" type="primary" icon="report" @click="onOk" :loading="loading" />
       </div>
     </div>
   </q-dialog>
@@ -29,16 +29,23 @@
 import { useDialogPluginComponent, useQuasar } from "quasar";
 import MyButton from "../my/MyButton.vue";
 import { ref } from "vue";
-import { createReport } from "src/api/users";
 import { useI18n } from "vue-i18n";
+import { deleteComment, deletePost } from "src/api/posts";
 
-defineEmits([...useDialogPluginComponent.emits]);
+const emit = defineEmits([...useDialogPluginComponent.emits]);
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
-const props = defineProps<{
-  targetType: "user" | "message" | "post" | "comment";
-  targetId: string;
-}>();
+const props = defineProps<
+  | {
+      targetType: "post";
+      postId: string;
+    }
+  | {
+      targetType: "comment";
+      postId: string;
+      commentId: string;
+    }
+>();
 
 const quasar = useQuasar();
 const { t } = useI18n();
@@ -48,21 +55,28 @@ const loading = ref(false);
 async function onOk() {
   loading.value = true;
   try {
-    await createReport(text.value, props.targetId, props.targetType);
+    if (props.targetType == "post") {
+      await deletePost(props.postId, undefined, text.value);
+    } else if (props.targetType == "comment") {
+      await deleteComment(props.postId, props.commentId, undefined, text.value);
+    } else {
+      throw new Error("Unknown targetType");
+    }
 
     quasar.notify({
       type: "default-notification",
-      message: t("report_dialog.title"),
-      caption: t("report_dialog.success"),
+      message: t("mod_delete_dialog.title"),
+      caption: t("mod_delete_dialog.success"),
       progress: true,
       icon: "sym_r_done_outline"
     });
 
     dialogRef.value?.hide();
+    emit("ok");
   } catch {
     quasar.notify({
       type: "error-notification",
-      message: t("report_dialog.failed"),
+      message: t("mod_delete_dialog.failed"),
       progress: true
     });
   } finally {

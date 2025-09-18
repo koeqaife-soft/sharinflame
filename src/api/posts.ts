@@ -32,8 +32,13 @@ async function getPost(id: string, config: AxiosRequestConfig = {}) {
   return await api.get<ResponseWithPost>(postsEndpoints.post(id), config);
 }
 
-async function deletePost(id: string, config: AxiosRequestConfig = {}) {
-  return await api.delete<ApiResponse>(postsEndpoints.post(id), config);
+async function deletePost(id: string, config: AxiosRequestConfig = {}, reason?: string) {
+  return await api.delete<ApiResponse>(postsEndpoints.post(id), {
+    params: {
+      ...(reason && { reason })
+    },
+    ...config
+  });
 }
 
 async function editPost(
@@ -129,8 +134,13 @@ async function createComment(
   return await api.post<ApiResponse<Comment>>(postsEndpoints.comments(post_id), data, config);
 }
 
-async function deleteComment(post_id: string, comment_id: string, config: AxiosRequestConfig = {}) {
-  return await api.delete(postsEndpoints.comment_actions(post_id, comment_id), config);
+async function deleteComment(post_id: string, comment_id: string, config: AxiosRequestConfig = {}, reason?: string) {
+  return await api.delete(postsEndpoints.comment_actions(post_id, comment_id), {
+    params: {
+      ...(reason && { reason })
+    },
+    ...config
+  });
 }
 
 async function getComments(

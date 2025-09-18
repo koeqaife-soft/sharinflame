@@ -9,11 +9,8 @@
     ref="elementRef"
     @click="onClicked"
   >
-    <div class="image-container">
-      <open-user-dialog
-        v-if="notif.linked_type == 'post' || notif.linked_type == 'comment'"
-        :user="notif.loaded.user"
-      />
+    <div class="image-container" :class="{ 'only-icon': notif.loaded?.user == undefined }">
+      <open-user-dialog v-if="notif.loaded?.user !== undefined && notif.loaded?.user" :user="notif.loaded.user" />
       <my-icon :icon="typeIcons[actualType] ?? ''" class="icon" />
     </div>
     <div class="text-container" @click="onClicked">
@@ -76,7 +73,9 @@ const disabled = ref(false);
 const typeIcons = {
   new_comment: "chat_bubble",
   new_reply: "reply",
-  followed: "person_add"
+  followed: "person_add",
+  mod_deleted_post: "shield",
+  mod_deleted_comment: "shield"
 };
 
 function setCache(key: string, value: CacheType[string]) {
@@ -101,6 +100,11 @@ const linkedContent = computed(() => {
     return {
       username: props.notif.loaded.user.display_name || props.notif.loaded.user.username,
       message: message
+    };
+  } else if (props.notif.linked_type === "mod_audit") {
+    return {
+      username: props.notif.loaded.user.display_name || props.notif.loaded.user.username,
+      message: `<b>${t("reason")}:</b> ${props.notif.message}`
     };
   }
   return { username: undefined, message: undefined };
@@ -147,7 +151,10 @@ async function onClicked() {
 
   try {
     if (props.notif.linked_type == "post") {
-      const post = await sync(() => getPost(props.notif.loaded!.post_id, { signal: controller!.signal }), "post");
+      const post = await sync(
+        () => getPost((props.notif.loaded as Post).post_id, { signal: controller!.signal }),
+        "post"
+      );
       if (post.data.success) {
         mainStore.openDialog("post", post.data.data.post_id, { post: post.data.data });
       }
@@ -156,12 +163,20 @@ async function onClicked() {
         const [parent, comment] = await sync(
           () =>
             Promise.all([
-              getComment(props.notif.loaded!.post_id, (props.notif.loaded as CommentWithUser).parent_comment_id!, {
-                signal: controller!.signal
-              }),
-              getComment(props.notif.loaded!.post_id, (props.notif.loaded as CommentWithUser).comment_id, {
-                signal: controller!.signal
-              })
+              getComment(
+                (props.notif.loaded as CommentWithUser).post_id,
+                (props.notif.loaded as CommentWithUser).parent_comment_id!,
+                {
+                  signal: controller!.signal
+                }
+              ),
+              getComment(
+                (props.notif.loaded as CommentWithUser).post_id,
+                (props.notif.loaded as CommentWithUser).comment_id,
+                {
+                  signal: controller!.signal
+                }
+              )
             ]),
           "reply"
         );
@@ -178,10 +193,14 @@ async function onClicked() {
         const [post, comment] = await sync(
           () =>
             Promise.all([
-              getPost(props.notif.loaded!.post_id, { signal: controller!.signal }),
-              getComment(props.notif.loaded!.post_id, (props.notif.loaded as CommentWithUser).comment_id, {
-                signal: controller!.signal
-              })
+              getPost((props.notif.loaded as CommentWithUser).post_id, { signal: controller!.signal }),
+              getComment(
+                (props.notif.loaded as CommentWithUser).post_id,
+                (props.notif.loaded as CommentWithUser).comment_id,
+                {
+                  signal: controller!.signal
+                }
+              )
             ]),
           "post+comment"
         );

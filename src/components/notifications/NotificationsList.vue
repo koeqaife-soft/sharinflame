@@ -48,7 +48,7 @@ watch(
       if (old) return old;
 
       if (value.message) value.message = truncate(value.message, 32);
-      if (value.loaded?.content) value.loaded.content = truncate(value.loaded.content, 32);
+      if (value.loaded?.content) value.loaded.content = truncate(value.loaded.content as string, 32);
       return value;
     });
     if (newVal.length > 0) {

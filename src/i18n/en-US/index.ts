@@ -47,6 +47,7 @@ export default {
   post_options: {
     edit: "Edit Post",
     delete: "Delete Post",
+    mod_delete: "Delete Post (MOD)",
     copy_id: "Copy Id",
     report: "Report"
   },
@@ -54,6 +55,7 @@ export default {
   comment_options: {
     copy_id: "Copy Id",
     delete: "Delete Comment",
+    mod_delete: "Delete Comment (MOD)",
     report: "Report",
     created_at: "Created At",
     go_to_post: "Go To Post",
@@ -157,6 +159,12 @@ export default {
     title: "Report Resource",
     success: "Successfully created report",
     failed: "Failed to create report"
+  },
+
+  mod_delete_dialog: {
+    title: "Delete Resource",
+    success: "Successfully deleted resource",
+    failed: "Failed to delete resource"
   },
 
   notification_permission: {
@@ -263,7 +271,9 @@ export default {
     label: "Notifications",
     no_notifications: "No notifications",
     new_comment: "Comment from {username}",
-    new_reply: "New reply from {username}"
+    new_reply: "New reply from {username}",
+    mod_deleted_comment: "Your comment was deleted by {username}",
+    mod_deleted_post: "Your post was deleted by {username}"
   },
   show_all: "Show All",
   unread: "Unread",

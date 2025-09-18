@@ -36,7 +36,8 @@ const dialogs = {
   tag: defineAsyncComponent(() => import("src/components/posts/TagDialog.vue")),
   okCancel: defineAsyncComponent(() => import("src/components/misc/OkCancelDialog.vue")),
   notifications: defineAsyncComponent(() => import("src/components/notifications/NotificationsDialog.vue")),
-  report: defineAsyncComponent(() => import("src/components/misc/ReportDialog.vue"))
+  report: defineAsyncComponent(() => import("src/components/misc/ReportDialog.vue")),
+  modDelete: defineAsyncComponent(() => import("src/components/misc/ModDeleteDialog.vue"))
 } as const;
 
 const stackDialogs = ["replies"];

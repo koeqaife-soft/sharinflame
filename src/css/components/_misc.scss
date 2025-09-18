@@ -197,8 +197,9 @@
   }
 }
 
-// ReportDialog style
-.report-dialog {
+// ReportDialog and ModDeleteDialog style
+.report-dialog,
+.mod-delete-dialog {
   .dialog-content {
     max-width: 500px;
     height: auto;
@@ -219,7 +220,7 @@
     color: var(--on-card);
     margin-bottom: 12px;
   }
-  .report-text {
+  .textarea {
     padding-top: 0px;
     padding-bottom: 0px;
     padding-left: 16px;

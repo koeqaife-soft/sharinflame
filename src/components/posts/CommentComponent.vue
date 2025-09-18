@@ -123,6 +123,18 @@ async function action(type: string, data: unknown) {
         () => void onCommentDelete()
       );
       break;
+    case "mod_delete":
+      mainStore.openDialog(
+        "modDelete",
+        "",
+        {
+          targetType: "comment",
+          postId: commentRef.value.post_id,
+          commentId: commentRef.value.comment_id
+        },
+        () => emit("deleteComment", commentRef.value.post_id)
+      );
+      break;
     case "go_to_post": {
       moreMenuLoading.value = true;
       try {

@@ -20,6 +20,16 @@ interface UpdateProfileValues {
   languages?: string[];
 }
 
+type UserPermission =
+  | "MODERATE_POSTS"
+  | "MODERATE_COMMENTS"
+  | "MODERATE_PROFILES"
+  | "BAN_USERS"
+  | "RED_BUTTON"
+  | "RECOVER_POSTS"
+  | "RECOVER_COMMENTS"
+  | "ADMIN_PANEL";
+
 interface User {
   user_id: string;
   username: string;
@@ -31,6 +41,8 @@ interface User {
   languages?: string[];
   created_at: number;
   followed?: true;
+  role_id?: number;
+  permissions?: UserPermission[];
 }
 
 interface Post {
@@ -156,6 +168,7 @@ interface BaseNotification {
 type ApiNotification =
   | (BaseNotification & { linked_type: "post"; loaded: Post })
   | (BaseNotification & { linked_type: "comment"; loaded: CommentWithUser })
+  | (BaseNotification & { linked_type: "mod_audit"; loaded: { user: User; [key: string]: unknown } })
   | (BaseNotification & { linked_type: undefined; loaded: undefined });
 
 type NotificationsResponse = ApiResponse<{
