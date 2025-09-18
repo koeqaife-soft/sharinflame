@@ -238,10 +238,44 @@ export function waitForRefresh() {
   });
 }
 
+const rateLimitInterceptor = () => {
+  api.interceptors.response.use(
+    (response: AxiosResponse) => response,
+    async (error: AxiosError) => {
+      if (error.response?.status === 429) {
+        try {
+          const data = error.response.data as {
+            success: boolean;
+            data: { limit: number; reset: number };
+            error: string;
+          };
+
+          const resetTime = data?.data?.reset;
+          const delay = Math.max(0, resetTime * 1000 - Date.now());
+
+          if (delay > 0) {
+            console.warn(`Rate limited, waiting ${(delay / 1000).toFixed(1)}s before retry...`);
+            await new Promise((resolve) => setTimeout(resolve, delay));
+          }
+
+          if (error.config) {
+            return api.request(error.config);
+          }
+        } catch (e) {
+          console.error("Failed to handle rate limit:", e);
+        }
+      }
+
+      return Promise.reject(error);
+    }
+  );
+};
+
 function init(_api: AxiosInstance, _mainStore: mainStoreType) {
   api = _api;
   mainStore = _mainStore;
   authInterceptor();
+  rateLimitInterceptor();
   connectionInterceptor();
 }
 
