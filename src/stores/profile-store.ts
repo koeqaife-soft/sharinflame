@@ -41,6 +41,9 @@ export const useProfileStore = defineStore("profile", {
           if (r.status === 200 && r.data.success) {
             profile.data = r.data.data;
             profile.lastUpdate = Math.floor(Date.now() / 1000);
+            if (id == "me") {
+              this.profiles[profile.data.user_id] = profile;
+            }
           }
         } finally {
           profile.isLoading = false;
