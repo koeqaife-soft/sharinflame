@@ -2,7 +2,10 @@ const localization = {
   "en-US": {
     new_comment: "Comment from {username}",
     new_reply: "New reply from {username}",
-    new_notification: "New Notification"
+    new_notification: "New Notification",
+    mod_deleted_comment: "Your comment was deleted by {username}",
+    mod_deleted_post: "Your post was deleted by {username}",
+    reason: "Reason"
   }
 };
 
@@ -55,8 +58,12 @@ self.addEventListener("push", (event) => {
   const title = format(template, { username: data.username });
 
   /** @type {NotificationOptions} */
+  let message = data.message ?? "";
+  if (data.type == "mod_deleted_post" || data.type == "mod_deleted_post") {
+    message = `${t.reason}: ${message}`;
+  }
   const options = {
-    body: data.message ?? "",
+    body: message,
     icon: data.avatar_url ?? "/icons/favicon-96x96.png",
     tag: `notif-${data.id}`,
     vibrate: [100, 50, 100]
