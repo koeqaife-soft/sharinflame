@@ -102,6 +102,14 @@ export default {
     first: {
       label: "First",
       description: "User came in the first month after release"
+    },
+    media_manager: {
+      label: "Media Manager",
+      description: "Does all the dirty stuff for SharinFlame, like: tiktok and other social media."
+    },
+    update: {
+      label: "Unknown badge",
+      description: "You have to update your client to see this badge!"
     }
   },
   follow: "Follow",

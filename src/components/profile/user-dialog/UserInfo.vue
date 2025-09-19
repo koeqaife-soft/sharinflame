@@ -27,7 +27,7 @@
                 :style="animationDelayComponent(badgeIndex)"
                 :key="badgeIndex"
               >
-                <my-icon :icon="badgeIcons[badge as BadgesKeys]" class="icon" />
+                <my-icon :icon="badgeIcons[badge as BadgesKeys] ?? 'question_mark'" class="icon" />
                 <div class="text-container">
                   <div class="label">{{ $t(getLabelKey(badge)) }}</div>
                   <div class="description">{{ $t(getDescriptionKey(badge)) }}</div>
@@ -90,23 +90,25 @@ const sections = computed(() => [
 const badgesKeys = {
   0: "owner",
   1: "tester",
-  2: "first"
+  2: "first",
+  3: "media_manager"
 } as const;
 
 const badgeIcons = {
   0: "crown",
   1: "experiment",
-  2: "trophy"
+  2: "trophy",
+  3: "public"
 } as const;
 
 type BadgesKeys = keyof typeof badgesKeys;
 
 function getLabelKey(badge: number): string {
-  return `badges.${badgesKeys[badge as BadgesKeys]}.label`;
+  return `badges.${badgesKeys[badge as BadgesKeys] ?? "update"}.label`;
 }
 
 function getDescriptionKey(badge: number): string {
-  return `badges.${badgesKeys[badge as BadgesKeys]}.description`;
+  return `badges.${badgesKeys[badge as BadgesKeys] ?? "update"}.description`;
 }
 
 function animationDelay(key: string): string {
