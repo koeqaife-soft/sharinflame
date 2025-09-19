@@ -166,6 +166,17 @@ export default {
     success: "Successfully deleted resource",
     failed: "Failed to delete resource"
   },
+  moderated_by: "Moderated By",
+  blocked_resource: "Blocked Resource",
+  moderated_on: "Moderated on",
+  appellation_status: {
+    label: "Appellation Status",
+    none: "None",
+    pending: "Pending",
+    approved: "Approved",
+    rejected: "Rejected"
+  },
+  send: "Send",
 
   notification_permission: {
     title: "Enable Notifications?",

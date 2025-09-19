@@ -113,15 +113,6 @@ async function readAllNotifications(config: AxiosRequestConfig = {}) {
   return await api.post(usersEndpoints.read_all_notifications, undefined, config);
 }
 
-async function createReport(
-  reason: string,
-  targetId: string,
-  targetType: "comment" | "post" | "user" | "message",
-  config: AxiosRequestConfig = {}
-) {
-  return await api.post(usersEndpoints.create_report, { reason, target_id: targetId, target_type: targetType }, config);
-}
-
 function init(_api: AxiosInstance) {
   api = _api;
 }
@@ -142,6 +133,5 @@ export {
   getNotifications,
   getUnreadNotificationsCount,
   readNotification,
-  readAllNotifications,
-  createReport
+  readAllNotifications
 };

@@ -29,7 +29,7 @@
 import { useDialogPluginComponent, useQuasar } from "quasar";
 import MyButton from "../my/MyButton.vue";
 import { ref } from "vue";
-import { createReport } from "src/api/users";
+import { createReport } from "src/api/moderation";
 import { useI18n } from "vue-i18n";
 
 defineEmits([...useDialogPluginComponent.emits]);

@@ -17,7 +17,12 @@
     </div>
     <div class="actions card-section actions-section" :class="{ 'can-animate': canAnimate }">
       <div class="reaction-buttons">
-        <reaction-buttons :object="commentRef" :before-action="allowAnimate" :is-comment="true" :disable="disable" />
+        <reaction-buttons
+          :object="commentRef"
+          :before-action="allowAnimate"
+          :is-comment="true"
+          :disable="disableActions || disable"
+        />
       </div>
       <div class="action-container">
         <my-button
@@ -26,11 +31,11 @@
           class="comments round button"
           size="sm"
           @click="repliesDialog"
-          :disable="disable"
+          :disable="disableActions || disable"
         />
       </div>
       <q-space />
-      <div class="action-container circle">
+      <div class="action-container circle" v-if="!disableActions">
         <my-button icon="more_horiz" class="more button circle" size="sm" :disable="disable" :loading="moreMenuLoading">
           <q-menu class="comment-more-menu" self="top right" v-if="!moreMenuLoading">
             <more-menu :comment="commentRef" @action="action" :show-go-to="!hideGoTo && !(inDialog ?? true)" />
@@ -69,6 +74,7 @@ const props = defineProps<{
   hideGoTo?: boolean;
   inDialog?: boolean;
   inRepliesDialog?: boolean;
+  disableActions?: boolean;
 }>();
 
 const canAnimate = ref(false);

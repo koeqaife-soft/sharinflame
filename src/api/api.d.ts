@@ -165,10 +165,46 @@ interface BaseNotification {
   unread: boolean;
 }
 
+/*
+{
+	"loaded": {
+		"user_id": "135335132528902144",
+		"old_content": "{\"tags\": [], \"ctags\": [], \"media\": [], \"status\": null, \"content\": \"zzz\", \"post_id\": \"137169851121926144\", \"user_id\": \"135343353365004288\", \"created_at\": 1758217441, \"is_deleted\": null, \"media_type\": null, \"updated_at\": 1758217441, \"likes_count\": 0, \"comments_count\": 0, \"dislikes_count\": 0}",
+		"target_type": "post",
+		"target_id": "137169851121926144",
+		"action_type": "delete_post",
+		"reason": "123",
+		"appellation_status": "none",
+		"user": {
+			"user_id": "135335132528902144",
+			"username": "koeqaife",
+			"role_id": 0,
+			"display_name": "Koqaife",
+			"avatar_url": "https://storage.sharinflame.com/public/avatars/135335132528902144/135338840293507072.webp",
+			"created_at": 1757780010
+		}
+	}
+}
+*/
+
+interface ModAuditBase {
+  id: string;
+  target_id: string;
+  action_type: string;
+  reason: string;
+  appellation_status: "none" | "pending" | "rejected" | "approved";
+  user: User;
+  created_at: number;
+}
+
+type ModAudit =
+  | (ModAuditBase & { target_type: "post"; old_content: Post })
+  | (ModAuditBase & { target_type: "comment"; old_content: Comment });
+
 type ApiNotification =
   | (BaseNotification & { linked_type: "post"; loaded: Post })
   | (BaseNotification & { linked_type: "comment"; loaded: CommentWithUser })
-  | (BaseNotification & { linked_type: "mod_audit"; loaded: { user: User; [key: string]: unknown } })
+  | (BaseNotification & { linked_type: "mod_audit"; loaded: { user: User; [key: string]: unknown } & ModAudit })
   | (BaseNotification & { linked_type: undefined; loaded: undefined });
 
 type NotificationsResponse = ApiResponse<{

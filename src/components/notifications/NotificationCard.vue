@@ -13,7 +13,7 @@
       <open-user-dialog v-if="notif.loaded?.user !== undefined && notif.loaded?.user" :user="notif.loaded.user" />
       <my-icon :icon="typeIcons[actualType] ?? ''" class="icon" />
     </div>
-    <div class="text-container" @click="onClicked">
+    <div class="text-container" @click.stop="onClicked">
       <div class="title">{{ $t(`notifications.${actualType}`, { username: linkedContent.username }) }}</div>
       <div class="message" v-if="linkedContent.message" v-html="formatStringForHtml(linkedContent.message)" />
     </div>
@@ -213,6 +213,10 @@ async function onClicked() {
           emit("onLoaded");
         }
       }
+    } else if (props.notif.linked_type == "mod_audit") {
+      mainStore.openDialog("modAudit", props.notif.loaded.id, {
+        audit: props.notif.loaded
+      });
     }
   } catch (e) {
     disabled.value = true;

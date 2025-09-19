@@ -49,7 +49,12 @@
     </div>
     <div class="actions card-section" :class="{ 'can-animate': canAnimate }" v-if="!postRef.is_system">
       <div class="reaction-buttons">
-        <reaction-buttons :object="postRef" :before-action="allowAnimate" :is-comment="false" :disable="disable" />
+        <reaction-buttons
+          :object="postRef"
+          :before-action="allowAnimate"
+          :is-comment="false"
+          :disable="disableActions || disable"
+        />
       </div>
       <div class="action-container">
         <my-button
@@ -58,11 +63,11 @@
           class="comments round button"
           size="sm"
           @click="postDialog"
-          :disable="disable"
+          :disable="disableActions || disable"
         />
       </div>
       <q-space />
-      <div class="action-container circle">
+      <div class="action-container circle" v-if="!disableActions">
         <my-button icon="more_horiz" class="more button circle" size="sm" :disable="disable">
           <q-menu class="post-more-menu" self="top right">
             <more-menu :post="postRef" @action="action" />
@@ -114,6 +119,7 @@ const emit = defineEmits<{
 const props = defineProps<{
   post: PostWithSystem;
   inDialog?: boolean;
+  disableActions?: boolean;
 }>();
 
 const postRef = toRef(props.post);
