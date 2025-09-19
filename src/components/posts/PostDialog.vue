@@ -45,7 +45,7 @@
             class="posts-infinite-scroll"
             ref="virtualScroll"
             :skeleton-height="126"
-            :no-items-key="currentType == 'comment' ? $t('no_comments') : $t('no_updates')"
+            :no-items-key="currentType == 'comment' ? 'no_comments' : 'no_updates'"
           >
             <template v-slot:default="{ item, index }">
               <comment-component
