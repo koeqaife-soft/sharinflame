@@ -6,13 +6,22 @@
     </div>
     <div class="card-section content-section">
       <div class="avatar-container">
-        <open-user-dialog :user="commentRef.user" />
+        <open-user-dialog v-if="commentRef.user" :user="commentRef.user" />
       </div>
       <div class="text-container">
         <div class="username">
-          {{ commentRef.user.display_name || commentRef.user.username }}
+          <template v-if="commentRef.user">
+            {{ commentRef.user.display_name || commentRef.user.username }}
+          </template>
+          <template v-else>
+            {{ $t("unknown_user") }}
+          </template>
         </div>
-        <text-parts class="content" :text="formatStringForHtml(commentRef.content)" :html="true" />
+        <text-parts
+          class="content"
+          :text="formatStringForHtml(commentRef.content || $t('resource_was_deleted'))"
+          :html="true"
+        />
       </div>
     </div>
     <div class="actions card-section actions-section" :class="{ 'can-animate': canAnimate }">
@@ -70,7 +79,7 @@ const emit = defineEmits<{
 
 const props = defineProps<{
   isParent?: boolean;
-  comment: CommentWithUser;
+  comment: CommentWithUser | Comment;
   hideGoTo?: boolean;
   inDialog?: boolean;
   inRepliesDialog?: boolean;
@@ -100,7 +109,7 @@ async function onCommentDelete() {
       message: t("comment_deleted.msg"),
       caption: t("comment_deleted.caption")
     });
-    emit("deleteComment", commentRef.value.comment_id);
+    onDelete();
     disable.value = true;
   } catch (e) {
     quasar.notify({
@@ -138,7 +147,7 @@ async function action(type: string, data: unknown) {
           postId: commentRef.value.post_id,
           commentId: commentRef.value.comment_id
         },
-        () => emit("deleteComment", commentRef.value.post_id)
+        () => onDelete()
       );
       break;
     case "go_to_post": {
@@ -211,13 +220,20 @@ async function action(type: string, data: unknown) {
   }
 }
 
+function onDelete() {
+  if (commentRef.value.replies_count == 0) emit("deleteComment", commentRef.value.comment_id);
+  else {
+    commentRef.value.content = undefined;
+  }
+}
+
 function repliesDialog() {
   if (props.inRepliesDialog) return;
   mainStore.openDialog("replies", commentRef.value.comment_id, {
     comment: commentRef.value,
     onDelete: () => {
       disable.value = true;
-      emit("deleteComment", commentRef.value.comment_id);
+      onDelete();
     },
     inDialog: props.inDialog
   });

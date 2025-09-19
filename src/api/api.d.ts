@@ -89,16 +89,17 @@ interface Comment {
   comment_id: string;
   post_id: string;
   user_id: string;
-  content: string;
-  parent_comment_id?: string;
+  content?: string | undefined;
+  parent_comment_id?: string | undefined;
   replies_count: number;
   likes_count: number;
   dislikes_count: number;
-  is_like?: boolean;
-  is_fav?: boolean;
+  is_like?: boolean | undefined;
+  is_fav?: boolean | undefined;
   created_at: number;
-  type?: "update" | "comment";
-  _meta?: MetaData;
+  type?: "update" | "comment" | undefined;
+  _meta?: MetaData | undefined;
+  user?: User | undefined;
 }
 
 interface Tag {

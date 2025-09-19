@@ -292,5 +292,8 @@ export default {
 
   load_more: "Load More",
 
-  resource_not_found: "Resource not found"
+  unknown_user: "Unknown User",
+
+  resource_not_found: "Resource not found",
+  resource_was_deleted: "Resource was deleted"
 };
