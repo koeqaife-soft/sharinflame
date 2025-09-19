@@ -71,7 +71,6 @@ async function onOk() {
       icon: "sym_r_done_outline"
     });
 
-    dialogRef.value?.hide();
     emit("ok");
   } catch {
     quasar.notify({
