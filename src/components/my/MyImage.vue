@@ -1,6 +1,6 @@
 <template>
   <div class="my-image">
-    <img :src="src" loading="lazy" ref="imgRef" @load="onLoad" @error="onError" />
+    <img :src="src" loading="lazy" decoding="async" ref="imgRef" @load="onLoad" @error="onError" />
     <div v-if="loading" class="loading">
       <my-spinner size="50px" />
     </div>
