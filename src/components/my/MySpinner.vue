@@ -20,7 +20,7 @@
       <animate
         attributeName="stroke-dashoffset"
         calcMode="spline"
-        :dur="pageFocused && isPlaying ? '2s' : '0ms'"
+        :dur="pageFocused && isPlaying ? '3s' : '0ms'"
         values="685;-685"
         keySplines="0 0 1 1"
         repeatCount="indefinite"
