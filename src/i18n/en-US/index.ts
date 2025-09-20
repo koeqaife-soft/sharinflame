@@ -283,7 +283,7 @@ export default {
 
   star_background_setting: {
     label: "Star Background",
-    desc: "Enables star background in home page (can lag!)"
+    desc: "Enables star background in home page (can lag)"
   },
 
   notifications: {
