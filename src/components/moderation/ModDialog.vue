@@ -48,17 +48,20 @@
             </div>
             <div class="reports" v-if="assigned.reports">
               <div class="card report q-mb-sm" v-for="(item, index) in assigned.reports" :key="index">
+                <div class="username" @click="mainStore.openDialog('user', item.user.user_id, { user: item.user })">
+                  {{ item.user.username }}:
+                </div>
                 <div class="reason">{{ item.reason }}</div>
               </div>
             </div>
-            <my-button
-              :label="$t('approve')"
-              icon-right="check"
-              class="centered q-mt-sm full-width"
-              type="outlined"
-              @click="next"
-            />
           </q-scroll-area>
+          <my-button
+            :label="$t('approve')"
+            icon-right="check"
+            class="centered q-mt-sm full-width"
+            type="outlined"
+            @click="next"
+          />
         </template>
       </div>
     </closeable-content>
@@ -72,12 +75,15 @@ import MyIcon from "../my/MyIcon.vue";
 import MyButton from "../my/MyButton.vue";
 import { defineAsyncComponent, onMounted, onUnmounted, ref } from "vue";
 import { dismissAssigned, getAssignedResource } from "src/api/moderation";
+import { useMainStore } from "src/stores/main-store";
 
 defineEmits([...useDialogPluginComponent.emits]);
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
 const CommentComponent = defineAsyncComponent(() => import("src/components/posts/CommentComponent.vue"));
 const PostComponent = defineAsyncComponent(() => import("src/components/posts/PostComponent.vue"));
+
+const mainStore = useMainStore();
 
 interface Report {
   report_id: string;
@@ -86,6 +92,7 @@ interface Report {
   target_type: string;
   reason: string;
   status: string;
+  user: User;
 }
 
 interface AssignedPost {
