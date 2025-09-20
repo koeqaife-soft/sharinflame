@@ -50,7 +50,6 @@
           class="delete round button"
           :disable="disable"
           @click="action('mod_delete', null)"
-          :label="$t('delete')"
         />
       </div>
       <div class="action-container circle" v-if="!disableActions">
