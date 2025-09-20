@@ -1,19 +1,19 @@
 {
   "primary": {
     "s": ["=", "38"],
-    "l": ["=", "32"],
-    "luminance": "32"
+    "l": ["=", "30"],
+    "luminance": "30"
   },
   "secondary": {
     "s": ["=", "15"],
-    "l": ["=", "35"],
-    "luminance": "35"
+    "l": ["=", "30"],
+    "luminance": "30"
   },
   "tertiary": {
     "h": ["-", "80"],
     "s": ["=", "38"],
-    "l": ["=", "32"],
-    "luminance": "32"
+    "l": ["=", "30"],
+    "luminance": "30"
   },
   "on-primary": {
     "hex": "#ffffff"
