@@ -14,8 +14,7 @@ export async function initPush() {
     return;
   }
 
-  const permission = await Notification.requestPermission();
-  if (permission !== "granted") {
+  if (Notification.permission !== "granted") {
     return;
   }
 

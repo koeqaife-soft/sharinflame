@@ -236,11 +236,15 @@ onMounted(() => {
     websockets.sendHeartbeat();
   });
 
-  navigator.serviceWorker.addEventListener("message", (event) => {
-    if (event.data && event.data.type === "SW_PING") {
-      event.ports[0]!.postMessage({ canHandle: websockets.isConnected() });
-    }
-  });
+  try {
+    navigator.serviceWorker.addEventListener("message", (event) => {
+      if (event.data && event.data.type === "SW_PING") {
+        event.ports[0]!.postMessage({ canHandle: websockets.isConnected() });
+      }
+    });
+  } catch (e) {
+    console.error(e);
+  }
 });
 
 onBeforeMount(() => {
