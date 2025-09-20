@@ -197,7 +197,8 @@ onMounted(() => {
 
   if (
     Notification.permission != "denied" &&
-    (Notification.permission == "default" || mainStore.getSetting("getNotifications") === undefined)
+    Notification.permission == "default" &&
+    mainStore.getSetting("getNotifications") === undefined
   ) {
     mainStore.openDialog(
       "okCancel",
