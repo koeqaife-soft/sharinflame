@@ -195,11 +195,7 @@ onMounted(() => {
   updateScreenSize();
   window.addEventListener("resize", updateScreenSize, { passive: true });
 
-  if (
-    Notification.permission != "denied" &&
-    Notification.permission == "default" &&
-    mainStore.getSetting("getNotifications") === undefined
-  ) {
+  if (Notification.permission != "denied" && mainStore.getSetting("getNotifications") === undefined) {
     mainStore.openDialog(
       "okCancel",
       "",
