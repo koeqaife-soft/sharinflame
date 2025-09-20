@@ -323,7 +323,9 @@
 .card .my-button.is-card,
 .menu-card .my-button.is-card {
   box-shadow: none;
-  background-color: var(--card-high);
+  &:not(.is-category) {
+    background-color: var(--card-high);
+  }
 }
 
 .my-button.is-category {
