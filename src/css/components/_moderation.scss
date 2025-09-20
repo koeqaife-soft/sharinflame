@@ -38,16 +38,19 @@
     padding-left: 14px;
     padding-right: 14px;
     min-height: 58px;
+    color: var(--on-card);
     .my-icon {
       @include iconSize(24);
       margin-right: 8px;
     }
     .note {
       font-size: 16px;
+      color: var(--on-card);
     }
     .info-label {
       margin-left: 8px;
       font-size: 16px;
+      color: var(--on-card);
     }
   }
 
