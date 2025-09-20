@@ -44,10 +44,10 @@
         />
       </div>
       <q-space />
-      <div class="action-container" v-if="showModDelete">
+      <div class="action-container circle" v-if="showModDelete">
         <my-button
           icon="delete_forever"
-          class="delete round button"
+          class="delete circle button"
           :disable="disable"
           @click="action('mod_delete', null)"
         />
