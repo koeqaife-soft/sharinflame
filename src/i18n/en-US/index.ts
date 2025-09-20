@@ -303,5 +303,10 @@ export default {
   unknown_user: "Unknown User",
 
   resource_not_found: "Resource not found",
-  resource_was_deleted: "Resource was deleted"
+  resource_was_deleted: "Resource was deleted",
+
+  moderation: "Moderation",
+  no_work_now: "No work for now",
+  reports: "Reports",
+  approve: "Approve"
 };

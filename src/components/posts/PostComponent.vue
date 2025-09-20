@@ -67,8 +67,17 @@
         />
       </div>
       <q-space />
+      <div class="action-container" v-if="showModDelete">
+        <my-button
+          icon="delete_forever"
+          class="delete round button"
+          :disable="disable"
+          @click="action('mod_delete', null)"
+          :label="$t('delete')"
+        />
+      </div>
       <div class="action-container circle" v-if="!disableActions">
-        <my-button icon="more_horiz" class="more button circle" size="sm" :disable="disable">
+        <my-button icon="more_horiz" class="more button circle" :disable="disable">
           <q-menu class="post-more-menu" self="top right">
             <more-menu :post="postRef" @action="action" />
           </q-menu>
@@ -120,6 +129,7 @@ const props = defineProps<{
   post: PostWithSystem;
   inDialog?: boolean;
   disableActions?: boolean;
+  showModDelete?: boolean;
 }>();
 
 const postRef = toRef(props.post);

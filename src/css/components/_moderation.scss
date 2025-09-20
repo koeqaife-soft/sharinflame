@@ -1,3 +1,29 @@
+.mod-audit-dialog,
+.mod-dialog {
+  .section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-left: 14px;
+    padding-right: 14px;
+    min-height: 58px;
+    color: var(--on-card);
+    .my-icon {
+      @include iconSize(24);
+      margin-right: 8px;
+    }
+    .note {
+      font-size: 16px;
+      color: var(--on-card);
+    }
+    .info-label {
+      margin-left: 8px;
+      font-size: 16px;
+      color: var(--on-card);
+    }
+  }
+}
+
 .mod-audit-dialog {
   @media (min-width: 641px) {
     .dialog-content {
@@ -31,29 +57,6 @@
       transform 0.25s ease-out;
   }
 
-  .section {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    padding-left: 14px;
-    padding-right: 14px;
-    min-height: 58px;
-    color: var(--on-card);
-    .my-icon {
-      @include iconSize(24);
-      margin-right: 8px;
-    }
-    .note {
-      font-size: 16px;
-      color: var(--on-card);
-    }
-    .info-label {
-      margin-left: 8px;
-      font-size: 16px;
-      color: var(--on-card);
-    }
-  }
-
   .moderator-avatar {
     margin-left: 8px;
   }
@@ -65,5 +68,52 @@
   .section .appellation-icon {
     margin-left: 8px;
     margin-right: 0;
+  }
+}
+
+.mod-dialog {
+  @media (min-width: 641px) {
+    .dialog-content {
+      max-width: 625px;
+      margin-left: 8px;
+      margin-right: 8px;
+      border-radius: 18px !important;
+    }
+    .q-dialog__inner {
+      margin-top: 74px;
+      margin-bottom: 16px;
+    }
+  }
+  @media (max-width: 640px) {
+    .dialog-content {
+      max-height: 100%;
+      border-radius: 0px;
+      border-radius: 18px 18px 0px 0px !important;
+    }
+    .q-dialog__inner {
+      margin-top: 58px;
+    }
+  }
+  .dialog-content {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    transition:
+      max-height 0.2s ease,
+      margin 0.2s ease,
+      transform 0.25s ease-out;
+  }
+
+  .dialog-center {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .report {
+    padding-left: 16px;
+    font-size: 16px;
   }
 }

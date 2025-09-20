@@ -44,6 +44,15 @@
         />
       </div>
       <q-space />
+      <div class="action-container" v-if="showModDelete">
+        <my-button
+          icon="delete_forever"
+          class="delete round button"
+          :disable="disable"
+          @click="action('mod_delete', null)"
+          :label="$t('delete')"
+        />
+      </div>
       <div class="action-container circle" v-if="!disableActions">
         <my-button icon="more_horiz" class="more button circle" size="sm" :disable="disable" :loading="moreMenuLoading">
           <q-menu class="comment-more-menu" self="top right" v-if="!moreMenuLoading">
@@ -84,6 +93,7 @@ const props = defineProps<{
   inDialog?: boolean;
   inRepliesDialog?: boolean;
   disableActions?: boolean;
+  showModDelete?: boolean;
 }>();
 
 const canAnimate = ref(false);

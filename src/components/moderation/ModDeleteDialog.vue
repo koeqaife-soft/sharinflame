@@ -38,12 +38,12 @@ const { dialogRef, onDialogHide } = useDialogPluginComponent();
 const props = defineProps<
   | {
       targetType: "post";
-      postId: string;
+      postId?: string;
     }
   | {
       targetType: "comment";
-      postId: string;
-      commentId: string;
+      postId?: string;
+      commentId?: string;
     }
 >();
 
@@ -56,9 +56,9 @@ async function onOk() {
   loading.value = true;
   try {
     if (props.targetType == "post") {
-      await deletePost(props.postId, undefined, text.value);
+      await deletePost(props.postId!, undefined, text.value);
     } else if (props.targetType == "comment") {
-      await deleteComment(props.postId, props.commentId, undefined, text.value);
+      await deleteComment(props.postId!, props.commentId!, undefined, text.value);
     } else {
       throw new Error("Unknown targetType");
     }

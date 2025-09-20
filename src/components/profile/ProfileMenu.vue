@@ -40,6 +40,15 @@
       @click="mainStore.openDialog('myActivity', '', {})"
       v-close-popup
     />
+    <my-button
+      type="card"
+      :class="['moderation', buttonsClass]"
+      icon="shield"
+      :label="$t('moderation')"
+      v-close-popup
+      v-if="profileStore.profile?.permissions?.some((v) => v.startsWith('MODERATE_'))"
+      @click="mainStore.openDialog('mod', '', {})"
+    />
     <q-separator />
     <my-button
       type="card"
