@@ -33,6 +33,8 @@ type UserPermission =
 interface User {
   user_id: string;
   username: string;
+  followers_count?: number;
+  following_count?: number;
   display_name?: string;
   avatar_url?: string;
   banner_url?: string;

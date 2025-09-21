@@ -138,9 +138,13 @@ async function followButton() {
   try {
     if (followed) {
       delete userRef.value.followed;
+      userRef.value.followers_count ??= 0;
+      userRef.value.followers_count -= 1;
       await unfollow(userRef.value.user_id);
     } else {
       userRef.value.followed = true;
+      userRef.value.followers_count ??= 0;
+      userRef.value.followers_count += 1;
       await follow(userRef.value.user_id);
     }
   } catch {

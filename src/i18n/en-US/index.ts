@@ -112,6 +112,11 @@ export default {
       description: "You have to update your client to see this badge!"
     }
   },
+  social_activity: {
+    label: "Social Activity",
+    following: "Following: {number}",
+    followers: "Followers: {number}"
+  },
   follow: "Follow",
   unfollow: "Unfollow",
   edit: "Edit",

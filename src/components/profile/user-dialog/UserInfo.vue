@@ -7,8 +7,21 @@
             <my-icon :icon="section.icon" :style="section.iconStyle" />
             <div>{{ $t(section.titleKey) }}</div>
           </div>
-          <q-separator class="separator q-mb-xs q-mt-xs" />
-          <template v-if="section.key === 'bio'">
+          <div class="horizontal-container" v-if="section.key === 'social_activity'">
+            <div class="card counter">
+              <my-icon icon="group" />
+              <div class="label">
+                {{ $t("social_activity.followers", { number: props.user.followers_count ?? 0 }) }}
+              </div>
+            </div>
+            <div class="card counter">
+              <my-icon icon="person_add" />
+              <div class="label">
+                {{ $t("social_activity.following", { number: props.user.following_count ?? 0 }) }}
+              </div>
+            </div>
+          </div>
+          <template v-else-if="section.key === 'bio'">
             <div class="text" v-html="formatStringForHtml(props.user.bio!)" />
           </template>
           <template v-else-if="section.key === 'created_at'">
@@ -54,9 +67,17 @@ const props = defineProps<{
 
 const sections = computed(() => [
   {
+    key: "social_activity",
+    class: "card social-activity animation-fade-in-down",
+    icon: "browse_gallery",
+    titleKey: "social_activity.label",
+    visible: true,
+    iconStyle: undefined
+  },
+  {
     key: "bio",
     class: "card bio animation-fade-in-down",
-    icon: "person",
+    icon: "text_snippet",
     titleKey: "about_me",
     visible: !!props.user.bio,
     iconStyle: undefined
@@ -72,7 +93,7 @@ const sections = computed(() => [
   {
     key: "created_at",
     class: "card created-at animation-fade-in-down",
-    icon: "event",
+    icon: "cake",
     titleKey: "created_at",
     visible: true,
     iconStyle: { transform: "translateY(-1.55px)" }
