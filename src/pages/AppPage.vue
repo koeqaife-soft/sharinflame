@@ -161,7 +161,7 @@ const optionsList = [
   },
   {
     labelKey: "categories.new",
-    icon: "update",
+    icon: "lightbulb",
     key: "new"
   },
   {
