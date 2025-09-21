@@ -140,13 +140,13 @@ const categoriesList = computed<ButtonProps[]>(() => [
     type: "popular"
   },
   {
-    icon: "update",
+    icon: "lightbulb",
     label: t("categories.new"),
     click: () => changeType("new"),
     type: "new"
   },
   {
-    icon: "group",
+    icon: "person_add",
     label: t("categories.following"),
     click: () => changeType("following"),
     type: "following"

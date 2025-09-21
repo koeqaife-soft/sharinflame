@@ -95,7 +95,7 @@ const items = [
   {
     labelKey: "following",
     key: "following",
-    icon: "group"
+    icon: "person_add"
   }
 ] as const;
 
