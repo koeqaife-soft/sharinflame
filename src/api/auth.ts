@@ -77,7 +77,7 @@ async function verifyEmailCheck(token: string, code: string, config: AxiosReques
   );
 }
 
-async function authMe(config: AxiosRequestConfig = {}) {
+async function getAuthMe(config: AxiosRequestConfig = {}) {
   return await api.get<ApiResponse<AuthUser>>(authEndpoints.me, config);
 }
 
@@ -131,5 +131,5 @@ export {
   clientLogout,
   verifyEmailSend,
   verifyEmailCheck,
-  authMe
+  getAuthMe
 };

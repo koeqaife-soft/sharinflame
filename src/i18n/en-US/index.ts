@@ -285,6 +285,16 @@ export default {
   contrast: "Contrast",
   mono: "Mono",
 
+  security: "Security",
+  verify: "Verify",
+  code: "Code",
+  email_verify: {
+    title: "Email Verification",
+    success: "Your email has been verified",
+    failed: "Failed you verify your email",
+    incorrect: "Code is incorrect, try again"
+  },
+
   star_background_setting: {
     label: "Star Background",
     desc: "Enables star background in home page (can lag)"

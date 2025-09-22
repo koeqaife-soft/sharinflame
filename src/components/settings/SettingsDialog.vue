@@ -48,6 +48,7 @@
               <keep-alive>
                 <profile-view v-if="showIf('profile')" />
                 <appearance-view v-else-if="showIf('appearance')" />
+                <security-view v-else-if="showIf('security')" />
               </keep-alive>
             </transition>
           </div>
@@ -74,7 +75,8 @@ const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
 const ProfileView = defineAsyncComponent(() => import("./ProfileView.vue"));
 const AppearanceView = defineAsyncComponent(() => import("./AppearanceView.vue"));
-type views = ["profile", "appearance"];
+const SecurityView = defineAsyncComponent(() => import("./SecurityView.vue"));
+type views = ["profile", "appearance", "security"];
 
 const mainStore = useMainStore();
 const screenSize = ref(window.innerWidth);
@@ -88,6 +90,11 @@ const items = [
     labelKey: "profile",
     key: "profile",
     icon: "person"
+  },
+  {
+    labelKey: "security",
+    key: "security",
+    icon: "lock"
   },
   {
     labelKey: "appearance",

@@ -199,7 +199,8 @@
 
 // ReportDialog and ModDeleteDialog style
 .report-dialog,
-.mod-delete-dialog {
+.mod-delete-dialog,
+.email-verify-dialog {
   .dialog-content {
     max-width: 500px;
     height: auto;

@@ -39,7 +39,8 @@ const dialogs = {
   report: defineAsyncComponent(() => import("src/components/misc/ReportDialog.vue")),
   modDelete: defineAsyncComponent(() => import("src/components/moderation/ModDeleteDialog.vue")),
   modAudit: defineAsyncComponent(() => import("src/components/moderation/ModAuditDialog.vue")),
-  mod: defineAsyncComponent(() => import("src/components/moderation/ModDialog.vue"))
+  mod: defineAsyncComponent(() => import("src/components/moderation/ModDialog.vue")),
+  emailVerify: defineAsyncComponent(() => import("src/components/settings/security/EmailVerifyDialog.vue"))
 } as const;
 
 const stackDialogs = ["replies"];

@@ -53,9 +53,6 @@
   }
 
   .appearance-view {
-    .label {
-      margin-top: 2px;
-    }
     .slider-container {
       margin-left: 6px;
       margin-right: 6px;
@@ -124,6 +121,41 @@
     }
   }
 
+  .security-view {
+    .email {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      .buttons {
+        display: flex;
+        gap: 8px;
+      }
+      .email-value {
+        margin-left: 4px;
+      }
+    }
+    .card {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+  }
+
+  .card {
+    .header {
+      display: flex;
+      flex-direction: row;
+      .my-icon {
+        @include iconSize(20);
+        color: var(--on-card);
+        margin-right: 8px;
+      }
+      .label {
+        font-size: 14px;
+      }
+    }
+  }
+
   .label {
     font-size: 14px;
     font-weight: 600;
@@ -140,6 +172,7 @@
     align-items: center;
     height: 300px;
     width: 100%;
+    color: var(--primary);
   }
 
   .input {
