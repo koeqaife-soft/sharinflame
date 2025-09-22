@@ -47,6 +47,13 @@ interface User {
   permissions?: UserPermission[];
 }
 
+interface AuthUser {
+  user_id: string;
+  username: string;
+  email: string;
+  email_verified: boolean;
+}
+
 interface Post {
   post_id: string;
   user_id: string;

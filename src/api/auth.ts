@@ -1,4 +1,4 @@
-import type { AxiosInstance } from "axios";
+import type { AxiosInstance, AxiosRequestConfig } from "axios";
 import router from "src/router";
 import websockets from "src/utils/websockets";
 import { waitForRefresh, refreshNow } from "./interceptors";
@@ -9,7 +9,10 @@ export const authEndpoints = {
   register: "/auth/register",
   login: "/auth/login",
   refresh: "/auth/refresh",
-  logout: "/auth/logout"
+  logout: "/auth/logout",
+  me: "/auth/me",
+  send_email_verify: "/auth/email/verify/send",
+  check_email_verify: "/auth/email/verify/check"
 };
 export const noAuthEndpoints = ["/auth/register", "/auth/login", "/auth/refresh", "/ping"];
 
@@ -59,6 +62,25 @@ async function refresh() {
   return r;
 }
 
+async function verifyEmailSend(config: AxiosRequestConfig = {}) {
+  return await api.post<ApiResponse<{ token: string }>>(authEndpoints.send_email_verify, undefined, config);
+}
+
+async function verifyEmailCheck(token: string, code: string, config: AxiosRequestConfig = {}) {
+  return await api.post<ApiResponse<{ token: string }>>(
+    authEndpoints.check_email_verify,
+    {
+      token: token,
+      code: code
+    },
+    config
+  );
+}
+
+async function authMe(config: AxiosRequestConfig = {}) {
+  return await api.get<ApiResponse<AuthUser>>(authEndpoints.me, config);
+}
+
 function init(_api: AxiosInstance) {
   api = _api;
 
@@ -96,4 +118,18 @@ function clientLogout() {
   window.location.reload();
 }
 
-export { register, login, logout, refresh, init, setTokens, clearTokens, getAccessToken, refreshToken, clientLogout };
+export {
+  register,
+  login,
+  logout,
+  refresh,
+  init,
+  setTokens,
+  clearTokens,
+  getAccessToken,
+  refreshToken,
+  clientLogout,
+  verifyEmailSend,
+  verifyEmailCheck,
+  authMe
+};
