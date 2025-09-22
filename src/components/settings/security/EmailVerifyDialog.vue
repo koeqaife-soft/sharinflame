@@ -19,7 +19,11 @@
         :disable="loading"
         :error="isIncorrect"
         :error-message="$t('email_verify.incorrect')"
-      />
+      >
+        <template #prepend>
+          <my-icon icon="key"></my-icon>
+        </template>
+      </q-input>
       <div class="buttons horizontal-container">
         <my-button :label="$t('cancel')" type="flat" icon="close" @click="dialogRef!.hide()" :disable="loading" />
         <my-button :label="$t('verify')" type="primary" icon="check" @click="onOk" :loading="loading" />
@@ -30,12 +34,13 @@
 <script setup lang="ts">
 import { useDialogPluginComponent, useQuasar } from "quasar";
 import MyButton from "src/components/my/MyButton.vue";
+import MyIcon from "src/components/my/MyIcon.vue";
 import { onBeforeUnmount, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { verifyEmailCheck } from "src/api/auth";
 import { isAxiosError } from "axios";
 
-defineEmits([...useDialogPluginComponent.emits]);
+const emit = defineEmits([...useDialogPluginComponent.emits]);
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
 const controller = new AbortController();
@@ -65,7 +70,7 @@ async function onOk() {
       icon: "sym_r_done_outline"
     });
 
-    dialogRef.value?.hide();
+    emit("ok");
   } catch (e) {
     if (isAxiosError(e) && e.response?.data.error == "INCORRECT") {
       isIncorrect.value = true;

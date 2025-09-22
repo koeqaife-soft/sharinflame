@@ -17,7 +17,11 @@
         :label="$t('reason')"
         class="full-width textarea card"
         :disable="loading"
-      />
+      >
+        <template #prepend>
+          <my-icon icon="problem" />
+        </template>
+      </q-input>
       <div class="buttons horizontal-container">
         <my-button :label="$t('cancel')" type="flat" icon="close" @click="dialogRef!.hide()" :disable="loading" />
         <my-button :label="$t('delete')" type="primary" icon="report" @click="onOk" :loading="loading" />
@@ -28,6 +32,7 @@
 <script setup lang="ts">
 import { useDialogPluginComponent, useQuasar } from "quasar";
 import MyButton from "../my/MyButton.vue";
+import MyIcon from "../my/MyIcon.vue";
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
 import { deleteComment, deletePost } from "src/api/posts";
