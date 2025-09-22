@@ -158,7 +158,7 @@ const changeType = (type: string) => {
 };
 
 function editProfile() {
-  mainStore.openDialog("settings", "", { open: "my_account" });
+  mainStore.openDialog("settings", "", { open: "profile" });
 }
 
 onMounted(async () => {

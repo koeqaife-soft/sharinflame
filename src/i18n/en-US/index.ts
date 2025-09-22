@@ -251,7 +251,6 @@ export default {
 
   more: "More",
 
-  my_account: "My Account",
   profile: "Profile",
   display_name: "Display Name",
   add_language: "Add Language",

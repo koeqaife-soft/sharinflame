@@ -1,11 +1,6 @@
 <template>
-  <q-scroll-area class="scroll-area fix-scroll-area full-height account-view" :visible="false" v-if="loaded">
-    <div class="card container profile-container">
-      <div class="horizontal-container">
-        <my-icon icon="account_circle" class="label-icon" :style="{ transform: 'translateY(-2px)' }" />
-        <div class="label">{{ $t("profile") }}</div>
-      </div>
-
+  <q-scroll-area class="scroll-area fix-scroll-area full-height profile-view" :visible="false" v-if="loaded">
+    <div class="container profile-container">
       <q-input
         borderless
         v-model="displayName"
@@ -14,7 +9,11 @@
         :placeholder="profile?.username"
         class="input"
         :disable="applyLoading"
-      />
+      >
+        <template #prepend>
+          <my-icon icon="id_card" />
+        </template>
+      </q-input>
 
       <q-input
         borderless
@@ -25,7 +24,11 @@
         class="input"
         ref="aboutMeRef"
         :disable="applyLoading"
-      />
+      >
+        <template #prepend>
+          <my-icon icon="text_snippet" />
+        </template>
+      </q-input>
 
       <div class="card languages">
         <div class="horizontal-container">

@@ -1,5 +1,7 @@
 .settings-dialog {
-  .account-view {
+  .profile-view {
+    display: flex;
+    gap: 8px;
     .languages {
       flex-direction: column;
       display: flex;
@@ -17,20 +19,14 @@
       }
     }
     .language {
-      background-color: var(--card);
+      background-color: var(--card-high);
     }
     .button-container {
       justify-content: flex-end;
     }
-    .profile-container {
-      padding-top: 10px;
-      .card {
-        box-shadow: none;
-        border-radius: 6px;
-        background-color: var(--card-high);
-        padding-top: 12px;
-        padding-bottom: 12px;
-      }
+    .card {
+      padding-top: 12px;
+      padding-bottom: 12px;
     }
     .change-banner,
     .change-avatar {
@@ -42,9 +38,10 @@
       }
     }
     .image-state {
-      background-color: var(--card) !important;
+      box-shadow: none;
+      background-color: var(--card-high);
       margin: 12px 0px;
-      padding: 0px 14px;
+      padding: 12px 14px;
       .my-icon {
         @include iconSize(22);
       }
@@ -150,7 +147,7 @@
     padding-bottom: 0px;
     padding-left: 16px;
     padding-right: 16px;
-    background-color: var(--card-high);
+    background-color: var(--card);
     border: 1px solid transparent;
     border-radius: 6px;
     transition: border-color 0.2s ease-out;

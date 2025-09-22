@@ -46,7 +46,7 @@
           >
             <transition name="crossfade" :css="!isSmallScreen">
               <keep-alive>
-                <account-view v-if="showIf('my_account')" />
+                <profile-view v-if="showIf('profile')" />
                 <appearance-view v-else-if="showIf('appearance')" />
               </keep-alive>
             </transition>
@@ -72,21 +72,21 @@ const props = defineProps<{
 defineEmits([...useDialogPluginComponent.emits]);
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
-const AccountView = defineAsyncComponent(() => import("./AccountView.vue"));
+const ProfileView = defineAsyncComponent(() => import("./ProfileView.vue"));
 const AppearanceView = defineAsyncComponent(() => import("./AppearanceView.vue"));
-type views = ["my_account", "appearance"];
+type views = ["profile", "appearance"];
 
 const mainStore = useMainStore();
 const screenSize = ref(window.innerWidth);
 const isSmallScreen = computed(() => screenSize.value < 750);
 const current = ref(props.open ? 1 : 0);
 
-const selected = ref<views[number]>(props.open ?? "my_account");
+const selected = ref<views[number]>(props.open ?? "profile");
 
 const items = [
   {
-    labelKey: "my_account",
-    key: "my_account",
+    labelKey: "profile",
+    key: "profile",
     icon: "person"
   },
   {
