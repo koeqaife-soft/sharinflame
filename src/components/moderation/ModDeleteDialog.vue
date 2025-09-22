@@ -2,7 +2,7 @@
   <q-dialog
     transition-show="scale"
     transition-hide="scale"
-    class="mod-delete-dialog card-dialog"
+    class="text-dialog mod-delete-dialog card-dialog"
     ref="dialogRef"
     @hide="onDialogHide"
     maximized

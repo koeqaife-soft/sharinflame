@@ -2,7 +2,7 @@
   <q-dialog
     transition-show="scale"
     transition-hide="scale"
-    class="email-verify-dialog card-dialog"
+    class="text-dialog card-dialog"
     ref="dialogRef"
     @hide="onDialogHide"
     maximized

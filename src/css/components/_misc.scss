@@ -197,10 +197,8 @@
   }
 }
 
-// ReportDialog and ModDeleteDialog style
-.report-dialog,
-.mod-delete-dialog,
-.email-verify-dialog {
+// Dialogs with text inputs
+.text-dialog {
   .dialog-content {
     max-width: 500px;
     height: auto;
