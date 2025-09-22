@@ -1,6 +1,6 @@
 <template>
   <q-scroll-area class="scroll-area full-height fix-scroll-area" :visible="false">
-    <div class="container">
+    <div class="container profile-container">
       <template v-for="(section, index) in sections">
         <div v-if="section.visible" :key="index" :class="section.class" :style="animationDelay(section.key)">
           <div class="header">
@@ -91,20 +91,20 @@ const sections = computed(() => [
     iconStyle: undefined
   },
   {
-    key: "created_at",
-    class: "card created-at animation-fade-in-down",
-    icon: "cake",
-    titleKey: "created_at",
-    visible: true,
-    iconStyle: { transform: "translateY(-1.55px)" }
-  },
-  {
     key: "languages",
     class: "card languages animation-fade-in-down",
     icon: "language",
     titleKey: "languages",
     visible: !!props.user.languages?.length,
     iconStyle: undefined
+  },
+  {
+    key: "created_at",
+    class: "card created-at animation-fade-in-down",
+    icon: "cake",
+    titleKey: "created_at",
+    visible: true,
+    iconStyle: { transform: "translateY(-1.55px)" }
   }
 ]);
 
