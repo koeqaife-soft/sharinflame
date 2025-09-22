@@ -285,6 +285,7 @@ export default {
   contrast: "Contrast",
   mono: "Mono",
 
+  account: "Account",
   security: "Security",
   verify: "Verify",
   code: "Code",
