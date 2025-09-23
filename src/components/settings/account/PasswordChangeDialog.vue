@@ -74,7 +74,7 @@
         </div>
         <div class="buttons horizontal-container">
           <my-button :label="$t('cancel')" type="flat" icon="close" @click="dialogRef!.hide()" :disable="loading" />
-          <my-button :label="$t('verify')" type="primary" icon="check" btn-type="submit" :loading="loading" />
+          <my-button :label="$t('done')" type="primary" icon="check" btn-type="submit" :loading="loading" />
         </div>
       </q-form>
     </div>

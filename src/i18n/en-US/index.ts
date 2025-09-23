@@ -305,6 +305,7 @@ export default {
     incorrect: "Password is incorrect, try again",
     close_all_sessions: "Close all sessions?"
   },
+  done: "Done",
 
   star_background_setting: {
     label: "Star Background",
