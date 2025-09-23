@@ -1,28 +1,48 @@
 <template>
   <q-scroll-area class="scroll-area fix-scroll-area full-height security-view" :visible="false" v-if="authUser">
-    <div class="card section email">
-      <div class="content">
-        <div class="header">
-          <my-icon class="label-icon" icon="email" />
-          <div class="label">{{ $t("email") }}</div>
+    <div class="container">
+      <div class="card section email">
+        <div class="content">
+          <div class="header">
+            <my-icon class="label-icon" icon="email" />
+            <div class="label">{{ $t("email") }}</div>
+          </div>
+          <div class="section-value">{{ email }}</div>
         </div>
-        <div class="email-value">{{ email }}</div>
+        <div class="buttons">
+          <my-button
+            type="card"
+            @click="revealEmail = !revealEmail"
+            :icon-right="revealEmail ? 'visibility_off' : 'visibility'"
+          />
+          <my-button
+            type="attention"
+            :label="$t('verify')"
+            icon-right="check"
+            :loading="emailVerifyLoading"
+            @click="verifyEmail"
+            v-if="!authUser.email_verified"
+          />
+          <my-button type="primary" :label="$t('edit')" icon-right="edit" :disable="emailVerifyLoading" />
+        </div>
       </div>
-      <div class="buttons">
-        <my-button
-          type="card"
-          @click="revealEmail = !revealEmail"
-          :icon-right="revealEmail ? 'visibility_off' : 'visibility'"
-        />
-        <my-button
-          type="attention"
-          :label="$t('verify')"
-          icon-right="check"
-          :loading="emailVerifyLoading"
-          @click="verifyEmail"
-          v-if="!authUser.email_verified"
-        />
-        <my-button type="primary" :label="$t('edit')" icon-right="edit" :disable="emailVerifyLoading" />
+
+      <div class="card section password">
+        <div class="content">
+          <div class="header">
+            <my-icon class="label-icon" icon="key" />
+            <div class="label">{{ $t("password") }}</div>
+          </div>
+          <div class="section-value">{{ $t("hidden") }}</div>
+        </div>
+        <div class="buttons">
+          <my-button
+            type="primary"
+            :label="$t('edit')"
+            icon-right="edit"
+            @click="mainStore.openDialog('passwordChange', '', {})"
+          />
+        </div>
       </div>
     </div>
   </q-scroll-area>

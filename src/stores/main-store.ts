@@ -40,7 +40,8 @@ const dialogs = {
   modDelete: defineAsyncComponent(() => import("src/components/moderation/ModDeleteDialog.vue")),
   modAudit: defineAsyncComponent(() => import("src/components/moderation/ModAuditDialog.vue")),
   mod: defineAsyncComponent(() => import("src/components/moderation/ModDialog.vue")),
-  emailVerify: defineAsyncComponent(() => import("src/components/settings/account/EmailVerifyDialog.vue"))
+  emailVerify: defineAsyncComponent(() => import("src/components/settings/account/EmailVerifyDialog.vue")),
+  passwordChange: defineAsyncComponent(() => import("src/components/settings/account/PasswordChangeDialog.vue"))
 } as const;
 
 const stackDialogs = ["replies"];

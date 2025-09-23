@@ -12,7 +12,8 @@ export const authEndpoints = {
   logout: "/auth/logout",
   me: "/auth/me",
   send_email_verify: "/auth/email/verify/send",
-  check_email_verify: "/auth/email/verify/check"
+  check_email_verify: "/auth/email/verify/check",
+  change_password: "/auth/change_password"
 };
 export const noAuthEndpoints = ["/auth/register", "/auth/login", "/auth/refresh", "/ping"];
 
@@ -77,6 +78,23 @@ async function verifyEmailCheck(token: string, code: string, config: AxiosReques
   );
 }
 
+async function changePassword(
+  oldPassword: string,
+  newPassword: string,
+  config: AxiosRequestConfig = {},
+  closeAllSessions: boolean = false
+) {
+  return await api.post(
+    authEndpoints.change_password,
+    {
+      old_password: oldPassword,
+      new_password: newPassword,
+      close_sessions: closeAllSessions
+    },
+    config
+  );
+}
+
 async function getAuthMe(config: AxiosRequestConfig = {}) {
   return await api.get<ApiResponse<AuthUser>>(authEndpoints.me, config);
 }
@@ -131,5 +149,6 @@ export {
   clientLogout,
   verifyEmailSend,
   verifyEmailCheck,
-  getAuthMe
+  getAuthMe,
+  changePassword
 };

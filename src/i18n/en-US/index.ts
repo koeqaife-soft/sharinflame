@@ -292,8 +292,18 @@ export default {
   email_verify: {
     title: "Email Verification",
     success: "Your email has been verified",
-    failed: "Failed you verify your email",
+    failed: "Failed to verify your email",
     incorrect: "Code is incorrect, try again"
+  },
+  hidden: "Hidden",
+  old_password: "Old Password",
+  new_password: "New Password",
+  password_change: {
+    title: "Change Password",
+    success: "Your password has been changed",
+    failed: "Failed to change your password",
+    incorrect: "Password is incorrect, try again",
+    close_all_sessions: "Close all sessions?"
   },
 
   star_background_setting: {
