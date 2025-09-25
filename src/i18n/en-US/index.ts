@@ -306,6 +306,15 @@ export default {
     close_all_sessions: "Close all sessions?"
   },
   done: "Done",
+  new_email: "New Email",
+  email_change: {
+    title: "Change Email",
+    success: "Your email has been changed",
+    incorrect_password: "Password is incorrect, try again",
+    pending:
+      "For security reasons, your email address will not be changed immediately. Within 1-5 days, your email address will be changed to the one you specified."
+  },
+  pending_email_change: "Pending Email Change",
 
   star_background_setting: {
     label: "Star Background",

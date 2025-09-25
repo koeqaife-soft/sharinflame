@@ -52,6 +52,8 @@ interface AuthUser {
   username: string;
   email: string;
   email_verified: boolean;
+  pending_email?: string;
+  pending_email_until?: number;
 }
 
 interface Post {

@@ -13,7 +13,11 @@ export const authEndpoints = {
   me: "/auth/me",
   send_email_verify: "/auth/email/verify/send",
   check_email_verify: "/auth/email/verify/check",
-  change_password: "/auth/change_password"
+  change_password: "/auth/change_password",
+
+  change_email_send: "/auth/change_email/send",
+  change_email_check: "/auth/change_email/check",
+  change_email_cancel: "/auth/change_email/cancel"
 };
 export const noAuthEndpoints = ["/auth/register", "/auth/login", "/auth/refresh", "/ping"];
 
@@ -68,7 +72,7 @@ async function verifyEmailSend(config: AxiosRequestConfig = {}) {
 }
 
 async function verifyEmailCheck(token: string, code: string, config: AxiosRequestConfig = {}) {
-  return await api.post<ApiResponse<{ token: string }>>(
+  return await api.post(
     authEndpoints.check_email_verify,
     {
       token: token,
@@ -76,6 +80,32 @@ async function verifyEmailCheck(token: string, code: string, config: AxiosReques
     },
     config
   );
+}
+
+async function changeEmailSend(password: string, newEmail: string, config: AxiosRequestConfig = {}) {
+  return await api.post<ApiResponse<{ token: string }>>(
+    authEndpoints.change_email_send,
+    {
+      password,
+      new_email: newEmail
+    },
+    config
+  );
+}
+
+async function changeEmailCheck(token: string, code: string, config: AxiosRequestConfig = {}) {
+  return await api.post<ApiResponse<{ pending_until?: string | null }>>(
+    authEndpoints.change_email_check,
+    {
+      token: token,
+      code: code
+    },
+    config
+  );
+}
+
+async function changeEmailCancel(config: AxiosRequestConfig = {}) {
+  return await api.post(authEndpoints.change_email_cancel, undefined, config);
 }
 
 async function changePassword(
@@ -150,5 +180,8 @@ export {
   verifyEmailSend,
   verifyEmailCheck,
   getAuthMe,
-  changePassword
+  changePassword,
+  changeEmailSend,
+  changeEmailCheck,
+  changeEmailCancel
 };

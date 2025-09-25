@@ -23,7 +23,26 @@
             @click="verifyEmail"
             v-if="!authUser.email_verified"
           />
-          <my-button type="primary" :label="$t('edit')" icon-right="edit" :disable="emailVerifyLoading" />
+          <my-button
+            type="primary"
+            :label="$t('edit')"
+            icon-right="edit"
+            :disable="emailVerifyLoading"
+            @click="changeEmail"
+          />
+        </div>
+      </div>
+
+      <div class="card section email" v-if="authUser.pending_email">
+        <div class="content">
+          <div class="header">
+            <my-icon class="label-icon" icon="email" />
+            <div class="label">{{ $t("pending_email_change") }}</div>
+          </div>
+          <div class="section-value">{{ authUser.pending_email }}</div>
+        </div>
+        <div class="buttons">
+          <my-button type="attention" :label="$t('cancel')" icon-right="close" @click="cancelChanging" />
         </div>
       </div>
 
@@ -51,7 +70,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { getAuthMe, verifyEmailSend } from "src/api/auth";
+import { changeEmailCancel, getAuthMe, verifyEmailSend } from "src/api/auth";
 import { computed, defineAsyncComponent, onBeforeUnmount, onMounted, ref } from "vue";
 import MyIcon from "../my/MyIcon.vue";
 import MyButton from "../my/MyButton.vue";
@@ -93,8 +112,23 @@ async function verifyEmail() {
   }
 }
 
+async function updateUser() {
+  authUser.value = (await getAuthMe({ signal: controller.signal })).data.data;
+}
+
+async function cancelChanging() {
+  await changeEmailCancel({ signal: controller.signal });
+  void updateUser();
+}
+
+function changeEmail() {
+  mainStore.openDialog("changeEmail", "", {}, () => {
+    void updateUser();
+  });
+}
+
 onMounted(async () => {
-  authUser.value = (await getAuthMe()).data.data;
+  await updateUser();
 });
 
 onBeforeUnmount(() => {
