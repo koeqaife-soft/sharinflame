@@ -80,7 +80,7 @@ let isRefreshing = false;
 let subscribers: Array<(success: boolean) => void> = [];
 let lastRefresh: number = 0;
 
-const invalidAuth = () => {
+export const invalidAuth = () => {
   clearRefreshSubscribers();
   if (mainStore.initialized == 2) window.location.reload();
   mainStore.initialized = 1;

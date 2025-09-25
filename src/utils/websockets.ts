@@ -1,3 +1,5 @@
+import { invalidAuth } from "src/api/interceptors";
+
 interface EventMap {
   please_token: undefined;
   success_auth: undefined;
@@ -100,6 +102,7 @@ class WebSocketService {
     };
 
     this.socket.onclose = (event: CloseEvent) => {
+      if (event.reason == "INVALID_TOKEN") invalidAuth();
       console.debug(`WebSocket closed with code: ${event.code}, reason: ${event.reason}`);
       if (this.shouldStayConnected && !this.isManualDisconnect && !this.isReconnecting) {
         void this.handleReconnect();
