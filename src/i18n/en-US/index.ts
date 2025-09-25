@@ -311,8 +311,7 @@ export default {
     title: "Change Email",
     success: "Your email has been changed",
     incorrect_password: "Password is incorrect, try again",
-    pending:
-      "For security reasons, your email address will not be changed immediately. Within 1-5 days, your email address will be changed to the one you specified."
+    pending: "For security reasons, you need to wait 1-5 days for the email changes to take effect."
   },
   pending_email_change: "Pending Email Change",
 
