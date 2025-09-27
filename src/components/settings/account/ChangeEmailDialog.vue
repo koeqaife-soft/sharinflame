@@ -6,7 +6,7 @@
     ref="dialogRef"
     @hide="onDialogHide"
     maximized
-    persistent
+    :persistent="page == 1"
   >
     <div class="dialog-content">
       <div class="title">{{ page != 1 ? $t(`email_change.title`) : $t("email_verify.title") }}</div>
