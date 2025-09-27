@@ -113,6 +113,7 @@ const _validateEmail = (val: string) => _validate(validateEmail(val));
 
 watch(code, () => (isIncorrect.value.code = false));
 watch(password, () => (isIncorrect.value.password = false));
+watch(email, () => (emailError.value = undefined));
 
 async function onOk() {
   loading.value = true;
