@@ -6,6 +6,7 @@
     ref="dialogRef"
     @hide="onDialogHide"
     maximized
+    persistent
   >
     <div class="dialog-content">
       <div class="title">{{ page != 1 ? $t(`email_change.title`) : $t("email_verify.title") }}</div>
@@ -36,6 +37,8 @@
             :rules="[_validateEmail]"
             class="full-width textarea card q-mb-md"
             :disable="loading"
+            :error="emailError !== undefined"
+            :error-message="emailError"
           >
             <template #prepend>
               <my-icon icon="mail"></my-icon>
@@ -99,6 +102,7 @@ const isIncorrect = ref({
   password: false
 });
 const isPwd = ref(true);
+const emailError = ref<string>();
 
 const page = ref(0);
 
@@ -141,6 +145,9 @@ async function onOk() {
         return;
       } else if (e.response?.data.error == "INCORRECT_PASSWORD") {
         isIncorrect.value.password = true;
+        return;
+      } else if (e.response?.data.error == "USER_ALREADY_EXISTS") {
+        emailError.value = t("email_exists");
         return;
       }
     }
