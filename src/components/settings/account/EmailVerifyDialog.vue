@@ -6,6 +6,7 @@
     ref="dialogRef"
     @hide="onDialogHide"
     maximized
+    persistent
   >
     <div class="dialog-content">
       <div class="title">{{ $t(`email_verify.title`) }}</div>
