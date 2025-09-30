@@ -4,7 +4,7 @@
       <div class="label">It's beta!</div>
       <q-separator class="separator" />
       <div class="content">
-        Hello user! <br /><br />
+        Hello cool user! <br /><br />
         Welcome to the second public beta test of SharinFlame! Don't judge all the features just yet — things are still
         in progress.
         <br /><br />
@@ -15,8 +15,8 @@
         <br /><br />
         You can come back next Saturday and see what I've added!!
         <br /><br />
-        My plans include: “Forgot Password?”, account settings (username, email, password, etc.), reputation, DMs, and
-        more.
+        My plans include: “Forgot Password?”, account settings (username, and others), reputation, DMs, and more.
+        <br />I spent a lot of time already on it by the way, could you imagine that I coded this whole website alone?
         <br /><br />
         <b>Have fun!</b> ♥
       </div>
