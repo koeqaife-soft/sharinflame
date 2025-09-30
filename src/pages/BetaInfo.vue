@@ -45,6 +45,10 @@ function proceed() {
   display: flex;
   justify-content: center;
   align-content: center;
+
+  overflow-y: scroll !important;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 .info-card {
   align-self: center;
@@ -52,6 +56,7 @@ function proceed() {
   width: 100%;
   max-width: 600px;
   padding: 16px;
+  margin-top: 50px;
 }
 .label {
   font-size: 20px;
