@@ -13,8 +13,6 @@
         Unlike the first beta test, this one will not be shut down, accounts won't be wiped and even will receive
         updates!
         <br /><br />
-        You can come back next Saturday and see what I've added!!
-        <br /><br />
         My plans include: “Forgot Password?”, account settings (username, and others), reputation, DMs, and more.
         <br />I spent a lot of time already on it by the way, could you imagine that I coded this whole website alone?
         <br /><br />
