@@ -15,7 +15,9 @@
     </div>
     <div class="text-container" @click.stop="onClicked">
       <div class="title">{{ $t(`notifications.${actualType}`, { username: linkedContent.username }) }}</div>
-      <span class="message" v-if="linkedContent.message" v-html="formatStringForHtml(linkedContent.message)" />
+      <span class="message" v-if="linkedContent.message">
+        <span v-html="formatStringForHtml(linkedContent.message)" />
+      </span>
     </div>
   </my-button>
 </template>
