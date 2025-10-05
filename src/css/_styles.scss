@@ -370,7 +370,10 @@ mark {
 }
 
 .emoji {
-  font-family: "NotoColorEmoji", sans-serif;
+  font-family: "NotoColorEmoji";
+  display: inline-block;
+  width: 1ch;
+  text-align: center;
 }
 
 .login-card,
