@@ -278,20 +278,14 @@
 }
 
 .segmented-button {
-  border: 2px solid var(--outline);
-  border-radius: 36px;
+  @include elevation(1);
+  border-radius: 8px;
+  background-color: var(--card);
   .button {
     padding-left: 16px;
     padding-right: 16px;
-    border-radius: 0px;
+    border-radius: 8px;
     color: var(--on-background);
-
-    &:first-child {
-      border-radius: 36px 0px 0px 36px;
-    }
-    &:last-child {
-      border-radius: 0px 36px 36px 0px;
-    }
   }
 }
 
@@ -321,7 +315,8 @@
 }
 
 .card .my-button.is-card,
-.menu-card .my-button.is-card {
+.menu-card .my-button.is-card,
+.card .segmented-button {
   box-shadow: none;
   background-color: var(--card-high);
 }
