@@ -281,7 +281,8 @@
   @include elevation(1);
   border-radius: 8px;
   background-color: var(--card);
-  .button {
+  .my-button {
+    box-shadow: none;
     padding-left: 16px;
     padding-right: 16px;
     border-radius: 8px;
