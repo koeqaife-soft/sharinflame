@@ -11,6 +11,7 @@
   flex-direction: row;
   gap: 8px;
   z-index: 1;
+  height: 64px;
   .profile {
     height: 40px;
     width: 40px;
@@ -28,4 +29,8 @@ body.mobile .bottom-bar {
   transform: none;
   justify-content: space-evenly;
   border-radius: 0px;
+}
+
+body.mobile .app-view {
+  padding-bottom: 64px;
 }

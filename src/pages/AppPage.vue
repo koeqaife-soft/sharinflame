@@ -41,8 +41,9 @@
           :hide-right-column="hideRightColumn"
           :hide-notifications="hideNotifications"
           key="home"
+          class="app-view"
         />
-        <chat-view v-else-if="currentView == 'chat'" key="chat" />
+        <chat-view v-else-if="currentView == 'chat'" key="chat" class="app-view" />
       </keep-alive>
     </transition>
   </main-layout>
