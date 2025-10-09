@@ -27,7 +27,7 @@
             </div>
           </q-menu>
         </my-button>
-        <span class="button-badge" v-if="unreadNotificationsCount > 0">
+        <span class="button-badge on-toolbar" v-if="unreadNotificationsCount > 0">
           {{ unreadNotificationsCount }}
         </span>
       </div>
@@ -51,7 +51,12 @@
     <my-button icon="chat" is-category :class="{ selected: currentView == 'chat' }" @click="currentView = 'chat'" />
     <template v-if="$q.platform.is.mobile">
       <my-button icon="add" @click="mainStore.openDialog('postEditor', '', {})" />
-      <my-button icon="notifications" @click="mainStore.openDialog('notifications', '', {})" />
+      <div class="button-and-badge">
+        <my-button icon="notifications" @click="mainStore.openDialog('notifications', '', {})" />
+        <span class="button-badge" v-if="unreadNotificationsCount > 0">
+          {{ unreadNotificationsCount }}
+        </span>
+      </div>
       <open-profile-menu />
     </template>
   </div>
