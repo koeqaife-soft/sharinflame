@@ -75,11 +75,12 @@
           v-for="reply in commentRef.replies"
           :key="reply.comment_id"
           :comment="reply"
-          :in-replies-dialog="inRepliesDialog"
+          :in-replies-dialog="true"
           :disable-actions="disableActions"
           :show-mod-delete="showModDelete"
           :show-replies="true"
           :reply-indent="(replyIndent ?? 1) + 1"
+          hide-go-to
           @delete-comment="
             (id: string) => {
               const index = commentRef.replies!.findIndex((c) => c.comment_id === id);
@@ -253,7 +254,7 @@ async function action(type: string, data: unknown) {
       }
       break;
     case "report":
-      mainStore.openDialog("report", "", { targetType: "comment", targetId: commentRef.value.post_id });
+      mainStore.openDialog("report", "", { targetType: "comment", targetId: commentRef.value.comment_id });
       break;
     case "copy_id":
       void navigator.clipboard.writeText(data as string);
