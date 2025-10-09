@@ -152,7 +152,7 @@
   }
 
   .my-icon {
-    @include iconSize(20);
+    @include iconSize(24);
     margin: auto;
   }
 }
@@ -325,9 +325,6 @@
 .my-button.is-category {
   span {
     font-weight: 500;
-  }
-  .my-icon {
-    @include iconSize(24);
   }
 
   &.selected {

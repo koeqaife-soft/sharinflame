@@ -1,0 +1,31 @@
+.bottom-bar {
+  @include elevation(2);
+  background-color: var(--card-high);
+  padding: 12px;
+  border-radius: 16px;
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  z-index: 1;
+  .profile {
+    height: 40px;
+    width: 40px;
+    .q-avatar {
+      height: 26px;
+      width: 26px;
+    }
+  }
+}
+
+body.mobile .bottom-bar {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transform: none;
+  justify-content: space-evenly;
+  border-radius: 0px;
+}

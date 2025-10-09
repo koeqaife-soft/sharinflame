@@ -1,7 +1,7 @@
 <template>
   <main-layout :in-router="false" headers-class="index-10" class="full-height">
     <particles-background v-if="mainStore.getSetting('starBackground')" />
-    <template #toolbar-actions v-if="hideRightColumn || hideNotifications">
+    <template #toolbar-actions v-if="(hideRightColumn || hideNotifications) && !$q.platform.is.mobile">
       <div class="button-and-badge">
         <my-button icon="notifications" class="webkit-no-drag" v-if="hideNotifications">
           <q-menu class="menu-card notifications-menu" v-model="notificationsMenuOpened" max-height="999px">
@@ -33,28 +33,41 @@
       </div>
       <open-profile-menu v-if="hideRightColumn" />
     </template>
-    <keep-alive>
-      <home-view
-        v-if="currentView == 'home'"
-        :hide-left-column="hideLeftColumn"
-        :hide-right-column="hideRightColumn"
-        :hide-notifications="hideNotifications"
-      />
-      <chat-view v-else-if="currentView == 'chat'" />
-    </keep-alive>
+    <transition name="crossfade" mode="out-in">
+      <keep-alive>
+        <home-view
+          v-if="currentView == 'home'"
+          :hide-left-column="hideLeftColumn"
+          :hide-right-column="hideRightColumn"
+          :hide-notifications="hideNotifications"
+          key="home"
+        />
+        <chat-view v-else-if="currentView == 'chat'" key="chat" />
+      </keep-alive>
+    </transition>
   </main-layout>
+  <div class="bottom-bar">
+    <my-button icon="home" is-category :class="{ selected: currentView == 'home' }" @click="currentView = 'home'" />
+    <my-button icon="chat" is-category :class="{ selected: currentView == 'chat' }" @click="currentView = 'chat'" />
+    <template v-if="$q.platform.is.mobile">
+      <my-button icon="add" @click="mainStore.openDialog('postEditor', '', {})" />
+      <my-button icon="notifications" @click="mainStore.openDialog('notifications', '', {})" />
+      <open-profile-menu />
+    </template>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, defineAsyncComponent } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, defineAsyncComponent, onBeforeMount } from "vue";
 import { useMainStore } from "src/stores/main-store";
 import { readAllNotifications } from "src/api/users";
 import MainLayout from "src/layouts/MainLayout.vue";
 import MyButton from "src/components/my/MyButton.vue";
+import OpenProfileMenu from "src/components/profile/OpenProfileMenu.vue";
 import { initPush } from "src/utils/worker";
+import { watch } from "vue";
 
 const NotificationsList = defineAsyncComponent(() => import("src/components/notifications/NotificationsList.vue"));
-const OpenProfileMenu = defineAsyncComponent(() => import("src/components/profile/OpenProfileMenu.vue"));
 const ParticlesBackground = defineAsyncComponent(() => import("src/components/ParticlesBackground.vue"));
 const HomeView = defineAsyncComponent(() => import("src/pages/app-views/HomeView.vue"));
 const ChatView = defineAsyncComponent(() => import("src/pages/app-views/ChatView.vue"));
@@ -94,6 +107,10 @@ async function getNotificationPermission() {
   await initPush();
 }
 
+watch(currentView, (v) => {
+  localStorage.setItem("lastAppView", v);
+});
+
 onMounted(() => {
   updateScreenSize();
   window.addEventListener("resize", updateScreenSize, { passive: true });
@@ -115,5 +132,10 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   window.removeEventListener("resize", updateScreenSize);
+});
+
+onBeforeMount(() => {
+  const lastView = localStorage.getItem("lastAppView");
+  if (lastView == "home" || lastView == "chat") currentView.value = lastView;
 });
 </script>
