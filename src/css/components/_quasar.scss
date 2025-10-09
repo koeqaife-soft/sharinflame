@@ -25,11 +25,13 @@
 
 body.body--dark .q-dialog__backdrop {
   background-color: rgba(0, 0, 0, 0.5) !important;
-  backdrop-filter: blur(1px) contrast(95%);
 }
 
 body.body--light .q-dialog__backdrop {
   background-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+body:not(.mobile) .q-dialog__backdrop {
   backdrop-filter: blur(1px) contrast(95%);
 }
 
