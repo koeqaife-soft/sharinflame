@@ -43,6 +43,7 @@
         v-if="$q.platform.is.desktop"
         v-model="starBackground"
       />
+      <toggle-card label-key="toolbar_use_alt_setting" icon="toolbar" v-model="toolbarUseAlt" />
     </div>
   </q-scroll-area>
 </template>
@@ -98,6 +99,7 @@ const currentColor = ref("");
 const selectedMode = ref("");
 const selectedTheme = ref(mainStore.getSetting("currentTheme"));
 const starBackground = ref(mainStore.getSetting("starBackground"));
+const toolbarUseAlt = ref(mainStore.getSetting("toolbarUseAlt"));
 
 const predefinedColors = [8, 45, 120, 150, 180, 230, 320];
 const predefinedColorsHex = ref<string[]>([]);
@@ -140,6 +142,10 @@ function updateRangeStyle() {
 
 watch(starBackground, (v) => {
   mainStore.setSettings("starBackground", v);
+});
+
+watch(toolbarUseAlt, (v) => {
+  mainStore.setSettings("toolbarUseAlt", v);
 });
 
 watch(selectedMode, (v) => {

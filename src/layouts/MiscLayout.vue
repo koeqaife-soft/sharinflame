@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header unelevated :class="headersClass">
+    <q-header unelevated :class="[headersClass, { 'use-alt': mainStore.settings.toolbarUseAlt }]">
       <q-toolbar class="toolbar webkit-drag">
         <LogoComponent icon-class="icon" />
         <div class="webkit-drag title">SharinFlame</div>
@@ -34,8 +34,10 @@
 <script setup lang="ts">
 import LogoComponent from "src/components/misc/LogoComponent.vue";
 import MyButton from "src/components/my/MyButton.vue";
+import { useMainStore } from "src/stores/main-store";
 import { defineAsyncComponent } from "vue";
 
+const mainStore = useMainStore();
 const WindowActions = defineAsyncComponent(() => import("src/components/WindowActions.vue"));
 
 withDefaults(

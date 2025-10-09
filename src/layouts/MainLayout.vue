@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header unelevated :class="headersClass">
+    <q-header unelevated :class="[headersClass, { 'use-alt': mainStore.settings.toolbarUseAlt }]">
       <q-toolbar class="toolbar webkit-drag">
         <slot name="toolbar-before-logo" />
         <LogoComponent @icon-click="logoClick" :is-animated="isIconAnimated" icon-class="icon" class="webkit-no-drag" />
@@ -50,9 +50,11 @@ import { onBeforeUnmount, ref, defineAsyncComponent } from "vue";
 import MyButton from "src/components/my/MyButton.vue";
 import MyIcon from "src/components/my/MyIcon.vue";
 import { useRouter } from "vue-router";
+import { useMainStore } from "src/stores/main-store";
 
 const WindowActions = defineAsyncComponent(() => import("src/components/WindowActions.vue"));
 
+const mainStore = useMainStore();
 const router = useRouter();
 
 const isIconAnimated = ref(false);

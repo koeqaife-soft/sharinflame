@@ -11,7 +11,8 @@ const defaultSettings = {
   darkMode: "auto" as boolean | "auto",
   currentTheme: "default" as "default" | "monochrome" | "contrast",
   starBackground: false,
-  getNotifications: undefined as undefined | boolean
+  getNotifications: undefined as undefined | boolean,
+  toolbarUseAlt: false
 };
 
 type KeyOfSettings = keyof typeof defaultSettings;

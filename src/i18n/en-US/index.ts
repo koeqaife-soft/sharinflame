@@ -319,6 +319,10 @@ export default {
     label: "Star Background",
     desc: "Enables star background in home page (can lag)"
   },
+  toolbar_use_alt_setting: {
+    label: "Alternate Toolbar Color",
+    desc: "Use an alternate color for the toolbar"
+  },
 
   notifications: {
     label: "Notifications",
