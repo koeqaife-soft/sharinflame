@@ -15,7 +15,7 @@
     ]"
     @click.stop="(payload) => !disable && emit('click', payload)"
     :disable="disable ?? false"
-    @touchstart.passive="onTap"
+    @mouseup.passive="onTap"
   >
     <slot />
     <span v-if="icon || label || iconRight || $slots['append']">
