@@ -33,12 +33,16 @@ async function check(type: "email" | "username", value: string, config: AxiosReq
   });
 }
 
-async function register(username: string, email: string, password: string) {
-  const r = await api.post<AuthResponse>(authEndpoints.register, {
-    username: username,
-    password: password,
-    email: email
-  });
+async function register(username: string, email: string, password: string, config: AxiosRequestConfig = {}) {
+  const r = await api.post<AuthResponse>(
+    authEndpoints.register,
+    {
+      username: username,
+      password: password,
+      email: email
+    },
+    config
+  );
   if (r.data.success)
     setTokens({
       refresh: r.data.data.refresh,
@@ -48,11 +52,15 @@ async function register(username: string, email: string, password: string) {
   return r;
 }
 
-async function login(email: string, password: string) {
-  const r = await api.post<AuthResponse>(authEndpoints.login, {
-    password: password,
-    email: email
-  });
+async function login(email: string, password: string, config: AxiosRequestConfig = {}) {
+  const r = await api.post<AuthResponse>(
+    authEndpoints.login,
+    {
+      password: password,
+      email: email
+    },
+    config
+  );
   if (r.data.success)
     setTokens({
       refresh: r.data.data.refresh,
@@ -67,9 +75,9 @@ async function logout() {
   return r;
 }
 
-async function refresh() {
+async function refresh(config: AxiosRequestConfig = {}) {
   const refresh_token = localStorage.getItem("refresh_token");
-  const r = await api.post<AuthResponse>(authEndpoints.refresh, { refresh_token });
+  const r = await api.post<AuthResponse>(authEndpoints.refresh, { refresh_token }, config);
   if (r.data.success)
     setTokens({
       refresh: r.data.data.refresh,

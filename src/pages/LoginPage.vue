@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { onUnmounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { validateEmail, validatePassword } from "src/utils/validations";
 import { isAxiosError } from "axios";
@@ -76,6 +76,8 @@ import MyIcon from "src/components/my/MyIcon.vue";
 const { t } = useI18n();
 const router = useRouter();
 const mainStore = useMainStore();
+
+let controller = new AbortController();
 
 const cardRef = ref<HTMLDivElement>();
 const email = ref("");
@@ -118,11 +120,14 @@ const _validateEmail = (val: string) => _validate(validateEmail(val));
 const _validatePassword = (val: string) => _validate(validatePassword(val));
 
 const _login = async () => {
+  if (loading.value) return;
+  controller.abort();
+  controller = new AbortController();
   errors.value.email = "";
   errors.value.password = "";
   loading.value = true;
   try {
-    const r = await login(email.value, password.value);
+    const r = await login(email.value, password.value, { signal: controller.signal });
     if (r.data.success) {
       mainStore.initialized = 0;
       push({ path: "/" });
@@ -144,4 +149,8 @@ const _login = async () => {
     loading.value = false;
   }
 };
+
+onUnmounted(() => {
+  controller.abort();
+});
 </script>

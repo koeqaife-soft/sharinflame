@@ -105,6 +105,8 @@ import MyIcon from "src/components/my/MyIcon.vue";
 const { t } = useI18n();
 const mainStore = useMainStore();
 
+let controller = new AbortController();
+
 const cardRef = ref<HTMLDivElement>();
 const username = ref("");
 const email = ref("");
@@ -155,11 +157,14 @@ const _validatePassword = (val: string) => _validate(validatePassword(val));
 const validateConfirmPassword = (val: string) => val === password.value || t("passwords_must_match");
 
 const _register = async () => {
+  if (loading.value) return;
+  controller.abort();
+  controller = new AbortController();
   loading.value = true;
   try {
-    await check("username", username.value);
-    await check("email", email.value);
-    const r = await register(username.value, email.value, password.value);
+    await check("username", username.value, { signal: controller.signal });
+    await check("email", email.value, { signal: controller.signal });
+    const r = await register(username.value, email.value, password.value, { signal: controller.signal });
     if (r.data.success) {
       mainStore.initialized = 0;
       push({ path: "/" });
@@ -179,5 +184,6 @@ const _register = async () => {
 
 onUnmounted(() => {
   if (timeout) clearTimeout(timeout);
+  controller.abort();
 });
 </script>
