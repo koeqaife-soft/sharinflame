@@ -132,8 +132,7 @@ function onLogout() {
       localeKey: "logout_dialog",
       okKey: "yes",
       cancelKey: "no",
-      okType: "attention",
-      persistent: true
+      okType: "attention"
     },
     () => void onLogoutOk()
   );
