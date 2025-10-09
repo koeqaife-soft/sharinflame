@@ -21,7 +21,7 @@ export const authEndpoints = {
 
   check: "/auth/check"
 };
-export const noAuthEndpoints = ["/auth/register", "/auth/login", "/auth/refresh", "/ping"];
+export const noAuthEndpoints = ["/auth/register", "/auth/login", "/auth/refresh", "/ping", "/auth/check"];
 
 async function check(type: "email" | "username", value: string, config: AxiosRequestConfig = {}) {
   return await api.get(authEndpoints.check, {
