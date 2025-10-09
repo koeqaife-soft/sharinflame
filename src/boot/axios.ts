@@ -22,17 +22,15 @@ let mainStore: ReturnType<typeof useMainStore>;
 
 export const api = axios.create({ baseURL: apiUrl, timeout: 15000 });
 
-async function initialize() {
-  await Promise.all(
-    initFunctions.map((initFunction) => {
-      return initFunction(api, mainStore);
-    })
-  );
+function initialize() {
+  initFunctions.map((initFunction) => {
+    return initFunction(api, mainStore);
+  });
 }
 
 export default defineBoot(({ app }) => {
   app.config.globalProperties.$axios = axios;
   app.config.globalProperties.$api = api;
   mainStore = useMainStore();
-  void initialize();
+  initialize();
 });
