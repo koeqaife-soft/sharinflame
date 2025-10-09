@@ -75,7 +75,7 @@
           v-for="reply in commentRef.replies"
           :key="reply.comment_id"
           :comment="reply"
-          :in-replies-dialog="true"
+          :in-replies-dialog="false"
           :disable-actions="disableActions"
           :show-mod-delete="showModDelete"
           :show-replies="true"
