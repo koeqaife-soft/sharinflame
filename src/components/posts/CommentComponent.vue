@@ -1,65 +1,94 @@
 <template>
-  <div class="card comment" :key="commentRef.comment_id">
-    <div class="card-section replied-to-section" v-if="isParent">
-      <my-icon icon="reply" />
-      <div class="label">{{ $t("replied_to") }}</div>
-    </div>
-    <div class="card-section content-section">
-      <div class="avatar-container">
-        <open-user-dialog v-if="commentRef.user" :user="commentRef.user" />
+  <div class="comment" :key="commentRef.comment_id">
+    <div class="card">
+      <div class="card-section replied-to-section" v-if="isParent">
+        <my-icon icon="reply" />
+        <div class="label">{{ $t("replied_to") }}</div>
       </div>
-      <div class="text-container">
-        <div class="username">
-          <template v-if="commentRef.user">
-            {{ commentRef.user.display_name || commentRef.user.username }}
-          </template>
-          <template v-else>
-            {{ $t("unknown_user") }}
-          </template>
+      <div class="card-section content-section">
+        <div class="avatar-container">
+          <open-user-dialog v-if="commentRef.user" :user="commentRef.user" />
         </div>
-        <text-parts
-          class="content"
-          :text="formatStringForHtml(commentRef.content || $t('resource_was_deleted'))"
-          :html="true"
-        />
+        <div class="text-container">
+          <div class="username">
+            <template v-if="commentRef.user">
+              {{ commentRef.user.display_name || commentRef.user.username }}
+            </template>
+            <template v-else>
+              {{ $t("unknown_user") }}
+            </template>
+          </div>
+          <text-parts
+            class="content"
+            :text="formatStringForHtml(commentRef.content || $t('resource_was_deleted'))"
+            :html="true"
+          />
+        </div>
+      </div>
+      <div class="actions card-section actions-section" :class="{ 'can-animate': canAnimate }">
+        <div class="reaction-buttons">
+          <reaction-buttons
+            :object="commentRef"
+            :before-action="allowAnimate"
+            :is-comment="true"
+            :disable="disableActions || disable"
+          />
+        </div>
+        <div class="action-container">
+          <my-button
+            icon="reply"
+            :label="formatNumber(commentRef.replies_count)"
+            class="comments round button"
+            size="sm"
+            @click="repliesDialog"
+            :disable="disableActions || disable"
+          />
+        </div>
+        <q-space />
+        <div class="action-container circle" v-if="showModDelete">
+          <my-button
+            icon="delete_forever"
+            class="delete circle button"
+            :disable="disable"
+            @click="action('mod_delete', null)"
+          />
+        </div>
+        <div class="action-container circle" v-if="!disableActions">
+          <my-button
+            icon="more_horiz"
+            class="more button circle"
+            size="sm"
+            :disable="disable"
+            :loading="moreMenuLoading"
+          >
+            <q-menu class="comment-more-menu" self="top right" v-if="!moreMenuLoading">
+              <more-menu :comment="commentRef" @action="action" :show-go-to="!hideGoTo && !(inDialog ?? true)" />
+            </q-menu>
+          </my-button>
+        </div>
       </div>
     </div>
-    <div class="actions card-section actions-section" :class="{ 'can-animate': canAnimate }">
-      <div class="reaction-buttons">
-        <reaction-buttons
-          :object="commentRef"
-          :before-action="allowAnimate"
-          :is-comment="true"
-          :disable="disableActions || disable"
+
+    <template v-if="showReplies && commentRef.replies && commentRef.replies.length > 0">
+      <div class="replies" :class="`indent-${replyIndent ?? 1}`">
+        <comment-component
+          v-for="reply in commentRef.replies"
+          :key="reply.comment_id"
+          :comment="reply"
+          :in-replies-dialog="inRepliesDialog"
+          :disable-actions="disableActions"
+          :show-mod-delete="showModDelete"
+          :show-replies="true"
+          :reply-indent="(replyIndent ?? 1) + 1"
+          @delete-comment="
+            (id: string) => {
+              const index = commentRef.replies!.findIndex((c) => c.comment_id === id);
+              if (index !== -1) commentRef.replies!.splice(index, 1);
+            }
+          "
         />
       </div>
-      <div class="action-container">
-        <my-button
-          icon="reply"
-          :label="formatNumber(commentRef.replies_count)"
-          class="comments round button"
-          size="sm"
-          @click="repliesDialog"
-          :disable="disableActions || disable"
-        />
-      </div>
-      <q-space />
-      <div class="action-container circle" v-if="showModDelete">
-        <my-button
-          icon="delete_forever"
-          class="delete circle button"
-          :disable="disable"
-          @click="action('mod_delete', null)"
-        />
-      </div>
-      <div class="action-container circle" v-if="!disableActions">
-        <my-button icon="more_horiz" class="more button circle" size="sm" :disable="disable" :loading="moreMenuLoading">
-          <q-menu class="comment-more-menu" self="top right" v-if="!moreMenuLoading">
-            <more-menu :comment="commentRef" @action="action" :show-go-to="!hideGoTo && !(inDialog ?? true)" />
-          </q-menu>
-        </my-button>
-      </div>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -70,6 +99,7 @@ import TextParts from "../misc/TextParts.vue";
 import ReactionButtons from "./ReactionButtons.vue";
 import MyButton from "../my/MyButton.vue";
 import MyIcon from "../my/MyIcon.vue";
+import CommentComponent from "./CommentComponent.vue";
 import { i18n } from "src/boot/i18n";
 import { useQuasar } from "quasar";
 import { deleteComment, getComment, getPost } from "src/api/posts";
@@ -90,9 +120,11 @@ const props = defineProps<{
   comment: CommentWithUser | Comment;
   hideGoTo?: boolean;
   inDialog?: boolean;
-  inRepliesDialog?: boolean;
-  disableActions?: boolean;
-  showModDelete?: boolean;
+  inRepliesDialog?: boolean | undefined;
+  disableActions?: boolean | undefined;
+  showModDelete?: boolean | undefined;
+  showReplies?: boolean;
+  replyIndent?: number;
 }>();
 
 const canAnimate = ref(false);

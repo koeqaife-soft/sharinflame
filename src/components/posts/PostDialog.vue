@@ -53,6 +53,7 @@
                 :class="{ 'q-mb-sm': index + 1 < items.length }"
                 @delete-comment="handleDeleteComment"
                 :in-dialog="true"
+                show-replies
               />
             </template>
             <template v-slot:skeleton>
@@ -214,6 +215,17 @@ function updateMeta<T>(key: string, value: T) {
   postRef.value._meta[key] = value;
 }
 
+function attachUsersToComments(comments: Comment[], usersMap: Record<string, User>): CommentWithUser[] {
+  return comments.map((comment) => {
+    const withUser: CommentWithUser = {
+      ...comment,
+      user: usersMap[comment.user_id]!,
+      replies: comment.replies ? attachUsersToComments(comment.replies, usersMap) : []
+    };
+    return withUser;
+  });
+}
+
 async function loadComments(index: number, done: (stop?: boolean) => void) {
   const toAdd: CommentWithUser[] = [];
   nextItems.value ??= [];
@@ -226,15 +238,7 @@ async function loadComments(index: number, done: (stop?: boolean) => void) {
 
       if (r.data.success) {
         const usersMap = r.data.data.users;
-        nextItems.value.push(
-          ...apiLoaded.map(
-            (comment: Comment) =>
-              ({
-                ...comment,
-                user: usersMap[comment.user_id]
-              }) as CommentWithUser
-          )
-        );
+        nextItems.value.push(...attachUsersToComments(apiLoaded, usersMap));
       }
     }
 

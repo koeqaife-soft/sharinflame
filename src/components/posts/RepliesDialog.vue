@@ -70,6 +70,7 @@
                 @delete-comment="handleDeleteComment"
                 :in-dialog="inDialog!"
                 :hide-go-to="true"
+                show-replies
               />
             </template>
             <template v-slot:skeleton>
@@ -183,7 +184,8 @@ function allowLoad() {
 
 function onScroll(info: QScrollObserverDetails) {
   headerVisible.value =
-    info.position.top < commentComponentRef.value!.scrollHeight + parentCommentComponentRef.value!.scrollHeight + 66 ||
+    info.position.top <
+      commentComponentRef.value!.scrollHeight + (parentCommentComponentRef.value?.scrollHeight ?? 0) + 66 ||
     info.direction == "up";
 }
 
@@ -201,6 +203,17 @@ function reloadComments() {
 function updateMeta<T>(key: string, value: T) {
   commentRef.value._meta ||= {};
   commentRef.value._meta[key] = value;
+}
+
+function attachUsersToComments(comments: Comment[], usersMap: Record<string, User>): CommentWithUser[] {
+  return comments.map((comment) => {
+    const withUser: CommentWithUser = {
+      ...comment,
+      user: usersMap[comment.user_id]!,
+      replies: comment.replies ? attachUsersToComments(comment.replies, usersMap) : []
+    };
+    return withUser;
+  });
 }
 
 async function loadComments(index: number, done: (stop?: boolean) => void) {
@@ -221,15 +234,7 @@ async function loadComments(index: number, done: (stop?: boolean) => void) {
 
       if (r.data.success) {
         const usersMap = r.data.data.users;
-        nextItems.value.push(
-          ...apiLoaded.map(
-            (comment: Comment) =>
-              ({
-                ...comment,
-                user: usersMap[comment.user_id]
-              }) as CommentWithUser
-          )
-        );
+        nextItems.value.push(...attachUsersToComments(apiLoaded, usersMap));
       }
     }
 

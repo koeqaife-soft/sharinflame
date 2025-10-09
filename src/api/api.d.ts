@@ -111,6 +111,7 @@ interface Comment {
   type?: "update" | "comment" | undefined;
   _meta?: MetaData | undefined;
   user?: User | undefined;
+  replies?: CommentWithUser[] | undefined;
 }
 
 interface Tag {
