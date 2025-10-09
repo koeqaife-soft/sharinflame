@@ -13,7 +13,7 @@
       <div class="message">{{ $t(`${localeKey}.message`) }}</div>
       <div class="buttons horizontal-container">
         <my-button v-if="showCancel" :label="$t(cancelKey!)" type="flat" icon="close" @click="onCancel" />
-        <my-button v-if="showOk" :label="$t(okKey!)" :type="okType!" :icon="okIcon" @click="$emit('ok')" />
+        <my-button v-if="showOk" :label="$t(okKey!)" :type="okType!" :icon="okIcon" @click="onOk" />
       </div>
     </div>
   </q-dialog>
@@ -22,12 +22,17 @@
 import { useDialogPluginComponent } from "quasar";
 import MyButton from "../my/MyButton.vue";
 
-const emit = defineEmits([...useDialogPluginComponent.emits]);
-const { dialogRef, onDialogHide } = useDialogPluginComponent();
+defineEmits([...useDialogPluginComponent.emits]);
+const { dialogRef, onDialogHide, onDialogCancel, onDialogOK } = useDialogPluginComponent();
 
 function onCancel() {
+  onDialogCancel();
   dialogRef.value?.hide();
-  emit("hide");
+}
+
+function onOk() {
+  onDialogOK();
+  dialogRef.value?.hide();
 }
 
 withDefaults(
@@ -40,7 +45,6 @@ withDefaults(
     showCancel?: boolean;
     showOk?: boolean;
     persistent?: boolean;
-    onOk?: () => void;
   }>(),
   {
     cancelKey: "cancel",
