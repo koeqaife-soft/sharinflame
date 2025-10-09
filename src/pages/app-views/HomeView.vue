@@ -6,15 +6,22 @@
       </div>
     </div>
     <div class="center-column container" style="gap: 0px">
-      <div class="horizontal-container categories-label card" :class="{ scrolled }" v-if="hideLeftColumn">
-        <my-select :options="optionsList" v-model="currentType" />
-
-        <q-space />
-        <my-button icon="refresh" class="reload-button" @click="reloadKey = Date.now()" />
-      </div>
       <div class="full-height">
         <transition name="post-scroll">
-          <post-scroll :type="currentType" :key="reloadKey" class="full-height full-width" @scroll="onScroll" />
+          <post-scroll :type="currentType" :key="reloadKey" class="full-height full-width" @scroll="onScroll">
+            <template #before>
+              <div
+                class="horizontal-container sticky-label categories-label card"
+                :class="{ 'is-hidden': hideBar, scrolled }"
+                v-if="hideLeftColumn"
+              >
+                <my-select :options="optionsList" v-model="currentType" />
+
+                <q-space />
+                <my-button icon="refresh" class="reload-button" @click="reloadKey = Date.now()" />
+              </div>
+            </template>
+          </post-scroll>
         </transition>
       </div>
     </div>
@@ -78,6 +85,7 @@ const unreadNotificationsCount = computed(() => {
   return mainStore.getUnreadCount();
 });
 
+const hideBar = ref(false);
 const scrolled = ref(false);
 
 const changeType = (type: KeyOfGetPostsTypes) => {
@@ -86,6 +94,7 @@ const changeType = (type: KeyOfGetPostsTypes) => {
 };
 
 function onScroll(info: QScrollObserverDetails) {
+  hideBar.value = info.position.top > 150 && info.direction == "down";
   scrolled.value = info.position.top > 8;
 }
 

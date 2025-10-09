@@ -75,12 +75,16 @@
 
   .categories-label {
     @include elevation(1);
+    background-color: var(--card);
     z-index: 1;
     margin-left: 8px;
     margin-right: 8px;
     margin-top: 8px;
     border-radius: 18px;
-    transition: border-radius 0.1s ease;
+    transition:
+      border-radius 0.1s ease,
+      transform 0.3s ease;
+    transform: translate3d(0, 0, 0);
 
     .categories-button {
       width: fit-content;
@@ -97,6 +101,13 @@
         @include iconSize(22);
         color: var(--on-card);
       }
+    }
+    &.is-hidden {
+      transform: translate3d(0, -150%, 0);
+    }
+    &.scrolled {
+      border-top-left-radius: 0px;
+      border-top-right-radius: 0px;
     }
   }
 

@@ -2,6 +2,7 @@
   <div>
     <transition name="post-scroll">
       <q-scroll-area class="scroll-area full-height" :visible="false" :key="scrollKey">
+        <slot name="before" />
         <my-virtual-scroll
           :items="items"
           :margins="8"
