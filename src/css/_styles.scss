@@ -59,6 +59,7 @@ body {
   }
 
   &.use-alt {
+    @include elevation(0);
     background-color: var(--toolbar-alt);
 
     span,
