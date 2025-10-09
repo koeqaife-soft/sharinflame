@@ -50,7 +50,7 @@
     <my-button icon="home" is-category :class="{ selected: currentView == 'home' }" @click="currentView = 'home'" />
     <my-button icon="chat" is-category :class="{ selected: currentView == 'chat' }" @click="currentView = 'chat'" />
     <template v-if="$q.platform.is.mobile">
-      <my-button icon="add" @click="mainStore.openDialog('postEditor', '', {})" />
+      <my-button icon="add_2" @click="mainStore.openDialog('postEditor', '', {})" />
       <div class="button-and-badge">
         <my-button icon="notifications" @click="mainStore.openDialog('notifications', '', {})" />
         <span class="button-badge" v-if="unreadNotificationsCount > 0">
