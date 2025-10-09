@@ -1,5 +1,5 @@
 <template>
-  <my-button class="profile webkit-no-drag">
+  <my-button class="profile webkit-no-drag is-icon">
     <user-avatar :me="true" />
     <q-menu class="menu-card" ref="menu">
       <profile-menu buttons-class="card-button" @close-menu="closeMenu" />
