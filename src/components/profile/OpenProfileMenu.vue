@@ -10,8 +10,8 @@
 import { QMenu } from "quasar";
 import { defineAsyncComponent, ref } from "vue";
 import MyButton from "../my/MyButton.vue";
+import ProfileMenu from "./ProfileMenu.vue";
 
-const ProfileMenu = defineAsyncComponent(() => import("./ProfileMenu.vue"));
 const UserAvatar = defineAsyncComponent(() => import("./UserAvatar.vue"));
 
 const menu = ref<QMenu>();
