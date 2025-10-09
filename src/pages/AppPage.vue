@@ -89,8 +89,8 @@ const isSmallScreen = computed(() => screenSize.value[0] <= 850);
 const isBigScreen = computed(() => screenSize.value[0] >= 1200);
 const isShortScreen = computed(() => screenSize.value[1] <= 750);
 
-const hideLeftColumn = computed(() => !isBigScreen.value);
-const hideRightColumn = computed(() => isSmallScreen.value);
+const hideLeftColumn = computed(() => currentView.value != "home" || !isBigScreen.value);
+const hideRightColumn = computed(() => currentView.value != "home" || isSmallScreen.value);
 const hideNotifications = computed(() => hideRightColumn.value || isShortScreen.value);
 
 const unreadNotificationsCount = computed(() => {
