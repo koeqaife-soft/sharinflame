@@ -59,6 +59,7 @@ const isIncorrect = ref(false);
 watch(text, () => (isIncorrect.value = false));
 
 async function onOk() {
+  if (loading.value) return;
   loading.value = true;
   try {
     await verifyEmailCheck(props.token, text.value.trim(), { signal: controller.signal });

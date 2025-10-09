@@ -114,6 +114,7 @@ const _validatePassword = (val: string) => _validate(validatePassword(val));
 const validateConfirmPassword = (val: string) => val === newPassword.value || t("passwords_must_match");
 
 async function onOk() {
+  if (loading.value) return;
   loading.value = true;
   if (_validatePassword(newPassword.value) !== true) return;
   if (validateConfirmPassword(repeatedPassword.value) !== true) return;

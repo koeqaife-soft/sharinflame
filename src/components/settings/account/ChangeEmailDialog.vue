@@ -89,7 +89,7 @@ import { validateEmail } from "src/utils/validations";
 const emit = defineEmits([...useDialogPluginComponent.emits]);
 const { dialogRef, onDialogHide } = useDialogPluginComponent();
 
-const controller = new AbortController();
+let controller = new AbortController();
 
 const quasar = useQuasar();
 const { t } = useI18n();
@@ -116,10 +116,13 @@ watch(password, () => (isIncorrect.value.password = false));
 watch(email, () => (emailError.value = undefined));
 
 async function onOk() {
+  if (loading.value) return;
+  controller.abort();
+  controller = new AbortController();
   loading.value = true;
   try {
     if (page.value == 0) {
-      await check("email", email.value);
+      await check("email", email.value, { signal: controller.signal });
       const r = await changeEmailSend(password.value, email.value, { signal: controller.signal });
       token = r.data.data.token;
       page.value = 1;
