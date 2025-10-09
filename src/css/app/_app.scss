@@ -34,3 +34,8 @@ body.mobile .bottom-bar {
 body.mobile .app-view {
   padding-bottom: 64px;
 }
+body:not(.mobile) .home-view {
+  .center-column .virtual-scroll-content {
+    padding-bottom: 64px;
+  }
+}
