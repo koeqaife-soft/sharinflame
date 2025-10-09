@@ -2,7 +2,6 @@ const localization = {
   "en-US": {
     new_comment: "Comment from {username}",
     new_reply: "New reply from {username}",
-    new_notification: "New Notification",
     mod_deleted_comment: "Your comment was deleted by {username}",
     mod_deleted_post: "Your post was deleted by {username}",
     reason: "Reason"
@@ -53,20 +52,25 @@ self.addEventListener("push", (event) => {
   console.debug("Got new notification");
 
   const key = data.is_reply ? "new_reply" : data.type;
-  const template = t[key] ?? t.new_notification;
+  const template = t[key];
+  if (!template) {
+    console.warn("Unknown notification type: " + data.type);
+    return;
+  }
 
   const title = format(template, { username: data.username });
 
-  /** @type {NotificationOptions} */
   let message = data.message ?? "";
   if (data.type == "mod_deleted_post" || data.type == "mod_deleted_post") {
     message = `${t.reason}: ${message}`;
   }
+  /** @type {NotificationOptions} */
   const options = {
     body: message,
     icon: data.avatar_url ?? "/icons/favicon-96x96.png",
     tag: `notif-${data.id}`,
-    vibrate: [100, 50, 100]
+    vibrate: [100, 50, 100],
+    renotify: false
   };
 
   event.waitUntil(
