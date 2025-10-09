@@ -96,7 +96,7 @@ import { onUnmounted, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { validateEmail, validatePassword, validateName } from "src/utils/validations";
 import { isAxiosError } from "axios";
-import { register } from "src/api/auth";
+import { check, register } from "src/api/auth";
 import { useRouter } from "vue-router";
 import { useMainStore } from "src/stores/main-store";
 import MyButton from "src/components/my/MyButton.vue";
@@ -157,6 +157,8 @@ const validateConfirmPassword = (val: string) => val === password.value || t("pa
 const _register = async () => {
   loading.value = true;
   try {
+    await check("username", username.value);
+    await check("email", email.value);
     const r = await register(username.value, email.value, password.value);
     if (r.data.success) {
       mainStore.initialized = 0;

@@ -17,9 +17,21 @@ export const authEndpoints = {
 
   change_email_send: "/auth/change_email/send",
   change_email_check: "/auth/change_email/check",
-  change_email_cancel: "/auth/change_email/cancel"
+  change_email_cancel: "/auth/change_email/cancel",
+
+  check: "/auth/check"
 };
 export const noAuthEndpoints = ["/auth/register", "/auth/login", "/auth/refresh", "/ping"];
+
+async function check(type: "email" | "username", value: string, config: AxiosRequestConfig = {}) {
+  return await api.get(authEndpoints.check, {
+    params: {
+      type,
+      value
+    },
+    ...config
+  });
+}
 
 async function register(username: string, email: string, password: string) {
   const r = await api.post<AuthResponse>(authEndpoints.register, {
@@ -183,5 +195,6 @@ export {
   changePassword,
   changeEmailSend,
   changeEmailCheck,
-  changeEmailCancel
+  changeEmailCancel,
+  check
 };

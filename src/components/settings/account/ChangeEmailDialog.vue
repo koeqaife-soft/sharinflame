@@ -83,7 +83,7 @@ import MyIcon from "src/components/my/MyIcon.vue";
 import { onBeforeUnmount, ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 import { isAxiosError } from "axios";
-import { changeEmailCheck, changeEmailSend } from "src/api/auth";
+import { changeEmailCheck, changeEmailSend, check } from "src/api/auth";
 import { validateEmail } from "src/utils/validations";
 
 const emit = defineEmits([...useDialogPluginComponent.emits]);
@@ -119,6 +119,7 @@ async function onOk() {
   loading.value = true;
   try {
     if (page.value == 0) {
+      await check("email", email.value);
       const r = await changeEmailSend(password.value, email.value, { signal: controller.signal });
       token = r.data.data.token;
       page.value = 1;
