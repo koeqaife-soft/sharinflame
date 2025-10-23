@@ -357,11 +357,13 @@ async function createPostButton() {
           try {
             let blob = file.blob;
 
+            let name = `${prefix}-${file.name}`;
             if (blob.type.startsWith("image/")) {
               blob = await imageToWebp(blob);
+              name = `${prefix}-image.webp`;
             }
 
-            await uploadFile(`${prefix}-image.webp`, blob, "context", undefined, contextId);
+            await uploadFile(name, blob, "context", undefined, contextId);
           } catch (e) {
             file.error = "file_error.failed_to_upload";
             throw e;
