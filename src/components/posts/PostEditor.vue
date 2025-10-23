@@ -160,6 +160,7 @@ import CloseableContent from "../misc/CloseableContent.vue";
 import { useMainStore } from "src/stores/main-store";
 import { createContext, uploadFile } from "src/api/storage";
 import { storageConfig } from "src/api/storage";
+import { imageToWebp } from "src/utils/format";
 
 const props = defineProps<{
   originalPost?: Post;
@@ -354,7 +355,13 @@ async function createPostButton() {
         const prefix = indexToLetters(index);
         const func = async () => {
           try {
-            await uploadFile(`${prefix}-${file.name}`, file.blob, "context", undefined, contextId);
+            let blob = file.blob;
+
+            if (blob.type.startsWith("image/")) {
+              blob = await imageToWebp(blob);
+            }
+
+            await uploadFile(`${prefix}-image.webp`, blob, "context", undefined, contextId);
           } catch (e) {
             file.error = "file_error.failed_to_upload";
             throw e;
