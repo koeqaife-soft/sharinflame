@@ -206,7 +206,9 @@ class WebSocketService {
     if (this.isConnected()) {
       this.send({
         type: "heartbeat",
-        last_active: this._lastActive
+        data: {
+          last_active: this._lastActive
+        }
       });
     }
     this.heartbeatTimeoutFunc();
