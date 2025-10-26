@@ -1,4 +1,4 @@
-import websocket from "src/utils/websockets";
+import { subscribeWebPush } from "src/api/users";
 
 const VAPID = "BJGHEin0mFMzmwplmS-Q4xDjv97OT2AOjSzRa5AcyFpdjPiRwCI0M7yPf8qATGh5VOp4TlMWBuq3DsS5ZQQLw70";
 
@@ -31,10 +31,7 @@ export async function initPush() {
       });
     }
 
-    websocket.send({
-      type: "push_subscription",
-      data: subscription.toJSON()
-    });
+    await subscribeWebPush(subscription.toJSON());
   } catch {
     // noop
   }
