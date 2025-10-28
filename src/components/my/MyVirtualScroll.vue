@@ -195,10 +195,13 @@ function recalculatePositionVariables() {
 let rafId: number | null = null;
 function throttledUpdateVisibleItems() {
   if (rafId !== null) return;
-  rafId = requestAnimationFrame(() => {
-    updateVisibleItems();
-    rafId = null;
-  });
+  rafId = requestIdleCallback(
+    () => {
+      updateVisibleItems();
+      rafId = null;
+    },
+    { timeout: 50 }
+  );
 }
 
 function onScroll(info: QScrollObserverDetails) {
