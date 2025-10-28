@@ -260,7 +260,6 @@
 // Avatar
 .avatar {
   outline: 2px solid var(--contrast-outline);
-  background-color: var(--secondary);
   color: var(--on-secondary);
   align-items: center;
   justify-content: center;
@@ -268,5 +267,6 @@
   user-select: none;
   &:not(:has(img)) {
     outline: 1px var(--on-secondary) solid;
+    background-color: var(--secondary);
   }
 }
