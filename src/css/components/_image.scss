@@ -15,6 +15,10 @@
     display: block;
   }
 
+  img:not(.loaded) {
+    visibility: hidden;
+  }
+
   .loading {
     position: absolute;
     inset: 0;
