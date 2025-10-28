@@ -70,9 +70,10 @@ onMounted(() => {
 onBeforeUnmount(() => {
   if (observer) observer.disconnect();
   if (imgRef.value) {
+    const img = imgRef.value;
     setTimeout(() => {
-      imgRef.value!.style.visibility = "hidden";
-      imgRef.value!.src = "";
+      img.style.visibility = "hidden";
+      img.src = "";
     }, 0);
   }
 });
