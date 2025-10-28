@@ -54,9 +54,10 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   if (observer) observer.disconnect();
-  if (loading.value && imgRef.value) {
-    imgRef.value.style.visibility = "hidden";
-    imgRef.value.src = "";
+  if (imgRef.value) {
+    setTimeout(() => {
+      imgRef.value!.src = "";
+    }, 0);
   }
 });
 </script>
