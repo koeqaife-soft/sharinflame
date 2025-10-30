@@ -2,9 +2,11 @@ import { authEndpoints } from "./auth";
 import { postsEndpoints } from "./posts";
 import { usersEndpoints } from "./users";
 import { storageEndpoints } from "./storage";
+import { chatEndpoints } from "./chat";
 
-const useLocalhost = false;
-const isSsl = true;
+// TODO: CHANGE THE VALUE BACK
+const useLocalhost = true;
+const isSsl = false;
 const url = useLocalhost ? `localhost:6169` : `api.sharinflame.com`;
 
 export const apiUrl = `${isSsl ? "https" : "http"}://${url}/v1`;
@@ -15,5 +17,6 @@ export const apiEndpoints = {
   posts: postsEndpoints,
   users: usersEndpoints,
   storage: storageEndpoints,
+  chat: chatEndpoints,
   ping: "/ping"
 };

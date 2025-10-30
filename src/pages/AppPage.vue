@@ -1,6 +1,12 @@
 <template>
   <main-layout :in-router="false" headers-class="index-10" class="full-height">
     <particles-background v-if="mainStore.getSetting('starBackground')" />
+    <template #before-space v-if="!$q.platform.is.mobile">
+      <div class="top-action-bar webkit-no-drag">
+        <my-button icon="home" is-category :class="{ selected: currentView == 'home' }" @click="currentView = 'home'" />
+        <my-button icon="chat" is-category :class="{ selected: currentView == 'chat' }" @click="currentView = 'chat'" />
+      </div>
+    </template>
     <template #toolbar-actions v-if="(hideRightColumn || hideNotifications) && !$q.platform.is.mobile">
       <div class="button-and-badge">
         <my-button icon="notifications" class="webkit-no-drag" v-if="hideNotifications">
@@ -47,19 +53,17 @@
       </keep-alive>
     </transition>
   </main-layout>
-  <div class="bottom-bar">
+  <div class="bottom-bar" v-if="$q.platform.is.mobile">
     <my-button icon="home" is-category :class="{ selected: currentView == 'home' }" @click="currentView = 'home'" />
     <my-button icon="chat" is-category :class="{ selected: currentView == 'chat' }" @click="currentView = 'chat'" />
-    <template v-if="$q.platform.is.mobile">
-      <my-button icon="add_2" @click="mainStore.openDialog('postEditor', '', {})" />
-      <div class="button-and-badge">
-        <my-button icon="notifications" @click="mainStore.openDialog('notifications', '', {})" />
-        <span class="button-badge" v-if="unreadNotificationsCount > 0">
-          {{ unreadNotificationsCount }}
-        </span>
-      </div>
-      <open-profile-menu />
-    </template>
+    <my-button icon="add_2" @click="mainStore.openDialog('postEditor', '', {})" />
+    <div class="button-and-badge">
+      <my-button icon="notifications" @click="mainStore.openDialog('notifications', '', {})" />
+      <span class="button-badge" v-if="unreadNotificationsCount > 0">
+        {{ unreadNotificationsCount }}
+      </span>
+    </div>
+    <open-profile-menu />
   </div>
 </template>
 

@@ -214,3 +214,16 @@ interface WebPushNotification {
   message: string;
   is_reply?: string;
 }
+
+interface UserChannel {
+  user_id: string;
+  channel_id: string;
+  membership_id: string;
+  last_read_message_id: str;
+  last_read_at: number;
+  joined_at: number;
+  metadata?: string;
+  type: "direct" | "group";
+  created_at: number;
+  members: User[];
+}

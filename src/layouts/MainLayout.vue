@@ -12,7 +12,9 @@
         </my-button>
         <div v-else class="webkit-drag title">SharinFlame</div>
 
+        <slot name="before-space" />
         <q-space class="webkit-drag" />
+        <slot name="after-space" />
 
         <div
           class="horizontal-container full-height align-center"

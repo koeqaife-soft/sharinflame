@@ -22,6 +22,15 @@
   }
 }
 
+.top-action-bar {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  gap: 4px;
+  display: flex;
+  flex-direction: row;
+}
+
 body.mobile .bottom-bar {
   bottom: 0;
   left: 0;
@@ -33,9 +42,4 @@ body.mobile .bottom-bar {
 
 body.mobile .app-view {
   padding-bottom: 64px;
-}
-body:not(.mobile) .home-view {
-  .center-column .virtual-scroll-content:last-child {
-    margin-bottom: 64px;
-  }
 }

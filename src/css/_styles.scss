@@ -55,7 +55,21 @@ body {
   div,
   .my-icon,
   .icon {
-    color: var(--on-toolbar);
+    &:not(.q-avatar__content):not(.avatar) {
+      color: var(--on-toolbar);
+    }
+  }
+
+  .my-button {
+    &.selected {
+      background-color: var(--on-primary);
+      .my-icon {
+        color: var(--primary);
+      }
+    }
+    &:not(.selected) {
+      --_after-bg-color: var(--background);
+    }
   }
 
   &.use-alt {
@@ -66,7 +80,22 @@ body {
     div,
     .my-icon,
     .icon {
-      color: var(--on-toolbar-alt);
+      &:not(.q-avatar__content):not(.avatar) {
+        color: var(--on-toolbar-alt);
+      }
+    }
+
+    .my-button {
+      &.selected {
+        --_after-bg-color: var(--background);
+        background-color: var(--on-card-secondary);
+        .my-icon {
+          color: var(--card-secondary);
+        }
+      }
+      &:not(.selected) {
+        --_after-bg-color: var(--on-background-variant);
+      }
     }
   }
 

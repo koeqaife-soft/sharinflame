@@ -7,9 +7,10 @@ import { init as initPosts } from "src/api/posts";
 import { init as initUsers } from "src/api/users";
 import { init as initStorage } from "src/api/storage";
 import { init as initModeration } from "src/api/moderation";
+import { init as initChat } from "src/api/chat";
 import { apiUrl } from "src/api/config";
 
-const initFunctions = [initAuth, initPosts, initUsers, initStorage, initModeration, interceptors.init];
+const initFunctions = [initAuth, initPosts, initUsers, initStorage, initModeration, initChat, interceptors.init];
 
 declare module "vue" {
   interface ComponentCustomProperties {
