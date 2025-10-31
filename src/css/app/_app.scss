@@ -15,9 +15,8 @@
   .profile {
     height: 40px;
     width: 40px;
-    .q-avatar {
-      height: 26px;
-      width: 26px;
+    .avatar {
+      --avatar-size: 26px;
     }
   }
 }
