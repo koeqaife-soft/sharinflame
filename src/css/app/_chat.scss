@@ -21,8 +21,7 @@
         margin-right: 8px;
         margin-top: 4px;
         margin-bottom: 4px;
-        height: 40px;
-        width: 40px;
+        --avatar-size: 40px;
       }
     }
   }
@@ -31,5 +30,31 @@
     width: 100%;
     max-width: 350px;
     padding: 8px;
+  }
+
+  .select-chat {
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    align-content: center;
+    font-size: 24px;
+    color: var(--on-background-variant);
+  }
+
+  .chat-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .avatar {
+      height: 40px;
+      width: 40px;
+      margin-right: 8px;
+    }
+  }
+
+  &:not(.is-small-screen) {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    gap: 8px;
   }
 }

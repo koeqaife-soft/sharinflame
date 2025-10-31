@@ -346,5 +346,7 @@ export default {
   moderation: "Moderation",
   no_work_now: "No work for now",
   reports: "Reports",
-  approve: "Approve"
+  approve: "Approve",
+
+  select_chat: "Please, select chat"
 };
