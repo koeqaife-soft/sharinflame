@@ -268,6 +268,8 @@
   overflow: hidden;
   height: var(--avatar-size);
   width: var(--avatar-size);
+  min-width: var(--avatar-size);
+  min-height: var(--avatar-size);
   border-radius: 50%;
 
   .avatar-content {
