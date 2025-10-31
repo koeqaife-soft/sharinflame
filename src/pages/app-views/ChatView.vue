@@ -21,14 +21,7 @@
     <div class="chat">
       <!-- TODO -->
       <template v-if="currentChannel">
-        <div class="card chat-header">
-          <template v-if="currentChannel.type == 'direct'">
-            <user-avatar :user="currentChannel.members[0]" />
-            <div class="channel-name">
-              {{ currentChannel.members[0]?.display_name ?? currentChannel.members[0]?.username }}
-            </div>
-          </template>
-        </div>
+        <chat-component :channel="currentChannel" />
       </template>
       <template v-else>
         <div class="select-chat">{{ $t("select_chat") }}</div>
@@ -40,6 +33,7 @@
 import { computed, onMounted, ref, watch } from "vue";
 import MyButton from "src/components/my/MyButton.vue";
 import UserAvatar from "src/components/profile/UserAvatar.vue";
+import ChatComponent from "src/components/chat/ChatComponent.vue";
 import { getChannels } from "src/api/chat";
 
 defineProps<{
