@@ -1,7 +1,7 @@
 @import "mixins";
 
 .card {
-  @include elevation(2);
+  @include elevation(1);
   border-radius: 16px;
   padding: 8px;
   background-color: var(--card);
