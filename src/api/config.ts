@@ -5,8 +5,8 @@ import { storageEndpoints } from "./storage";
 import { chatEndpoints } from "./chat";
 
 // TODO: CHANGE THE VALUE BACK
-const useLocalhost = false;
-const isSsl = true;
+const useLocalhost = true;
+const isSsl = false;
 const url = useLocalhost ? `localhost:6169` : `api.sharinflame.com`;
 
 export const apiUrl = `${isSsl ? "https" : "http"}://${url}/v1`;

@@ -226,4 +226,17 @@ interface UserChannel {
   type: "direct" | "group";
   created_at: number;
   members: User[];
+  __meta?: Record<string, string>;
+}
+
+interface Message {
+  message_id: string;
+  channel_id: string;
+  user_id: string;
+  content: string;
+  content_type: "plain" | "encrypted";
+  file_context_id?: string;
+  created_at: number;
+  edited_at?: number;
+  media?: string[];
 }

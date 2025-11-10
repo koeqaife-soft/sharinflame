@@ -17,6 +17,11 @@ const defaultSettings = {
 
 type KeyOfSettings = keyof typeof defaultSettings;
 
+interface CurrentChatState {
+  channelId?: string;
+  user?: User;
+}
+
 type OpenedDialogs = Map<
   string,
   {
@@ -73,7 +78,9 @@ export const useMainStore = defineStore("main", {
     settings: getSettings(),
     lastNotifications: [] as ApiNotification[],
     quasar: useQuasar(),
-    unreadCount: -1
+    unreadCount: -1,
+    currentView: "" as "chat" | "home",
+    currentChat: {} as CurrentChatState
   }),
   getters: {},
   actions: {

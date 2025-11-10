@@ -74,7 +74,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, defineAsyncComponent, onBeforeMount } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, defineAsyncComponent, onBeforeMount, toRef } from "vue";
 import { useMainStore } from "src/stores/main-store";
 import { readAllNotifications } from "src/api/users";
 import MainLayout from "src/layouts/MainLayout.vue";
@@ -90,7 +90,7 @@ const ChatView = defineAsyncComponent(() => import("src/pages/app-views/ChatView
 
 const mainStore = useMainStore();
 
-const currentView = ref<"home" | "chat">("home");
+const currentView = toRef(mainStore.currentView);
 
 const notificationsMenuOpened = ref(false);
 

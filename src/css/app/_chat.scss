@@ -8,6 +8,14 @@
   .chat {
     width: 100%;
     max-width: 950px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chat-component {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
   }
 
   .channels {
@@ -21,7 +29,7 @@
         margin-right: 8px;
         margin-top: 4px;
         margin-bottom: 4px;
-        --avatar-size: 40px;
+        --avatar-size: 36px;
       }
     }
   }
@@ -46,8 +54,7 @@
     flex-direction: row;
     align-items: center;
     .avatar {
-      height: 40px;
-      width: 40px;
+      --avatar-size: 40px;
       margin-right: 8px;
     }
   }

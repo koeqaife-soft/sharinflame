@@ -348,5 +348,6 @@ export default {
   reports: "Reports",
   approve: "Approve",
 
-  select_chat: "Please, select chat"
+  select_chat: "Please, select chat",
+  enter_message: "Enter message"
 };
